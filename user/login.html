@@ -6,131 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+    crossorigin="anonymous" />
+  <link
+    href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    rel="stylesheet" />
+  <link href="/css/login.css" rel="stylesheet" />
     <title>Document</title>
   </head>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-    }
-    .nav-wrap {
-      width: 100%;
-      height: 100px;
-      border-bottom: 2px solid rgb(179, 179, 179);
-    }
-    .nav-bar {
-      width: 70%;
-      height: 100px;
-      min-width: 800px;
-      margin: auto;
-      display: flex;
-      justify-content: flex-start;
-      overflow: hidden;
-      align-items: center;
-    }
-    .nav-bar > div {
-      display: flex;
-      align-items: center;
-    }
-    .logo-img-wrap {
-      width: 160px;
-    }
-    .logo-img-wrap img {
-      display: block;
-      width: 100%;
-    }
-    .domain-name {
-      margin-left: 30px;
-      font-size: 30px;
-      font-weight: bold;
-      padding-top: 20px;
-    }
-    .login-or-mypage-div {
-      margin-left: auto;
-      background-color: rgb(60, 60, 255);
-      width: 100px;
-      height: 50px;
-      border-radius: 30px;
-      display: flex;
-      justify-content: center;
-      color: white;
-      cursor: pointer;
-    }
-    .register-or-logout-div {
-      margin-left: 20px;
-      background-color: rgb(60, 60, 255);
-      width: 100px;
-      height: 50px;
-      border-radius: 30px;
-      display: flex;
-      justify-content: center;
-      color: white;
-      cursor: pointer;
-    }
-    .login-or-mypage-div:hover {
-      background-color: rgb(102, 102, 249);
-    }
-    .register-or-logout-div:hover {
-      background-color: rgb(102, 102, 249);
-    }
-
-#loginBox > h1 {
-  margin: 0 auto;
-  margin-bottom: 25px;
-}
-
-#loginBox {
-  width: 500px;
-  margin: 0 auto;
-  margin-top: 100px;
-  padding: 20px;
-
-  border: 2px solid lavender;
-  border-radius: 20px;
-
-  box-shadow: 3px 3px 5px lavender;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.login-id-div{
-    margin-left:20px;
-}
-.login-id{
-    width:410px;
-}
-.login-password-div{
-    margin-left:20px;
-}
-.login-password{
-    width:410px;
-}
-.loginBtn-div{
-    display: flex;
-    margin: auto;
-    margin-top : 20px;
-}
-#loginBtn {
-  width: 200px;
-  margin: 0 auto;
-}
-#logoutBtn {
-  width: 200px;
-  margin-left: 10px;
-}
-.password-forget{
-    margin: 0 auto;
-    margin-top : 20px;
-}
-
-  </style>
-
   <body>
     <div class="nav-wrap">
       <nav class="nav-bar">
         <div class="logo-img-wrap">
-          <img src="images/logo.png" />
+          <img src="/nav_bar/images/logo.png" />
         </div>
         <div class="domain-name">Worker Bench</div>
         <div class="login-or-mypage-div">로그인</div>
@@ -139,21 +30,63 @@
     </div>
     <div id="loginBox">
         <h1>로그인</h1>
-        <div class="mb-3 login-id-div">
-          <label for="account" class="form-label">아이디</label>
-          <input type="text" class="form-control login-id" id="account">
-        </div>
-        <div class="mb-3 login-password-div">
-          <label for="password" class="form-label">비밀번호</label>
-          <input type="password" class="form-control login-password" id="password"></input>
-        </div>
-        <div class="loginBtn-div">
-            <button type="button" class="btn btn-primary" id="loginBtn">로그인</button>
-            <button type="button" class="btn btn-primary" id="logoutBtn">회원가입</button>
-        </div>
-        <div class="password-forget">
-            <a href="/password-forget">비밀번호를 잊으셨나요?</a>
-        </div>
+        <div class="wrap">
+            <div class="mx-auto" style="max-width: 480px">
+              <div class="card-body">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"
+                      ><i class="fa fa-user-o" aria-hidden="true"></i
+                    ></span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="아이디"
+                    aria-label="Username"
+                    aria-describedby="basic-addon1"
+                    id="inputEmail"
+                  />
+                </div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon2"
+                      ><i class="fa fa-lock" aria-hidden="true"></i
+                    ></span>
+                  </div>
+                  <input
+                    type="password"
+                    class="form-control"
+                    placeholder="비밀번호"
+                    aria-label="Password"
+                    aria-describedby="basic-addon2"
+                    id="inputPassword"
+                  />
+                </div>
+                <div class="row d-flex justify-content-around">
+                  <div class="col-6 pr-2">
+                    <button
+                      type="button"
+                      class="loginBtn"
+                      onclick="sign_in()"
+                    >
+                      로그인
+                    </button>
+                  </div>
+                  <div class="col-6 pl-2">
+                    <button
+                      type="button"
+                      class="signupBtn"
+                      onclick="window.location.replace('/register/guest')"
+                    >
+                      회원가입
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
     </div>
+    
   </body>
 </html>
