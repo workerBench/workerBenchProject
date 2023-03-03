@@ -11,7 +11,7 @@ const common_1 = require("@nestjs/common");
 let AdminController = class AdminController {
 };
 AdminController = __decorate([
-    (0, common_1.Controller)('admin')
+    (0, common_1.Controller)('api/admin')
 ], AdminController);
 exports.AdminController = AdminController;
 //# sourceMappingURL=admin.controller.js.map
