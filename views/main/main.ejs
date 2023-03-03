@@ -1,177 +1,21 @@
-<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>메인 페이지</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="/main/css/main.css">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="main/css/style.css" rel="stylesheet" />
+    <title>Document</title>
   </head>
   <body>
-    <%- include ("header.ejs") %>    
-    <!-- 메인 이미지 -->
-    <div class="main-title"><h1>동료와 나를 이어주는 즐거운 벤치, 워크샵 중개 플랫폼 워커벤치입니다.</h1></div>
-    
-    <!-- 인기 워크샵 목록 -->
-    <h2 class="best-workshop-title">현재 가장 인기 있는 워크샵</h1>
-    <div class="best-workshop-list">
-      <div class="row row-cols-1 row-cols-md-4 g-4">
-        <div class="col">
-          <div class="card h-100">
-            <img
-              src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
-              class="card-img-top"
-              alt="..."
-            />
-            <!-- a href="" 추가해서 이미지 클릭 시 해당 워크샵 상세 페이지로 렌더링해야 함-->
-
-            <div class="card-body">
-              <h5 class="card-title">워크샵 제목(title)</h5>
-              <p class="card-text">유형(category)</p>
-              <p class="card-text">비용(price)</p>
-              <p class="card-text">인원(min_member)~(max_member)</p>
-              <p class="card-text">총 시간(total-time)</p>
-              <p class="card-text">목적(purposse)</p>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <img
-              src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
-              class="card-img-top"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">워크샵 제목(title)</h5>
-              <p class="card-text">유형(category)</p>
-              <p class="card-text">비용(price)</p>
-              <p class="card-text">인원(min_member)~(max_member)</p>
-              <p class="card-text">총 시간(total-time)</p>
-              <p class="card-text">목적(purposse)</p>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <img
-              src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
-              class="card-img-top"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">워크샵 제목(title)</h5>
-              <p class="card-text">유형(category)</p>
-              <p class="card-text">비용(price)</p>
-              <p class="card-text">인원(min_member)~(max_member)</p>
-              <p class="card-text">총 시간(total-time)</p>
-              <p class="card-text">목적(purposse)</p>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <img
-              src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
-              class="card-img-top"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">워크샵 제목(title)</h5>
-              <p class="card-text">유형(category)</p>
-              <p class="card-text">비용(price)</p>
-              <p class="card-text">인원(min_member)~(max_member)</p>
-              <p class="card-text">총 시간(total-time)</p>
-              <p class="card-text">목적(purposse)</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 신규 워크샵 목록 -->
-    <h2 class="new-workshop-title">신규 워크샵</h1>
-    <div class="new-workshop-list">
-      <div class="row row-cols-1 row-cols-md-4 g-4">
-        <div class="col">
-          <div class="card h-100">
-            <img
-              src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
-              class="card-img-top"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">워크샵 제목(title)</h5>
-              <p class="card-text">유형(category)</p>
-              <p class="card-text">비용(price)</p>
-              <p class="card-text">인원(min_member)~(max_member)</p>
-              <p class="card-text">총 시간(total-time)</p>
-              <p class="card-text">목적(purposse)</p>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <img
-              src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
-              class="card-img-top"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">워크샵 제목(title)</h5>
-              <p class="card-text">유형(category)</p>
-              <p class="card-text">비용(price)</p>
-              <p class="card-text">인원(min_member)~(max_member)</p>
-              <p class="card-text">총 시간(total-time)</p>
-              <p class="card-text">목적(purposse)</p>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <img
-              src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
-              class="card-img-top"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">워크샵 제목(title)</h5>
-              <p class="card-text">유형(category)</p>
-              <p class="card-text">비용(price)</p>
-              <p class="card-text">인원(min_member)~(max_member)</p>
-              <p class="card-text">총 시간(total-time)</p>
-              <p class="card-text">목적(purposse)</p>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <img
-              src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
-              class="card-img-top"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">워크샵 제목(title)</h5>
-              <p class="card-text">유형(category)</p>
-              <p class="card-text">비용(price)</p>
-              <p class="card-text">인원(min_member)~(max_member)</p>
-              <p class="card-text">총 시간(total-time)</p>
-              <p class="card-text">목적(purposse)</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-      crossorigin="anonymous"
-    ></script>
+    <h1>안녕하세요~~DEDSDASDA --432-</h1>
+    {{ data }}
+    <button onclick="change()">제발~</button>
   </body>
+
+  <script>
+    const change = () => {
+      const h1Tag = document.querySelector('h1');
+      h1Tag.innerText = '잘 바뀌나용?~~~!!!!!#@#!@';
+    };
+  </script>
 </html>

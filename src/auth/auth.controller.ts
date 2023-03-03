@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Res, UseGuards, Render } from '@nestjs/common';
+import { Controller, Get, Post, Body, Res, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { CurrentUser } from 'src/common/decorators/user.decorator';

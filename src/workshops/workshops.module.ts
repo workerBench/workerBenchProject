@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
-import { WorkshopsController } from './workshops.controller';
-import { WorkshopsControllerRender } from './workshops.controller.render';
+import {
+  WorkshopsController,
+  WorkshopsControllerRender,
+} from './workshops.controller';
 import { WorkshopsService } from './workshops.service';
 
 @Module({
