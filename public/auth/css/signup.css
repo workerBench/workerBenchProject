@@ -1,0 +1,115 @@
+/* signup css*/
+#signupBox > h1 {
+  margin: 0 auto;
+  margin-bottom: 25px;
+}
+#signupBox {
+  width: 400px;
+  margin: 0 auto;
+  margin-top: 100px;
+  padding: 20px;
+  border: 2px solid lavender;
+  border-radius: 20px;
+  box-shadow: 3px 3px 5px lavender;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#signupBtn {
+  width: 200px;
+  height: 40px;
+  margin: 0 auto;
+  background-color: rgb(60, 60, 255);
+  border-radius: 10px;
+  color: white;
+  border:none;
+}
+#signupBtn:hover {
+  background-color: rgb(102, 102, 249);
+}
+  /* modal css*/
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.modal.show {
+  display: block;
+}
+.modal_body {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 600px;
+  /* padding: 40px; */
+  /* text-align: center; */
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+  transform: translateX(-50%) translateY(-50%);
+  }
+.m_head{
+  height: 10%;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  background-color:#e7e5e5;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.modal_title{
+  font-size: 25px;
+  color: gray;
+  font-weight: 500;
+}
+.password-reset> h1{
+  margin: 0 auto;
+  margin-top: 50px;
+}
+.password-reset {
+  width: 750px;
+  margin: 0 auto;
+  margin-top: 50px;
+  padding: 20px;
+  border: 2px solid lavender;
+  border-radius: 20px;
+  /* box-shadow: 3px 3px 5px lavender; */
+  display: flex;
+  flex-direction: column;
+}
+.Certification-Number{
+  display: flex;
+  margin-top: 50px;
+  justify-content: center; 
+}
+#auth-confirm {
+  width: 200px;
+  height: 50px;
+  margin-left:70px;
+  background-color: rgb(60, 60, 255);
+  border-radius: 10px;
+  color: white;
+  border:none;
+}
+#auth-confirm:hover {
+  background-color: rgb(102, 102, 249);
+}
+#close-btn{
+  width: 100px;
+  height: 40px;
+  /* margin: 0 auto; */
+  background-color: rgb(60, 60, 255);
+  border-radius: 10px;
+  color: white;
+  border:none;
+  margin-top :100px;
+  margin-left: 600px;
+}
+#close-btn:hover {
+  background-color: rgb(102, 102, 249);
+}

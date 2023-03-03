@@ -1,5 +1,5 @@
 import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class PurostTag extends CommonEntity {
+export declare class PurposeTag extends CommonEntity {
     id: number;
     name: string;
 }

@@ -1,5 +1,5 @@
 import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class ReviewImage extends CommonEntity {
+export declare class Review extends CommonEntity {
     id: number;
     content: string;
     star: number;

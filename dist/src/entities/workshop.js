@@ -110,7 +110,7 @@ __decorate([
 ], WorkShop.prototype, "price", void 0);
 __decorate([
     (0, typeorm_1.Column)('varchar', {
-        name: 'thumb',
+        name: 'status',
         length: 50,
         nullable: false,
         default: 'request',

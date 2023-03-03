@@ -9,17 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PurostTag = void 0;
+exports.PurposeTag = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const common_entity_1 = require("../common/entities/common.entity");
 const typeorm_1 = require("typeorm");
-let PurostTag = class PurostTag extends common_entity_1.CommonEntity {
+let PurposeTag = class PurposeTag extends common_entity_1.CommonEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('increment', { type: 'int', name: 'id' }),
     __metadata("design:type", Number)
-], PurostTag.prototype, "id", void 0);
+], PurposeTag.prototype, "id", void 0);
 __decorate([
     (0, class_validator_1.IsString)({ message: '목적 이름을 정확히 등록해 주세요' }),
     (0, class_validator_1.IsNotEmpty)({ message: '목적 이름을 등록해 주세요' }),
@@ -30,9 +30,9 @@ __decorate([
     }),
     (0, typeorm_1.Column)('varchar', { name: 'name', length: 20, nullable: false }),
     __metadata("design:type", String)
-], PurostTag.prototype, "name", void 0);
-PurostTag = __decorate([
+], PurposeTag.prototype, "name", void 0);
+PurposeTag = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'purpose_tag' })
-], PurostTag);
-exports.PurostTag = PurostTag;
+], PurposeTag);
+exports.PurposeTag = PurposeTag;
 //# sourceMappingURL=purpose-tag.js.map

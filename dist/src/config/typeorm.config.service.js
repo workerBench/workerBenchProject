@@ -12,6 +12,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TypeOrmConfigService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const admin_user_1 = require("../entities/admin-user");
+const company_1 = require("../entities/company");
+const company_application_1 = require("../entities/company-application");
+const genre_tag_1 = require("../entities/genre-tag");
+const order_1 = require("../entities/order");
+const purpose_tag_1 = require("../entities/purpose-tag");
+const review_1 = require("../entities/review");
+const review_image_1 = require("../entities/review-image");
+const teacher_1 = require("../entities/teacher");
+const wish_list_1 = require("../entities/wish-list");
+const workshop_1 = require("../entities/workshop");
+const workshop_image_1 = require("../entities/workshop-image");
+const workshop_instance_detail_1 = require("../entities/workshop-instance.detail");
+const workshop_purpose_1 = require("../entities/workshop-purpose");
+const user_1 = require("../entities/user");
 let TypeOrmConfigService = class TypeOrmConfigService {
     constructor(configService) {
         this.configService = configService;
@@ -24,8 +39,24 @@ let TypeOrmConfigService = class TypeOrmConfigService {
             username: this.configService.get('DB_USERNAME'),
             password: this.configService.get('DB_PASSWORD'),
             database: this.configService.get('DB_NAME'),
-            entities: [],
-            synchronize: false,
+            entities: [
+                admin_user_1.AdminUser,
+                company_application_1.CompanyApplication,
+                company_1.company,
+                genre_tag_1.GenreTag,
+                order_1.Order,
+                purpose_tag_1.PurposeTag,
+                review_image_1.ReviewImage,
+                review_1.Review,
+                teacher_1.Teacher,
+                user_1.User,
+                wish_list_1.WishList,
+                workshop_image_1.WorkShopImage,
+                workshop_instance_detail_1.WorkShopInstanceDetail,
+                workshop_purpose_1.WorkShopPurpose,
+                workshop_1.WorkShop,
+            ],
+            synchronize: true,
             logging: true,
             keepConnectionAlive: true,
             charset: 'utf8mb4',

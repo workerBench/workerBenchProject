@@ -10,7 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommonEntity = void 0;
-const class_transformer_1 = require("class-transformer");
 const typeorm_1 = require("typeorm");
 class CommonEntity {
 }
@@ -23,7 +22,6 @@ __decorate([
     __metadata("design:type", Date)
 ], CommonEntity.prototype, "updatedAt", void 0);
 __decorate([
-    (0, class_transformer_1.Exclude)(),
     (0, typeorm_1.DeleteDateColumn)(),
     __metadata("design:type", Date)
 ], CommonEntity.prototype, "deletedAt", void 0);
