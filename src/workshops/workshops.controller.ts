@@ -11,4 +11,3 @@ export class WorkshopsControllerRender {
     return { data: '헬로 월드~' };
   }
 }
-

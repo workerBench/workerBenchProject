@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { CommonEntity } from 'src/common/entities/common.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
@@ -24,6 +23,7 @@ export class User extends CommonEntity {
     nullable: false,
   })
   email: string;
+  
   @IsString({ message: '비밀번호를 정확히 입력해 주세요' })
   @IsNotEmpty({ message: '비밀번호를 입력해 주세요' })
   @ApiProperty({
