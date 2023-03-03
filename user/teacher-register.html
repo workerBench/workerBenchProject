@@ -14,7 +14,7 @@
   <link
     href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     rel="stylesheet" />
-    <link href="/css/password-change.css" rel="stylesheet"/>
+    <link href="/css/teacher-register.css" rel="stylesheet"/>
     <title>비밀번호 재입력</title>
   </head>
   <body>
@@ -28,17 +28,23 @@
         <div class="register-or-logout-div">회원가입</div>
       </nav>
     </div>
-      <div id="passwordBox">
-          <h1>비밀번호 재입력</h1>
+      <div id="teacherBox">
+          <h1>강사 등록</h1>
           <div class="mb-3">
-            <label for="password" class="form-label">비밀번호 입력</label>
-            <input type="text" class="form-control" id="password">
+            <label for="phone" class="form-label">휴대폰 번호</label>
+            <input type="text" class="form-control" id="phone">
           </div>
           <div class="mb-3">
-            <label for="checkPassword" class="form-label">비밀번호 재확인</label>
-            <input type="checkPassword" class="form-control" id="checkPassword"></input>
+            <label for="address" class="form-label">주소</label>
+            <input type="text" class="form-control" id="address"></input>
           </div>
-          <button type="button" id="changeBtn">변경하기</button>
+          <div class="mb-3">
+            <label for="name" class="form-label">실명</label>
+            <input type="text" class="form-control" id="name"></input>
+          </div>
+          <button type="button" id="registerBtn">등록하기</button>
       </div>
+
+
   </body>
 </html>

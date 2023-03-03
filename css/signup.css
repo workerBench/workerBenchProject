@@ -63,7 +63,7 @@ body {
     background-color: rgb(102, 102, 249);
   }
 
-  /* 회원가입css*/
+  /* signup css*/
   #signupBox > h1 {
   margin: 0 auto;
   margin-bottom: 25px;
@@ -96,7 +96,7 @@ body {
   #signupBtn:hover {
     background-color: rgb(102, 102, 249);
   }
-  /* 모달창 css*/
+  /* modal css*/
   .modal {
       position: absolute;
       top: 0;
