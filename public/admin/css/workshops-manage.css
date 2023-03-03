@@ -1,0 +1,140 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Gowun Dodum', sans-serif;
+}
+
+/*sidebar css 구간입니다.*/
+
+.wrapper{
+    display: flex;
+    min-height: 1080px;
+    height: 100%;
+}
+
+.sidebar{
+    min-width: 170px;
+    width: 15%;
+    height: 100%;
+    min-height: 1080px;
+    background: #9F70FB;
+    color: white;
+    padding-top: 30px;
+}
+.target-li {
+    display: block;
+    padding-left: 20px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 14px;
+}
+.target-li a{
+    color: white;
+    display: block;
+}
+.link-li:hover{
+    background-color: white;
+    color: black;
+    cursor: pointer;
+}
+.active-li {
+    background-color: white;
+    color: black;
+}
+
+/*main-content 구간입니다.*/
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin:20px auto auto auto;
+}
+
+.workshop-search{
+    font-weight: bold;
+    width: 700px;
+    padding: 30px 45px 40px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.search-wrap {
+    height: 40px;
+    width: 600px;
+    background-color: #ffffff;
+    display: flex;
+    margin-top: 20px;
+}
+.search-wrap > .form-select {
+    width: 135px;
+    font-size: 13px;
+}
+
+.search-box {
+    border: 1px solid #9F70FB;
+    font-size: 16px;
+    width: 400px;
+    padding: 10px;
+    outline: none;
+    float: left;
+}
+.search-button {
+    width: 50px;
+    height: 100%;
+    border: 0px;
+    background: #9F70FB;
+    outline: none;
+    float: right;
+    color: white;
+    cursor: pointer;
+}
+
+.card-wrapper {
+    margin-left:30px;
+}
+
+.col{
+    width: 280px;
+    transition: all 0.2s linear;
+}
+.col:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+.card {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.card-body > div {
+    margin:auto auto 10px auto;
+}
+.card-body > div > div {
+    margin-right: 30px;
+}
+.category{
+    display: flex;
+}
+.category > .online {
+    box-shadow: 0 0 3px 0 gray;
+    padding: 5px 10px 5px 10px;
+    border-radius: 15px;
+}
+.category > .offline {
+    box-shadow: 0 0 3px 0 gray;
+    padding: 5px 10px 5px 10px;
+    border-radius: 15px;
+}
+.personnel-and-time{
+    display: flex;
+}
+.workshop-tag > .tag {
+    box-shadow: 0 0 3px 0 gray;
+    padding: 5px 10px 5px 10px;
+    border-radius: 10px;
+}

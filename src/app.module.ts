@@ -14,6 +14,7 @@ import { TeacherModule } from './teacher/teacher.module';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({
