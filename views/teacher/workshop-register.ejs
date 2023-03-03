@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+    crossorigin="anonymous"/>
+  <link
+    href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    rel="stylesheet" />
+    <link href="/teacher/css/workshop-register.css" rel="stylesheet"/>
+    <script src="/teacher/js/workshop-register.js"></script>
+    <title>워크샵 등록</title>
+  </head>
+  <body>
+    <%- include('header.ejs') %>
+    <div class="button-div">
+      <button type="radio" id="button" onclick="workshop()">나의 워크샵 목록</button>
+      <button type="radio" id="button" onclick="information()">강사 및 업체 정보</button>
+      <button type="radio" id="button" onclick="register()">워크샵 등록</button>
+      <button type="radio" id="button" onclick="manage()">수강 문의 관리</button>
+    </div>
+    <div id="workshop-registerBox">
+        <div class="image">
+            <img src="/images/images.jpg"/>
+            <div class="mb-3">
+                <input class="form-control file-register" type="file" id="formFileMultiple" multiple>
+              </div>
+            <div class="image-register">
+                <button id="image-registerBtn">이미지 등록</button>
+            </div>
+        </div>
+        <div class="workshop-information">
+            <div class="mb-3">
+              <label for="title" class="form-label">강의제목</label>
+              <input type="text" class="form-control" id="title" placeholder="강의제목">
+            </div>
+            <div class="mb-3">
+                <label for="minimum-people" class="form-label">최소 인원수</label>
+                <input type="text" class="form-control" id="minimum-people" placeholder="최소 인원수">
+              </div>
+              <div class="mb-3">
+                <label for="Maximum-people" class="form-label">최대 인원수</label>
+                <input type="text" class="form-control" id="Maximum-people" placeholder="최대 인원수">
+              </div>
+              <div class="mb-3">
+                <label for="genre" class="form-label">분야</label>
+                <input type="text" class="form-control" id="genre" placeholder="분야">
+              </div>
+
+              <div class="mb-3">
+                <label for="total-time" class="form-label">걸리는 시간</label>
+                <input type="text" class="form-control" id="total-time" placeholder="걸리는 시간">
+              </div>
+              <div class="mb-3">
+                <label for="price" class="form-label">1인당 가격</label>
+                <input type="text" class="form-control" id="price" placeholder="1인당 가격">
+              </div>
+        </div>
+    </div>
+    <div class="mb-3 contents-div">
+        <label for="workshop" class="form-label workshop-description-li">워크샵 설명</label>
+        <input type="text" class="form-control" id="contents"></input>
+      </div>
+    <div class="regiseterBtn-div">
+        <button type="button" id="registerBtn">등록하기</button>
+    </div>
+  </body>
+</html>
