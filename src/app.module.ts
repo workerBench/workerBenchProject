@@ -12,6 +12,8 @@ import { WorkshopsModule } from './workshops/workshops.module';
 import { MypageModule } from './mypage/mypage.module';
 import { TeacherModule } from './teacher/teacher.module';
 import { AdminModule } from './admin/admin.module';
+import { AppController } from './app.controller';
+
 
 @Module({
   imports: [
@@ -57,7 +59,7 @@ import { AdminModule } from './admin/admin.module';
     TeacherModule,
     AdminModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,

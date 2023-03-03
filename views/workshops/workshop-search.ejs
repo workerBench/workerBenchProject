@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>메인 페이지</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/workshops/css/workshop-search.css" />
+  </head>
+  <body>
+    <!-- 워크샵 검색창 -->
+    <%- include ("header.ejs") %>
+    <div class="workshop-search-box">
+      <div class="workshop-search-title">
+        우리 팀/회사에 딱 맞는 워크샵 찾아보기
+      </div>
+      <select class="form-select category" aria-label="Default select example">
+        <option selected>온라인 / 오프라인</option>
+        <option value="1">온라인</option>
+        <option value="2">오프라인</option>
+      </select>
+      <select
+        class="form-select member-cnt"
+        aria-label="Default select example"
+      >
+        <option selected>인원</option>
+        <option value="1">1~10명</option>
+        <option value="2">11~30명</option>
+        <option value="2">31~50명</option>
+        <option value="2">50명 초과</option>
+      </select>
+      <select class="form-select location" aria-label="Default select example">
+        <option selected>지역</option>
+        <option value="1">온라인</option>
+        <option value="2">오프라인</option>
+      </select>
+      <select class="form-select puprpose" aria-label="Default select example">
+        <option selected>목적</option>
+        <option value="1">추가</option>
+      </select>
+      <select class="form-select genre" aria-label="Default select example">
+        <option selected>분야</option>
+        <option value="1">추가</option>
+      </select>
+    </div>
+
+    <!-- 워크샵 검색 결과 -->
+    <div class="workshop-search-result">검색 결과 00건</div>
+
+    <div class="row row-cols-1 row-cols-md-4 g-4 workshop-result-list">
+      <div class="col">
+        <div class="card h-100">
+          <img
+            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body">
+            <h5 class="card-title">워크샵 제목(title)</h5>
+            <p class="card-text">유형(category)</p>
+            <p class="card-text">비용(price)</p>
+            <p class="card-text">인원(min_member)~(max_member)</p>
+            <p class="card-text">총 시간(total-time)</p>
+            <p class="card-text">목적(purpose)</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100">
+          <img
+            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body">
+            <h5 class="card-title">워크샵 제목(title)</h5>
+            <p class="card-text">유형(category)</p>
+            <p class="card-text">비용(price)</p>
+            <p class="card-text">인원(min_member)~(max_member)</p>
+            <p class="card-text">총 시간(total-time)</p>
+            <p class="card-text">목적(purpose)</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100">
+          <img
+            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body">
+            <h5 class="card-title">워크샵 제목(title)</h5>
+            <p class="card-text">유형(category)</p>
+            <p class="card-text">비용(price)</p>
+            <p class="card-text">인원(min_member)~(max_member)</p>
+            <p class="card-text">총 시간(total-time)</p>
+            <p class="card-text">목적(purpose)</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100">
+          <img
+            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body">
+            <h5 class="card-title">워크샵 제목(title)</h5>
+            <p class="card-text">유형(category)</p>
+            <p class="card-text">비용(price)</p>
+            <p class="card-text">인원(min_member)~(max_member)</p>
+            <p class="card-text">총 시간(total-time)</p>
+            <p class="card-text">목적(purpose)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

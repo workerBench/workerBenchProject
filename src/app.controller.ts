@@ -1,7 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Render } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  // 메인 페이지 render
+  @Get()
+  @Render('main/main')
+  getMain() {
+    return;
+  }
 }
