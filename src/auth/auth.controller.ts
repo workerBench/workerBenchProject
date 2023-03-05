@@ -12,7 +12,7 @@ import { JwtRefreshAuthGuard } from './jwt/jwt.refreshGuard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
+  @Post('/login')
   async login(
     @Body() body: loginDTO,
     @Res({ passthrough: true }) response: Response,
