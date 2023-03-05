@@ -12,9 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkShop = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const common_entity_1 = require("../common/entities/common.entity");
 const typeorm_1 = require("typeorm");
-let WorkShop = class WorkShop extends common_entity_1.CommonEntity {
+let WorkShop = class WorkShop {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('increment', { type: 'int', name: 'id' }),
@@ -136,6 +135,18 @@ __decorate([
     (0, typeorm_1.Column)('int', { name: 'genre_id', nullable: true }),
     __metadata("design:type", Number)
 ], WorkShop.prototype, "genre_id", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], WorkShop.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], WorkShop.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], WorkShop.prototype, "deletedAt", void 0);
 WorkShop = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'workshop' })
 ], WorkShop);

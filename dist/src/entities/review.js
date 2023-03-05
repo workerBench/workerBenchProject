@@ -12,9 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Review = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const common_entity_1 = require("../common/entities/common.entity");
 const typeorm_1 = require("typeorm");
-let Review = class Review extends common_entity_1.CommonEntity {
+let Review = class Review {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('increment', { type: 'int', name: 'id' }),
@@ -50,6 +49,18 @@ __decorate([
     (0, typeorm_1.Column)('int', { name: 'workshop_id', nullable: true }),
     __metadata("design:type", Number)
 ], Review.prototype, "workshop_id", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Review.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], Review.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], Review.prototype, "deletedAt", void 0);
 Review = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'review_image' })
 ], Review);

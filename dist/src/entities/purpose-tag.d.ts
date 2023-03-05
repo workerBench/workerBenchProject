@@ -1,5 +1,7 @@
-import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class PurposeTag extends CommonEntity {
+export declare class PurposeTag {
     id: number;
     name: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
 }

@@ -1,6 +1,8 @@
-import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class WorkShopImage extends CommonEntity {
+export declare class WorkShopImage {
     id: number;
     img_name: string;
     workshop_id: number | null;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
 }

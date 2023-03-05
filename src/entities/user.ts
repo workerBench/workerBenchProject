@@ -1,10 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { CommonEntity } from 'src/common/entities/common.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({ schema: 'workerbench', name: 'user' })
-export class User extends CommonEntity {
+export class User {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
   id: number;
 
@@ -23,7 +29,7 @@ export class User extends CommonEntity {
     nullable: false,
   })
   email: string;
-  
+
   @IsString({ message: '비밀번호를 정확히 입력해 주세요' })
   @IsNotEmpty({ message: '비밀번호를 입력해 주세요' })
   @ApiProperty({
@@ -57,4 +63,13 @@ export class User extends CommonEntity {
   })
   @Column('int', { name: 'isBan', nullable: false, default: 0 })
   isBan: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date | null;
 }

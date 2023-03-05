@@ -2,7 +2,6 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-  // UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -12,15 +11,11 @@ export class JwtRefreshAuthGuard extends AuthGuard('refreshToken') {
     return super.canActivate(context);
   }
 
+  // 만약 토큰이 불량 상태라면 user 는 false
   handleRequest(err: any, user: any, info: any) {
-    console.log('32312321');
-    console.log(user);
-    if (err || !user) {
-      console.log('여긴 리프레쉬 가드!');
-      throw new UnauthorizedException('인증 문제가 있습니다.');
+    if (!user) {
+      throw new UnauthorizedException('refresh Token is not valid');
     }
     return user;
   }
 }
-
-//* guard -> strategy

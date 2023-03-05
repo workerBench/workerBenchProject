@@ -1,6 +1,8 @@
-import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class WishList extends CommonEntity {
+export declare class WishList {
     id: number;
     user_id: number;
     workshop_id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
 }

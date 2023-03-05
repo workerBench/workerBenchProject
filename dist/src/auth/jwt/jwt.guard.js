@@ -14,7 +14,7 @@ let JwtAuthGuard = class JwtAuthGuard extends (0, passport_1.AuthGuard)('jwt') {
         return super.canActivate(context);
     }
     handleRequest(err, user, info) {
-        console.log('1111');
+        console.log('여기는 Guard 의 핸들 리퀘스트');
         console.log(user);
         if (user) {
             return user;

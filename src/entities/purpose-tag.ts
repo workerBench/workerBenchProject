@@ -1,10 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { CommonEntity } from 'src/common/entities/common.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({ schema: 'workerbench', name: 'purpose_tag' })
-export class PurposeTag extends CommonEntity {
+export class PurposeTag {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
   id: number;
 
@@ -17,4 +23,13 @@ export class PurposeTag extends CommonEntity {
   })
   @Column('varchar', { name: 'name', length: 20, nullable: false })
   name: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date | null;
 }

@@ -1,5 +1,4 @@
-import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class company extends CommonEntity {
+export declare class company {
     id: number;
     company_type: number;
     company_name: string;
@@ -11,4 +10,7 @@ export declare class company extends CommonEntity {
     saving_name: string;
     isBan: number;
     user_id: number | null;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
 }

@@ -12,9 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GenreTag = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const common_entity_1 = require("../common/entities/common.entity");
 const typeorm_1 = require("typeorm");
-let GenreTag = class GenreTag extends common_entity_1.CommonEntity {
+let GenreTag = class GenreTag {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('increment', { type: 'int', name: 'id' }),
@@ -35,6 +34,18 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], GenreTag.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], GenreTag.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], GenreTag.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], GenreTag.prototype, "deletedAt", void 0);
 GenreTag = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'genre_tag' })
 ], GenreTag);

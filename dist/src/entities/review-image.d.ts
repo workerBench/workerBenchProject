@@ -1,6 +1,8 @@
-import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class ReviewImage extends CommonEntity {
+export declare class ReviewImage {
     id: number;
     img_name: string;
     review_id: number | null;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
 }

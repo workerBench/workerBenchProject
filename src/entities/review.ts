@@ -1,10 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { CommonEntity } from 'src/common/entities/common.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({ schema: 'workerbench', name: 'review_image' })
-export class Review extends CommonEntity {
+export class Review {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
   id: number;
 
@@ -33,4 +39,13 @@ export class Review extends CommonEntity {
 
   @Column('int', { name: 'workshop_id', nullable: true })
   workshop_id: number | null;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date | null;
 }

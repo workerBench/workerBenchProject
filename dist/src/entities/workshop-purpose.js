@@ -10,9 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkShopPurpose = void 0;
-const common_entity_1 = require("../common/entities/common.entity");
 const typeorm_1 = require("typeorm");
-let WorkShopPurpose = class WorkShopPurpose extends common_entity_1.CommonEntity {
+let WorkShopPurpose = class WorkShopPurpose {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('increment', { type: 'int', name: 'id' }),
@@ -26,6 +25,18 @@ __decorate([
     (0, typeorm_1.Column)('int', { name: 'purpose_tag_id', nullable: false }),
     __metadata("design:type", Number)
 ], WorkShopPurpose.prototype, "purpose_tag_id", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], WorkShopPurpose.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], WorkShopPurpose.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], WorkShopPurpose.prototype, "deletedAt", void 0);
 WorkShopPurpose = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'workshop_purpose' })
 ], WorkShopPurpose);

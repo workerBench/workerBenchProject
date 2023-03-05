@@ -1,5 +1,4 @@
-import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class Order extends CommonEntity {
+export declare class Order {
     id: number;
     imp_uid: string;
     amount: number;
@@ -7,4 +6,7 @@ export declare class Order extends CommonEntity {
     status: string;
     user_id: number | null;
     workshop_id: number | null;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
 }

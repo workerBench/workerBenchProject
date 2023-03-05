@@ -15,63 +15,162 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
+const nestjs_real_ip_1 = require("nestjs-real-ip");
 const user_decorator_1 = require("../common/decorators/user.decorator");
+const success_interceptor_1 = require("../common/interceptors/success.interceptor");
 const auth_service_1 = require("./auth.service");
+const current_user_dto_1 = require("./dtos/current-user.dto");
 const login_dto_1 = require("./dtos/login.dto");
-const jwt_guard_1 = require("./jwt/jwt.guard");
-const jwt_refreshGuard_1 = require("./jwt/jwt.refreshGuard");
+const register_auth_dto_1 = require("./dtos/register-auth.dto");
+const register_join_1 = require("./dtos/register-join");
+const jwt_teacher_guard_1 = require("./jwt/access/user/jwt-teacher-guard");
+const jwt_user_guard_1 = require("./jwt/access/user/jwt-user-guard");
+const jwt_user_refresh_guard_1 = require("./jwt/refresh/user/jwt-user-refresh-guard");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    async login(body, response) {
-        const accessJwt = await this.authService.verifyUserAndSignJwtAccess();
-        const refreshJwt = await this.authService.verifyUserAndSignJwtRefresh();
-        response.cookie('accessToken', accessJwt, { httpOnly: true });
-        response.cookie('refreshToken', refreshJwt, { httpOnly: true });
-        return { accessJwt, refreshJwt };
+    async register(body) {
+        try {
+            await this.authService.checkEffective(body);
+            await this.authService.checkingAccount(body.email);
+            await this.authService.sendingEmailAuthCode(body.email);
+            return true;
+        }
+        catch (err) {
+            throw new common_1.HttpException(`${err.message}`, 401);
+        }
     }
-    async checkAccessToken(user) {
-        return { success: true, user };
+    async registerJoin(body, response, clientIp) {
+        const { email, password, emailAuthCode } = body;
+        try {
+            await this.authService.checkingEmailCode(email, emailAuthCode);
+            const createdUser = await this.authService.joinUser(email, password);
+            const accessToekn = await this.authService.makeAccessToken(createdUser.id, createdUser.email, createdUser.user_type);
+            const refreshToekn = await this.authService.makeRefreshToken(createdUser.id, createdUser.email, createdUser.user_type, clientIp);
+            response.cookie('userAccessToken', accessToekn, { httpOnly: true });
+            response.cookie('refreshToken', refreshToekn, { httpOnly: true });
+            return true;
+        }
+        catch (err) {
+            throw new common_1.BadRequestException(`${err.message}`);
+        }
     }
-    async refreshToken() {
+    async login(body, response, clientIp) {
+        const { email, password } = body;
+        let userInfo;
+        console.log('로그인!');
+        console.log(clientIp);
+        try {
+            userInfo = await this.authService.checkLoginUser(email, password);
+        }
+        catch (err) {
+            throw new common_1.BadRequestException(`${err.message}`);
+        }
+        const accessToekn = await this.authService.makeAccessToken(userInfo.id, userInfo.email, userInfo.user_type);
+        const refreshToekn = await this.authService.makeRefreshToken(userInfo.id, userInfo.email, userInfo.user_type, clientIp);
+        response.cookie('userAccessToken', accessToekn, { httpOnly: true });
+        response.cookie('refreshToken', refreshToekn, { httpOnly: true });
+        return true;
+    }
+    async test22(user) {
+        console.log('---- 테스트 잘 작동함!');
+        console.log(user);
         return;
     }
-    async getReFresh() {
-        return this.authService.getRefreshTokenFromRedis();
+    async test233(user) {
+        console.log('---- 테스트 잘 작동함!');
+        console.log(user);
+        return;
+    }
+    async test44(user, request, response, clientIp) {
+        try {
+            const refreshToken = request.cookies['refreshToken'];
+            await this.authService.checkRefreshTokenInRedis(user.id, user.user_type, clientIp, refreshToken);
+            const accessToekn = await this.authService.makeAccessToken(user.id, user.email, user.user_type);
+            response.cookie('userAccessToken', accessToekn, { httpOnly: true });
+            return true;
+        }
+        catch (err) {
+            throw new common_1.HttpException('로그인 토큰의 정보가 올바르지 않습니다', 400);
+        }
     }
 };
 __decorate([
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '성공',
+    }),
+    (0, swagger_1.ApiOperation)({ summary: '회원가입 - 인증 api' }),
+    (0, common_1.Post)('register'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [register_auth_dto_1.RegisterAuthDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "register", null);
+__decorate([
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '성공',
+        type: register_join_1.RegisterJoinDto,
+    }),
+    (0, swagger_1.ApiOperation)({ summary: '회원가입 - join api' }),
+    (0, common_1.Post)('register/join'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
+    __param(2, (0, nestjs_real_ip_1.RealIP)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [register_join_1.RegisterJoinDto, Object, String]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "registerJoin", null);
+__decorate([
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '성공',
+        type: register_join_1.RegisterJoinDto,
+    }),
+    (0, swagger_1.ApiOperation)({ summary: '로그인 api' }),
     (0, common_1.Post)('login'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
+    __param(2, (0, nestjs_real_ip_1.RealIP)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [login_dto_1.loginDTO, Object]),
+    __metadata("design:paramtypes", [login_dto_1.LoginDto, Object, String]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
-    (0, common_1.Post)('accesstoken'),
-    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('test'),
+    (0, common_1.UseGuards)(jwt_user_guard_1.JwtUserAuthGuard),
     __param(0, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [current_user_dto_1.CurrentUserDto]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "checkAccessToken", null);
+], AuthController.prototype, "test22", null);
 __decorate([
-    (0, common_1.Post)('refreshtoken'),
-    (0, common_1.UseGuards)(jwt_refreshGuard_1.JwtRefreshAuthGuard),
+    (0, common_1.Get)('test2'),
+    (0, common_1.UseGuards)(jwt_teacher_guard_1.JwtTeacherAuthGuard),
+    __param(0, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [current_user_dto_1.CurrentUserDto]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "refreshToken", null);
+], AuthController.prototype, "test233", null);
 __decorate([
-    (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({
+        summary: 'refresh token 이 유효하다면 access token 을 재발급',
+    }),
+    (0, common_1.Get)('refreshtoken/user'),
+    (0, common_1.UseGuards)(jwt_user_refresh_guard_1.JwtRefreshAuthGuard),
+    __param(0, (0, user_decorator_1.CurrentUser)()),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Res)({ passthrough: true })),
+    __param(3, (0, nestjs_real_ip_1.RealIP)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [current_user_dto_1.CurrentUserDto, Object, Object, String]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "getReFresh", null);
+], AuthController.prototype, "test44", null);
 AuthController = __decorate([
     (0, swagger_1.ApiTags)('auth'),
+    (0, common_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
     (0, common_1.Controller)('api/auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);

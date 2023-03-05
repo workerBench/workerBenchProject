@@ -1,5 +1,4 @@
-import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class WorkShop extends CommonEntity {
+export declare class WorkShop {
     id: number;
     title: string;
     category: 'online' | 'offline';
@@ -13,4 +12,7 @@ export declare class WorkShop extends CommonEntity {
     location: string | null;
     user_id: number | null;
     genre_id: number | null;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
 }

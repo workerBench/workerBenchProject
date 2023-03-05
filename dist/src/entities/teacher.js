@@ -12,9 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Teacher = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const common_entity_1 = require("../common/entities/common.entity");
 const typeorm_1 = require("typeorm");
-let Teacher = class Teacher extends common_entity_1.CommonEntity {
+let Teacher = class Teacher {
 };
 __decorate([
     (0, typeorm_1.PrimaryColumn)('int', { name: 'user_id' }),
@@ -61,6 +60,18 @@ __decorate([
     (0, typeorm_1.Column)('int', { name: 'possession_company_id', nullable: true, default: 0 }),
     __metadata("design:type", Number)
 ], Teacher.prototype, "possession_company_id", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Teacher.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], Teacher.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], Teacher.prototype, "deletedAt", void 0);
 Teacher = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'teacher' })
 ], Teacher);

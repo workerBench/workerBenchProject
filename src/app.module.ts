@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './config/typeorm.config.service';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthModule } from './auth/auth.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { RedisConfigService } from './config/redis.config.service';
 import { WorkshopsModule } from './workshops/workshops.module';
@@ -13,7 +12,7 @@ import { MypageModule } from './mypage/mypage.module';
 import { TeacherModule } from './teacher/teacher.module';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
-
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +24,7 @@ import { AppController } from './app.controller';
           .default('development'),
         PORT: Joi.number().default(5000),
         JWT_SECRET_KEY: Joi.string().required(),
+        JWT_SECRET_KEY_ADMIN: Joi.string().required(),
         ADMIN_USER: Joi.string().required(),
         ADMIN_PASSWORD: Joi.string().required(),
         DB_HOST: Joi.string().required(),
