@@ -1,19 +1,19 @@
 import { Controller,Get,Render } from '@nestjs/common';
-@Controller()
+@Controller('auth')
 export class AuthControllerRender {
-  @Get('/auth/login')
+  @Get('/login')
   @Render('auth/login')
   q() {
   }
-  @Get('/auth/password/change')
+  @Get('/password/change')
   @Render('auth/password-change')
   b() {
   }
-  @Get('/auth/password/reset')
+  @Get('/password/reset')
   @Render('auth/password-reset')
   c() {
   }
-  @Get('/auth/signup')
+  @Get('/signup')
   @Render('auth/signup')
   d() {
   }
