@@ -9,4 +9,13 @@ export class AppController {
   getMain() {
     return;
   }
+
+  // add a getHello method
+  @Get('/hello')
+  getHello() {
+    return 'Hello World!';
+  }
+
+
 }
+

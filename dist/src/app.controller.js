@@ -15,6 +15,9 @@ let AppController = class AppController {
     getMain() {
         return;
     }
+    getHello() {
+        return 'Hello World!';
+    }
 };
 __decorate([
     (0, common_1.Get)(),
@@ -23,6 +26,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "getMain", null);
+__decorate([
+    (0, common_1.Get)('/hello'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "getHello", null);
 AppController = __decorate([
     (0, common_1.Controller)()
 ], AppController);
