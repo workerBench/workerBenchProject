@@ -4,4 +4,5 @@ export declare class AdminService {
     private workshopRepository;
     constructor(workshopRepository: Repository<WorkShop>);
     requestWorkshops(): Promise<WorkShop[]>;
+    approveWorkshop(id: number): Promise<import("typeorm").UpdateResult>;
 }

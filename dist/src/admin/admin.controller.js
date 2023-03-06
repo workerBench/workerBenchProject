@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminController = void 0;
 const common_1 = require("@nestjs/common");
@@ -21,6 +24,10 @@ let AdminController = class AdminController {
         const requestWorkshops = await this.adminService.requestWorkshops();
         return requestWorkshops;
     }
+    async approveWorkshop(id) {
+        await this.adminService.approveWorkshop(id);
+        return { message: "워크숍이 승인 되었습니다." };
+    }
 };
 __decorate([
     (0, common_1.Get)('/workshops/request'),
@@ -28,6 +35,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "requestWorkshops", null);
+__decorate([
+    (0, common_1.Patch)('/workshop/approval/:id'),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "approveWorkshop", null);
 AdminController = __decorate([
     (0, swagger_1.ApiTags)('admin'),
     (0, common_1.Controller)('api/admin'),

@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, Patch } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
 
@@ -12,6 +12,13 @@ export class AdminController {
     async requestWorkshops() {
         const requestWorkshops = await this.adminService.requestWorkshops()
         return requestWorkshops
+    }
+
+    // 워크숍 승인하기 (status:"request" => "approval")
+    @Patch('/workshop/approval/:id')
+    async approveWorkshop(@Param("id") id: number) {
+        await this.adminService.approveWorkshop(id)
+        return { message: "워크숍이 승인 되었습니다."}
     }
 }
 

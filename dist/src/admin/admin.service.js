@@ -21,10 +21,19 @@ let AdminService = class AdminService {
     constructor(workshopRepository) {
         this.workshopRepository = workshopRepository;
     }
-    requestWorkshops() {
-        return this.workshopRepository.find({
+    async requestWorkshops() {
+        return await this.workshopRepository.find({
             where: { status: "request" }
         });
+    }
+    async approveWorkshop(id) {
+        const workshop = await this.workshopRepository.findOne({
+            where: { id, status: "request" }
+        });
+        if (!workshop) {
+            throw new common_1.NotFoundException("없는 워크숍입니다.");
+        }
+        return await this.workshopRepository.update({ id }, { status: "approval" });
     }
 };
 AdminService = __decorate([
