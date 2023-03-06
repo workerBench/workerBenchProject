@@ -34,7 +34,8 @@ describe('AdminService', () => {
     workShopRepository = module.get<MockRepository<WorkShop>>(getRepositoryToken(WorkShop));
   });
 
-  // 검토 대기중인 워크숍 목록 TEST
+  //-------------------------- 검토 대기중인 워크숍 목록 TEST --------------------------//
+
   describe('requestWorkshops', () => {
     it('should return a list of requested workshops', async () => {
 
@@ -60,7 +61,9 @@ describe('AdminService', () => {
     });
   });
 
-  // 워크숍 승인하기 TEST
+
+  //-------------------------- 워크숍 승인하기 TEST --------------------------//
+  
   describe('approveWorkshop', () => {
     it('should approve a workshop', async () => {
       const mockWorkshop = {
@@ -100,7 +103,8 @@ describe('AdminService', () => {
     });
   });
 
-  // 워크숍 반려하기 TEST
+  //-------------------------- 워크숍 반려하기 TEST --------------------------//
+
   describe('rejectWorkshop', () => {
     it('should reject a workshop', async () => {
       const mockWorkshop = {
@@ -140,4 +144,31 @@ describe('AdminService', () => {
     });
   });
 
+
+  //-------------------------- status:"approval"인 워크숍 목록 불러오기 TEST --------------------------//
+
+  describe('getApprovedWorkshops', () => {
+    it('should return a list of approved workshops', async () => {
+
+      const workShops = [{
+        id: 1,
+        name: '워크숍 이름',
+        status: 'approval'
+      }, 
+      {
+        id: 2,
+        name: '워크숍2 이름',
+        status: 'approval'
+      }]
+
+      jest.spyOn(workShopRepository, 'find').mockResolvedValueOnce([workShops]);
+
+      const result = await adminService.getApprovedWorkshops();
+
+      expect(workShopRepository.find).toHaveBeenCalledWith({
+        where: { status: 'approval' },
+      });
+      expect(result).toEqual([workShops]);
+    });
+  });
 });
