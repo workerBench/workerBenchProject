@@ -5,9 +5,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { WorkShop } from './workshop';
 
 @Entity({ schema: 'workerbench', name: 'workshop_image' })
 export class WorkShopImage {
@@ -40,4 +43,14 @@ export class WorkShopImage {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  /* ------------------------ 관계 mapping --------------------------- */
+
+  // 1. workshop
+  @ManyToOne(() => WorkShop, (workshop) => workshop.Orders, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
+  Workshop: WorkShop;
 }

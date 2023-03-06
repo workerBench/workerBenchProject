@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { AdminUser } from 'src/entities/admin-user';
-import { company } from 'src/entities/company';
+import { Company } from 'src/entities/company';
 import { CompanyApplication } from 'src/entities/company-application';
 import { GenreTag } from 'src/entities/genre-tag';
 import { Order } from 'src/entities/order';
@@ -32,7 +32,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       entities: [
         AdminUser,
         CompanyApplication,
-        company,
+        Company,
         GenreTag,
         Order,
         PurposeTag,

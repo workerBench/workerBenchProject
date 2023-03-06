@@ -1,3 +1,4 @@
+import { WorkShop } from './workshop';
 export declare class WorkShopImage {
     id: number;
     img_name: string;
@@ -5,4 +6,5 @@ export declare class WorkShopImage {
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
+    Workshop: WorkShop;
 }

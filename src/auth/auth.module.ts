@@ -14,7 +14,6 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { nodeMailerOption } from 'src/config/nodemailer.service';
 import { JwtUserStrategy } from './jwt/access/user/jwt-user.strategy';
 import { JwtRefreshStrategy } from './jwt/refresh/user/jwt-user-refresh.strategy';
-import { AuthAdminService } from './auth-admin.service';
 
 @Module({
   imports: [
@@ -37,12 +36,7 @@ import { AuthAdminService } from './auth-admin.service';
     ConfigModule.forRoot(),
   ],
   controllers: [AuthController, AuthControllerRender],
-  providers: [
-    AuthService,
-    AuthAdminService,
-    JwtUserStrategy,
-    JwtRefreshStrategy,
-  ],
+  providers: [AuthService, JwtUserStrategy, JwtRefreshStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

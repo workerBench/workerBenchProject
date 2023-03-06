@@ -3,9 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { PurposeTag } from './purpose-tag';
+import { WorkShop } from './workshop';
 
 @Entity({ schema: 'workerbench', name: 'workshop_purpose' })
 export class WorkShopPurpose {
@@ -26,4 +30,22 @@ export class WorkShopPurpose {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  /* ------------------------ 관계 mapping --------------------------- */
+
+  // 1. workshop
+  @ManyToOne(() => WorkShop, (workshop) => workshop.PurposeList, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
+  Workshop: WorkShop;
+
+  // 2. purpose_tag
+  @ManyToOne(() => PurposeTag, (purposeTag) => purposeTag.WorkShopPurPoseList, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'purpose_tag_id', referencedColumnName: 'id' }])
+  PurPoseTag: PurposeTag;
 }

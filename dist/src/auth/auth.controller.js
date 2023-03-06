@@ -46,10 +46,10 @@ let AuthController = class AuthController {
         try {
             await this.authService.checkingEmailCode(email, emailAuthCode);
             const createdUser = await this.authService.joinUser(email, password);
-            const accessToekn = await this.authService.makeAccessToken(createdUser.id, createdUser.email, createdUser.user_type);
-            const refreshToekn = await this.authService.makeRefreshToken(createdUser.id, createdUser.email, createdUser.user_type, clientIp);
-            response.cookie('userAccessToken', accessToekn, { httpOnly: true });
-            response.cookie('refreshToken', refreshToekn, { httpOnly: true });
+            const accessToken = await this.authService.makeAccessToken(createdUser.id, createdUser.email, createdUser.user_type);
+            const refreshToken = await this.authService.makeRefreshToken(createdUser.id, createdUser.email, createdUser.user_type, clientIp);
+            response.cookie('userAccessToken', accessToken, { httpOnly: true });
+            response.cookie('refreshToken', refreshToken, { httpOnly: true });
             return true;
         }
         catch (err) {
@@ -59,8 +59,6 @@ let AuthController = class AuthController {
     async login(body, response, clientIp) {
         const { email, password } = body;
         let userInfo;
-        console.log('로그인!');
-        console.log(clientIp);
         try {
             userInfo = await this.authService.checkLoginUser(email, password);
         }
@@ -80,7 +78,7 @@ let AuthController = class AuthController {
     }
     async test233(user) {
         console.log('---- 테스트 잘 작동함!');
-        console.log(user);
+        console.log(user.id);
         return;
     }
     async test44(user, request, response, clientIp) {
@@ -112,7 +110,7 @@ __decorate([
     (0, swagger_1.ApiResponse)({
         status: 200,
         description: '성공',
-        type: register_join_1.RegisterJoinDto,
+        type: Boolean,
     }),
     (0, swagger_1.ApiOperation)({ summary: '회원가입 - join api' }),
     (0, common_1.Post)('register/join'),

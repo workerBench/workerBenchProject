@@ -1,4 +1,6 @@
-export declare class company {
+import { CompanyApplication } from './company-application';
+import { Teacher } from './teacher';
+export declare class Company {
     id: number;
     company_type: number;
     company_name: string;
@@ -13,4 +15,7 @@ export declare class company {
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
+    President: Teacher;
+    EmployeeList: Teacher[];
+    AppliedCompanyList: CompanyApplication[];
 }

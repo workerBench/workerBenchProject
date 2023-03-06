@@ -5,9 +5,15 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ReviewImage } from './review-image';
+import { User } from './user';
+import { WorkShop } from './workshop';
 
 @Entity({ schema: 'workerbench', name: 'review_image' })
 export class Review {
@@ -48,4 +54,26 @@ export class Review {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  /* ------------------------ 관계 mapping --------------------------- */
+
+  // 1. user
+  @ManyToOne(() => User, (user) => user.MyReviews, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  Writer: User;
+
+  // 2. workshop
+  @ManyToOne(() => WorkShop, (workshop) => workshop.Reviews, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
+  Workshop: WorkShop;
+
+  // 3. review_image
+  @OneToMany(() => ReviewImage, (reviewImage) => reviewImage.Review)
+  ReviewImages: ReviewImage[];
 }

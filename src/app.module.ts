@@ -51,7 +51,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     ThrottlerModule.forRoot({
       ttl: 60,
-      limit: 10, // ttl 동안 limit 만큼의 요청만 받는다.
+      limit: 100, // ttl 동안 limit 만큼의 요청만 받는다.
     }),
     AuthModule,
     WorkshopsModule,

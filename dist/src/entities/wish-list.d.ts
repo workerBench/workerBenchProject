@@ -1,3 +1,5 @@
+import { User } from './user';
+import { WorkShop } from './workshop';
 export declare class WishList {
     id: number;
     user_id: number;
@@ -5,4 +7,6 @@ export declare class WishList {
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
+    User: User;
+    Workshop: WorkShop;
 }

@@ -5,9 +5,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Review } from './review';
 
 @Entity({ schema: 'workerbench', name: 'review_image' })
 export class ReviewImage {
@@ -36,4 +39,14 @@ export class ReviewImage {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  /* ------------------------ 관계 mapping --------------------------- */
+
+  // 1. review
+  @ManyToOne(() => Review, (reivew) => reivew.ReviewImages, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'review_id', referencedColumnName: 'id' }])
+  Review: Review;
 }

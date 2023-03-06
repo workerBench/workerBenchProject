@@ -85,7 +85,7 @@ AppModule = __decorate([
             }),
             throttler_1.ThrottlerModule.forRoot({
                 ttl: 60,
-                limit: 10,
+                limit: 100,
             }),
             auth_module_1.AuthModule,
             workshops_module_1.WorkshopsModule,

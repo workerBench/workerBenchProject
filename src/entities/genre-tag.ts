@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { WorkShop } from './workshop';
 
 @Entity({ schema: 'workerbench', name: 'genre_tag' })
 export class GenreTag {
@@ -36,4 +38,10 @@ export class GenreTag {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  /* ------------------------ 관계 mapping --------------------------- */
+
+  // 1. workshop
+  @OneToMany(() => WorkShop, (workshop) => workshop.GenreTag)
+  WorkShopList: WorkShop[];
 }

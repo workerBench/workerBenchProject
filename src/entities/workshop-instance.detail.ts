@@ -5,9 +5,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { User } from './user';
+import { WorkShop } from './workshop';
 
 @Entity({ schema: 'workerbench', name: 'workshop_instance_detail' })
 export class WorkShopInstanceDetail {
@@ -140,4 +144,22 @@ export class WorkShopInstanceDetail {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  /* ------------------------ 관계 mapping --------------------------- */
+
+  // 1. user
+  @ManyToOne(() => User, (user) => user.MyInstances, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  Writer: User;
+
+  // 2. workshop
+  @ManyToOne(() => WorkShop, (workshop) => workshop.WorkShopInstances, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
+  Workshop: User;
 }

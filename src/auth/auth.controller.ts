@@ -60,7 +60,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: '성공',
-    type: RegisterJoinDto,
+    type: Boolean,
   })
   @ApiOperation({ summary: '회원가입 - join api' })
   @Post('register/join')
@@ -77,19 +77,19 @@ export class AuthController {
       // 회원가입 insert
       const createdUser = await this.authService.joinUser(email, password);
       // 가입 후 토큰 발행 - accessToken, refreshToken
-      const accessToekn = await this.authService.makeAccessToken(
+      const accessToken = await this.authService.makeAccessToken(
         createdUser.id,
         createdUser.email,
         createdUser.user_type,
       );
-      const refreshToekn = await this.authService.makeRefreshToken(
+      const refreshToken = await this.authService.makeRefreshToken(
         createdUser.id,
         createdUser.email,
         createdUser.user_type,
         clientIp,
       );
-      response.cookie('userAccessToken', accessToekn, { httpOnly: true });
-      response.cookie('refreshToken', refreshToekn, { httpOnly: true });
+      response.cookie('userAccessToken', accessToken, { httpOnly: true });
+      response.cookie('refreshToken', refreshToken, { httpOnly: true });
       return true;
     } catch (err) {
       throw new BadRequestException(`${err.message}`);
@@ -111,8 +111,6 @@ export class AuthController {
   ) {
     const { email, password } = body;
     let userInfo: User;
-    console.log('로그인!');
-    console.log(clientIp);
 
     try {
       // 유저 찾기
@@ -154,7 +152,7 @@ export class AuthController {
   @UseGuards(JwtTeacherAuthGuard)
   async test233(@CurrentUser() user: CurrentUserDto) {
     console.log('---- 테스트 잘 작동함!');
-    console.log(user);
+    console.log(user.id);
     return;
   }
 

@@ -5,9 +5,16 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Company } from './company';
+import { CompanyApplication } from './company-application';
+import { User } from './user';
 
 @Entity({ schema: 'workerbench', name: 'teacher' })
 export class Teacher {
@@ -58,4 +65,30 @@ export class Teacher {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  /* ------------------------ 관계 mapping --------------------------- */
+
+  // 1. user
+  @OneToOne(() => User, (user) => user.TeacherProfile)
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  User: User;
+
+  // 2. company
+  @OneToOne(() => Company, (company) => company.President)
+  MyCompany: Company;
+
+  // 3. company 2
+  @ManyToOne(() => Company, (company) => company.EmployeeList, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'affiliation_company_id', referencedColumnName: 'id' }])
+  AffiliationCompany: Company;
+
+  // 4. company_application
+  @OneToMany(
+    () => CompanyApplication,
+    (companyApplication) => companyApplication.Teacher,
+  )
+  ApplicationList: CompanyApplication[];
 }

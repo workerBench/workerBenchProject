@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { WorkShopPurpose } from './workshop-purpose';
 
 @Entity({ schema: 'workerbench', name: 'purpose_tag' })
 export class PurposeTag {
@@ -32,4 +34,13 @@ export class PurposeTag {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  /* ------------------------ 관계 mapping --------------------------- */
+
+  // 1. workshop_purpose
+  @OneToMany(
+    () => WorkShopPurpose,
+    (workshopPurpose) => workshopPurpose.PurPoseTag,
+  )
+  WorkShopPurPoseList: WorkShopPurpose[];
 }

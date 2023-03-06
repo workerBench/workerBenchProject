@@ -23,7 +23,6 @@ const mailer_1 = require("@nestjs-modules/mailer");
 const nodemailer_service_1 = require("../config/nodemailer.service");
 const jwt_user_strategy_1 = require("./jwt/access/user/jwt-user.strategy");
 const jwt_user_refresh_strategy_1 = require("./jwt/refresh/user/jwt-user-refresh.strategy");
-const auth_admin_service_1 = require("./auth-admin.service");
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
@@ -48,12 +47,7 @@ AuthModule = __decorate([
             config_1.ConfigModule.forRoot(),
         ],
         controllers: [auth_controller_1.AuthController, auth_render_controller_1.AuthControllerRender],
-        providers: [
-            auth_service_1.AuthService,
-            auth_admin_service_1.AuthAdminService,
-            jwt_user_strategy_1.JwtUserStrategy,
-            jwt_user_refresh_strategy_1.JwtRefreshStrategy,
-        ],
+        providers: [auth_service_1.AuthService, jwt_user_strategy_1.JwtUserStrategy, jwt_user_refresh_strategy_1.JwtRefreshStrategy],
         exports: [auth_service_1.AuthService],
     })
 ], AuthModule);
