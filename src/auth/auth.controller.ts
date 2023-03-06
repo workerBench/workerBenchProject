@@ -286,10 +286,8 @@ export class AuthController {
     @RealIP() clientIp: string,
   ) {
     try {
-      console.log('11111');
       // 관리자의 refresh token 을 가져온다
       const refreshToken = request.cookies[TOKEN_NAME.adminRefresh];
-      console.log(refreshToken);
       // cookie 의 refresh token 과 redis 의 refresh token 이 일치하는지 비교.
       await this.authService.checkAdminRefreshTokenInRedis(
         user.id,
@@ -297,14 +295,12 @@ export class AuthController {
         clientIp,
         refreshToken,
       );
-      console.log('2222');
       // 토큰 검증에 문제가 없을 경우 access token 을 재발급 해준다.
       const accessToken = await this.authService.makeAccessTokenForAdmin(
         user.id,
         user.email,
         user.admin_type,
       );
-      console.log('3333');
       response.cookie(TOKEN_NAME.adminAccess, accessToken, { httpOnly: true });
       return true;
     } catch (err) {

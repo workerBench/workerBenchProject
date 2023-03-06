@@ -187,7 +187,7 @@ export class AuthService {
       { id, email, adminType },
       {
         secret: this.configService.get('JWT_SECRET_KEY_ADMIN'),
-        expiresIn: '600s',
+        expiresIn: '600',
         algorithm: 'HS256',
       },
     );
@@ -375,23 +375,18 @@ export class AuthService {
     if (adminType === 1) {
       adminTypeString = adminTypeNaming.super;
     }
-    console.log('44444');
-    console.log(refreshTokenRedisKey(adminTypeString, id));
 
     const clientInfoFromRedis = (
       await this.redisClient.get(refreshTokenRedisKey(adminTypeString, id))
     ).split('_#_');
-    console.log(clientInfoFromRedis);
 
     if (clientInfoFromRedis[0] !== ip) {
-      console.log('55555');
       const err = new Error('사용자의 ip 정보가 정확하지 않습니다');
       err.name = 'IpDoesntSame';
       throw err;
     }
 
     if (clientInfoFromRedis[1] !== refreshToken) {
-      console.log('66666');
       const err = new Error('사용자의 토큰 정보가 정확하지 않습니다');
       err.name = 'IpDoesntSame';
       throw err;
