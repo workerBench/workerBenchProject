@@ -25,11 +25,11 @@ let TeacherController = class TeacherController {
     createTeacherRegister(data) {
         return this.teacherService.createTeacherRegister(data.phone_number, data.address, data.name);
     }
-    getTeacherWorkshops() {
-        return this.teacherService.getTeacherWorkshops();
+    async getTeacherWorkshops() {
+        return await this.teacherService.getTeacherWorkshops();
     }
-    getTeacherMypage() {
-        return this.teacherService.getTeacherMypage();
+    async getTeacherMypage() {
+        return await this.teacherService.getTeacherMypage();
     }
     createTeacherCompany(data) {
         return this.teacherService.createTeacherCompany(data.company_type, data.company_name, data.business_number, data.rrn_front, data.rrn_back, data.bank_name, data.account, data.saving_name, data.isBan, data.user_id);
@@ -55,13 +55,13 @@ __decorate([
     (0, common_1.Get)('workshops'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], TeacherController.prototype, "getTeacherWorkshops", null);
 __decorate([
     (0, common_1.Get)('mypage'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], TeacherController.prototype, "getTeacherMypage", null);
 __decorate([
     (0, common_1.Post)('company'),

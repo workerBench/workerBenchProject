@@ -18,13 +18,13 @@ export class TeacherController {
   }
   // 강사 워크샵 목록 api
   @Get('workshops')
-  getTeacherWorkshops() {
-    return this.teacherService.getTeacherWorkshops();
+  async getTeacherWorkshops() {
+     return await this.teacherService.getTeacherWorkshops();
   }
   // 강사 및 업체 정보 api
   @Get('mypage')
-  getTeacherMypage() {
-    return this.teacherService.getTeacherMypage();
+  async getTeacherMypage() {
+     return await this.teacherService.getTeacherMypage();
   }
   // 강사 업체 등록 api
   @Post('company')

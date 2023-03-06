@@ -29,13 +29,16 @@ let TeacherService = class TeacherService {
     }
     async createTeacherRegister(phone_number, address, name) {
         try {
-            const user_id = 1;
-            await this.teacherRepository.save({
+            const user_id = 2;
+            await this.teacherRepository.insert({
                 user_id,
                 phone_number,
                 address,
                 name,
             });
+            if (user_id) {
+                return { errorMessage: "이미 등록된 강사입니다." };
+            }
             return { message: '등록이 완료되었습니다.' };
         }
         catch (error) {
@@ -44,22 +47,27 @@ let TeacherService = class TeacherService {
         }
     }
     async getTeacherWorkshops() {
-        await this.workshopRepository.find({
+        const workshop = await this.workshopRepository.find({
             where: { deletedAt: null },
-            select: ['title', 'thumb', 'genre_id'],
+            select: ['title', 'thumb', 'genre_id',],
         });
+        return workshop;
     }
     async getTeacherMypage() {
-        await this.teacherRepository.findOne({
+        const mypage = await this.teacherRepository.find({
             where: { deletedAt: null },
             select: [
-                'user_id',
                 'phone_number',
                 'address',
                 'name',
                 'possession_company_id',
             ],
         });
+        await this.companyRepository.find({
+            where: { deletedAt: null },
+            select: ['company_type', 'company_name', 'business_number', 'rrn_front', 'rrn_back', 'bank_name', 'saving_name']
+        });
+        return mypage;
     }
     async createTeacherCompany(company_type, company_name, business_number, rrn_front, rrn_back, bank_name, account, saving_name, isBan, user_id) {
         try {
@@ -75,9 +83,6 @@ let TeacherService = class TeacherService {
                 isBan,
                 user_id,
             });
-            if (company_name) {
-                return { errorMessage: '이미 등록된 업체입니다.' };
-            }
             return { message: '등록이 완료되었습니다.' };
         }
         catch (error) {
