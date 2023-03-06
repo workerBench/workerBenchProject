@@ -6,4 +6,7 @@ export declare class AdminController {
     approveWorkshop(id: number): Promise<{
         message: string;
     }>;
+    rejectWorkshop(id: number): Promise<{
+        message: string;
+    }>;
 }

@@ -20,6 +20,13 @@ export class AdminController {
         await this.adminService.approveWorkshop(id)
         return { message: "워크숍이 승인 되었습니다."}
     }
+
+    // 워크숍 반려하기 (status:"request" => "rejected")
+    @Patch('/workshop/rejected/:id')
+    async rejectWorkshop(@Param("id") id: number) {
+        await this.adminService.rejectWorkshop(id)
+        return { message: "워크숍이 반려 되었습니다."}
+    }
 }
 
 

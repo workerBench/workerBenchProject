@@ -28,6 +28,10 @@ let AdminController = class AdminController {
         await this.adminService.approveWorkshop(id);
         return { message: "워크숍이 승인 되었습니다." };
     }
+    async rejectWorkshop(id) {
+        await this.adminService.rejectWorkshop(id);
+        return { message: "워크숍이 반려 되었습니다." };
+    }
 };
 __decorate([
     (0, common_1.Get)('/workshops/request'),
@@ -42,6 +46,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "approveWorkshop", null);
+__decorate([
+    (0, common_1.Patch)('/workshop/rejected/:id'),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "rejectWorkshop", null);
 AdminController = __decorate([
     (0, swagger_1.ApiTags)('admin'),
     (0, common_1.Controller)('api/admin'),

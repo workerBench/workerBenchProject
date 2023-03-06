@@ -30,10 +30,19 @@ let AdminService = class AdminService {
         const workshop = await this.workshopRepository.findOne({
             where: { id, status: "request" }
         });
-        if (!workshop) {
+        if (!workshop || workshop.status !== "request") {
             throw new common_1.NotFoundException("없는 워크숍입니다.");
         }
-        return await this.workshopRepository.update({ id }, { status: "approval" });
+        return await this.workshopRepository.update(id, { status: "approval" });
+    }
+    async rejectWorkshop(id) {
+        const workshop = await this.workshopRepository.findOne({
+            where: { id, status: "request" }
+        });
+        if (!workshop || workshop.status !== "request") {
+            throw new common_1.NotFoundException("없는 워크숍입니다.");
+        }
+        return await this.workshopRepository.update(id, { status: "rejected" });
     }
 };
 AdminService = __decorate([

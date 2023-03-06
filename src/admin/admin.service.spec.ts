@@ -23,6 +23,7 @@ describe('AdminService', () => {
     workshopRepository = module.get<Repository<WorkShop>>(getRepositoryToken(WorkShop));
   });
 
+  // 검토 대기중인 워크숍 목록 TEST
   describe('requestWorkshops', () => {
     it('should return a list of requested workshops', async () => {
       const workshop1 = new WorkShop();
@@ -43,8 +44,10 @@ describe('AdminService', () => {
       expect(result).toEqual([workshop1]);
     });
   });
+
+  // describe('approveWrokshop', () => {
+  //   it('should update workshop status approval', async () => {
+      
+  //   })
+  // })
 });
-
-
-
-
