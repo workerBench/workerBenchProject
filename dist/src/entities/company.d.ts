@@ -1,5 +1,5 @@
 import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class company extends CommonEntity {
+export declare class Company extends CommonEntity {
     id: number;
     company_type: number;
     company_name: string;

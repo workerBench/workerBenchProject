@@ -15,4 +15,18 @@ describe('TeacherService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-});
+  // 강사 등록 api 테스트
+  // 업체 등록 api 테스트
+  describe('createTeacherCompany', () => {
+    it('업체 등록 api 테스트'), () =>{
+      // service.create({
+        
+      //   company_type: 1,
+      //   company_name: "테스트",
+
+
+      // })
+    }
+      
+  });
+})

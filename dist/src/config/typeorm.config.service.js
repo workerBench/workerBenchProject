@@ -42,7 +42,7 @@ let TypeOrmConfigService = class TypeOrmConfigService {
             entities: [
                 admin_user_1.AdminUser,
                 company_application_1.CompanyApplication,
-                company_1.company,
+                company_1.Company,
                 genre_tag_1.GenreTag,
                 order_1.Order,
                 purpose_tag_1.PurposeTag,

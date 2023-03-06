@@ -4,7 +4,7 @@ import { CommonEntity } from 'src/common/entities/common.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ schema: 'workerbench', name: 'company' })
-export class company extends CommonEntity {
+export class Company extends CommonEntity {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
   id: number;
 
