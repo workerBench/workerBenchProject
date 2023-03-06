@@ -27,6 +27,13 @@ export class AdminController {
         await this.adminService.rejectWorkshop(id)
         return { message: "워크숍이 반려 되었습니다."}
     }
+
+    // status:"approval"인 모든 워크숍 목록 가져오기
+    @Get('/workshops')
+    async getApprovedWorkshops() {
+        const workshops = await this.adminService.getApprovedWorkshops()
+        return workshops
+    }
 }
 
 

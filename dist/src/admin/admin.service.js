@@ -44,6 +44,11 @@ let AdminService = class AdminService {
         }
         return await this.workshopRepository.update(id, { status: "rejected" });
     }
+    async getApprovedWorkshops() {
+        return await this.workshopRepository.find({
+            where: { status: "approval" }
+        });
+    }
 };
 AdminService = __decorate([
     (0, common_1.Injectable)(),

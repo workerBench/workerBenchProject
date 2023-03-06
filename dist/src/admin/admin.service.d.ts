@@ -6,4 +6,5 @@ export declare class AdminService {
     requestWorkshops(): Promise<WorkShop[]>;
     approveWorkshop(id: number): Promise<import("typeorm").UpdateResult>;
     rejectWorkshop(id: number): Promise<import("typeorm").UpdateResult>;
+    getApprovedWorkshops(): Promise<WorkShop[]>;
 }

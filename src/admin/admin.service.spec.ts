@@ -83,7 +83,7 @@ describe('AdminService', () => {
     it('should throw a NotFoundException if the workshop does not exist or has already been approved', async () => {
       const mockWorkshop = {
         id: 1,
-        name: 'Workshop 1',
+        name: '워크숍 이름',
         status: 'approval',
       };
       jest.spyOn(workShopRepository, 'findOne').mockResolvedValueOnce(undefined);
@@ -123,7 +123,7 @@ describe('AdminService', () => {
     it('should throw a NotFoundException if the workshop does not exist or has already been rejected', async () => {
       const mockWorkshop = {
         id: 1,
-        name: 'Workshop 1',
+        name: '워크숍 이름',
         status: 'rejected',
       };
       jest.spyOn(workShopRepository, 'findOne').mockResolvedValueOnce(undefined);

@@ -9,4 +9,5 @@ export declare class AdminController {
     rejectWorkshop(id: number): Promise<{
         message: string;
     }>;
+    getApprovedWorkshops(): Promise<import("../entities/workshop").WorkShop[]>;
 }
