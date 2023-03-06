@@ -12,9 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Teacher = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const common_entity_1 = require("../common/entities/common.entity");
 const typeorm_1 = require("typeorm");
-let Teacher = class Teacher extends common_entity_1.CommonEntity {
+const company_1 = require("./company");
+const company_application_1 = require("./company-application");
+const user_1 = require("./user");
+let Teacher = class Teacher {
 };
 __decorate([
     (0, typeorm_1.PrimaryColumn)('int', { name: 'user_id' }),
@@ -61,6 +63,39 @@ __decorate([
     (0, typeorm_1.Column)('int', { name: 'possession_company_id', nullable: true, default: 0 }),
     __metadata("design:type", Number)
 ], Teacher.prototype, "possession_company_id", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Teacher.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], Teacher.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], Teacher.prototype, "deletedAt", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => user_1.User, (user) => user.TeacherProfile),
+    (0, typeorm_1.JoinColumn)([{ name: 'user_id', referencedColumnName: 'id' }]),
+    __metadata("design:type", user_1.User)
+], Teacher.prototype, "User", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => company_1.Company, (company) => company.President),
+    __metadata("design:type", company_1.Company)
+], Teacher.prototype, "MyCompany", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => company_1.Company, (company) => company.EmployeeList, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)([{ name: 'affiliation_company_id', referencedColumnName: 'id' }]),
+    __metadata("design:type", company_1.Company)
+], Teacher.prototype, "AffiliationCompany", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => company_application_1.CompanyApplication, (companyApplication) => companyApplication.Teacher),
+    __metadata("design:type", Array)
+], Teacher.prototype, "ApplicationList", void 0);
 Teacher = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'teacher' })
 ], Teacher);
