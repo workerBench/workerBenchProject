@@ -23,13 +23,20 @@ const mailer_1 = require("@nestjs-modules/mailer");
 const nodemailer_service_1 = require("../config/nodemailer.service");
 const jwt_user_strategy_1 = require("./jwt/access/user/jwt-user.strategy");
 const jwt_user_refresh_strategy_1 = require("./jwt/refresh/user/jwt-user-refresh.strategy");
+const jwt_admin_strategy_1 = require("./jwt/access/admin/jwt-admin.strategy");
+const jwt_admin_refresh_strategy_1 = require("./jwt/refresh/admin/jwt-admin-refresh.strategy");
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
             passport_1.PassportModule.register({
-                defaultStrategy: ['userAccessToken', 'adminAccessToken', 'refreshToken'],
+                defaultStrategy: [
+                    'userAccessToken',
+                    'refreshToken',
+                    'adminAccessToken',
+                    'adminRefreshToken',
+                ],
                 session: false,
             }),
             typeorm_1.TypeOrmModule.forFeature([user_1.User, admin_user_1.AdminUser]),
@@ -47,7 +54,13 @@ AuthModule = __decorate([
             config_1.ConfigModule.forRoot(),
         ],
         controllers: [auth_controller_1.AuthController, auth_render_controller_1.AuthControllerRender],
-        providers: [auth_service_1.AuthService, jwt_user_strategy_1.JwtUserStrategy, jwt_user_refresh_strategy_1.JwtRefreshStrategy],
+        providers: [
+            auth_service_1.AuthService,
+            jwt_user_strategy_1.JwtUserStrategy,
+            jwt_user_refresh_strategy_1.JwtRefreshStrategy,
+            jwt_admin_strategy_1.JwtAdminStrategy,
+            jwt_admin_refresh_strategy_1.JwtAdminRefreshStrategy,
+        ],
         exports: [auth_service_1.AuthService],
     })
 ], AuthModule);

@@ -14,11 +14,18 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { nodeMailerOption } from 'src/config/nodemailer.service';
 import { JwtUserStrategy } from './jwt/access/user/jwt-user.strategy';
 import { JwtRefreshStrategy } from './jwt/refresh/user/jwt-user-refresh.strategy';
+import { JwtAdminStrategy } from './jwt/access/admin/jwt-admin.strategy';
+import { JwtAdminRefreshStrategy } from './jwt/refresh/admin/jwt-admin-refresh.strategy';
 
 @Module({
   imports: [
     PassportModule.register({
-      defaultStrategy: ['userAccessToken', 'adminAccessToken', 'refreshToken'],
+      defaultStrategy: [
+        'userAccessToken',
+        'refreshToken',
+        'adminAccessToken',
+        'adminRefreshToken',
+      ],
       session: false,
     }),
     TypeOrmModule.forFeature([User, AdminUser]),
@@ -36,7 +43,13 @@ import { JwtRefreshStrategy } from './jwt/refresh/user/jwt-user-refresh.strategy
     ConfigModule.forRoot(),
   ],
   controllers: [AuthController, AuthControllerRender],
-  providers: [AuthService, JwtUserStrategy, JwtRefreshStrategy],
+  providers: [
+    AuthService,
+    JwtUserStrategy,
+    JwtRefreshStrategy,
+    JwtAdminStrategy,
+    JwtAdminRefreshStrategy,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

@@ -15,15 +15,23 @@ import { Response, Request } from 'express';
 import { RealIP } from 'nestjs-real-ip';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
+import { AdminUser } from 'src/entities/admin-user';
 import { User } from 'src/entities/user';
 import { AuthService } from './auth.service';
-import { CurrentUserDto } from './dtos/current-user.dto';
+import { AdminLoginDto } from './dtos/admin-login.dto';
+import { AdminRegisterJoinDto } from './dtos/admin-register-join';
+import { AdminRemoveDto } from './dtos/admin-remove.dto';
+import { CurrentAdminDto, CurrentUserDto } from './dtos/current-user.dto';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterAuthDto } from './dtos/register-auth.dto';
 import { RegisterJoinDto } from './dtos/register-join';
+import { JwtNormalAdminAuthGuard } from './jwt/access/admin/jwt-normal-admin-guard';
+import { JwtSuperAdminAuthGuard } from './jwt/access/admin/jwt-super-admin-guard';
 import { JwtTeacherAuthGuard } from './jwt/access/user/jwt-teacher-guard';
 import { JwtUserAuthGuard } from './jwt/access/user/jwt-user-guard';
+import { JwtAdminRefreshAuthGuard } from './jwt/refresh/admin/jwt-admin-refresh-guard';
 import { JwtRefreshAuthGuard } from './jwt/refresh/user/jwt-user-refresh-guard';
+import { TOKEN_NAME } from './naming/token-name';
 
 @ApiTags('auth')
 @UseInterceptors(SuccessInterceptor)
@@ -31,7 +39,7 @@ import { JwtRefreshAuthGuard } from './jwt/refresh/user/jwt-user-refresh-guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // 회원가입 시도 시 유효성 검사
+  // 유저 회원가입 시도 시 유효성 검사
   @ApiResponse({
     status: 200,
     description: '성공',
@@ -56,7 +64,7 @@ export class AuthController {
     }
   }
 
-  // 회원가입 시도 시 유효성 검사 통과 후 실제 join
+  // 유저 회원가입 시도 시 유효성 검사 통과 후 실제 join
   @ApiResponse({
     status: 200,
     description: '성공',
@@ -88,8 +96,8 @@ export class AuthController {
         createdUser.user_type,
         clientIp,
       );
-      response.cookie('userAccessToken', accessToken, { httpOnly: true });
-      response.cookie('refreshToken', refreshToken, { httpOnly: true });
+      response.cookie(TOKEN_NAME.userAccess, accessToken, { httpOnly: true });
+      response.cookie(TOKEN_NAME.userRefresh, refreshToken, { httpOnly: true });
       return true;
     } catch (err) {
       throw new BadRequestException(`${err.message}`);
@@ -120,21 +128,227 @@ export class AuthController {
     }
 
     // 검증 후 토큰 발행
-    const accessToekn = await this.authService.makeAccessToken(
+    const accessToken = await this.authService.makeAccessToken(
       userInfo.id,
       userInfo.email,
       userInfo.user_type,
     );
-    const refreshToekn = await this.authService.makeRefreshToken(
+    const refreshToken = await this.authService.makeRefreshToken(
       userInfo.id,
       userInfo.email,
       userInfo.user_type,
       clientIp,
     );
 
-    response.cookie('userAccessToken', accessToekn, { httpOnly: true });
-    response.cookie('refreshToken', refreshToekn, { httpOnly: true });
+    response.cookie(TOKEN_NAME.userAccess, accessToken, { httpOnly: true });
+    response.cookie(TOKEN_NAME.userRefresh, refreshToken, { httpOnly: true });
 
+    return true;
+  }
+
+  // 유저 or 강사의 access token 에 문제가 있을 시 refresh token 검증 요청
+  @ApiOperation({
+    summary: 'refresh token 이 유효하다면 access token 을 재발급',
+  })
+  @Get('refreshtoken/user')
+  @UseGuards(JwtRefreshAuthGuard)
+  async userRefreshCheck(
+    @CurrentUser() user: CurrentUserDto,
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @RealIP() clientIp: string,
+  ) {
+    try {
+      // 사용자의 refresh token 을 가져온다
+      const refreshToken = request.cookies[TOKEN_NAME.userRefresh];
+
+      // cookie 의 refresh token 과 redis 의 refresh token 이 일치하는지 비교.
+      await this.authService.checkRefreshTokenInRedis(
+        user.id,
+        user.user_type,
+        clientIp,
+        refreshToken,
+      );
+
+      // 토큰 검증에 문제가 없을 경우 access token 을 재발급 해준다.
+      const accessToken = await this.authService.makeAccessToken(
+        user.id,
+        user.email,
+        user.user_type,
+      );
+
+      response.cookie(TOKEN_NAME.userAccess, accessToken, { httpOnly: true });
+      return true;
+    } catch (err) {
+      response.clearCookie(TOKEN_NAME.userAccess);
+      response.clearCookie(TOKEN_NAME.userRefresh);
+      throw new HttpException(`${err.message}`, 400);
+    }
+  }
+
+  // 관리자 등록 (회원가입)
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '관리자 등록' })
+  @Post('admin/register')
+  async adminRegister(
+    @Body() body: AdminRegisterJoinDto,
+    @Res({ passthrough: true }) response: Response,
+    @RealIP() clientIp: string,
+  ) {
+    try {
+      // 유효성 검사
+      await this.authService.checkEffectiveForAdmin(body);
+      // 중복 검사
+      await this.authService.checkingAdminAccount(body.email);
+      // 가입
+      const createdAdminUser = await this.authService.joinAdminUser(body);
+      // 토큰 발행
+      const accessToken = await this.authService.makeAccessTokenForAdmin(
+        createdAdminUser.id,
+        createdAdminUser.email,
+        createdAdminUser.admin_type,
+      );
+      const refreshToken = await this.authService.makeRefreshTokenForAdmin(
+        createdAdminUser.id,
+        createdAdminUser.email,
+        createdAdminUser.admin_type,
+        clientIp,
+      );
+      // 토큰 쿠키에 삽입
+      response.cookie(TOKEN_NAME.adminAccess, accessToken, { httpOnly: true });
+      response.cookie(TOKEN_NAME.adminRefresh, refreshToken, {
+        httpOnly: true,
+      });
+
+      return true;
+    } catch (err) {
+      // 에러가 string. 지역 에러
+      throw new HttpException(`${err.message}`, 401);
+    }
+  }
+
+  // 관리자 로그인
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: AdminLoginDto,
+  })
+  @ApiOperation({ summary: '관리자 로그인 api' })
+  @Post('admin/login')
+  async adminLogin(
+    @Body() body: AdminLoginDto,
+    @Res({ passthrough: true }) response: Response,
+    @RealIP() clientIp: string,
+  ) {
+    const { email, password } = body;
+    let adminInfo: AdminUser;
+
+    try {
+      // 유저 찾기
+      adminInfo = await this.authService.checkLoginAdminUser(email, password);
+    } catch (err) {
+      throw new BadRequestException(`${err.message}`);
+    }
+
+    // 검증 후 토큰 발행
+    const accessToken = await this.authService.makeAccessTokenForAdmin(
+      adminInfo.id,
+      adminInfo.email,
+      adminInfo.admin_type,
+    );
+    const refreshToken = await this.authService.makeRefreshTokenForAdmin(
+      adminInfo.id,
+      adminInfo.email,
+      adminInfo.admin_type,
+      clientIp,
+    );
+
+    // 쿠키에 토큰 삽입
+    response.cookie(TOKEN_NAME.adminAccess, accessToken, { httpOnly: true });
+    response.cookie(TOKEN_NAME.adminRefresh, refreshToken, { httpOnly: true });
+
+    return true;
+  }
+
+  // 관리자의 access token 에 문제가 있을 시 refresh token 검증 요청
+  @ApiOperation({
+    summary: 'refresh token 이 유효하다면 access token 을 재발급',
+  })
+  @Get('refreshtoken/admin')
+  @UseGuards(JwtAdminRefreshAuthGuard)
+  async checkAdminRefresh(
+    @CurrentUser() user: CurrentAdminDto,
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @RealIP() clientIp: string,
+  ) {
+    try {
+      console.log('11111');
+      // 관리자의 refresh token 을 가져온다
+      const refreshToken = request.cookies[TOKEN_NAME.adminRefresh];
+      console.log(refreshToken);
+      // cookie 의 refresh token 과 redis 의 refresh token 이 일치하는지 비교.
+      await this.authService.checkAdminRefreshTokenInRedis(
+        user.id,
+        user.admin_type,
+        clientIp,
+        refreshToken,
+      );
+      console.log('2222');
+      // 토큰 검증에 문제가 없을 경우 access token 을 재발급 해준다.
+      const accessToken = await this.authService.makeAccessTokenForAdmin(
+        user.id,
+        user.email,
+        user.admin_type,
+      );
+      console.log('3333');
+      response.cookie(TOKEN_NAME.adminAccess, accessToken, { httpOnly: true });
+      return true;
+    } catch (err) {
+      response.clearCookie(TOKEN_NAME.adminAccess);
+      response.clearCookie(TOKEN_NAME.adminRefresh);
+      throw new HttpException(`${err.message}`, 400);
+    }
+  }
+
+  // 관리자 삭제. 최고 관리자(super admin) 만 가능.
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: AdminRemoveDto,
+  })
+  @ApiOperation({ summary: '관리자 삭제' })
+  @Post('admin/remove')
+  async removeAdminAccount(@Body() body: AdminRemoveDto) {
+    return await this.authService.removeAdmin(body.email);
+  }
+
+  // 유저 로그아웃
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '유저 로그아웃 api' })
+  @Post('logout/user')
+  async logOutUser(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie(TOKEN_NAME.userAccess);
+    response.clearCookie(TOKEN_NAME.userRefresh);
+    return true;
+  }
+
+  // 관리자 로그아웃
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '관리자 로그아웃 api' })
+  @Post('logout/admin')
+  async logOutAdmin(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie(TOKEN_NAME.adminAccess);
+    response.clearCookie(TOKEN_NAME.adminRefresh);
     return true;
   }
 
@@ -156,41 +370,19 @@ export class AuthController {
     return;
   }
 
-  // 유저 or 강사의 access token 에 문제가 있을 시 refresh token 검증 요청
-  @ApiOperation({
-    summary: 'refresh token 이 유효하다면 access token 을 재발급',
-  })
-  @Get('refreshtoken/user')
-  @UseGuards(JwtRefreshAuthGuard)
-  async test44(
-    @CurrentUser() user: CurrentUserDto,
-    @Req() request: Request,
-    @Res({ passthrough: true }) response: Response,
-    @RealIP() clientIp: string,
-  ) {
-    try {
-      // 사용자의 refresh token 을 가져온다
-      const refreshToken = request.cookies['refreshToken'];
+  // 부 관리자 테스트
+  @Get('admintest')
+  @UseGuards(JwtNormalAdminAuthGuard)
+  async test66(@CurrentUser() user: CurrentUserDto) {
+    console.log('부 관리자 테스트!');
+    console.log(user);
+  }
 
-      // cookie 의 refresh token 과 redis 의 refresh token 이 일치하는지 비교.
-      await this.authService.checkRefreshTokenInRedis(
-        user.id,
-        user.user_type,
-        clientIp,
-        refreshToken,
-      );
-
-      // 토큰 검증에 문제가 없을 경우 access token 을 재발급 해준다.
-      const accessToekn = await this.authService.makeAccessToken(
-        user.id,
-        user.email,
-        user.user_type,
-      );
-
-      response.cookie('userAccessToken', accessToekn, { httpOnly: true });
-      return true;
-    } catch (err) {
-      throw new HttpException('로그인 토큰의 정보가 올바르지 않습니다', 400);
-    }
+  // 최고 관리자 테스트
+  @Get('superadmintest')
+  @UseGuards(JwtSuperAdminAuthGuard)
+  async test77(@CurrentUser() user: CurrentUserDto) {
+    console.log('최고 관리자 테스트!');
+    console.log(user);
   }
 }

@@ -4,6 +4,6 @@ export const userTypeNaming = {
 };
 
 export const adminTypeNaming = {
-  normal: 'normal',
-  super: 'super',
+  normal: 'normal_admin',
+  super: 'super_admin',
 };

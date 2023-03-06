@@ -48,9 +48,11 @@ const crypto_1 = require("crypto");
 const bcrypt = __importStar(require("bcrypt"));
 const redis_key_name_1 = require("./naming/redis-key-name");
 const user_type_1 = require("./naming/user-type");
+const admin_user_1 = require("../entities/admin-user");
 let AuthService = class AuthService {
-    constructor(userRepository, jwtService, configService, mailerService, redisService) {
+    constructor(userRepository, adminUserRepository, jwtService, configService, mailerService, redisService) {
         this.userRepository = userRepository;
+        this.adminUserRepository = adminUserRepository;
         this.jwtService = jwtService;
         this.configService = configService;
         this.mailerService = mailerService;
@@ -75,8 +77,43 @@ let AuthService = class AuthService {
             throw err;
         }
     }
+    async checkEffectiveForAdmin(adminInfo) {
+        const { email, password, name, phone_number } = adminInfo;
+        if (!email || !email.includes('@') || !email.includes('.')) {
+            const err = new Error('이메일 형식이 올바르지 않습니다.');
+            err.name = 'WrongEmailError';
+            throw err;
+        }
+        if (password.length < 4) {
+            const err = new Error('패스워드가 짧습니다.');
+            err.name = 'WrongPasswordError';
+            throw err;
+        }
+        if (!name) {
+            const err = new Error('올바른 이름이 아닙니다.');
+            err.name = 'WrongNameError';
+            throw err;
+        }
+        if (!phone_number ||
+            phone_number.includes('-') ||
+            phone_number.length !== 11) {
+            const err = new Error('올바른 전화번호가 아닙니다.');
+            err.name = 'WrongPhoneNumberError';
+            throw err;
+        }
+    }
     async checkingAccount(email) {
         const check_email = await this.userRepository.findOne({ where: { email } });
+        if (check_email) {
+            const err = new Error('이미 존재하는 이메일 입니다.');
+            err.name = 'DuplicationEmailError';
+            throw err;
+        }
+    }
+    async checkingAdminAccount(email) {
+        const check_email = await this.adminUserRepository.findOne({
+            where: { email },
+        });
         if (check_email) {
             const err = new Error('이미 존재하는 이메일 입니다.');
             err.name = 'DuplicationEmailError';
@@ -119,9 +156,27 @@ let AuthService = class AuthService {
         });
         return saveResult;
     }
+    async joinAdminUser(adminInfo) {
+        const hashedPassword = await bcrypt.hash(adminInfo.password, 12);
+        const saveResult = await this.adminUserRepository.save({
+            email: adminInfo.email,
+            password: hashedPassword,
+            name: adminInfo.name,
+            phone_number: adminInfo.phone_number,
+        });
+        return saveResult;
+    }
     async makeAccessToken(id, email, userType) {
         const accessToekn = await this.jwtService.signAsync({ id, email, userType }, {
             secret: this.configService.get('JWT_SECRET_KEY'),
+            expiresIn: '60s',
+            algorithm: 'HS256',
+        });
+        return accessToekn;
+    }
+    async makeAccessTokenForAdmin(id, email, adminType) {
+        const accessToekn = await this.jwtService.signAsync({ id, email, adminType }, {
+            secret: this.configService.get('JWT_SECRET_KEY_ADMIN'),
             expiresIn: '60s',
             algorithm: 'HS256',
         });
@@ -137,10 +192,26 @@ let AuthService = class AuthService {
         }
         const refreshToekn = await this.jwtService.signAsync({ id, email, userType }, {
             secret: this.configService.get('JWT_SECRET_KEY'),
-            expiresIn: '100s',
+            expiresIn: '3000s',
             algorithm: 'HS256',
         });
-        await this.redisClient.setex((0, redis_key_name_1.refreshTokenRedisKey)(userTypeString, id), 100, `${clientIp}_${refreshToekn}`);
+        await this.redisClient.setex((0, redis_key_name_1.refreshTokenRedisKey)(userTypeString, id), 100, `${clientIp}_#_${refreshToekn}`);
+        return refreshToekn;
+    }
+    async makeRefreshTokenForAdmin(id, email, adminType, clientIp) {
+        let adminTypeString;
+        if (adminType === 0) {
+            adminTypeString = user_type_1.adminTypeNaming.normal;
+        }
+        if (adminType === 1) {
+            adminTypeString = user_type_1.adminTypeNaming.super;
+        }
+        const refreshToekn = await this.jwtService.signAsync({ id, email, adminType }, {
+            secret: this.configService.get('JWT_SECRET_KEY_ADMIN'),
+            expiresIn: '3000s',
+            algorithm: 'HS256',
+        });
+        await this.redisClient.setex((0, redis_key_name_1.refreshTokenRedisKey)(adminTypeString, id), 100, `${clientIp}_#_${refreshToekn}`);
         return refreshToekn;
     }
     async checkLoginUser(email, password) {
@@ -160,12 +231,36 @@ let AuthService = class AuthService {
         }
         return userInfo;
     }
+    async checkLoginAdminUser(email, password) {
+        const adminInfo = await this.adminUserRepository.findOne({
+            where: { email },
+            select: ['id', 'email', 'password', 'admin_type'],
+        });
+        if (!adminInfo) {
+            const err = new Error('이메일 또는 비밀번호가 일치하지 않습니다');
+            err.name = 'DoesntExistEmailOrPasswordError';
+            throw err;
+        }
+        if (!(await bcrypt.compare(password, adminInfo.password))) {
+            const err = new Error('이메일 또는 비밀번호가 일치하지 않습니다');
+            err.name = 'DoesntExistEmailOrPasswordError';
+            throw err;
+        }
+        return adminInfo;
+    }
     async checkUserFromUserAccessToken(id, email, userType) {
         const userInfo = await this.userRepository.findOne({
             where: { id, email, user_type: userType },
             select: ['id', 'email', 'user_type', 'isBan'],
         });
         return userInfo;
+    }
+    async checkAdminFromAdminAccessToken(id, email, adminType) {
+        const adminInfo = await this.adminUserRepository.findOne({
+            where: { id, email, admin_type: adminType },
+            select: ['id', 'email', 'admin_type'],
+        });
+        return adminInfo;
     }
     async checkRefreshTokenInRedis(id, userType, ip, refreshToken) {
         let userTypeString;
@@ -175,7 +270,7 @@ let AuthService = class AuthService {
         if (userType === 1) {
             userTypeString = user_type_1.userTypeNaming.teacher;
         }
-        const clientInfoFromRedis = (await this.redisClient.get((0, redis_key_name_1.refreshTokenRedisKey)(userTypeString, id))).split('_');
+        const clientInfoFromRedis = (await this.redisClient.get((0, redis_key_name_1.refreshTokenRedisKey)(userTypeString, id))).split('_#_');
         if (clientInfoFromRedis[0] !== ip) {
             const err = new Error('사용자의 ip 정보가 정확하지 않습니다');
             err.name = 'IpDoesntSame';
@@ -188,11 +283,51 @@ let AuthService = class AuthService {
         }
         return;
     }
+    async checkAdminRefreshTokenInRedis(id, adminType, ip, refreshToken) {
+        let adminTypeString;
+        if (adminType === 0) {
+            adminTypeString = user_type_1.adminTypeNaming.normal;
+        }
+        if (adminType === 1) {
+            adminTypeString = user_type_1.adminTypeNaming.super;
+        }
+        console.log('44444');
+        console.log((0, redis_key_name_1.refreshTokenRedisKey)(adminTypeString, id));
+        const clientInfoFromRedis = (await this.redisClient.get((0, redis_key_name_1.refreshTokenRedisKey)(adminTypeString, id))).split('_#_');
+        console.log(clientInfoFromRedis);
+        if (clientInfoFromRedis[0] !== ip) {
+            console.log('55555');
+            const err = new Error('사용자의 ip 정보가 정확하지 않습니다');
+            err.name = 'IpDoesntSame';
+            throw err;
+        }
+        if (clientInfoFromRedis[1] !== refreshToken) {
+            console.log('66666');
+            const err = new Error('사용자의 토큰 정보가 정확하지 않습니다');
+            err.name = 'IpDoesntSame';
+            throw err;
+        }
+        return;
+    }
+    async removeAdmin(email) {
+        const adminInfo = await this.adminUserRepository.findOne({
+            where: { email },
+        });
+        if (!adminInfo) {
+            const err = new Error('존재하지 않는 부관리자 계정입니다.');
+            err.name = 'DoesntExistAdminAccount';
+            throw err;
+        }
+        await this.adminUserRepository.softDelete({ email });
+        return;
+    }
 };
 AuthService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_1.User)),
+    __param(1, (0, typeorm_1.InjectRepository)(admin_user_1.AdminUser)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         jwt_1.JwtService,
         config_1.ConfigService,
         mailer_1.MailerService,

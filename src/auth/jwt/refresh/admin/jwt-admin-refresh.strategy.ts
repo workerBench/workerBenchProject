@@ -3,13 +3,13 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from 'src/auth/auth.service';
-import { jwtUserRefreshTokenFromCookie } from 'src/common/utils/jwtExtractorFromCookies';
+import { jwtAdminRefreshTokenFromCookie } from 'src/common/utils/jwtExtractorFromCookies';
 import { JwtPayload } from '../../payload/jwt.payload';
 
 @Injectable()
-export class JwtRefreshStrategy extends PassportStrategy(
+export class JwtAdminRefreshStrategy extends PassportStrategy(
   Strategy,
-  'refreshToken',
+  'adminRefreshToken',
 ) {
   constructor(
     private readonly authService: AuthService,
@@ -17,24 +17,24 @@ export class JwtRefreshStrategy extends PassportStrategy(
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        jwtUserRefreshTokenFromCookie,
+        jwtAdminRefreshTokenFromCookie,
       ]),
-      secretOrKey: configService.get('JWT_SECRET_KEY'),
+      secretOrKey: configService.get('JWT_SECRET_KEY_ADMIN'),
       ignoreExpiration: false,
     });
   }
 
   async validate(payload: JwtPayload) {
     try {
-      const user = await this.authService.checkUserFromUserAccessToken(
+      const admin = await this.authService.checkAdminFromAdminAccessToken(
         payload.id,
         payload.email,
-        payload.userType,
+        payload.adminType,
       );
-      if (!user) {
+      if (!admin) {
         throw new Error('해당하는 유저는 없습니다.');
       }
-      return user;
+      return admin;
     } catch (error) {
       throw new UnauthorizedException(error);
     }

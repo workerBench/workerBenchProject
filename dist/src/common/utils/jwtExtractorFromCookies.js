@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.jwtRefreshTokenFromCookie = exports.jwtAdminTokenFromCookie = exports.jwtUserTokenFromCookie = void 0;
+exports.jwtAdminRefreshTokenFromCookie = exports.jwtAdminTokenFromCookie = exports.jwtUserRefreshTokenFromCookie = exports.jwtUserTokenFromCookie = void 0;
 const jwtUserTokenFromCookie = (request) => {
     try {
         const jwt = request.cookies['userAccessToken'];
@@ -11,6 +11,16 @@ const jwtUserTokenFromCookie = (request) => {
     }
 };
 exports.jwtUserTokenFromCookie = jwtUserTokenFromCookie;
+const jwtUserRefreshTokenFromCookie = (request) => {
+    try {
+        const jwt = request.cookies['refreshToken'];
+        return jwt;
+    }
+    catch (error) {
+        return null;
+    }
+};
+exports.jwtUserRefreshTokenFromCookie = jwtUserRefreshTokenFromCookie;
 const jwtAdminTokenFromCookie = (request) => {
     try {
         const jwt = request.cookies['adminAccessToken'];
@@ -21,14 +31,14 @@ const jwtAdminTokenFromCookie = (request) => {
     }
 };
 exports.jwtAdminTokenFromCookie = jwtAdminTokenFromCookie;
-const jwtRefreshTokenFromCookie = (request) => {
+const jwtAdminRefreshTokenFromCookie = (request) => {
     try {
-        const jwt = request.cookies['refreshToken'];
+        const jwt = request.cookies['adminRefreshToken'];
         return jwt;
     }
     catch (error) {
         return null;
     }
 };
-exports.jwtRefreshTokenFromCookie = jwtRefreshTokenFromCookie;
+exports.jwtAdminRefreshTokenFromCookie = jwtAdminRefreshTokenFromCookie;
 //# sourceMappingURL=jwtExtractorFromCookies.js.map
