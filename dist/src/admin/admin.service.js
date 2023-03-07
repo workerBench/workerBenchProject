@@ -49,6 +49,17 @@ let AdminService = class AdminService {
             where: { status: "approval" }
         });
     }
+    async updateWorkshop(id, title, category, desc, thumb, min_member, max_member, total_time, price, location) {
+        const workshop = await this.workshopRepository.findOne({
+            where: { id, status: "approval" }
+        });
+        if (!workshop || workshop.status !== "approval") {
+            throw new common_1.NotFoundException("없는 워크숍입니다.");
+        }
+        return await this.workshopRepository.update(id, {
+            title, category, desc, thumb, min_member, max_member, total_time, price, location
+        });
+    }
 };
 AdminService = __decorate([
     (0, common_1.Injectable)(),

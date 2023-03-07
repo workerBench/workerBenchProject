@@ -49,4 +49,31 @@ export class AdminService {
             where: {status:"approval"}
         })
     }
+
+        //-------------------------- 워크숍 수정하기 --------------------------//
+
+    async updateWorkshop(
+        id: number, 
+        title: string, 
+        category: "online" | "offline", 
+        desc: string, 
+        thumb: string,
+        min_member: number,
+        max_member: number,
+        total_time: number,
+        price: number,
+        location: string,
+        ) {
+            const workshop = await this.workshopRepository.findOne({
+                where:{id, status: "approval"}
+            })
+
+            if(!workshop || workshop.status !== "approval") {
+                throw new NotFoundException("없는 워크숍입니다.")
+            }
+            
+            return await this.workshopRepository.update(id, {
+                title, category, desc, thumb, min_member, max_member, total_time, price, location
+            })
+        }
 }

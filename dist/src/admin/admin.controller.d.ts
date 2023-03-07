@@ -1,4 +1,5 @@
 import { AdminService } from './admin.service';
+import { editWorkshopDto } from './dto/edit-workshop.dto';
 export declare class AdminController {
     private readonly adminService;
     constructor(adminService: AdminService);
@@ -10,4 +11,7 @@ export declare class AdminController {
         message: string;
     }>;
     getApprovedWorkshops(): Promise<import("../entities/workshop").WorkShop[]>;
+    updateWorkshop(id: number, data: editWorkshopDto): Promise<{
+        message: string;
+    }>;
 }

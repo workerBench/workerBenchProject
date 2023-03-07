@@ -1,6 +1,9 @@
-import { Controller, Get, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Put } from '@nestjs/common';
+import { Body } from '@nestjs/common/decorators';
 import { ApiTags } from '@nestjs/swagger';
+import { json } from 'stream/consumers';
 import { AdminService } from './admin.service';
+import { editWorkshopDto } from './dto/edit-workshop.dto';
 
 @ApiTags('admin')
 @Controller('api/admin')
@@ -33,6 +36,27 @@ export class AdminController {
     async getApprovedWorkshops() {
         const workshops = await this.adminService.getApprovedWorkshops()
         return workshops
+    }
+
+    // 워크숍 수정하기
+    @Put('/workshop/:id')
+    async updateWorkshop(
+        @Param("id") id: number,
+        @Body() data: editWorkshopDto
+    ) {
+        const workshop = await this.adminService.updateWorkshop(
+            id,
+            data.title,
+            data.category,
+            data.desc,
+            data.thumb,
+            data.min_member,
+            data.max_member,
+            data.total_time,
+            data.price,
+            data.location
+        )
+        return {message: "워크숍 수정이 완료되었습니다."}
     }
 }
 

@@ -14,8 +14,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminController = void 0;
 const common_1 = require("@nestjs/common");
+const decorators_1 = require("@nestjs/common/decorators");
 const swagger_1 = require("@nestjs/swagger");
 const admin_service_1 = require("./admin.service");
+const edit_workshop_dto_1 = require("./dto/edit-workshop.dto");
 let AdminController = class AdminController {
     constructor(adminService) {
         this.adminService = adminService;
@@ -35,6 +37,10 @@ let AdminController = class AdminController {
     async getApprovedWorkshops() {
         const workshops = await this.adminService.getApprovedWorkshops();
         return workshops;
+    }
+    async updateWorkshop(id, data) {
+        const workshop = await this.adminService.updateWorkshop(id, data.title, data.category, data.desc, data.thumb, data.min_member, data.max_member, data.total_time, data.price, data.location);
+        return { message: "워크숍 수정이 완료되었습니다." };
     }
 };
 __decorate([
@@ -63,6 +69,14 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "getApprovedWorkshops", null);
+__decorate([
+    (0, common_1.Put)('/workshop/:id'),
+    __param(0, (0, common_1.Param)("id")),
+    __param(1, (0, decorators_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, edit_workshop_dto_1.editWorkshopDto]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "updateWorkshop", null);
 AdminController = __decorate([
     (0, swagger_1.ApiTags)('admin'),
     (0, common_1.Controller)('api/admin'),
