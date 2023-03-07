@@ -19,7 +19,7 @@ import { WorkShopPurpose } from '../../entities/workshop-purpose';
 
 import * as bcrypt from 'bcrypt';
 
-export default class UserSeeder implements Seeder {
+export default class MainSeeder implements Seeder {
   public async run(
     dataSource: DataSource,
     factoryManager: SeederFactoryManager,
