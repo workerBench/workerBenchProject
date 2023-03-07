@@ -12,12 +12,17 @@ export declare class TeacherController {
     }>;
     getTeacherWorkshops(): Promise<import("../entities/workshop").WorkShop[]>;
     getTeacherMypage(): Promise<Teacher[]>;
-    createTeacherCompany(data: createCompanyDto): Promise<{
+    createTeacherCompany(data: createCompanyDto): {
+        message: string;
+    };
+    createTeacherWorkshops(data: createWorkshopsDto): {
+        message: string;
+    };
+    getTeacherComplete(): Promise<import("../entities/workshop").WorkShop[]>;
+    updateTeacherAccept(id: number): Promise<{
         message: string;
     }>;
-    createTeacherWorkshops(data: createWorkshopsDto): Promise<{
+    updateTeacherComplete(id: number): Promise<{
         message: string;
     }>;
-    getTeacherRequest(): void;
-    getTeacherComplete(): void;
 }

@@ -113,7 +113,7 @@ export class WorkShop {
     default: 'request',
   })
   // status: 'request' | 'approval' | 'rejected' | 'finished';
-  status: string
+  status: string;
 
   @IsString()
   @IsNotEmpty({ message: '워크샵 운영이 가능한 지역을 적어주세요' })

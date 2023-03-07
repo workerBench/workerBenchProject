@@ -187,6 +187,18 @@ describe('TeacherService', () => {
           expect(result).toBeInstanceOf(Array); // 값이 배열로 반환
         
       })
+      //강사 마이페이지 조회
+      describe('getTeacherMypage()', () => {
+        it('should getTeacherMypage success message', async () => {
+          workshopRepository.find.mockResolvedValue([]); // mockResolvedValue: 반환값을 정함
+
+          const result = await service.getTeacherMypage();
+    
+          expect(workshopRepository.find).toHaveBeenCalledTimes(1); // 1번만 호출
+          expect(result).toBeInstanceOf(Array); // 값이 배열로 반환
+        
+      })
     });
   });
 });
+})

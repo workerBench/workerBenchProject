@@ -14,14 +14,18 @@ export declare class TeacherService {
     }>;
     getTeacherWorkshops(): Promise<WorkShop[]>;
     getTeacherMypage(): Promise<Teacher[]>;
-    createTeacherCompany(company_type: number, company_name: string, business_number: number, rrn_front: number, rrn_back: number, bank_name: string, account: number, saving_name: string, isBan: number, user_id: number): Promise<{
+    createTeacherCompany(company_type: number, company_name: string, business_number: number, rrn_front: number, rrn_back: number, bank_name: string, account: number, saving_name: string, isBan: number, user_id: number): {
+        message: string;
+    };
+    createTeacherWorkshops(category: string, genre_id: number, title: string, desc: string, thumb: string, min_member: number, max_member: number, total_time: number, price: number, status: string, location: string): {
+        message: string;
+    };
+    getTeacherRequest(id: number): Promise<WorkShop>;
+    getTeacherComplete(): Promise<WorkShop[]>;
+    updateTeacherAccept(id: number): Promise<{
         message: string;
     }>;
-    createTeacherWorkshops(category: string, genre_id: number, title: string, desc: string, thumb: string, min_member: number, max_member: number, total_time: number, price: number, location: string): Promise<{
+    updateTeacherComplete(id: number): Promise<{
         message: string;
     }>;
-    getTeacherRequest(): void;
-    getTeacherComplete(): void;
-    updateTeacherAccept(): void;
-    updateTeacherComplete(): void;
 }

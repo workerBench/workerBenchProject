@@ -38,13 +38,16 @@ let TeacherController = class TeacherController {
         return this.teacherService.createTeacherCompany(data.company_type, data.company_name, data.business_number, data.rrn_front, data.rrn_back, data.bank_name, data.account, data.saving_name, data.isBan, data.user_id);
     }
     createTeacherWorkshops(data) {
-        return this.teacherService.createTeacherWorkshops(data.category, data.genre_id, data.title, data.desc, data.thumb, data.min_member, data.max_member, data.total_time, data.price, data.location);
-    }
-    getTeacherRequest() {
-        return this.teacherService.getTeacherRequest();
+        return this.teacherService.createTeacherWorkshops(data.category, data.genre_id, data.title, data.desc, data.thumb, data.min_member, data.max_member, data.total_time, data.price, data.status, data.location);
     }
     getTeacherComplete() {
         return this.teacherService.getTeacherComplete();
+    }
+    updateTeacherAccept(id) {
+        return this.teacherService.updateTeacherAccept(id);
+    }
+    updateTeacherComplete(id) {
+        return this.teacherService.updateTeacherComplete(id);
     }
 };
 __decorate([
@@ -83,17 +86,25 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], TeacherController.prototype, "createTeacherWorkshops", null);
 __decorate([
-    (0, common_1.Get)('workshops/request'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], TeacherController.prototype, "getTeacherRequest", null);
-__decorate([
     (0, common_1.Get)('workshops/complete'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], TeacherController.prototype, "getTeacherComplete", null);
+__decorate([
+    (0, common_1.Patch)('workshops/manage/accept/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], TeacherController.prototype, "updateTeacherAccept", null);
+__decorate([
+    (0, common_1.Patch)('workshops/manage/complete/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], TeacherController.prototype, "updateTeacherComplete", null);
 TeacherController = __decorate([
     (0, common_1.Controller)('/api/teacher'),
     __metadata("design:paramtypes", [teacher_service_1.TeacherService])

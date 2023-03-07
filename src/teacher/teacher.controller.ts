@@ -62,27 +62,28 @@ export class TeacherController {
      data.max_member,
      data.total_time,
      data.price,
+     data.status,
      data.location,
     );
   }
   // 강사 미완료 목록 가져오기 api
-  @Get('workshops/request')
-  getTeacherRequest() {
-    return this.teacherService.getTeacherRequest();
-  }
+  // @Get('workshops/request')
+  // getTeacherRequest() {
+  //   return this.teacherService.getTeacherRequest();
+  // }
   // 강사 완료 목록 가져오기 api
   @Get('workshops/complete')
   getTeacherComplete() {
     return this.teacherService.getTeacherComplete();
   }
   // 강사 수강 문의 관리 (수락하기) api
-  // @Patch('workshops/manage/accept/:id')
-  // updateTeacherAccept(@Param('id') workshopId: number) {
-  //   return this.teacherService.updateTeacherAccept(workshopId);
-  // }
+  @Patch('workshops/manage/accept/:id')
+  updateTeacherAccept(@Param('id') id: number) {
+    return this.teacherService.updateTeacherAccept(id);
+  }
   // 강사 수강 문의 관리 (종료하기) pai
-  // @Patch('workshops/manage/complete/:id')
-  // updateTeacherComplete(@Param('id') workshopId: number) {
-  //   return this.teacherService.updateTeacherComplete(workshopId);
-  // }
+  @Patch('workshops/manage/complete/:id')
+  updateTeacherComplete(@Param('id') id: number) {
+    return this.teacherService.updateTeacherComplete(id);
+  }
 }
