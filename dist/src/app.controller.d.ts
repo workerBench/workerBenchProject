@@ -1,3 +1,6 @@
+import { AppService } from './app.service';
 export declare class AppController {
-    getMain(): void;
+    private readonly appService;
+    constructor(appService: AppService);
+    getHello(): string;
 }

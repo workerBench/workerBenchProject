@@ -43,7 +43,7 @@ const workshops_module_1 = require("./workshops/workshops.module");
 const mypage_module_1 = require("./mypage/mypage.module");
 const teacher_module_1 = require("./teacher/teacher.module");
 const admin_module_1 = require("./admin/admin.module");
-const app_controller_1 = require("./app.controller");
+const app_render_controller_1 = require("./app.render.controller");
 const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
 };
@@ -93,7 +93,7 @@ AppModule = __decorate([
             teacher_module_1.TeacherModule,
             admin_module_1.AdminModule,
         ],
-        controllers: [app_controller_1.AppController],
+        controllers: [app_render_controller_1.AppRenderController],
         providers: [
             {
                 provide: core_1.APP_GUARD,

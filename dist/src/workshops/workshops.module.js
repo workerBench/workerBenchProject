@@ -8,14 +8,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkshopsModule = void 0;
 const common_1 = require("@nestjs/common");
+const typeorm_1 = require("@nestjs/typeorm");
+const wish_list_1 = require("../entities/wish-list");
+const workshop_1 = require("../entities/workshop");
+const workshop_instance_detail_1 = require("../entities/workshop-instance.detail");
 const workshops_controller_1 = require("./workshops.controller");
-const workshops_controller_render_1 = require("./workshops.controller-render");
+const workshops_render_controller_1 = require("./workshops.render.controller");
 const workshops_service_1 = require("./workshops.service");
 let WorkshopsModule = class WorkshopsModule {
 };
 WorkshopsModule = __decorate([
     (0, common_1.Module)({
-        controllers: [workshops_controller_1.WorkshopsController, workshops_controller_render_1.WorkshopsControllerRender],
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([workshop_1.WorkShop, workshop_instance_detail_1.WorkShopInstanceDetail, wish_list_1.WishList]),
+        ],
+        controllers: [workshops_controller_1.WorkshopsController, workshops_render_controller_1.WorkshopsControllerRender],
         providers: [workshops_service_1.WorkshopsService],
     })
 ], WorkshopsModule);
