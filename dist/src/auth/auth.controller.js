@@ -126,13 +126,9 @@ let AuthController = class AuthController {
     }
     async checkAdminRefresh(user, request, response, clientIp) {
         try {
-            console.log('11111');
             const refreshToken = request.cookies[token_name_1.TOKEN_NAME.adminRefresh];
-            console.log(refreshToken);
             await this.authService.checkAdminRefreshTokenInRedis(user.id, user.admin_type, clientIp, refreshToken);
-            console.log('2222');
             const accessToken = await this.authService.makeAccessTokenForAdmin(user.id, user.email, user.admin_type);
-            console.log('3333');
             response.cookie(token_name_1.TOKEN_NAME.adminAccess, accessToken, { httpOnly: true });
             return true;
         }

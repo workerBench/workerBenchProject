@@ -169,7 +169,7 @@ let AuthService = class AuthService {
     async makeAccessToken(id, email, userType) {
         const accessToekn = await this.jwtService.signAsync({ id, email, userType }, {
             secret: this.configService.get('JWT_SECRET_KEY'),
-            expiresIn: '60s',
+            expiresIn: '600s',
             algorithm: 'HS256',
         });
         return accessToekn;
@@ -177,7 +177,7 @@ let AuthService = class AuthService {
     async makeAccessTokenForAdmin(id, email, adminType) {
         const accessToekn = await this.jwtService.signAsync({ id, email, adminType }, {
             secret: this.configService.get('JWT_SECRET_KEY_ADMIN'),
-            expiresIn: '60s',
+            expiresIn: '600',
             algorithm: 'HS256',
         });
         return accessToekn;
@@ -291,18 +291,13 @@ let AuthService = class AuthService {
         if (adminType === 1) {
             adminTypeString = user_type_1.adminTypeNaming.super;
         }
-        console.log('44444');
-        console.log((0, redis_key_name_1.refreshTokenRedisKey)(adminTypeString, id));
         const clientInfoFromRedis = (await this.redisClient.get((0, redis_key_name_1.refreshTokenRedisKey)(adminTypeString, id))).split('_#_');
-        console.log(clientInfoFromRedis);
         if (clientInfoFromRedis[0] !== ip) {
-            console.log('55555');
             const err = new Error('사용자의 ip 정보가 정확하지 않습니다');
             err.name = 'IpDoesntSame';
             throw err;
         }
         if (clientInfoFromRedis[1] !== refreshToken) {
-            console.log('66666');
             const err = new Error('사용자의 토큰 정보가 정확하지 않습니다');
             err.name = 'IpDoesntSame';
             throw err;
