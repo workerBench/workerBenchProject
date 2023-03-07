@@ -22,6 +22,6 @@ export declare class AuthController {
     logOutAdmin(response: Response): Promise<boolean>;
     test22(user: CurrentUserDto): Promise<void>;
     test233(user: CurrentUserDto): Promise<void>;
-    test66(user: CurrentUserDto): Promise<void>;
-    test77(user: CurrentUserDto): Promise<void>;
+    test66(admin: CurrentAdminDto): Promise<void>;
+    test77(admin: CurrentAdminDto): Promise<void>;
 }

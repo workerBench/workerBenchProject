@@ -1,4 +1,4 @@
-import { OmitType, PickType } from '@nestjs/swagger';
+import { OmitType } from '@nestjs/swagger';
 import { AdminUser } from 'src/entities/admin-user';
 import { User } from 'src/entities/user';
 

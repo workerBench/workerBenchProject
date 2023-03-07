@@ -30,7 +30,7 @@ __decorate([
     (0, swagger_1.ApiProperty)({
         example: 1,
         description: '워크샵 PK',
-        required: true,
+        required: false,
     }),
     (0, typeorm_1.Column)('int', { name: 'workshop_id', nullable: true }),
     __metadata("design:type", Number)
