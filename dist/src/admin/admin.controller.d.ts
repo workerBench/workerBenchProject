@@ -14,4 +14,7 @@ export declare class AdminController {
     updateWorkshop(id: number, data: editWorkshopDto): Promise<{
         message: string;
     }>;
+    removeWorkshop(id: number): Promise<{
+        message: string;
+    }>;
 }

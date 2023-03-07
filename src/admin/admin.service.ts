@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { not } from 'joi';
 import { Repository } from 'typeorm/repository/Repository';
 import { WorkShop } from '../entities/workshop';
 
@@ -13,7 +14,7 @@ export class AdminService {
 
     async requestWorkshops() {
         return await this.workshopRepository.find({
-            where:{status:"request"}
+            where:{status:"request", deletedAt: null}
         })
     }
 
@@ -21,7 +22,7 @@ export class AdminService {
 
     async approveWorkshop(id: number) {
         const workshop = await this.workshopRepository.findOne({
-            where:{id, status:"request"}
+            where:{id, status:"request", deletedAt: null}
         })
         if(!workshop || workshop.status !== "request") {
             throw new NotFoundException("없는 워크숍입니다.")
@@ -33,7 +34,7 @@ export class AdminService {
 
     async rejectWorkshop(id: number) {
         const workshop = await this.workshopRepository.findOne({
-            where:{id, status:"request"}
+            where:{id, status:"request", deletedAt: null}
         })
         
         if(!workshop || workshop.status !== "request") {
@@ -46,7 +47,7 @@ export class AdminService {
 
     async getApprovedWorkshops() {
         return await this.workshopRepository.find({
-            where: {status:"approval"}
+            where: {status:"approval", deletedAt: null}
         })
     }
 
@@ -65,7 +66,7 @@ export class AdminService {
         location: string,
         ) {
             const workshop = await this.workshopRepository.findOne({
-                where:{id, status: "approval"}
+                where:{id, status: "approval", deletedAt: null}
             })
 
             if(!workshop || workshop.status !== "approval") {
@@ -77,5 +78,19 @@ export class AdminService {
             })
         }
 
-    //-------------------------- 워크숍 삭제하기 --------------------------//
+    //-------------------------- 워크숍 삭제하기 (status: "approval" => "finished" --------------------------//
+
+    async removeWorkshop(id: number) {
+        const workshop = await this.workshopRepository.findOne({
+            where: {id, status: "approval"}
+        })
+
+        if(!workshop || workshop.status !== "approval") {
+            throw new NotFoundException("없는 워크숍입니다.")
+        }
+
+        await this.workshopRepository.update(id, {status:"finished"})
+
+        return await this.workshopRepository.softDelete(id)
+    }
 }

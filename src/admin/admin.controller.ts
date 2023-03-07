@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Patch, Put } from '@nestjs/common';
-import { Body } from '@nestjs/common/decorators';
+import { Body, Delete } from '@nestjs/common/decorators';
 import { ApiTags } from '@nestjs/swagger';
 import { json } from 'stream/consumers';
 import { AdminService } from './admin.service';
@@ -56,7 +56,15 @@ export class AdminController {
             data.price,
             data.location
         )
-        return {message: "워크숍 수정이 완료되었습니다."}
+        return { message: "워크숍 수정이 완료되었습니다." }
+    }
+
+    // 워크숍 삭제하기
+    @Delete('workshop/:id')
+    async removeWorkshop(@Param("id") id: number) {
+        await this.adminService.removeWorkshop(id)
+
+        return { message: "워크숍이 삭제되었습니다." }
     }
 }
 

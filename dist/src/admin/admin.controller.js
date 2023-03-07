@@ -42,6 +42,10 @@ let AdminController = class AdminController {
         const workshop = await this.adminService.updateWorkshop(id, data.title, data.category, data.desc, data.thumb, data.min_member, data.max_member, data.total_time, data.price, data.location);
         return { message: "워크숍 수정이 완료되었습니다." };
     }
+    async removeWorkshop(id) {
+        await this.adminService.removeWorkshop(id);
+        return { message: "워크숍이 삭제되었습니다." };
+    }
 };
 __decorate([
     (0, common_1.Get)('/workshops/request'),
@@ -77,6 +81,13 @@ __decorate([
     __metadata("design:paramtypes", [Number, edit_workshop_dto_1.editWorkshopDto]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "updateWorkshop", null);
+__decorate([
+    (0, decorators_1.Delete)('workshop/:id'),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "removeWorkshop", null);
 AdminController = __decorate([
     (0, swagger_1.ApiTags)('admin'),
     (0, common_1.Controller)('api/admin'),

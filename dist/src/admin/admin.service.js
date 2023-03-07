@@ -23,12 +23,12 @@ let AdminService = class AdminService {
     }
     async requestWorkshops() {
         return await this.workshopRepository.find({
-            where: { status: "request" }
+            where: { status: "request", deletedAt: null }
         });
     }
     async approveWorkshop(id) {
         const workshop = await this.workshopRepository.findOne({
-            where: { id, status: "request" }
+            where: { id, status: "request", deletedAt: null }
         });
         if (!workshop || workshop.status !== "request") {
             throw new common_1.NotFoundException("없는 워크숍입니다.");
@@ -37,7 +37,7 @@ let AdminService = class AdminService {
     }
     async rejectWorkshop(id) {
         const workshop = await this.workshopRepository.findOne({
-            where: { id, status: "request" }
+            where: { id, status: "request", deletedAt: null }
         });
         if (!workshop || workshop.status !== "request") {
             throw new common_1.NotFoundException("없는 워크숍입니다.");
@@ -46,12 +46,12 @@ let AdminService = class AdminService {
     }
     async getApprovedWorkshops() {
         return await this.workshopRepository.find({
-            where: { status: "approval" }
+            where: { status: "approval", deletedAt: null }
         });
     }
     async updateWorkshop(id, title, category, desc, thumb, min_member, max_member, total_time, price, location) {
         const workshop = await this.workshopRepository.findOne({
-            where: { id, status: "approval" }
+            where: { id, status: "approval", deletedAt: null }
         });
         if (!workshop || workshop.status !== "approval") {
             throw new common_1.NotFoundException("없는 워크숍입니다.");
@@ -59,6 +59,16 @@ let AdminService = class AdminService {
         return await this.workshopRepository.update(id, {
             title, category, desc, thumb, min_member, max_member, total_time, price, location
         });
+    }
+    async removeWorkshop(id) {
+        const workshop = await this.workshopRepository.findOne({
+            where: { id, status: "approval" }
+        });
+        if (!workshop || workshop.status !== "approval") {
+            throw new common_1.NotFoundException("없는 워크숍입니다.");
+        }
+        await this.workshopRepository.update(id, { status: "finished" });
+        return await this.workshopRepository.softDelete(id);
     }
 };
 AdminService = __decorate([
