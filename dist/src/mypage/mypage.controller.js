@@ -13,7 +13,7 @@ exports.MypageController = void 0;
 const common_1 = require("@nestjs/common");
 let MypageController = class MypageController {
     getAll() {
-        return 'mypage';
+        return 'here is mypage';
     }
 };
 __decorate([
