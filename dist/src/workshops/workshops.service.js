@@ -30,8 +30,14 @@ let WorkshopsService = class WorkshopsService {
             take: 8,
         });
     }
+    async getApprovedWorkshops() {
+        return await this.workshopRepository.find({
+            where: { status: 'approval' },
+            order: { updatedAt: 'DESC' },
+        });
+    }
     async getWorkshopDetail(id) {
-        return await this.workshopRepository.findOneBy({ id });
+        return await this.workshopRepository.findOne({ where: { id } });
     }
     async addToWish(user_id, workshop_id) {
         const IsWish = await this.wishRepository.findOne({

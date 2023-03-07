@@ -19,11 +19,14 @@ let WorkshopsController = class WorkshopsController {
     constructor(workshopsService) {
         this.workshopsService = workshopsService;
     }
-    getBestWorkshops() {
-        this.workshopsService.getBestWorkshops();
+    async getBestWorkshops() {
+        return await this.workshopsService.getBestWorkshops();
     }
     getNewWorkshops() {
         return this.workshopsService.getNewWorkshops();
+    }
+    async getApprovedWorkshops() {
+        return await this.workshopsService.getApprovedWorkshops();
     }
     async getWorkshopDetail(id) {
         return await this.workshopsService.getWorkshopDetail(id);
@@ -41,7 +44,7 @@ __decorate([
     (0, common_1.Get)('/best'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], WorkshopsController.prototype, "getBestWorkshops", null);
 __decorate([
     (0, common_1.Get)('/new'),
@@ -49,6 +52,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], WorkshopsController.prototype, "getNewWorkshops", null);
+__decorate([
+    (0, common_1.Get)('/approval'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], WorkshopsController.prototype, "getApprovedWorkshops", null);
 __decorate([
     (0, common_1.Get)('/:id'),
     __param(0, (0, common_1.Param)('id')),

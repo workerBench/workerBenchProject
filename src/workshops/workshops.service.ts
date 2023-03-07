@@ -13,11 +13,6 @@ export class WorkshopsService {
     private readonly wishRepository: Repository<WishList>,
   ) {}
 
-  // 진행 중인 전체 워크샵 조회 API
-  getApprovedWorkshops() {
-    this.workshopRepository.find({ where: { status: 'approval' } });
-  }
-
   // 인기 워크샵 조회 API
   getBestWorkshops() {}
 
@@ -27,6 +22,16 @@ export class WorkshopsService {
     return await this.workshopRepository.find({
       order: { createdAt: 'DESC' },
       take: 8,
+    });
+  }
+
+  // 승인된 전체 워크샵 조회 API
+  // status가 approval인 워크샵을 updatedAt이 최신 순으로 불러온다.
+  // *페이지네이션 추가 필요*
+  async getApprovedWorkshops() {
+    return await this.workshopRepository.find({
+      where: { status: 'approval' },
+      order: { updatedAt: 'DESC' },
     });
   }
 

@@ -7,14 +7,20 @@ export class WorkshopsController {
 
   // 인기 워크샵 조회 API
   @Get('/best')
-  getBestWorkshops() {
-    this.workshopsService.getBestWorkshops();
+  async getBestWorkshops() {
+    return await this.workshopsService.getBestWorkshops();
   }
 
   // 신규 워크샵 조회 API
   @Get('/new')
   getNewWorkshops() {
     return this.workshopsService.getNewWorkshops();
+  }
+
+  // 승인된 워크샵 전체 조회 API
+  @Get('/approval')
+  async getApprovedWorkshops() {
+    return await this.workshopsService.getApprovedWorkshops();
   }
 
   // 워크샵 검색 API
