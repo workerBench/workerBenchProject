@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import _ from 'lodash';
 import { Company } from 'src/entities/company';
@@ -21,45 +21,53 @@ export class TeacherService {
     name: string,
   ) {
     try {
-      const user_id = 2
-      await this.teacherRepository.insert({
-        user_id,
-        phone_number,
-        address,
-        name,
-      });
-      if(user_id){
-          return { errorMessage: "이미 등록된 강사입니다." };
-      }
-
-      return { message: '등록이 완료되었습니다.' };
+      const user_id = 1 // 파워 코딩 나중에 토큰값이 들어갈 예정
+        await this.teacherRepository.insert({
+          user_id,
+          phone_number,
+          address,
+          name,
+        });
+        return { message: '등록이 완료되었습니다.' };
     } catch (error) {
       console.log(error);
-      return { errorMessage: '입력한 요청이 잘못되었습니다.' };
+      throw new BadRequestException('입력된 요청이 잘못되었습니다.')
     }
   }
   async getTeacherWorkshops() {
-    const workshop = await this.workshopRepository.find({
-      where: { deletedAt: null },
-      select: ['title', 'thumb', 'genre_id',],
-    });
-    return workshop;
+    try {
+      const workshop = await this.workshopRepository.find({
+        where: { deletedAt: null },
+        select: ['title', 'thumb', 'genre_id',],
+      });
+      return workshop;
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException('입력된 요청이 잘못되었습니다.')
+    }
+    
   }
   async getTeacherMypage() {
-    const mypage = await this.teacherRepository.find({
-      where: { deletedAt: null },
-      select: [
-        'phone_number',
-        'address',
-        'name',
-        'possession_company_id',
-      ],
-    });
-    await this.companyRepository.find({
-      where: {deletedAt: null},
-      select: ['company_type','company_name','business_number','rrn_front','rrn_back','bank_name','saving_name']
-    })
-    return mypage;
+    try {
+      const mypage = await this.teacherRepository.find({
+        where: { deletedAt: null },
+        select: [
+          'phone_number',
+          'address',
+          'name',
+          'possession_company_id',
+        ],
+      });
+      await this.companyRepository.find({
+        where: {deletedAt: null},
+        select: ['company_type','company_name','business_number','rrn_front','rrn_back','bank_name','saving_name']
+      })
+      return mypage;
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException('입력된 요청이 잘못되었습니다.')
+    }
+    
   }
   async createTeacherCompany(
     company_type: number,
@@ -89,7 +97,7 @@ export class TeacherService {
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
       console.log(error);
-      return { errorMessage: '입력한 요청이 잘못되었습니다.' };
+      throw new BadRequestException('입력된 요청이 잘못되었습니다.')
     }
   }
   createTeacherWorkshops(
@@ -104,12 +112,6 @@ export class TeacherService {
     status: string,
     location: string,
   ) {
-    // const companyId = this.register.length + 1;
-    // this.register.push({id: companyId, title,category,desc,thumb,min_member,max_member,total_time,price,status,location});
-    // this.workshopRepository.find({
-    //     where: {deletedAt: null},
-    //     select: ["id", "title","category","desc","thumb","min_member","max_member","total_time","price","status","location","user_id","genre_id"],
-    // })
   }
   getTeacherRequest() {}
   getTeacherComplete() {}

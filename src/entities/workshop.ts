@@ -131,6 +131,12 @@ export class WorkShop {
   @Column('int', { name: 'genre_id', nullable: true })
   genre_id: number | null;
 
+  @Column('int', { name: 'name', nullable: true })
+  name: number | null;
+
+
+  
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -20,6 +20,7 @@ export declare class WorkShop {
     location: string | null;
     user_id: number | null;
     genre_id: number | null;
+    name: number | null;
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
