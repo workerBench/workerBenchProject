@@ -12,9 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PurposeTag = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const common_entity_1 = require("../common/entities/common.entity");
 const typeorm_1 = require("typeorm");
-let PurposeTag = class PurposeTag extends common_entity_1.CommonEntity {
+const workshop_purpose_1 = require("./workshop-purpose");
+let PurposeTag = class PurposeTag {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('increment', { type: 'int', name: 'id' }),
@@ -31,6 +31,22 @@ __decorate([
     (0, typeorm_1.Column)('varchar', { name: 'name', length: 20, nullable: false }),
     __metadata("design:type", String)
 ], PurposeTag.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], PurposeTag.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], PurposeTag.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], PurposeTag.prototype, "deletedAt", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => workshop_purpose_1.WorkShopPurpose, (workshopPurpose) => workshopPurpose.PurPoseTag),
+    __metadata("design:type", Array)
+], PurposeTag.prototype, "WorkShopPurPoseList", void 0);
 PurposeTag = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'purpose_tag' })
 ], PurposeTag);

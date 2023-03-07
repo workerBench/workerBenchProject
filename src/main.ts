@@ -13,6 +13,8 @@ import { HttpApiExceptionFilter } from './common/exceptions/http.api.exception.f
 import cookieParser from 'cookie-parser';
 import { join } from 'path';
 
+declare const module: any;
+
 class Application {
   private logger = new Logger(Application.name);
   private DEV_MODE: boolean;
@@ -108,6 +110,11 @@ class Application {
   async boostrap() {
     await this.setUpGlobalMiddleware();
     await this.server.listen(this.PORT);
+
+    if (module.hot) {
+      module.hot.accept();
+      module.hot.dispose(() => this.server.close());
+    }
   }
 
   startLog() {

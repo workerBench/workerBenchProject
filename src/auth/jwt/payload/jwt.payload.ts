@@ -1,5 +1,6 @@
 export class JwtPayload {
-  user_id: string;
-  iat?: number;
-  exp?: number;
+  id: number;
+  email?: string;
+  userType?: number;
+  adminType?: number;
 }
