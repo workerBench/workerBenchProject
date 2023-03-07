@@ -8,35 +8,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkshopsController = void 0;
 const common_1 = require("@nestjs/common");
+const workshops_service_1 = require("./workshops.service");
 let WorkshopsController = class WorkshopsController {
-    getAll() {
-        return 'here is workshops';
-    }
-    getOne(workshopsId) {
-        return `return one workshops id : ${workshopsId}`;
+    constructor(workshopsService) {
+        this.workshopsService = workshopsService;
     }
 };
-__decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], WorkshopsController.prototype, "getAll", null);
-__decorate([
-    (0, common_1.Get)("/:id"),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], WorkshopsController.prototype, "getOne", null);
 WorkshopsController = __decorate([
-    (0, common_1.Controller)('workshops')
+    (0, common_1.Controller)('/api/workshops'),
+    __metadata("design:paramtypes", [workshops_service_1.WorkshopsService])
 ], WorkshopsController);
 exports.WorkshopsController = WorkshopsController;
 //# sourceMappingURL=workshops.controller.js.map

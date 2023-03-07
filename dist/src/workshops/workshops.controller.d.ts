@@ -1,4 +1,5 @@
+import { WorkshopsService } from 'src/workshops/workshops.service';
 export declare class WorkshopsController {
-    getAll(): string;
-    getOne(workshopsId: string): string;
+    private readonly workshopsService;
+    constructor(workshopsService: WorkshopsService);
 }
