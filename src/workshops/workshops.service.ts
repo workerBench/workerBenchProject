@@ -10,16 +10,15 @@ import { Repository } from 'typeorm';
 export class WorkshopsService {
   constructor(
     private readonly workshopRepository: WorkshopRepository,
+    // @InjectRepository(WishList)
+    // private readonly workshopRepository: Repository<WorkShop>,
     @InjectRepository(WishList)
     private readonly wishRepository: Repository<WishList>,
-    @InjectRepository(Order)
-    private readonly orderRepository: Repository<Order>,
   ) {}
 
   // 인기 워크샵 조회 API
   // 최근 가장 결제 횟수가 많은 순으로 워크샵을 8개까지 가져온다.
   async getBestWorkshops() {
-    // return await this.workshopRepository.find({ relations: ['Orders'] });
     return await this.workshopRepository.getWorkshopsByOrder();
   }
 

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Order } from 'src/entities/order';
 import { WorkShop } from 'src/entities/workshop';
 import { DataSource, Repository } from 'typeorm';
 
@@ -11,10 +10,9 @@ export class WorkshopRepository extends Repository<WorkShop> {
 
   async getWorkshopsByOrder() {
     const result = await this.createQueryBuilder('workshop')
-      .innerJoinAndSelect('workshop.Orders', 'wo')
-      .groupBy('wo.id')
-      .orderBy('COUNT(wo.id)', 'DESC')
+      .innerJoinAndSelect('workshop.Orders', 'order')
       .getMany();
+
     return result;
   }
 }

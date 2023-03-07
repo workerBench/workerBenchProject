@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { WorkShop } from 'src/entities/workshop';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { WishList } from 'src/entities/wish-list';
+import Connection from 'mysql2/typings/mysql/lib/Connection';
 
 // repository mock 함수로 만들기 (repository에 사용되는 메소드를 mock)
 const mockWorkshopRepository = () => ({
@@ -48,6 +49,20 @@ describe('WorkshopsService', () => {
     wishRepository = module.get<MockRepository<WishList>>(
       getRepositoryToken(WishList),
     );
+  });
+
+  // 인기 워크샵 조회 API 테스트
+  describe('getNewWorkshops()', () => {
+    it.todo('인기 워크샵 잘 불러오는지 검증');
+
+    it('인기 워크샵 목록 잘 불러오는지 검증', async () => {
+      workshopRepository.find.mockResolvedValue([]); // mockResolvedValue: 반환값을 정함
+
+      const result = await service.getNewWorkshops();
+
+      expect(workshopRepository.find).toHaveBeenCalledTimes(1); // 1번만 호출
+      expect(result).toBeInstanceOf(Array); // 값이 배열로 반환되는지
+    });
   });
 
   // 신규 워크샵 조회 API 테스트
