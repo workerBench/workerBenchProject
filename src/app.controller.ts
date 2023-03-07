@@ -15,7 +15,4 @@ export class AppController {
   getHello() {
     return 'Hello World!';
   }
-
-
 }
-

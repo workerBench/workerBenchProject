@@ -15,7 +15,7 @@ let MypageModule = class MypageModule {
 MypageModule = __decorate([
     (0, common_1.Module)({
         controllers: [mypage_controller_1.MypageController],
-        providers: [mypage_service_1.MypageService]
+        providers: [mypage_service_1.MypageService],
     })
 ], MypageModule);
 exports.MypageModule = MypageModule;
