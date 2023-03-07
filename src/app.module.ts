@@ -11,8 +11,8 @@ import { WorkshopsModule } from './workshops/workshops.module';
 import { MypageModule } from './mypage/mypage.module';
 import { TeacherModule } from './teacher/teacher.module';
 import { AdminModule } from './admin/admin.module';
-import { AppController } from './app.controller';
-import { AuthModule } from './auth/auth.module';
+import { AppRenderController } from './app.render.controller';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -59,7 +59,7 @@ import { AuthModule } from './auth/auth.module';
     TeacherModule,
     AdminModule,
   ],
-  controllers: [AppController],
+  controllers: [AppRenderController],
   providers: [
     {
       provide: APP_GUARD,

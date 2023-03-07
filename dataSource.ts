@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import { WorkShop } from './src/entities/workshop';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -10,7 +11,7 @@ const dataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [],
+  entities: [WorkShop],
   migrations: [__dirname + '/src/migrations/*.ts'],
   charset: 'utf8mb4_general_ci',
   synchronize: false,
