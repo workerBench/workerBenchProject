@@ -20,7 +20,6 @@ import { WorkShopImage } from './workshop-image';
 import { WorkShopInstanceDetail } from './workshop-instance.detail';
 import { WorkShopPurpose } from './workshop-purpose';
 
-
 @Entity({ schema: 'workerbench', name: 'workshop' })
 export class WorkShop {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
