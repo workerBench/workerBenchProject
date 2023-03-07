@@ -1,8 +1,9 @@
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
 import { WorkShop } from '../../entities/workshop';
+import { Order } from '../../entities/order';
 
-export default class WorkshopSeeder implements Seeder {
+export default class OrderSeeder implements Seeder {
   public async run(
     dataSource: DataSource,
     factoryManager: SeederFactoryManager,
@@ -14,22 +15,16 @@ export default class WorkshopSeeder implements Seeder {
     // 2. dummy data를 하드코딩할 경우
     // 랜덤 날짜 구하는 함수
 
-    const workShopRepository = await dataSource.getRepository(WorkShop);
+    const orderRepository = await dataSource.getRepository(Order);
 
-    await workShopRepository.insert([
+    await orderRepository.insert([
       {
-        title: 'test1',
-        category: 'online',
-        desc: '상세정보1',
-        thumb: '이미지 링크',
-        min_member: 5,
-        max_member: 20,
-        total_time: 120,
-        price: 30000,
-        status: 'request',
-        location: '서울',
+        imp_uid: '1643289-4284937',
+        amount: 39800,
+        pay_method: 'card',
+        status: 'paid',
         user_id: 1,
-        genre_id: 1,
+        workshop_id: 1,
       },
     ]);
   }

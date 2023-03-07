@@ -1,22 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Order } from 'src/entities/order';
 import { WishList } from 'src/entities/wish-list';
 import { WorkShop } from 'src/entities/workshop';
+import { WorkshopRepository } from 'src/workshops/order.repository';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class WorkshopsService {
   constructor(
-    @InjectRepository(WorkShop)
-    private readonly workshopRepository: Repository<WorkShop>,
+    private readonly workshopRepository: WorkshopRepository,
     @InjectRepository(WishList)
     private readonly wishRepository: Repository<WishList>,
+    @InjectRepository(Order)
+    private readonly orderRepository: Repository<Order>,
   ) {}
 
   // 인기 워크샵 조회 API
-  // 최근 1개월 간 가장 결제 횟수가 많은 워크샵을 8개까지 가져온다.
+  // 최근 가장 결제 횟수가 많은 순으로 워크샵을 8개까지 가져온다.
   async getBestWorkshops() {
-    return await this.workshopRepository.find({});
+    // return await this.workshopRepository.find({ relations: ['Orders'] });
+    return await this.workshopRepository.getWorkshopsByOrder();
   }
 
   // 신규 워크샵 조회 API
