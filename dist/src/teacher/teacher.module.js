@@ -11,10 +11,18 @@ const common_1 = require("@nestjs/common");
 const teacher_render_controller_1 = require("./teacher.render.controller");
 const teacher_controller_1 = require("./teacher.controller");
 const teacher_service_1 = require("./teacher.service");
+const typeorm_1 = require("@nestjs/typeorm");
+const teacher_1 = require("../entities/teacher");
+const user_1 = require("../entities/user");
+const company_1 = require("../entities/company");
+const workshop_1 = require("../entities/workshop");
 let TeacherModule = class TeacherModule {
 };
 TeacherModule = __decorate([
     (0, common_1.Module)({
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([teacher_1.Teacher, user_1.User, company_1.Company, workshop_1.WorkShop])
+        ],
         controllers: [teacher_controller_1.TeacherController, teacher_render_controller_1.TeacherControllerRender],
         providers: [teacher_service_1.TeacherService]
     })

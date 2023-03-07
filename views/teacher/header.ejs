@@ -15,6 +15,7 @@
     href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     rel="stylesheet" />
     <link href="/teacher/css/header.css" rel="stylesheet"/>
+    <script src="/teacher/js/header.js"></script>
     <title>비밀번호 재입력</title>
   </head>
   <body>
@@ -24,8 +25,8 @@
           <img src="/images/header.png" />
         </div>
         <div class="domain-name">Worker Bench</div>
-        <div class="login-or-mypage-div">로그인</div>
-        <div class="register-or-logout-div">회원가입</div>
+        <button type="radio" id="login-button" onclick="login()">로그인</button>
+        <button type="radio" id="signup-button" onclick="signup()">회원 가입</button>
       </nav>
     </div>
 </body>

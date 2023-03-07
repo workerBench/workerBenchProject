@@ -34,31 +34,27 @@ body {
     font-weight: bold;
     padding-top: 20px;
 }
-.login-or-mypage-div {
+#login-button{
+    width: 100px;
+    height: 50px; 
     margin-left: auto;
     background-color: rgb(60, 60, 255);
-    width: 100px;
-    height: 50px;
     border-radius: 30px;
-    display: flex;
-    justify-content: center;
     color: white;
-    cursor: pointer;
+    border:none ;
 }
-.register-or-logout-div {
-    margin-left: 20px;
-    background-color: rgb(60, 60, 255);
-    width: 100px;
-    height: 50px;
-    border-radius: 30px;
-    display: flex;
-    justify-content: center;
-    color: white;
-    cursor: pointer;
-}
-.login-or-mypage-div:hover {
+#login-button:hover {
     background-color: rgb(102, 102, 249);
 }
-.register-or-logout-div:hover {
+#signup-button{
+    width: 100px;
+    height: 50px;
+    margin-left: 20px;
+    background-color: rgb(60, 60, 255);
+    border-radius: 30px;
+    color: white;
+    border:none ;
+}
+#signup-button:hover {
     background-color: rgb(102, 102, 249);
 }
