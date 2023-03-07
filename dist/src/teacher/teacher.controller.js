@@ -38,7 +38,10 @@ let TeacherController = class TeacherController {
         return this.teacherService.createTeacherCompany(data.company_type, data.company_name, data.business_number, data.rrn_front, data.rrn_back, data.bank_name, data.account, data.saving_name, data.isBan, data.user_id);
     }
     createTeacherWorkshops(data) {
-        return this.teacherService.createTeacherWorkshops(data.category, data.genre_id, data.title, data.desc, data.thumb, data.min_member, data.max_member, data.total_time, data.price, data.status, data.location);
+        return this.teacherService.createTeacherWorkshops(data.category, data.genre_id, data.title, data.desc, data.thumb, data.min_member, data.max_member, data.total_time, data.price, data.location);
+    }
+    getTeacherRequest() {
+        return this.teacherService.getTeacherRequest();
     }
     getTeacherComplete() {
         return this.teacherService.getTeacherComplete();
@@ -85,6 +88,12 @@ __decorate([
     __metadata("design:paramtypes", [createWorkshopsDto_1.createWorkshopsDto]),
     __metadata("design:returntype", void 0)
 ], TeacherController.prototype, "createTeacherWorkshops", null);
+__decorate([
+    (0, common_1.Get)('workshops/request'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], TeacherController.prototype, "getTeacherRequest", null);
 __decorate([
     (0, common_1.Get)('workshops/complete'),
     __metadata("design:type", Function),

@@ -2,8 +2,6 @@ import { Body, Controller, Get, Patch, Post, Param,UseGuards } from '@nestjs/com
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
-import { Teacher } from 'src/entities/teacher';
-import { User } from 'src/entities/user';
 import { createCompanyDto } from './dto/CreateCompanyDto';
 import { createTeacherDto } from './dto/createTeacherDto';
 import { createWorkshopsDto } from './dto/createWorkshopsDto';
@@ -62,15 +60,14 @@ export class TeacherController {
      data.max_member,
      data.total_time,
      data.price,
-     data.status,
      data.location,
     );
   }
   // 강사 미완료 목록 가져오기 api
-  // @Get('workshops/request')
-  // getTeacherRequest() {
-  //   return this.teacherService.getTeacherRequest();
-  // }
+  @Get('workshops/request')
+  getTeacherRequest() {
+    return this.teacherService.getTeacherRequest();
+  }
   // 강사 완료 목록 가져오기 api
   @Get('workshops/complete')
   getTeacherComplete() {

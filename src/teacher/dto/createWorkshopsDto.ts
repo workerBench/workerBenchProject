@@ -29,8 +29,5 @@ export class createWorkshopsDto {
   readonly price: number;
 
   @IsString()
-  readonly status: string;
-
-  @IsString()
   readonly location: string;
 }

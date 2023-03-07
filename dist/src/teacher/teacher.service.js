@@ -31,14 +31,16 @@ let TeacherService = class TeacherService {
         this.companyRepository = companyRepository;
         this.workshopRepository = workshopRepository;
     }
-    async createTeacherRegister(id, phone_number, address, name) {
+    async createTeacherRegister(user_id, phone_number, address, name) {
         try {
-            const user_id = await this.userRepository.findOne({
-                where: { id },
-                select: ['id'],
+            const User_id = await this.teacherRepository.findOne({
+                where: { user_id: user_id }
             });
+            if (User_id) {
+                throw new common_1.UnauthorizedException('이미 등록된 강사입니다.');
+            }
             this.teacherRepository.insert({
-                user_id: user_id.id,
+                user_id: user_id,
                 phone_number,
                 address,
                 name,
@@ -47,7 +49,7 @@ let TeacherService = class TeacherService {
         }
         catch (error) {
             console.log(error);
-            throw new common_1.BadRequestException('입력된 요청이 잘못되었습니다.');
+            throw new error('입력된 요청이 잘못되었습니다.');
         }
     }
     async getTeacherWorkshops() {
@@ -69,18 +71,6 @@ let TeacherService = class TeacherService {
                 where: { deletedAt: null },
                 select: ['phone_number', 'address', 'name'],
             });
-            await this.companyRepository.find({
-                where: { deletedAt: null },
-                select: [
-                    'company_type',
-                    'company_name',
-                    'business_number',
-                    'rrn_front',
-                    'rrn_back',
-                    'bank_name',
-                    'saving_name',
-                ],
-            });
             return mypage;
         }
         catch (error) {
@@ -88,9 +78,9 @@ let TeacherService = class TeacherService {
             throw new common_1.BadRequestException('입력된 요청이 잘못되었습니다.');
         }
     }
-    createTeacherCompany(company_type, company_name, business_number, rrn_front, rrn_back, bank_name, account, saving_name, isBan, user_id) {
+    async createTeacherCompany(company_type, company_name, business_number, rrn_front, rrn_back, bank_name, account, saving_name, isBan, user_id) {
         try {
-            const Company_name = this.companyRepository.findOne({
+            const Company_name = await this.companyRepository.findOne({
                 where: { company_name },
             });
             if (Company_name) {
@@ -115,9 +105,9 @@ let TeacherService = class TeacherService {
             throw error;
         }
     }
-    createTeacherWorkshops(category, genre_id, title, desc, thumb, min_member, max_member, total_time, price, status, location) {
+    async createTeacherWorkshops(category, genre_id, title, desc, thumb, min_member, max_member, total_time, price, location) {
         try {
-            this.workshopRepository.save({
+            await this.workshopRepository.insert({
                 category,
                 genre_id,
                 title,
@@ -127,7 +117,7 @@ let TeacherService = class TeacherService {
                 max_member,
                 total_time,
                 price,
-                status,
+                status: "request",
                 location,
             });
             return {
@@ -139,10 +129,9 @@ let TeacherService = class TeacherService {
             throw new common_1.BadRequestException('입력된 요청이 잘못되었습니다.');
         }
     }
-    async getTeacherRequest(id) {
-        const request = await this.workshopRepository.findOne({
-            where: { id },
-            select: ['status']
+    async getTeacherRequest() {
+        const request = await this.workshopRepository.find({
+            where: { status: 'request' },
         });
         return request;
     }
@@ -159,12 +148,12 @@ let TeacherService = class TeacherService {
                 select: ['status']
             });
             if (!status || lodash_1.default.isNil(status)) {
-                throw new common_1.BadRequestException('등록된 워크샵이 없습니다.');
+                throw new common_1.NotFoundException('등록된 워크샵이 없습니다.');
             }
-            if (status) {
-                throw new common_1.BadRequestException('이미 워크샵이 수락되었습니다.');
+            await this.workshopRepository.update(id, { status: "complete" });
+            if (status.status !== "complete") {
+                throw new common_1.UnauthorizedException('이미 워크샵이 수락되었습니다.');
             }
-            this.workshopRepository.update(id, { status: "complete" });
             return { message: '워크샵이 수락 되었습니다.' };
         }
         catch (error) {
@@ -179,12 +168,12 @@ let TeacherService = class TeacherService {
                 select: ['status']
             });
             if (!status || lodash_1.default.isNil(status)) {
-                throw new common_1.BadRequestException('등록된 워크샵이 없습니다.');
+                throw new common_1.NotFoundException('등록된 워크샵이 없습니다.');
             }
-            if (status) {
-                throw new common_1.BadRequestException('이미 워크샵이 종료되었습니다.');
+            await this.workshopRepository.update(id, { status: "finished" });
+            if (status.status !== "finished") {
+                throw new common_1.UnauthorizedException('이미 워크샵이 종료되었습니다.');
             }
-            this.workshopRepository.update(id, { status: "finished" });
             return { message: '워크샵이 종료 되었습니다.' };
         }
         catch (error) {

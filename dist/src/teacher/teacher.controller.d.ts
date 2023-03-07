@@ -1,5 +1,4 @@
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
-import { Teacher } from 'src/entities/teacher';
 import { createCompanyDto } from './dto/CreateCompanyDto';
 import { createTeacherDto } from './dto/createTeacherDto';
 import { createWorkshopsDto } from './dto/createWorkshopsDto';
@@ -11,13 +10,14 @@ export declare class TeacherController {
         message: string;
     }>;
     getTeacherWorkshops(): Promise<import("../entities/workshop").WorkShop[]>;
-    getTeacherMypage(): Promise<Teacher[]>;
-    createTeacherCompany(data: createCompanyDto): {
+    getTeacherMypage(): Promise<import("../entities/teacher").Teacher[]>;
+    createTeacherCompany(data: createCompanyDto): Promise<{
         message: string;
-    };
-    createTeacherWorkshops(data: createWorkshopsDto): {
+    }>;
+    createTeacherWorkshops(data: createWorkshopsDto): Promise<{
         message: string;
-    };
+    }>;
+    getTeacherRequest(): Promise<import("../entities/workshop").WorkShop[]>;
     getTeacherComplete(): Promise<import("../entities/workshop").WorkShop[]>;
     updateTeacherAccept(id: number): Promise<{
         message: string;

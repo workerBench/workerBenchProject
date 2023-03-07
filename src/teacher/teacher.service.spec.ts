@@ -11,6 +11,7 @@ import { TeacherService } from './teacher.service';
 const mockteacherRepository = () =>({
   findOne : jest.fn(),
   insert : jest.fn(),
+  find : jest.fn(),
 })
 const mockcompanyRepository = () =>({
   insert : jest.fn(),
@@ -71,7 +72,8 @@ describe('TeacherService', () => {
       getRepositoryToken(User),
     );
   });
-// company 테스트코듬 
+
+// 업체 등록 테스트코드
   describe('createTeacherCompany', () => {
     it('should insert a new company and return a success message', async () => {
       const companyData = {
@@ -106,13 +108,12 @@ describe('TeacherService', () => {
     });
 
     it('should insert company and return success message', async () => {
-      const company_name = 'new company name';
 
       jest.spyOn(companyRepository, 'findOne').mockResolvedValue(null);
 
       const result = await service.createTeacherCompany(
         1,
-        company_name,
+        'company name',
         1234567890,
         1234,
         5678,
@@ -125,7 +126,7 @@ describe('TeacherService', () => {
 
       expect(companyRepository.insert).toHaveBeenCalledWith({
         company_type: 1,
-        company_name,
+        company_name:'company name',
         business_number: 1234567890,
         rrn_front: 1234,
         rrn_back: 5678,
@@ -137,6 +138,7 @@ describe('TeacherService', () => {
       });
       expect(result).toEqual({ message: '등록이 완료되었습니다.' });
     });
+  });
 
 
     
@@ -176,7 +178,7 @@ describe('TeacherService', () => {
     //   expect(companyRepository.insert).toHaveBeenCalledWith(companyData);
     //   expect(result).toEqual(expectedMessage);
     // })
-        // 강사 워크샵 조회
+        // 강사 워크샵 테스트코드
       describe('getTeacherWorkshops()', () => {
         it('should getTeacherWorkshops success message', async () => {
           workshopRepository.find.mockResolvedValue([]); // mockResolvedValue: 반환값을 정함
@@ -185,20 +187,17 @@ describe('TeacherService', () => {
     
           expect(workshopRepository.find).toHaveBeenCalledTimes(1); // 1번만 호출
           expect(result).toBeInstanceOf(Array); // 값이 배열로 반환
-        
-      })
-      //강사 마이페이지 조회
+        });
+      });
+      //강사 마이페이지 조회 테스트코드
       describe('getTeacherMypage()', () => {
         it('should getTeacherMypage success message', async () => {
-          workshopRepository.find.mockResolvedValue([]); // mockResolvedValue: 반환값을 정함
+          teacherRepository.find.mockResolvedValue([]); // mockResolvedValue: 반환값을 정함
 
           const result = await service.getTeacherMypage();
     
-          expect(workshopRepository.find).toHaveBeenCalledTimes(1); // 1번만 호출
+          expect(teacherRepository.find).toHaveBeenCalledTimes(1); // 1번만 호출
           expect(result).toBeInstanceOf(Array); // 값이 배열로 반환
-        
-      })
+        });
     });
   });
-});
-})
