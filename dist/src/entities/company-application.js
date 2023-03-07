@@ -11,6 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CompanyApplication = void 0;
 const typeorm_1 = require("typeorm");
+const company_1 = require("./company");
+const teacher_1 = require("./teacher");
 let CompanyApplication = class CompanyApplication {
 };
 __decorate([
@@ -29,6 +31,22 @@ __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], CompanyApplication.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => teacher_1.Teacher, (teacher) => teacher.ApplicationList, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)([{ name: 'teacher_id', referencedColumnName: 'user_id' }]),
+    __metadata("design:type", teacher_1.Teacher)
+], CompanyApplication.prototype, "Teacher", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => company_1.Company, (company) => company.AppliedCompanyList, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)([{ name: 'company_id', referencedColumnName: 'id' }]),
+    __metadata("design:type", company_1.Company)
+], CompanyApplication.prototype, "AppliedCompany", void 0);
 CompanyApplication = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'company_application' })
 ], CompanyApplication);

@@ -37,7 +37,6 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_config_service_1 = require("./config/typeorm.config.service");
 const throttler_1 = require("@nestjs/throttler");
 const core_1 = require("@nestjs/core");
-const auth_module_1 = require("./auth/auth.module");
 const nestjs_redis_1 = require("@liaoliaots/nestjs-redis");
 const redis_config_service_1 = require("./config/redis.config.service");
 const workshops_module_1 = require("./workshops/workshops.module");
@@ -45,6 +44,7 @@ const mypage_module_1 = require("./mypage/mypage.module");
 const teacher_module_1 = require("./teacher/teacher.module");
 const admin_module_1 = require("./admin/admin.module");
 const app_controller_1 = require("./app.controller");
+const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -58,6 +58,7 @@ AppModule = __decorate([
                         .default('development'),
                     PORT: Joi.number().default(5000),
                     JWT_SECRET_KEY: Joi.string().required(),
+                    JWT_SECRET_KEY_ADMIN: Joi.string().required(),
                     ADMIN_USER: Joi.string().required(),
                     ADMIN_PASSWORD: Joi.string().required(),
                     DB_HOST: Joi.string().required(),
@@ -84,7 +85,7 @@ AppModule = __decorate([
             }),
             throttler_1.ThrottlerModule.forRoot({
                 ttl: 60,
-                limit: 10,
+                limit: 100,
             }),
             auth_module_1.AuthModule,
             workshops_module_1.WorkshopsModule,

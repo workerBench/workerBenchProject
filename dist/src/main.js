@@ -65,6 +65,10 @@ class Application {
     async boostrap() {
         await this.setUpGlobalMiddleware();
         await this.server.listen(this.PORT);
+        if (module.hot) {
+            module.hot.accept();
+            module.hot.dispose(() => this.server.close());
+        }
     }
     startLog() {
         if (this.DEV_MODE) {

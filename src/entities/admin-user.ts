@@ -1,10 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { CommonEntity } from 'src/common/entities/common.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({ schema: 'workerbench', name: 'admin_user' })
-export class AdminUser extends CommonEntity {
+export class AdminUser {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
   id: number;
 
@@ -58,11 +64,24 @@ export class AdminUser extends CommonEntity {
   @Column('varchar', { name: 'phone_number', length: 50, nullable: false })
   phone_number: string;
 
-  @Column('varchar', {
-    name: 'admin_type',
-    length: 20,
-    nullable: true,
-    default: 'normal_admin',
+  @ApiProperty({
+    example: 0,
+    description: '관리자 권한 여부. 일반 관리자 = 0, 최고 관리자 = 1',
+    required: false,
   })
-  admin_type: string;
+  @Column('int', {
+    name: 'admin_type',
+    nullable: false,
+    default: 0,
+  })
+  admin_type: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date | null;
 }

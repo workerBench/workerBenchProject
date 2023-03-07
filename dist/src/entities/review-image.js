@@ -12,9 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewImage = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const common_entity_1 = require("../common/entities/common.entity");
 const typeorm_1 = require("typeorm");
-let ReviewImage = class ReviewImage extends common_entity_1.CommonEntity {
+const review_1 = require("./review");
+let ReviewImage = class ReviewImage {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('increment', { type: 'int', name: 'id' }),
@@ -35,6 +35,26 @@ __decorate([
     (0, typeorm_1.Column)('int', { name: 'review_id', nullable: true }),
     __metadata("design:type", Number)
 ], ReviewImage.prototype, "review_id", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], ReviewImage.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], ReviewImage.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], ReviewImage.prototype, "deletedAt", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => review_1.Review, (reivew) => reivew.ReviewImages, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)([{ name: 'review_id', referencedColumnName: 'id' }]),
+    __metadata("design:type", review_1.Review)
+], ReviewImage.prototype, "Review", void 0);
 ReviewImage = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'review_image' })
 ], ReviewImage);

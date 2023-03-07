@@ -1,6 +1,12 @@
-import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class WorkShopPurpose extends CommonEntity {
+import { PurposeTag } from './purpose-tag';
+import { WorkShop } from './workshop';
+export declare class WorkShopPurpose {
     id: number;
     workshop_id: number;
     purpose_tag_id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
+    Workshop: WorkShop;
+    PurPoseTag: PurposeTag;
 }

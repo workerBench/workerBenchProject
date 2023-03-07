@@ -12,9 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Company = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const common_entity_1 = require("../common/entities/common.entity");
 const typeorm_1 = require("typeorm");
-let Company = class Company extends common_entity_1.CommonEntity {
+const company_application_1 = require("./company-application");
+const teacher_1 = require("./teacher");
+let Company = class Company {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('increment', { type: 'int', name: 'id' }),
@@ -133,6 +134,31 @@ __decorate([
     (0, typeorm_1.Column)('int', { name: 'user_id', nullable: true }),
     __metadata("design:type", Number)
 ], Company.prototype, "user_id", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Company.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], Company.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], Company.prototype, "deletedAt", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => teacher_1.Teacher, (teacher) => teacher.MyCompany),
+    (0, typeorm_1.JoinColumn)([{ name: 'user_id', referencedColumnName: 'user_id' }]),
+    __metadata("design:type", teacher_1.Teacher)
+], Company.prototype, "President", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => teacher_1.Teacher, (teacher) => teacher.AffiliationCompany),
+    __metadata("design:type", Array)
+], Company.prototype, "EmployeeList", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => company_application_1.CompanyApplication, (companyApplication) => companyApplication.AppliedCompany),
+    __metadata("design:type", Array)
+], Company.prototype, "AppliedCompanyList", void 0);
 Company = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'company' })
 ], Company);

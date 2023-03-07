@@ -1,9 +1,11 @@
-import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class AdminUser extends CommonEntity {
+export declare class AdminUser {
     id: number;
     email: string;
     password: string;
     name: string;
     phone_number: string;
-    admin_type: string;
+    admin_type: number;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
 }

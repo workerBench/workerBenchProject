@@ -12,9 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkShopImage = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const common_entity_1 = require("../common/entities/common.entity");
 const typeorm_1 = require("typeorm");
-let WorkShopImage = class WorkShopImage extends common_entity_1.CommonEntity {
+const workshop_1 = require("./workshop");
+let WorkShopImage = class WorkShopImage {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('increment', { type: 'int', name: 'id' }),
@@ -40,6 +40,26 @@ __decorate([
     (0, typeorm_1.Column)('int', { name: 'workshop_id', nullable: true }),
     __metadata("design:type", Number)
 ], WorkShopImage.prototype, "workshop_id", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], WorkShopImage.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], WorkShopImage.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], WorkShopImage.prototype, "deletedAt", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => workshop_1.WorkShop, (workshop) => workshop.Orders, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)([{ name: 'workshop_id', referencedColumnName: 'id' }]),
+    __metadata("design:type", workshop_1.WorkShop)
+], WorkShopImage.prototype, "Workshop", void 0);
 WorkShopImage = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'workshop_image' })
 ], WorkShopImage);
