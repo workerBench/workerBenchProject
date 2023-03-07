@@ -1,13 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { not } from 'joi';
+import { Company } from 'src/entities/company';
+import { User } from 'src/entities/user';
 import { Repository } from 'typeorm/repository/Repository';
 import { WorkShop } from '../entities/workshop';
 
 @Injectable()
 export class AdminService {
     constructor(
-        @InjectRepository(WorkShop) private workshopRepository: Repository<WorkShop>
+        @InjectRepository(WorkShop) private workshopRepository: Repository<WorkShop>,
+        @InjectRepository(User) private userRepository: Repository<User>,
+        @InjectRepository(Company) private companyRepository: Repository<Company>
     ) {}
 
     //-------------------------- 검토 대기중인 워크숍 목록 불러오기 --------------------------//
@@ -78,7 +82,7 @@ export class AdminService {
             })
         }
 
-    //-------------------------- 워크숍 삭제하기 (status: "approval" => "finished" --------------------------//
+    //-------------------------- 워크숍 삭제하기 (status: "approval" => "finished") --------------------------//
 
     async removeWorkshop(id: number) {
         const workshop = await this.workshopRepository.findOne({
@@ -92,5 +96,25 @@ export class AdminService {
         await this.workshopRepository.update(id, {status:"finished"})
 
         return await this.workshopRepository.softDelete(id)
+    }
+
+    //-------------------------- 유저 밴 처리하기 (isBam : 0 => 1) --------------------------//
+
+    async userBan(id: number) {
+        const user = await this.userRepository.findOne({
+            where:{id}
+        })
+
+        return await this.userRepository.update(id, {isBan: 1})
+    }
+
+    //-------------------------- 업체 밴 처리하기 (isBam : 0 => 1) --------------------------//
+
+    async companyBan(id: number) {
+        const company = await this.companyRepository.findOne({
+            where:{id}
+        })
+        
+        return await this.companyRepository.update(id, {isBan: 1})
     }
 }

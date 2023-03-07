@@ -46,6 +46,14 @@ let AdminController = class AdminController {
         await this.adminService.removeWorkshop(id);
         return { message: "워크숍이 삭제되었습니다." };
     }
+    async userBan(id) {
+        await this.adminService.userBan(id);
+        return { message: "유저가 밴 처리 되었습니다." };
+    }
+    async companyBan(id) {
+        await this.adminService.companyBan(id);
+        return { message: "업체가 밴 처리 되었습니다." };
+    }
 };
 __decorate([
     (0, common_1.Get)('/workshops/request'),
@@ -88,6 +96,20 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "removeWorkshop", null);
+__decorate([
+    (0, common_1.Patch)('ban/user'),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "userBan", null);
+__decorate([
+    (0, common_1.Patch)('ban/company'),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "companyBan", null);
 AdminController = __decorate([
     (0, swagger_1.ApiTags)('admin'),
     (0, common_1.Controller)('api/admin'),

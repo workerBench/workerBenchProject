@@ -17,4 +17,10 @@ export declare class AdminController {
     removeWorkshop(id: number): Promise<{
         message: string;
     }>;
+    userBan(id: number): Promise<{
+        message: string;
+    }>;
+    companyBan(id: number): Promise<{
+        message: string;
+    }>;
 }

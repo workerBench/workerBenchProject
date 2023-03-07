@@ -66,6 +66,22 @@ export class AdminController {
 
         return { message: "워크숍이 삭제되었습니다." }
     }
+
+    /*------------------------- 업체 및 유저 밴 기능 -------------------------*/
+
+    @Patch('ban/user')
+    async userBan(@Param("id") id: number) {
+        await this.adminService.userBan(id)
+
+        return { message: "유저가 밴 처리 되었습니다." }
+    }
+
+    @Patch('ban/company')
+    async companyBan(@Param("id") id: number) {
+        await this.adminService.companyBan(id)
+
+        return { message: "업체가 밴 처리 되었습니다." }
+    }
 }
 
 

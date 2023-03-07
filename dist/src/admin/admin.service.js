@@ -15,11 +15,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const company_1 = require("../entities/company");
+const user_1 = require("../entities/user");
 const Repository_1 = require("typeorm/repository/Repository");
 const workshop_1 = require("../entities/workshop");
 let AdminService = class AdminService {
-    constructor(workshopRepository) {
+    constructor(workshopRepository, userRepository, companyRepository) {
         this.workshopRepository = workshopRepository;
+        this.userRepository = userRepository;
+        this.companyRepository = companyRepository;
     }
     async requestWorkshops() {
         return await this.workshopRepository.find({
@@ -70,11 +74,27 @@ let AdminService = class AdminService {
         await this.workshopRepository.update(id, { status: "finished" });
         return await this.workshopRepository.softDelete(id);
     }
+    async userBan(id) {
+        const user = await this.userRepository.findOne({
+            where: { id }
+        });
+        return await this.userRepository.update(id, { isBan: 1 });
+    }
+    async companyBan(id) {
+        const company = await this.companyRepository.findOne({
+            where: { id }
+        });
+        return await this.companyRepository.update(id, { isBan: 1 });
+    }
 };
 AdminService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(workshop_1.WorkShop)),
-    __metadata("design:paramtypes", [Repository_1.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(user_1.User)),
+    __param(2, (0, typeorm_1.InjectRepository)(company_1.Company)),
+    __metadata("design:paramtypes", [Repository_1.Repository,
+        Repository_1.Repository,
+        Repository_1.Repository])
 ], AdminService);
 exports.AdminService = AdminService;
 //# sourceMappingURL=admin.service.js.map
