@@ -369,16 +369,16 @@ export class AuthController {
   // 부 관리자 테스트
   @Get('admintest')
   @UseGuards(JwtNormalAdminAuthGuard)
-  async test66(@CurrentUser() user: CurrentUserDto) {
+  async test66(@CurrentUser() admin: CurrentAdminDto) {
     console.log('부 관리자 테스트!');
-    console.log(user);
+    console.log(admin);
   }
 
   // 최고 관리자 테스트
   @Get('superadmintest')
   @UseGuards(JwtSuperAdminAuthGuard)
-  async test77(@CurrentUser() user: CurrentUserDto) {
+  async test77(@CurrentUser() admin: CurrentAdminDto) {
     console.log('최고 관리자 테스트!');
-    console.log(user);
+    console.log(admin);
   }
 }
