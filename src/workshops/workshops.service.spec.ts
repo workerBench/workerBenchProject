@@ -60,7 +60,21 @@ describe('WorkshopsService', () => {
       const result = await service.getNewWorkshops();
 
       expect(workshopRepository.find).toHaveBeenCalledTimes(1); // 1번만 호출
-      expect(result).toBeInstanceOf(Array); // 값이 배열로 반환
+      expect(result).toBeInstanceOf(Array); // 값이 배열로 반환되는지
+    });
+  });
+
+  // 승인된 워크샵 전체 조회 API
+  describe('getApprovedWorkshops()', () => {
+    it.todo('승인된 워크샵 전체 불러오는지 검증');
+
+    it('승인된 워크샵 전체 불러오는지 검증', async () => {
+      workshopRepository.find.mockResolvedValue([]);
+
+      const result = await service.getApprovedWorkshops();
+
+      expect(workshopRepository.find).toHaveBeenCalledTimes(1);
+      expect(result).toBeInstanceOf(Array); // 값이 배열로 반환되는지
     });
   });
 
