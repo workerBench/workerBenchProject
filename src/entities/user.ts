@@ -85,29 +85,29 @@ export class User {
   /* ------------------------ 관계 mapping --------------------------- */
 
   // 1. workshop
-  @OneToMany(() => WorkShop, (workshop) => workshop.Owner)
-  MyWorkshops: WorkShop[];
+  // @OneToMany(() => WorkShop, (workshop) => workshop.Owner)
+  // MyWorkshops: WorkShop[];
 
-  // 2. teacher
-  @OneToOne(() => Teacher, (teacher) => teacher.User)
-  TeacherProfile: Teacher;
+  // // 2. teacher
+  // @OneToOne(() => Teacher, (teacher) => teacher.User)
+  // TeacherProfile: Teacher;
 
-  // 3. wish_list
-  @OneToMany(() => WishList, (wishlist) => wishlist.User)
-  MyWishList: WishList[];
+  // // 3. wish_list
+  // @OneToMany(() => WishList, (wishlist) => wishlist.User)
+  // MyWishList: WishList[];
 
-  // 4. review
-  @OneToMany(() => Review, (review) => review.Writer)
-  MyReviews: Review[];
+  // // 4. review
+  // @OneToMany(() => Review, (review) => review.Writer)
+  // MyReviews: Review[];
 
-  // 5. workshop_instance_detail
-  @OneToMany(
-    () => WorkShopInstanceDetail,
-    (workShopInstanceDetail) => workShopInstanceDetail.Writer,
-  )
-  MyInstances: WorkShopInstanceDetail[];
+  // // 5. workshop_instance_detail
+  // @OneToMany(
+  //   () => WorkShopInstanceDetail,
+  //   (workShopInstanceDetail) => workShopInstanceDetail.Writer,
+  // )
+  // MyInstances: WorkShopInstanceDetail[];
 
-  // 6. order
-  @OneToMany(() => Order, (order) => order.Payer)
-  MyOrders: [];
+  // // 6. order
+  // @OneToMany(() => Order, (order) => order.Payer)
+  // MyOrders: [];
 }

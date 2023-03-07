@@ -1,6 +1,3 @@
-import { ReviewImage } from './review-image';
-import { User } from './user';
-import { WorkShop } from './workshop';
 export declare class Review {
     id: number;
     content: string;
@@ -10,7 +7,4 @@ export declare class Review {
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
-    Writer: User;
-    Workshop: WorkShop;
-    ReviewImages: ReviewImage[];
 }

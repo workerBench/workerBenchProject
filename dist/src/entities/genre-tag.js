@@ -13,7 +13,6 @@ exports.GenreTag = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
-const workshop_1 = require("./workshop");
 let GenreTag = class GenreTag {
 };
 __decorate([
@@ -47,10 +46,6 @@ __decorate([
     (0, typeorm_1.DeleteDateColumn)(),
     __metadata("design:type", Date)
 ], GenreTag.prototype, "deletedAt", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => workshop_1.WorkShop, (workshop) => workshop.GenreTag),
-    __metadata("design:type", Array)
-], GenreTag.prototype, "WorkShopList", void 0);
 GenreTag = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'genre_tag' })
 ], GenreTag);

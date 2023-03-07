@@ -13,8 +13,6 @@ exports.Company = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
-const company_application_1 = require("./company-application");
-const teacher_1 = require("./teacher");
 let Company = class Company {
 };
 __decorate([
@@ -146,19 +144,6 @@ __decorate([
     (0, typeorm_1.DeleteDateColumn)(),
     __metadata("design:type", Date)
 ], Company.prototype, "deletedAt", void 0);
-__decorate([
-    (0, typeorm_1.OneToOne)(() => teacher_1.Teacher, (teacher) => teacher.MyCompany),
-    (0, typeorm_1.JoinColumn)([{ name: 'user_id', referencedColumnName: 'user_id' }]),
-    __metadata("design:type", teacher_1.Teacher)
-], Company.prototype, "President", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => teacher_1.Teacher, (teacher) => teacher.AffiliationCompany),
-    __metadata("design:type", Array)
-], Company.prototype, "EmployeeList", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => company_application_1.CompanyApplication, (companyApplication) => companyApplication.AppliedCompany),
-    __metadata("design:type", Array)
-], Company.prototype, "AppliedCompanyList", void 0);
 Company = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'company' })
 ], Company);

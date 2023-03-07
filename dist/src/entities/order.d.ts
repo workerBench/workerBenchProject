@@ -1,5 +1,3 @@
-import { User } from './user';
-import { WorkShop } from './workshop';
 export declare class Order {
     id: number;
     imp_uid: string;
@@ -11,6 +9,4 @@ export declare class Order {
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
-    Payer: User;
-    Workshop: WorkShop;
 }

@@ -9,7 +9,7 @@ export declare class TeacherService {
     private companyRepository;
     private workshopRepository;
     constructor(teacherRepository: Repository<Teacher>, userRepository: Repository<User>, companyRepository: Repository<Company>, workshopRepository: Repository<WorkShop>);
-    createTeacherRegister(phone_number: string, address: string, name: string): Promise<{
+    createTeacherRegister(id: number, phone_number: string, address: string, name: string): Promise<{
         message: string;
     }>;
     getTeacherWorkshops(): Promise<WorkShop[]>;
@@ -17,7 +17,9 @@ export declare class TeacherService {
     createTeacherCompany(company_type: number, company_name: string, business_number: number, rrn_front: number, rrn_back: number, bank_name: string, account: number, saving_name: string, isBan: number, user_id: number): Promise<{
         message: string;
     }>;
-    createTeacherWorkshops(title: string, category: string, desc: string, thumb: string, min_member: number, max_member: number, total_time: number, price: number, status: string, location: string): void;
+    createTeacherWorkshops(category: string, genre_id: number, title: string, desc: string, thumb: string, min_member: number, max_member: number, total_time: number, price: number, location: string): Promise<{
+        message: string;
+    }>;
     getTeacherRequest(): void;
     getTeacherComplete(): void;
     updateTeacherAccept(): void;

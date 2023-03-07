@@ -69,26 +69,26 @@ export class Teacher {
   /* ------------------------ 관계 mapping --------------------------- */
 
   // 1. user
-  @OneToOne(() => User, (user) => user.TeacherProfile)
-  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-  User: User;
+  // @OneToOne(() => User, (user) => user.TeacherProfile)
+  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  // User: User;
 
-  // 2. company
-  @OneToOne(() => Company, (company) => company.President)
-  MyCompany: Company;
+  // // 2. company
+  // @OneToOne(() => Company, (company) => company.President)
+  // MyCompany: Company;
 
-  // 3. company 2
-  @ManyToOne(() => Company, (company) => company.EmployeeList, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'affiliation_company_id', referencedColumnName: 'id' }])
-  AffiliationCompany: Company;
+  // // 3. company 2
+  // @ManyToOne(() => Company, (company) => company.EmployeeList, {
+  //   onDelete: 'SET NULL',
+  //   onUpdate: 'CASCADE',
+  // })
+  // @JoinColumn([{ name: 'affiliation_company_id', referencedColumnName: 'id' }])
+  // AffiliationCompany: Company;
 
-  // 4. company_application
-  @OneToMany(
-    () => CompanyApplication,
-    (companyApplication) => companyApplication.Teacher,
-  )
-  ApplicationList: CompanyApplication[];
+  // // 4. company_application
+  // @OneToMany(
+  //   () => CompanyApplication,
+  //   (companyApplication) => companyApplication.Teacher,
+  // )
+  // ApplicationList: CompanyApplication[];
 }

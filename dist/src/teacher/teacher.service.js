@@ -27,11 +27,14 @@ let TeacherService = class TeacherService {
         this.companyRepository = companyRepository;
         this.workshopRepository = workshopRepository;
     }
-    async createTeacherRegister(phone_number, address, name) {
+    async createTeacherRegister(id, phone_number, address, name) {
         try {
-            const user_id = 1;
+            const user_id = await this.userRepository.findOne({
+                where: { id },
+                select: ['id'],
+            });
             await this.teacherRepository.insert({
-                user_id,
+                user_id: user_id.id,
                 phone_number,
                 address,
                 name,
@@ -47,7 +50,7 @@ let TeacherService = class TeacherService {
         try {
             const workshop = await this.workshopRepository.find({
                 where: { deletedAt: null },
-                select: ['title', 'thumb', 'genre_id',],
+                select: ['title', 'thumb', 'genre_id'],
             });
             return workshop;
         }
@@ -60,16 +63,19 @@ let TeacherService = class TeacherService {
         try {
             const mypage = await this.teacherRepository.find({
                 where: { deletedAt: null },
-                select: [
-                    'phone_number',
-                    'address',
-                    'name',
-                    'possession_company_id',
-                ],
+                select: ['phone_number', 'address', 'name', 'possession_company_id'],
             });
             await this.companyRepository.find({
                 where: { deletedAt: null },
-                select: ['company_type', 'company_name', 'business_number', 'rrn_front', 'rrn_back', 'bank_name', 'saving_name']
+                select: [
+                    'company_type',
+                    'company_name',
+                    'business_number',
+                    'rrn_front',
+                    'rrn_back',
+                    'bank_name',
+                    'saving_name',
+                ],
             });
             return mypage;
         }
@@ -80,6 +86,12 @@ let TeacherService = class TeacherService {
     }
     async createTeacherCompany(company_type, company_name, business_number, rrn_front, rrn_back, bank_name, account, saving_name, isBan, user_id) {
         try {
+            const Company_name = await this.companyRepository.findOne({
+                where: { company_name },
+            });
+            if (Company_name) {
+                throw new common_1.BadRequestException('이미 등록된 워크샵입니다.');
+            }
             await this.companyRepository.insert({
                 company_type,
                 company_name,
@@ -99,7 +111,27 @@ let TeacherService = class TeacherService {
             throw new common_1.BadRequestException('입력된 요청이 잘못되었습니다.');
         }
     }
-    createTeacherWorkshops(title, category, desc, thumb, min_member, max_member, total_time, price, status, location) {
+    async createTeacherWorkshops(category, genre_id, title, desc, thumb, min_member, max_member, total_time, price, location) {
+        try {
+            await this.workshopRepository.insert({
+                category,
+                genre_id,
+                title,
+                desc,
+                thumb,
+                min_member,
+                max_member,
+                total_time,
+                price,
+                status: "request",
+                location,
+            });
+            return { message: '워크샵 등록 신청이 완료되었습니다. 관리자의 수락을 기다려 주세요' };
+        }
+        catch (error) {
+            console.log(error);
+            throw new common_1.BadRequestException('입력된 요청이 잘못되었습니다.');
+        }
     }
     getTeacherRequest() { }
     getTeacherComplete() { }

@@ -1,4 +1,9 @@
-import { Body, Controller, Get, Patch, Post, Param } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Param,UseGuards } from '@nestjs/common';
+import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
+import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
+import { CurrentUser } from 'src/common/decorators/user.decorator';
+import { Teacher } from 'src/entities/teacher';
+import { User } from 'src/entities/user';
 import { createCompanyDto } from './dto/CreateCompanyDto';
 import { createTeacherDto } from './dto/createTeacherDto';
 import { createWorkshopsDto } from './dto/createWorkshopsDto';
@@ -8,9 +13,11 @@ export class TeacherController {
   constructor(private readonly teacherService: TeacherService) {}
   // 강사 등록 api
   @Post()
+  @UseGuards(JwtUserAuthGuard)
   createTeacherRegister(
-    @Body() data: createTeacherDto) {
+    @Body() data: createTeacherDto, @CurrentUser() user: CurrentUserDto) {
     return this.teacherService.createTeacherRegister(
+      user.id,
       data.phone_number,
       data.address,
       data.name,
@@ -46,15 +53,15 @@ export class TeacherController {
   @Post('workshops')
   createTeacherWorkshops(@Body() data: createWorkshopsDto) {
     return this.teacherService.createTeacherWorkshops(
+     data.category, 
+     data.genre_id,
      data.title,
-     data.category,
      data.desc,
      data.thumb,
      data.min_member,
      data.max_member,
      data.total_time,
      data.price,
-     data.status,
      data.location,
     );
   }

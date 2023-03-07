@@ -13,7 +13,6 @@ exports.ReviewImage = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
-const review_1 = require("./review");
 let ReviewImage = class ReviewImage {
 };
 __decorate([
@@ -47,14 +46,6 @@ __decorate([
     (0, typeorm_1.DeleteDateColumn)(),
     __metadata("design:type", Date)
 ], ReviewImage.prototype, "deletedAt", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => review_1.Review, (reivew) => reivew.ReviewImages, {
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE',
-    }),
-    (0, typeorm_1.JoinColumn)([{ name: 'review_id', referencedColumnName: 'id' }]),
-    __metadata("design:type", review_1.Review)
-], ReviewImage.prototype, "Review", void 0);
 ReviewImage = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'review_image' })
 ], ReviewImage);

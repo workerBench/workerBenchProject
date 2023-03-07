@@ -2,10 +2,13 @@ import { IsString,IsNumber } from 'class-validator';
 
 export class createWorkshopsDto {
   @IsString()
+  readonly category: string;
+  
+  @IsString()
   readonly title: string;
 
-  @IsString()
-  readonly category: string;
+  @IsNumber()
+  readonly genre_id: number;
 
   @IsString()
   readonly desc: string;

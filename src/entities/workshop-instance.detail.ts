@@ -147,19 +147,19 @@ export class WorkShopInstanceDetail {
 
   /* ------------------------ 관계 mapping --------------------------- */
 
-  // 1. user
-  @ManyToOne(() => User, (user) => user.MyInstances, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-  Writer: User;
+  // // 1. user
+  // @ManyToOne(() => User, (user) => user.MyInstances, {
+  //   onDelete: 'SET NULL',
+  //   onUpdate: 'CASCADE',
+  // })
+  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  // Writer: User;
 
-  // 2. workshop
-  @ManyToOne(() => WorkShop, (workshop) => workshop.WorkShopInstances, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
-  Workshop: User;
+  // // 2. workshop
+  // @ManyToOne(() => WorkShop, (workshop) => workshop.WorkShopInstances, {
+  //   onDelete: 'SET NULL',
+  //   onUpdate: 'CASCADE',
+  // })
+  // @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
+  // Workshop: User;
 }

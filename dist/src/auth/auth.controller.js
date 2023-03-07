@@ -38,6 +38,7 @@ let AuthController = class AuthController {
         this.authService = authService;
     }
     async register(body) {
+        console.log(body);
         try {
             await this.authService.checkEffective(body);
             await this.authService.checkingAccount(body.email);
@@ -161,13 +162,13 @@ let AuthController = class AuthController {
         console.log(user.id);
         return;
     }
-    async test66(user) {
+    async test66(admin) {
         console.log('부 관리자 테스트!');
-        console.log(user);
+        console.log(admin);
     }
-    async test77(user) {
+    async test77(admin) {
         console.log('최고 관리자 테스트!');
-        console.log(user);
+        console.log(admin);
     }
 };
 __decorate([
@@ -327,7 +328,7 @@ __decorate([
     (0, common_1.UseGuards)(jwt_normal_admin_guard_1.JwtNormalAdminAuthGuard),
     __param(0, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [current_user_dto_1.CurrentUserDto]),
+    __metadata("design:paramtypes", [current_user_dto_1.CurrentAdminDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "test66", null);
 __decorate([
@@ -335,7 +336,7 @@ __decorate([
     (0, common_1.UseGuards)(jwt_super_admin_guard_1.JwtSuperAdminAuthGuard),
     __param(0, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [current_user_dto_1.CurrentUserDto]),
+    __metadata("design:paramtypes", [current_user_dto_1.CurrentAdminDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "test77", null);
 AuthController = __decorate([

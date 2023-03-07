@@ -1,4 +1,3 @@
-import { Review } from './review';
 export declare class ReviewImage {
     id: number;
     img_name: string;
@@ -6,5 +5,4 @@ export declare class ReviewImage {
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
-    Review: Review;
 }

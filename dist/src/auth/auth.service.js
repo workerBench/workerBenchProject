@@ -103,6 +103,7 @@ let AuthService = class AuthService {
         }
     }
     async checkingAccount(email) {
+        console.log('111111');
         const check_email = await this.userRepository.findOne({ where: { email } });
         if (check_email) {
             const err = new Error('이미 존재하는 이메일 입니다.');
@@ -121,6 +122,7 @@ let AuthService = class AuthService {
         }
     }
     async sendingEmailAuthCode(email) {
+        console.log('2222222222');
         const auth_num = (0, crypto_1.randomBytes)(3).toString('hex');
         await this.redisClient.setex((0, redis_key_name_1.emailAuthCodeRedisKey)(email), 300, auth_num);
         this.mailerService
@@ -134,6 +136,7 @@ let AuthService = class AuthService {
             console.log(result);
         })
             .catch((error) => {
+            console.log('33333333333333333');
             console.log(error);
             throw new common_1.ConflictException();
         });

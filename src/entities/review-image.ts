@@ -42,11 +42,11 @@ export class ReviewImage {
 
   /* ------------------------ 관계 mapping --------------------------- */
 
-  // 1. review
-  @ManyToOne(() => Review, (reivew) => reivew.ReviewImages, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'review_id', referencedColumnName: 'id' }])
-  Review: Review;
+  // // 1. review
+  // @ManyToOne(() => Review, (reivew) => reivew.ReviewImages, {
+  //   onDelete: 'SET NULL',
+  //   onUpdate: 'CASCADE',
+  // })
+  // @JoinColumn([{ name: 'review_id', referencedColumnName: 'id' }])
+  // Review: Review;
 }

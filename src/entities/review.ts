@@ -57,23 +57,23 @@ export class Review {
 
   /* ------------------------ 관계 mapping --------------------------- */
 
-  // 1. user
-  @ManyToOne(() => User, (user) => user.MyReviews, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-  Writer: User;
+  // // 1. user
+  // @ManyToOne(() => User, (user) => user.MyReviews, {
+  //   onDelete: 'SET NULL',
+  //   onUpdate: 'CASCADE',
+  // })
+  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  // Writer: User;
 
-  // 2. workshop
-  @ManyToOne(() => WorkShop, (workshop) => workshop.Reviews, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
-  Workshop: WorkShop;
+  // // 2. workshop
+  // @ManyToOne(() => WorkShop, (workshop) => workshop.Reviews, {
+  //   onDelete: 'SET NULL',
+  //   onUpdate: 'CASCADE',
+  // })
+  // @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
+  // Workshop: WorkShop;
 
-  // 3. review_image
-  @OneToMany(() => ReviewImage, (reviewImage) => reviewImage.Review)
-  ReviewImages: ReviewImage[];
+  // // 3. review_image
+  // @OneToMany(() => ReviewImage, (reviewImage) => reviewImage.Review)
+  // ReviewImages: ReviewImage[];
 }

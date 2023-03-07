@@ -13,7 +13,6 @@ exports.PurposeTag = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
-const workshop_purpose_1 = require("./workshop-purpose");
 let PurposeTag = class PurposeTag {
 };
 __decorate([
@@ -43,10 +42,6 @@ __decorate([
     (0, typeorm_1.DeleteDateColumn)(),
     __metadata("design:type", Date)
 ], PurposeTag.prototype, "deletedAt", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => workshop_purpose_1.WorkShopPurpose, (workshopPurpose) => workshopPurpose.PurPoseTag),
-    __metadata("design:type", Array)
-], PurposeTag.prototype, "WorkShopPurPoseList", void 0);
 PurposeTag = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'purpose_tag' })
 ], PurposeTag);

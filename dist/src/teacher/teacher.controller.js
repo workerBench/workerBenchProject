@@ -14,6 +14,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TeacherController = void 0;
 const common_1 = require("@nestjs/common");
+const current_user_dto_1 = require("../auth/dtos/current-user.dto");
+const jwt_user_guard_1 = require("../auth/jwt/access/user/jwt-user-guard");
+const user_decorator_1 = require("../common/decorators/user.decorator");
 const CreateCompanyDto_1 = require("./dto/CreateCompanyDto");
 const createTeacherDto_1 = require("./dto/createTeacherDto");
 const createWorkshopsDto_1 = require("./dto/createWorkshopsDto");
@@ -22,8 +25,8 @@ let TeacherController = class TeacherController {
     constructor(teacherService) {
         this.teacherService = teacherService;
     }
-    createTeacherRegister(data) {
-        return this.teacherService.createTeacherRegister(data.phone_number, data.address, data.name);
+    createTeacherRegister(data, user) {
+        return this.teacherService.createTeacherRegister(user.id, data.phone_number, data.address, data.name);
     }
     async getTeacherWorkshops() {
         return await this.teacherService.getTeacherWorkshops();
@@ -35,7 +38,7 @@ let TeacherController = class TeacherController {
         return this.teacherService.createTeacherCompany(data.company_type, data.company_name, data.business_number, data.rrn_front, data.rrn_back, data.bank_name, data.account, data.saving_name, data.isBan, data.user_id);
     }
     createTeacherWorkshops(data) {
-        return this.teacherService.createTeacherWorkshops(data.title, data.category, data.desc, data.thumb, data.min_member, data.max_member, data.total_time, data.price, data.status, data.location);
+        return this.teacherService.createTeacherWorkshops(data.category, data.genre_id, data.title, data.desc, data.thumb, data.min_member, data.max_member, data.total_time, data.price, data.location);
     }
     getTeacherRequest() {
         return this.teacherService.getTeacherRequest();
@@ -46,9 +49,11 @@ let TeacherController = class TeacherController {
 };
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UseGuards)(jwt_user_guard_1.JwtUserAuthGuard),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [createTeacherDto_1.createTeacherDto]),
+    __metadata("design:paramtypes", [createTeacherDto_1.createTeacherDto, current_user_dto_1.CurrentUserDto]),
     __metadata("design:returntype", void 0)
 ], TeacherController.prototype, "createTeacherRegister", null);
 __decorate([
