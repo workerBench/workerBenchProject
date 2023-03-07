@@ -7,12 +7,10 @@ export declare class Teacher {
     address: string;
     name: string;
     affiliation_company_id: number | null;
-    possession_company_id: number | null;
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
     User: User;
     MyCompany: Company;
-    AffiliationCompany: Company;
     ApplicationList: CompanyApplication[];
 }

@@ -152,10 +152,6 @@ __decorate([
     __metadata("design:type", teacher_1.Teacher)
 ], Company.prototype, "President", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => teacher_1.Teacher, (teacher) => teacher.AffiliationCompany),
-    __metadata("design:type", Array)
-], Company.prototype, "EmployeeList", void 0);
-__decorate([
     (0, typeorm_1.OneToMany)(() => company_application_1.CompanyApplication, (companyApplication) => companyApplication.AppliedCompany),
     __metadata("design:type", Array)
 ], Company.prototype, "AppliedCompanyList", void 0);
