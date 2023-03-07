@@ -19,16 +19,16 @@ export class WishList {
   id: number;
 
   @Column('int', { name: 'user_id', nullable: true })
-  user_id: number;
+  user_id: number | null;
 
   @IsNotEmpty({ message: '찜하고 싶은 워크샵을 정확히 선택해 주세요' })
   @ApiProperty({
     example: 1,
     description: '워크샵 PK',
-    required: true,
+    required: false,
   })
   @Column('int', { name: 'workshop_id', nullable: true })
-  workshop_id: number;
+  workshop_id: number | null;
 
   @CreateDateColumn()
   createdAt: Date;
