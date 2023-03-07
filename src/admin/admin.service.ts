@@ -50,7 +50,7 @@ export class AdminService {
         })
     }
 
-        //-------------------------- 워크숍 수정하기 --------------------------//
+    //-------------------------- 워크숍 수정하기 --------------------------//
 
     async updateWorkshop(
         id: number, 
@@ -71,9 +71,11 @@ export class AdminService {
             if(!workshop || workshop.status !== "approval") {
                 throw new NotFoundException("없는 워크숍입니다.")
             }
-            
+
             return await this.workshopRepository.update(id, {
                 title, category, desc, thumb, min_member, max_member, total_time, price, location
             })
         }
+
+    //-------------------------- 워크숍 삭제하기 --------------------------//
 }
