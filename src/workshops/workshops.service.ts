@@ -14,7 +14,10 @@ export class WorkshopsService {
   ) {}
 
   // 인기 워크샵 조회 API
-  getBestWorkshops() {}
+  // 최근 1개월 간 가장 결제 횟수가 많은 워크샵을 8개까지 가져온다.
+  async getBestWorkshops() {
+    return await this.workshopRepository.find({});
+  }
 
   // 신규 워크샵 조회 API
   // 전체 워크샵 중에서 createdAt이 가장 최근인 순(=내림차순)으로 정렬한 후 최대 8개를 가져온다.
@@ -61,4 +64,6 @@ export class WorkshopsService {
   async getWorkshopReviews(id: number) {
     return await this.workshopRepository.find();
   }
+
+  // 워크샵 신청하기 API
 }

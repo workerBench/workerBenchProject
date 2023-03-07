@@ -23,7 +23,9 @@ let WorkshopsService = class WorkshopsService {
         this.workshopRepository = workshopRepository;
         this.wishRepository = wishRepository;
     }
-    getBestWorkshops() { }
+    async getBestWorkshops() {
+        return await this.workshopRepository.find({});
+    }
     async getNewWorkshops() {
         return await this.workshopRepository.find({
             order: { createdAt: 'DESC' },

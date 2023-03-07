@@ -5,7 +5,7 @@ export declare class WorkshopsService {
     private readonly workshopRepository;
     private readonly wishRepository;
     constructor(workshopRepository: Repository<WorkShop>, wishRepository: Repository<WishList>);
-    getBestWorkshops(): void;
+    getBestWorkshops(): Promise<WorkShop[]>;
     getNewWorkshops(): Promise<WorkShop[]>;
     getApprovedWorkshops(): Promise<WorkShop[]>;
     getWorkshopDetail(id: number): Promise<WorkShop>;
