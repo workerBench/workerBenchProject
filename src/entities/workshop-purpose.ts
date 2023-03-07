@@ -16,11 +16,11 @@ export class WorkShopPurpose {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
   id: number;
 
-  @Column('int', { name: 'workshop_id', nullable: false })
-  workshop_id: number;
+  @Column('int', { name: 'workshop_id', nullable: true })
+  workshop_id: number | null;
 
-  @Column('int', { name: 'purpose_tag_id', nullable: false })
-  purpose_tag_id: number;
+  @Column('int', { name: 'purpose_tag_id', nullable: true })
+  purpose_tag_id: number | null;
 
   @CreateDateColumn()
   createdAt: Date;

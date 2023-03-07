@@ -20,11 +20,11 @@ __decorate([
     __metadata("design:type", Number)
 ], WorkShopPurpose.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)('int', { name: 'workshop_id', nullable: false }),
+    (0, typeorm_1.Column)('int', { name: 'workshop_id', nullable: true }),
     __metadata("design:type", Number)
 ], WorkShopPurpose.prototype, "workshop_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)('int', { name: 'purpose_tag_id', nullable: false }),
+    (0, typeorm_1.Column)('int', { name: 'purpose_tag_id', nullable: true }),
     __metadata("design:type", Number)
 ], WorkShopPurpose.prototype, "purpose_tag_id", void 0);
 __decorate([
