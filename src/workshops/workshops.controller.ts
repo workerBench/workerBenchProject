@@ -39,7 +39,7 @@ export class WorkshopsController {
     return this.workshopsService.getWorkshopReviews(id);
   }
 
-  // 7. 워크샵 신청하기
+  // 워크샵 신청하기
   @Post()
   workshopOrder() {}
 }

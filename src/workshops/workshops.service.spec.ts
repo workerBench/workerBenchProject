@@ -8,6 +8,7 @@ import { WishList } from 'src/entities/wish-list';
 // repository mock 함수로 만들기 (repository에 사용되는 메소드를 mock)
 const mockWorkshopRepository = () => ({
   find: jest.fn(),
+  findOne: jest.fn(),
 });
 
 const mockWishRepository = () => ({
@@ -63,6 +64,36 @@ describe('WorkshopsService', () => {
     });
   });
 
+  // 워크샵 상세 조회 API 테스트
+  describe('getWorkshopDetail()', () => {
+    it.todo('워크샵 상세 잘 불러오는지 검증');
+
+    it('워크샵 상세 잘 불러오는지 검증', async () => {
+      const workshopData = {
+        id: 1,
+        title: '워크샵 제목',
+        category: 'offline',
+        desc: '워크샵 상세 설명',
+        thumb: '이미지 링크',
+        min_member: 10,
+        max_member: 50,
+        total_time: 120,
+        price: 30000,
+        status: 'approve',
+        location: '지역',
+        user_id: 1,
+        genre_id: 1,
+      };
+
+      workshopRepository.findOne.mockResolvedValue(workshopData);
+
+      const result = await service.getWorkshopDetail(1);
+
+      expect(workshopRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(workshopData); // 데이터가 일치하는지
+    });
+  });
+
   // 찜하기 API 테스트
   describe('addToWish()', () => {
     it.todo('회원이 해당 워크샵을 찜하지 않았으면 찜 하기 검증');
@@ -84,7 +115,7 @@ describe('WorkshopsService', () => {
         myData.workshop_id,
       );
 
-      expect(wishRepository.findOne).toHaveBeenCalledTimes(1); // 1번만 호출됐는지
+      expect(wishRepository.findOne).toHaveBeenCalledTimes(1);
       expect(wishRepository.insert).toHaveBeenCalledTimes(1);
       expect(result).toBe('찜하기 성공!');
     });
@@ -104,7 +135,7 @@ describe('WorkshopsService', () => {
         myData.workshop_id,
       );
 
-      expect(wishRepository.findOne).toHaveBeenCalledTimes(1); // 1번만 호출됐는지
+      expect(wishRepository.findOne).toHaveBeenCalledTimes(1);
       expect(result).toBe('찜하기 취소!');
     });
   });
