@@ -17,7 +17,7 @@ export declare class AuthController {
     adminRegister(body: AdminRegisterJoinDto, response: Response, clientIp: string): Promise<boolean>;
     adminLogin(body: AdminLoginDto, response: Response, clientIp: string): Promise<boolean>;
     checkAdminRefresh(user: CurrentAdminDto, request: Request, response: Response, clientIp: string): Promise<boolean>;
-    removeAdminAccount(body: AdminRemoveDto): Promise<void>;
+    removeAdminAccount(body: AdminRemoveDto): Promise<boolean>;
     logOutUser(response: Response): Promise<boolean>;
     logOutAdmin(response: Response): Promise<boolean>;
     test22(user: CurrentUserDto): Promise<void>;

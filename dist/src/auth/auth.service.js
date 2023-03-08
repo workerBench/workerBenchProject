@@ -76,6 +76,7 @@ let AuthService = class AuthService {
             err.name = 'WrongPasswordError';
             throw err;
         }
+        return true;
     }
     async checkEffectiveForAdmin(adminInfo) {
         const { email, password, name, phone_number } = adminInfo;
@@ -101,6 +102,7 @@ let AuthService = class AuthService {
             err.name = 'WrongPhoneNumberError';
             throw err;
         }
+        return true;
     }
     async checkingAccount(email) {
         const check_email = await this.userRepository.findOne({ where: { email } });
@@ -109,6 +111,7 @@ let AuthService = class AuthService {
             err.name = 'DuplicationEmailError';
             throw err;
         }
+        return true;
     }
     async checkingAdminAccount(email) {
         const check_email = await this.adminUserRepository.findOne({
@@ -119,6 +122,7 @@ let AuthService = class AuthService {
             err.name = 'DuplicationEmailError';
             throw err;
         }
+        return true;
     }
     async sendingEmailAuthCode(email) {
         const auth_num = (0, crypto_1.randomBytes)(3).toString('hex');
@@ -146,7 +150,7 @@ let AuthService = class AuthService {
             err.name = 'WrongEmailAuthCode';
             throw err;
         }
-        return;
+        return true;
     }
     async joinUser(email, password) {
         const hashedPassword = await bcrypt.hash(password, 12);
@@ -281,7 +285,7 @@ let AuthService = class AuthService {
             err.name = 'IpDoesntSame';
             throw err;
         }
-        return;
+        return true;
     }
     async checkAdminRefreshTokenInRedis(id, adminType, ip, refreshToken) {
         let adminTypeString;
@@ -302,7 +306,7 @@ let AuthService = class AuthService {
             err.name = 'IpDoesntSame';
             throw err;
         }
-        return;
+        return true;
     }
     async removeAdmin(email) {
         const adminInfo = await this.adminUserRepository.findOne({
@@ -314,7 +318,7 @@ let AuthService = class AuthService {
             throw err;
         }
         await this.adminUserRepository.softDelete({ email });
-        return;
+        return true;
     }
 };
 AuthService = __decorate([

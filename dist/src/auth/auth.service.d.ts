@@ -16,12 +16,12 @@ export declare class AuthService {
     private readonly redisService;
     private readonly redisClient;
     constructor(userRepository: Repository<User>, adminUserRepository: Repository<AdminUser>, jwtService: JwtService, configService: ConfigService, mailerService: MailerService, redisService: RedisService);
-    checkEffective(userInfo: RegisterAuthDto): Promise<void>;
-    checkEffectiveForAdmin(adminInfo: AdminRegisterJoinDto): Promise<void>;
-    checkingAccount(email: string): Promise<void>;
-    checkingAdminAccount(email: string): Promise<void>;
+    checkEffective(userInfo: RegisterAuthDto): Promise<boolean>;
+    checkEffectiveForAdmin(adminInfo: AdminRegisterJoinDto): Promise<boolean>;
+    checkingAccount(email: string): Promise<boolean>;
+    checkingAdminAccount(email: string): Promise<boolean>;
     sendingEmailAuthCode(email: string): Promise<boolean>;
-    checkingEmailCode(email: string, emailAuthCode: string): Promise<void>;
+    checkingEmailCode(email: string, emailAuthCode: string): Promise<boolean>;
     joinUser(email: string, password: string): Promise<{
         email: string;
         password: string;
@@ -40,7 +40,7 @@ export declare class AuthService {
     checkLoginAdminUser(email: string, password: string): Promise<AdminUser>;
     checkUserFromUserAccessToken(id: number, email: string, userType: number): Promise<User>;
     checkAdminFromAdminAccessToken(id: number, email: string, adminType: number): Promise<AdminUser>;
-    checkRefreshTokenInRedis(id: number, userType: number, ip: string, refreshToken: string): Promise<void>;
-    checkAdminRefreshTokenInRedis(id: number, adminType: number, ip: string, refreshToken: string): Promise<void>;
-    removeAdmin(email: string): Promise<void>;
+    checkRefreshTokenInRedis(id: number, userType: number, ip: string, refreshToken: string): Promise<boolean>;
+    checkAdminRefreshTokenInRedis(id: number, adminType: number, ip: string, refreshToken: string): Promise<boolean>;
+    removeAdmin(email: string): Promise<boolean>;
 }

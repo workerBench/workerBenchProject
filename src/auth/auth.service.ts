@@ -53,6 +53,8 @@ export class AuthService {
       err.name = 'WrongPasswordError';
       throw err;
     }
+
+    return true;
   }
 
   // 관리자 회원가입 시 유효성 검사
@@ -83,6 +85,8 @@ export class AuthService {
       err.name = 'WrongPhoneNumberError';
       throw err;
     }
+
+    return true;
   }
 
   // 유저 회원가입 시 이메일 중복 검사
@@ -93,6 +97,8 @@ export class AuthService {
       err.name = 'DuplicationEmailError';
       throw err;
     }
+
+    return true;
   }
 
   // 관리자 회원가입 시 이메일 중복 검사
@@ -105,6 +111,8 @@ export class AuthService {
       err.name = 'DuplicationEmailError';
       throw err;
     }
+
+    return true;
   }
 
   // 유저 회원가입 시 이메일 인증코드 발송
@@ -139,7 +147,7 @@ export class AuthService {
       err.name = 'WrongEmailAuthCode';
       throw err;
     }
-    return;
+    return true;
   }
 
   // 유저 회원가입 시 실제로 DB 에 insert
@@ -358,7 +366,7 @@ export class AuthService {
       throw err;
     }
 
-    return;
+    return true;
   }
 
   // redis 의 admin refresh token 검사
@@ -392,7 +400,7 @@ export class AuthService {
       throw err;
     }
 
-    return;
+    return true;
   }
 
   // 부 관리자 삭제
@@ -410,6 +418,6 @@ export class AuthService {
 
     // soft delete
     await this.adminUserRepository.softDelete({ email });
-    return;
+    return true;
   }
 }
