@@ -4,10 +4,12 @@ import { Repository } from 'typeorm';
 import { WorkShop } from 'src/entities/workshop';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { WishList } from 'src/entities/wish-list';
+import Connection from 'mysql2/typings/mysql/lib/Connection';
 
 // repository mock 함수로 만들기 (repository에 사용되는 메소드를 mock)
 const mockWorkshopRepository = () => ({
   find: jest.fn(),
+  findOne: jest.fn(),
 });
 
 const mockWishRepository = () => ({
@@ -49,6 +51,20 @@ describe('WorkshopsService', () => {
     );
   });
 
+  // 인기 워크샵 조회 API 테스트
+  describe('getNewWorkshops()', () => {
+    it.todo('인기 워크샵 잘 불러오는지 검증');
+
+    it('인기 워크샵 목록 잘 불러오는지 검증', async () => {
+      workshopRepository.find.mockResolvedValue([]); // mockResolvedValue: 반환값을 정함
+
+      const result = await service.getNewWorkshops();
+
+      expect(workshopRepository.find).toHaveBeenCalledTimes(1); // 1번만 호출
+      expect(result).toBeInstanceOf(Array); // 값이 배열로 반환되는지
+    });
+  });
+
   // 신규 워크샵 조회 API 테스트
   describe('getNewWorkshops()', () => {
     it.todo('신규 워크샵 목록 잘 불러오는지 검증');
@@ -59,7 +75,51 @@ describe('WorkshopsService', () => {
       const result = await service.getNewWorkshops();
 
       expect(workshopRepository.find).toHaveBeenCalledTimes(1); // 1번만 호출
-      expect(result).toBeInstanceOf(Array); // 값이 배열로 반환
+      expect(result).toBeInstanceOf(Array); // 값이 배열로 반환되는지
+    });
+  });
+
+  // 승인된 워크샵 전체 조회 API
+  describe('getApprovedWorkshops()', () => {
+    it.todo('승인된 워크샵 전체 불러오는지 검증');
+
+    it('승인된 워크샵 전체 불러오는지 검증', async () => {
+      workshopRepository.find.mockResolvedValue([]);
+
+      const result = await service.getApprovedWorkshops();
+
+      expect(workshopRepository.find).toHaveBeenCalledTimes(1);
+      expect(result).toBeInstanceOf(Array); // 값이 배열로 반환되는지
+    });
+  });
+
+  // 워크샵 상세 조회 API 테스트
+  describe('getWorkshopDetail()', () => {
+    it.todo('워크샵 상세 잘 불러오는지 검증');
+
+    it('워크샵 상세 잘 불러오는지 검증', async () => {
+      const workshopData = {
+        id: 1,
+        title: '워크샵 제목',
+        category: 'offline',
+        desc: '워크샵 상세 설명',
+        thumb: '이미지 링크',
+        min_member: 10,
+        max_member: 50,
+        total_time: 120,
+        price: 30000,
+        status: 'approve',
+        location: '지역',
+        user_id: 1,
+        genre_id: 1,
+      };
+
+      workshopRepository.findOne.mockResolvedValue(workshopData);
+
+      const result = await service.getWorkshopDetail(1);
+
+      expect(workshopRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(workshopData); // 데이터가 일치하는지
     });
   });
 
@@ -84,7 +144,7 @@ describe('WorkshopsService', () => {
         myData.workshop_id,
       );
 
-      expect(wishRepository.findOne).toHaveBeenCalledTimes(1); // 1번만 호출됐는지
+      expect(wishRepository.findOne).toHaveBeenCalledTimes(1);
       expect(wishRepository.insert).toHaveBeenCalledTimes(1);
       expect(result).toBe('찜하기 성공!');
     });
@@ -104,7 +164,7 @@ describe('WorkshopsService', () => {
         myData.workshop_id,
       );
 
-      expect(wishRepository.findOne).toHaveBeenCalledTimes(1); // 1번만 호출됐는지
+      expect(wishRepository.findOne).toHaveBeenCalledTimes(1);
       expect(result).toBe('찜하기 취소!');
     });
   });
