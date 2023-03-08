@@ -54,9 +54,6 @@ export class Teacher {
   @Column('int', { name: 'affiliation_company_id', nullable: true, default: 0 })
   affiliation_company_id: number | null;
 
-  @Column('int', { name: 'possession_company_id', nullable: true, default: 0 })
-  possession_company_id: number | null;
-
   @CreateDateColumn()
   createdAt: Date;
 
@@ -77,15 +74,7 @@ export class Teacher {
   @OneToOne(() => Company, (company) => company.President)
   MyCompany: Company;
 
-  // 3. company 2
-  @ManyToOne(() => Company, (company) => company.EmployeeList, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'affiliation_company_id', referencedColumnName: 'id' }])
-  AffiliationCompany: Company;
-
-  // 4. company_application
+  // 3. company_application
   @OneToMany(
     () => CompanyApplication,
     (companyApplication) => companyApplication.Teacher,

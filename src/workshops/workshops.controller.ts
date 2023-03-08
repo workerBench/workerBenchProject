@@ -1,4 +1,6 @@
-import { Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Order } from 'src/entities/order';
+import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
 import { WorkshopsService } from 'src/workshops/workshops.service';
 
 @Controller('/api/workshops')
@@ -41,11 +43,21 @@ export class WorkshopsController {
 
   // 특정 워크샵 후기 전체 조회 API
   @Get(':id/reviews')
-  GetWorkshopReviews(@Param('id') id: number) {
+  getWorkshopReviews(@Param('id') id: number) {
     return this.workshopsService.getWorkshopReviews(id);
   }
 
-  // 워크샵 신청하기
-  @Post()
-  workshopOrder() {}
+  // 워크샵 신청하기 API
+  @Post(':workshop_id/order')
+  orderWorkshop(
+    @Param('workshop_id') workshop_id: number,
+    @Body() orderWorkshopData: OrderWorkshopDto,
+  ) {
+    const user_id = 1;
+    return this.workshopsService.orderWorkshop(
+      workshop_id,
+      user_id,
+      orderWorkshopData,
+    );
+  }
 }

@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from 'src/entities/order';
 import { WishList } from 'src/entities/wish-list';
 import { WorkShop } from 'src/entities/workshop';
+import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
+import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
 import { WorkshopRepository } from 'src/workshops/workshop.repository';
 import { Repository } from 'typeorm';
 
@@ -14,9 +16,11 @@ export class WorkshopsService {
     // private readonly workshopRepository: Repository<WorkShop>,
     @InjectRepository(WishList)
     private readonly wishRepository: Repository<WishList>,
+    @InjectRepository(WorkShopInstanceDetail)
+    private readonly workshopDetailRepository: Repository<WorkShopInstanceDetail>,
   ) {}
 
-  // 인기 워크샵 조회 API
+  // 인기 워크샵 조회 API ★
   // 최근 가장 결제 횟수가 많은 순으로 워크샵을 8개까지 가져온다.
   async getBestWorkshops() {
     return await this.workshopRepository.getWorkshopsByOrder();
@@ -63,10 +67,43 @@ export class WorkshopsService {
     return '찜하기 취소!';
   }
 
-  // 워크샵 후기 불러오기 API
+  // 워크샵 후기 불러오기 API ★
   async getWorkshopReviews(id: number) {
     return await this.workshopRepository.find();
   }
 
-  // 워크샵 신청하기 API
+  // 워크샵 신청하기 API ★
+  orderWorkshop(
+    workshop_id: number,
+    user_id: number,
+    orderWorkshopDto: OrderWorkshopDto,
+  ) {
+    const {
+      company,
+      name,
+      email,
+      phone_number,
+      wish_date,
+      purpose,
+      wish_location,
+      member_cnt,
+      etc,
+      category,
+    } = orderWorkshopDto;
+    this.workshopDetailRepository.insert({
+      company,
+      name,
+      email,
+      phone_number,
+      wish_date,
+      purpose,
+      wish_location,
+      member_cnt,
+      etc,
+      category,
+      user_id,
+      workshop_id,
+    });
+    return '워크샵 문의 신청이 완료되었습니다.';
+  }
 }

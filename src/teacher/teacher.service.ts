@@ -13,7 +13,8 @@ export class TeacherService {
     @InjectRepository(Teacher) private teacherRepository: Repository<Teacher>,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Company) private companyRepository: Repository<Company>,
-    @InjectRepository(WorkShop) private workshopRepository: Repository<WorkShop>,
+    @InjectRepository(WorkShop)
+    private workshopRepository: Repository<WorkShop>,
   ) {}
   async createTeacherRegister(
     phone_number: string,
@@ -21,15 +22,15 @@ export class TeacherService {
     name: string,
   ) {
     try {
-      const user_id = 2
+      const user_id = 2;
       await this.teacherRepository.insert({
         user_id,
         phone_number,
         address,
         name,
       });
-      if(user_id){
-          return { errorMessage: "이미 등록된 강사입니다." };
+      if (user_id) {
+        return { errorMessage: '이미 등록된 강사입니다.' };
       }
 
       return { message: '등록이 완료되었습니다.' };
@@ -41,24 +42,27 @@ export class TeacherService {
   async getTeacherWorkshops() {
     const workshop = await this.workshopRepository.find({
       where: { deletedAt: null },
-      select: ['title', 'thumb', 'genre_id',],
+      select: ['title', 'thumb', 'genre_id'],
     });
     return workshop;
   }
   async getTeacherMypage() {
     const mypage = await this.teacherRepository.find({
       where: { deletedAt: null },
-      select: [
-        'phone_number',
-        'address',
-        'name',
-        'possession_company_id',
-      ],
+      select: ['phone_number', 'address', 'name'],
     });
     await this.companyRepository.find({
-      where: {deletedAt: null},
-      select: ['company_type','company_name','business_number','rrn_front','rrn_back','bank_name','saving_name']
-    })
+      where: { deletedAt: null },
+      select: [
+        'company_type',
+        'company_name',
+        'business_number',
+        'rrn_front',
+        'rrn_back',
+        'bank_name',
+        'saving_name',
+      ],
+    });
     return mypage;
   }
   async createTeacherCompany(
