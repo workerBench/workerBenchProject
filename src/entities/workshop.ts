@@ -43,8 +43,7 @@ export class WorkShop {
     required: true,
   })
   @Column('varchar', { name: 'category', length: 50, nullable: false })
-  // category: 'online' | 'offline';
-  category: string;
+  category: 'online' | 'offline';
 
   @IsString()
   @IsNotEmpty({ message: '워크샵에 대한 설명을 작성해 주세요.' })
@@ -112,8 +111,7 @@ export class WorkShop {
     nullable: false,
     default: 'request',
   })
-  // status: 'request' | 'approval' | 'rejected' | 'finished';
-  status: string;
+  status: 'request' | 'approval' | 'rejected' | 'finished';
 
   @IsString()
   @IsNotEmpty({ message: '워크샵 운영이 가능한 지역을 적어주세요' })

@@ -1,3 +1,4 @@
+import { NumberColorFormat } from '@faker-js/faker';
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import _ from 'lodash';
@@ -6,15 +7,15 @@ import { Teacher } from 'src/entities/teacher';
 import { User } from 'src/entities/user';
 import { WorkShop } from 'src/entities/workshop';
 import { Repository } from 'typeorm';
+import { CompanyRepository } from './teacher.repository';
 
 @Injectable()
 export class TeacherService {
   constructor(
     @InjectRepository(Teacher) private teacherRepository: Repository<Teacher>,
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Company) private companyRepository: Repository<Company>,
-    @InjectRepository(WorkShop)
-    private workshopRepository: Repository<WorkShop>,
+    @InjectRepository(WorkShop) private workshopRepository: Repository<WorkShop>,
+    private companyRepository: CompanyRepository
   ) {}
   async createTeacherRegister(
     user_id: number,
@@ -28,7 +29,7 @@ export class TeacherService {
       //   select: ['id'],
       // });
       const User_id = await this.teacherRepository.findOne({
-        where:{user_id:user_id}
+        where:{user_id}
       })
       if(User_id){
         throw new UnauthorizedException('이미 등록된 강사입니다.');
@@ -39,6 +40,10 @@ export class TeacherService {
         address,
         name,
       });
+      if (user_id) {
+        return { errorMessage: '이미 등록된 강사입니다.' };
+      }
+
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
       console.log(error);
@@ -57,25 +62,17 @@ export class TeacherService {
       throw new BadRequestException('입력된 요청이 잘못되었습니다.');
     }
   }
-  async getTeacherMypage() {
+  async getTeacherMypage(user_id:number) {
     try {
-      const mypage = await this.teacherRepository.find({
+      const mypage = await this.companyRepository.find({
         where: { deletedAt: null },
-        select: ['phone_number', 'address', 'name'],
+        select:['company_type','company_name','business_number','rrn_front','rrn_back','bank_name','account','saving_name']
       });
-      // await this.companyRepository.find({
-      //   where: { deletedAt: null },
-      //   select: [
-      //     'company_type',
-      //     'company_name',
-      //     'business_number',
-      //     'rrn_front',
-      //     'rrn_back',
-      //     'bank_name',
-      //     'saving_name',
-      //   ],
-      // });
-      return mypage;
+      let User_id = await this.teacherRepository.findOne({
+        where:{user_id},
+        select: ['phone_number','address','name']
+      })
+      return mypage
     } catch (error) {
       console.log(error);
       throw new BadRequestException('입력된 요청이 잘못되었습니다.');
@@ -91,9 +88,12 @@ export class TeacherService {
     account: number,
     saving_name: string,
     isBan: number,
-    user_id: number,
+    user_id:number
   ) {
     try {
+      const User_id = await this.teacherRepository.findOne({
+        where:{user_id}
+      })
       const Company_name = await this.companyRepository.findOne({
         where: { company_name },
       });
@@ -110,7 +110,7 @@ export class TeacherService {
         account,
         saving_name,
         isBan,
-        user_id,
+        user_id:user_id
       });
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
@@ -120,7 +120,7 @@ export class TeacherService {
     }
   }
   async createTeacherWorkshops(
-    category: string,
+    category: 'online' | 'offline',
     genre_id: number,
     title: string,
     desc: string,
@@ -164,7 +164,7 @@ export class TeacherService {
   }
   async getTeacherComplete() {
     const complete = await this.workshopRepository.find({
-      where: { status: 'complete' },
+      where: { status: 'approval' },
     });
     return complete;
   }
@@ -177,8 +177,8 @@ export class TeacherService {
       if(!status || _.isNil(status)){
         throw new NotFoundException('등록된 워크샵이 없습니다.');
       }
-      await this.workshopRepository.update(id,{status:"complete"})
-      if(status.status !== "complete"){
+      await this.workshopRepository.update(id,{status:"approval"})
+      if(status.status !== "approval"){
         throw new UnauthorizedException('이미 워크샵이 수락되었습니다.');
       }
       return { message: '워크샵이 수락 되었습니다.' };

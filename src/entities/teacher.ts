@@ -28,6 +28,7 @@ export class Teacher {
     description: '강사 전화번호. `-` 제외',
     required: true,
   })
+  
   @Column('varchar', { name: 'phone_number', length: 50, nullable: false })
   phone_number: string;
 
@@ -53,9 +54,6 @@ export class Teacher {
 
   @Column('int', { name: 'affiliation_company_id', nullable: true, default: 0 })
   affiliation_company_id: number | null;
-
-  @Column('int', { name: 'possession_company_id', nullable: true, default: 0 })
-  possession_company_id: number | null;
 
   @CreateDateColumn()
   createdAt: Date;

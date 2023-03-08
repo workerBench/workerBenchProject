@@ -27,7 +27,4 @@ export class createCompanyDto {
 
   @IsNumber()
   readonly isBan: number;
-
-  @IsNumber()
-  readonly user_id: number;
 }

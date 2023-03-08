@@ -7,11 +7,15 @@ export declare class TeacherController {
     private readonly teacherService;
     constructor(teacherService: TeacherService);
     createTeacherRegister(data: createTeacherDto, user: CurrentUserDto): Promise<{
+        errorMessage: string;
+        message?: undefined;
+    } | {
         message: string;
+        errorMessage?: undefined;
     }>;
     getTeacherWorkshops(): Promise<import("../entities/workshop").WorkShop[]>;
-    getTeacherMypage(): Promise<import("../entities/teacher").Teacher[]>;
-    createTeacherCompany(data: createCompanyDto): Promise<{
+    getTeacherMypage(user: CurrentUserDto): Promise<import("../entities/company").Company[]>;
+    createTeacherCompany(data: createCompanyDto, user: CurrentUserDto): Promise<{
         message: string;
     }>;
     createTeacherWorkshops(data: createWorkshopsDto): Promise<{

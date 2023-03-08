@@ -15,7 +15,7 @@ import { ReviewImage } from './review-image';
 import { User } from './user';
 import { WorkShop } from './workshop';
 
-@Entity({ schema: 'workerbench', name: 'review_image' })
+@Entity({ schema: 'workerbench', name: 'review' })
 export class Review {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
   id: number;

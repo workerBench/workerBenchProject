@@ -7,6 +7,7 @@ import { Teacher } from 'src/entities/teacher';
 import { User } from 'src/entities/user';
 import { Company } from 'src/entities/company';
 import { WorkShop } from 'src/entities/workshop';
+import { CompanyRepository } from './teacher.repository';
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { WorkShop } from 'src/entities/workshop';
     )
 ],
   controllers: [TeacherController, TeacherControllerRender],
-  providers: [TeacherService]
+  providers: [TeacherService,CompanyRepository]
 })
 export class TeacherModule {}

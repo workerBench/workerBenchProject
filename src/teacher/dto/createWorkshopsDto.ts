@@ -2,7 +2,7 @@ import { IsString,IsNumber } from 'class-validator';
 
 export class createWorkshopsDto {
   @IsString()
-  readonly category: string;
+  readonly  category: 'online' | 'offline';
   
   @IsString()
   readonly title: string;

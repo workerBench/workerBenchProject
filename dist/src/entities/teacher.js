@@ -57,10 +57,6 @@ __decorate([
     __metadata("design:type", Number)
 ], Teacher.prototype, "affiliation_company_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)('int', { name: 'possession_company_id', nullable: true, default: 0 }),
-    __metadata("design:type", Number)
-], Teacher.prototype, "possession_company_id", void 0);
-__decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], Teacher.prototype, "createdAt", void 0);
