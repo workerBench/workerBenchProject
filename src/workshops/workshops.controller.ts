@@ -1,4 +1,14 @@
-import { Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
+import { SearchWorkshopDto } from 'src/workshops/dtos/search-workshop.dto';
 import { WorkshopsService } from 'src/workshops/workshops.service';
 
 @Controller('/api/workshops')
@@ -7,8 +17,8 @@ export class WorkshopsController {
 
   // 인기 워크샵 조회 API
   @Get('/best')
-  getBestWorkshops() {
-    this.workshopsService.getBestWorkshops();
+  async getBestWorkshops() {
+    return await this.workshopsService.getBestWorkshops();
   }
 
   // 신규 워크샵 조회 API
@@ -17,8 +27,20 @@ export class WorkshopsController {
     return this.workshopsService.getNewWorkshops();
   }
 
+  // 승인된 워크샵 전체 조회 API
+  @Get('/approval')
+  async getApprovedWorkshops() {
+    return await this.workshopsService.getApprovedWorkshops();
+  }
+
   // 워크샵 검색 API
   // 워크샵 분야에 들어갈 키워드 정해야 함
+  @Get('/search')
+  async searchWorkshops(
+    @Query('searchWorkshopData') searchWorkshopData: SearchWorkshopDto,
+  ) {
+    return await this.workshopsService.searchWorkshops(searchWorkshopData);
+  }
 
   // 워크샵 상세 조회 API
   @Get('/:id')
@@ -34,12 +56,22 @@ export class WorkshopsController {
   }
 
   // 특정 워크샵 후기 전체 조회 API
-  @Get(':id/reviews')
-  GetWorkshopReviews(@Param('id') id: number) {
-    return this.workshopsService.getWorkshopReviews(id);
+  @Get(':workshop_id/reviews')
+  async getWorkshopReviews(@Param('workshop_id') workshop_id: number) {
+    return await this.workshopsService.getWorkshopReviews(workshop_id);
   }
 
-  // 7. 워크샵 신청하기
-  @Post()
-  workshopOrder() {}
+  // 워크샵 신청하기 API
+  @Post(':workshop_id/order')
+  orderWorkshop(
+    @Param('workshop_id') workshop_id: number,
+    @Body() orderWorkshopData: OrderWorkshopDto,
+  ) {
+    const user_id = 1;
+    return this.workshopsService.orderWorkshop(
+      workshop_id,
+      user_id,
+      orderWorkshopData,
+    );
+  }
 }
