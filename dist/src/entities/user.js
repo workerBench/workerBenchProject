@@ -13,6 +13,12 @@ exports.User = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
+const workshop_1 = require("./workshop");
+const teacher_1 = require("./teacher");
+const wish_list_1 = require("./wish-list");
+const review_1 = require("./review");
+const workshop_instance_detail_1 = require("./workshop-instance.detail");
+const order_1 = require("./order");
 let User = class User {
 };
 __decorate([
@@ -86,6 +92,30 @@ __decorate([
     (0, typeorm_1.DeleteDateColumn)(),
     __metadata("design:type", Date)
 ], User.prototype, "deletedAt", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => workshop_1.WorkShop, (workshop) => workshop.User),
+    __metadata("design:type", Array)
+], User.prototype, "MyWorkshops", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => teacher_1.Teacher, (teacher) => teacher.User),
+    __metadata("design:type", teacher_1.Teacher)
+], User.prototype, "TeacherProfile", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => wish_list_1.WishList, (wishlist) => wishlist.User),
+    __metadata("design:type", Array)
+], User.prototype, "MyWishList", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => review_1.Review, (review) => review.Writer),
+    __metadata("design:type", Array)
+], User.prototype, "MyReviews", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => workshop_instance_detail_1.WorkShopInstanceDetail, (workShopInstanceDetail) => workShopInstanceDetail.Writer),
+    __metadata("design:type", Array)
+], User.prototype, "MyInstances", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => order_1.Order, (order) => order.Payer),
+    __metadata("design:type", Array)
+], User.prototype, "MyOrders", void 0);
 User = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'user' })
 ], User);

@@ -111,6 +111,7 @@ export class WorkShopInstanceDetail {
   @Column('int', { name: 'member_cnt', nullable: false })
   member_cnt: number;
 
+  @IsString()
   @ApiProperty({
     example: '기타 문의사항은 다음과 같습니다...',
     description: '워크샵 수강 문의 등록 시 기타 문의 사항 기록',
@@ -147,19 +148,19 @@ export class WorkShopInstanceDetail {
 
   /* ------------------------ 관계 mapping --------------------------- */
 
-  // // 1. user
-  // @ManyToOne(() => User, (user) => user.MyInstances, {
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-  // Writer: User;
+  // 1. user
+  @ManyToOne(() => User, (user) => user.MyInstances, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  Writer: User;
 
-  // // 2. workshop
-  // @ManyToOne(() => WorkShop, (workshop) => workshop.WorkShopInstances, {
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
-  // Workshop: User;
+  // 2. workshop
+  @ManyToOne(() => WorkShop, (workshop) => workshop.WorkShopInstances, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
+  Workshop: User;
 }

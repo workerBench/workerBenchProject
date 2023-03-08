@@ -15,20 +15,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const company_1 = require("../entities/company");
+const user_1 = require("../entities/user");
 const Repository_1 = require("typeorm/repository/Repository");
 const workshop_1 = require("../entities/workshop");
 let AdminService = class AdminService {
-    constructor(workshopRepository) {
+    constructor(workshopRepository, userRepository, companyRepository) {
         this.workshopRepository = workshopRepository;
+        this.userRepository = userRepository;
+        this.companyRepository = companyRepository;
     }
     async requestWorkshops() {
         return await this.workshopRepository.find({
-            where: { status: "request" }
+            where: { status: "request", deletedAt: null }
         });
     }
     async approveWorkshop(id) {
         const workshop = await this.workshopRepository.findOne({
-            where: { id, status: "request" }
+            where: { id, status: "request", deletedAt: null }
         });
         if (!workshop || workshop.status !== "request") {
             throw new common_1.NotFoundException("없는 워크숍입니다.");
@@ -37,7 +41,7 @@ let AdminService = class AdminService {
     }
     async rejectWorkshop(id) {
         const workshop = await this.workshopRepository.findOne({
-            where: { id, status: "request" }
+            where: { id, status: "request", deletedAt: null }
         });
         if (!workshop || workshop.status !== "request") {
             throw new common_1.NotFoundException("없는 워크숍입니다.");
@@ -46,14 +50,79 @@ let AdminService = class AdminService {
     }
     async getApprovedWorkshops() {
         return await this.workshopRepository.find({
-            where: { status: "approval" }
+            where: { status: "approval", deletedAt: null }
         });
+    }
+    async updateWorkshop(id, title, category, desc, thumb, min_member, max_member, total_time, price, location) {
+        const workshop = await this.workshopRepository.findOne({
+            where: { id, status: "approval", deletedAt: null }
+        });
+        if (!workshop || workshop.status !== "approval") {
+            throw new common_1.NotFoundException("없는 워크숍입니다.");
+        }
+        return await this.workshopRepository.update(id, {
+            title, category, desc, thumb, min_member, max_member, total_time, price, location
+        });
+    }
+    async removeWorkshop(id) {
+        const workshop = await this.workshopRepository.findOne({
+            where: { id, status: "approval" }
+        });
+        if (!workshop || workshop.status !== "approval") {
+            throw new common_1.NotFoundException("없는 워크숍입니다.");
+        }
+        await this.workshopRepository.update(id, { status: "finished" });
+        return await this.workshopRepository.softDelete(id);
+    }
+    async userBan(id) {
+        const user = await this.userRepository.findOne({
+            where: { id }
+        });
+        return await this.userRepository.update(id, { isBan: 1 });
+    }
+    async companyBan(id) {
+        const company = await this.companyRepository.findOne({
+            where: { id }
+        });
+        return await this.companyRepository.update(id, { isBan: 1 });
+    }
+    async searchWorkshops(titleOrEmail, searchField) {
+        let query = this.workshopRepository.createQueryBuilder('workshop');
+        if (searchField === 'title') {
+            query = query.where('workshop.title LIKE :title', { title: `%${titleOrEmail}%` });
+        }
+        else if (searchField === 'email') {
+            query = query
+                .innerJoinAndSelect('workshop.User', 'user')
+                .where('user.email = :email', { email: `${titleOrEmail}` });
+        }
+        const workshops = await query.getMany();
+        return workshops;
+    }
+    async searchUserOrCompany(EmailOrCompany, searchcField) {
+        let query;
+        if (searchcField === 'email') {
+            query = this.userRepository
+                .createQueryBuilder('user')
+                .where('user.email = :email', { email: `${EmailOrCompany}` });
+        }
+        else if (searchcField === "company") {
+            query = this.companyRepository
+                .createQueryBuilder('company')
+                .where('company.company_name Like :company_name', { company_name: `%${EmailOrCompany}%` });
+        }
+        const result = await query.getMany();
+        return result;
     }
 };
 AdminService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(workshop_1.WorkShop)),
-    __metadata("design:paramtypes", [Repository_1.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(user_1.User)),
+    __param(2, (0, typeorm_1.InjectRepository)(company_1.Company)),
+    __metadata("design:paramtypes", [Repository_1.Repository,
+        Repository_1.Repository,
+        Repository_1.Repository])
 ], AdminService);
 exports.AdminService = AdminService;
 //# sourceMappingURL=admin.service.js.map

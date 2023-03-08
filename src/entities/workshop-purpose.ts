@@ -33,19 +33,19 @@ export class WorkShopPurpose {
 
   /* ------------------------ 관계 mapping --------------------------- */
 
-  // // 1. workshop
-  // @ManyToOne(() => WorkShop, (workshop) => workshop.PurposeList, {
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
-  // Workshop: WorkShop;
+  // 1. workshop
+  @ManyToOne(() => WorkShop, (workshop) => workshop.PurposeList, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
+  Workshop: WorkShop;
 
-  // // 2. purpose_tag
-  // @ManyToOne(() => PurposeTag, (purposeTag) => purposeTag.WorkShopPurPoseList, {
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn([{ name: 'purpose_tag_id', referencedColumnName: 'id' }])
-  // PurPoseTag: PurposeTag;
+  // 2. purpose_tag
+  @ManyToOne(() => PurposeTag, (purposeTag) => purposeTag.WorkShopPurPoseList, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'purpose_tag_id', referencedColumnName: 'id' }])
+  PurPoseTag: PurposeTag;
 }

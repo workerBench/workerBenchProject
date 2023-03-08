@@ -23,13 +23,13 @@ const teacher_1 = require("../entities/teacher");
 const user_1 = require("../entities/user");
 const workshop_1 = require("../entities/workshop");
 const typeorm_2 = require("typeorm");
-const teacher_repository_1 = require("./teacher.repository");
 let TeacherService = class TeacherService {
-    constructor(teacherRepository, userRepository, workshopRepository, companyRepository) {
+    constructor(teacherRepository, userRepository, workshopRepository, companyRepository, genreTagRepository) {
         this.teacherRepository = teacherRepository;
         this.userRepository = userRepository;
         this.workshopRepository = workshopRepository;
         this.companyRepository = companyRepository;
+        this.genreTagRepository = genreTagRepository;
     }
     async createTeacherRegister(user_id, phone_number, address, name) {
         try {
@@ -68,34 +68,31 @@ let TeacherService = class TeacherService {
             throw new common_1.BadRequestException('입력된 요청이 잘못되었습니다.');
         }
     }
-    async getTeacherMypage(user_id) {
-        try {
-            const mypage = await this.companyRepository.find({
-                where: { deletedAt: null },
-                select: ['company_type', 'company_name', 'business_number', 'rrn_front', 'rrn_back', 'bank_name', 'account', 'saving_name']
-            });
-            let User_id = await this.teacherRepository.findOne({
-                where: { user_id },
-                select: ['phone_number', 'address', 'name']
-            });
-            return mypage;
-        }
-        catch (error) {
-            console.log(error);
-            throw new common_1.BadRequestException('입력된 요청이 잘못되었습니다.');
-        }
+    async getTeacherMypage() {
+        return this.companyRepository
+            .createQueryBuilder('company')
+            .leftJoinAndSelect('company.User', 'user')
+            .select([
+            'company.id',
+            'company.company_type',
+            'company.company_name',
+            'company.business_number',
+            'company.rrn_front',
+            'company.rrn_back',
+            'company.bank_name',
+            'company.account',
+            'company.saving_name',
+            'user.phone_number',
+            'user.address',
+            'user.name',
+        ])
+            .getMany();
     }
     async createTeacherCompany(company_type, company_name, business_number, rrn_front, rrn_back, bank_name, account, saving_name, isBan, user_id) {
         try {
-            const User_id = await this.teacherRepository.findOne({
+            await this.teacherRepository.findOne({
                 where: { user_id }
             });
-            const Company_name = await this.companyRepository.findOne({
-                where: { company_name },
-            });
-            if (Company_name) {
-                throw new common_1.BadRequestException('이미 등록된 워크샵입니다.');
-            }
             this.companyRepository.insert({
                 company_type,
                 company_name,
@@ -197,10 +194,13 @@ TeacherService = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(teacher_1.Teacher)),
     __param(1, (0, typeorm_1.InjectRepository)(user_1.User)),
     __param(2, (0, typeorm_1.InjectRepository)(workshop_1.WorkShop)),
+    __param(3, (0, typeorm_1.InjectRepository)(user_1.User)),
+    __param(4, (0, typeorm_1.InjectRepository)(user_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
-        teacher_repository_1.CompanyRepository])
+        typeorm_2.Repository,
+        typeorm_2.Repository])
 ], TeacherService);
 exports.TeacherService = TeacherService;
 //# sourceMappingURL=teacher.service.js.map

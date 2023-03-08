@@ -28,10 +28,8 @@ export class TeacherController {
   }
   // 강사 및 업체 정보 api
   @Get('mypage')
-  @UseGuards(JwtUserAuthGuard)
-  async getTeacherMypage(@CurrentUser() user: CurrentUserDto) {
+  async getTeacherMypage() {
      return await this.teacherService.getTeacherMypage(
-      user.id
      );
   }
   // 강사 업체 등록 api
@@ -65,7 +63,6 @@ export class TeacherController {
      data.total_time,
      data.price,
      data.location,
-     
     );
   }
   // 강사 미완료 목록 가져오기 api

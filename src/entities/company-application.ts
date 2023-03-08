@@ -25,19 +25,19 @@ export class CompanyApplication {
 
   /* ------------------------ 관계 mapping --------------------------- */
 
-  // // 1. teacer
-  // @ManyToOne(() => Teacher, (teacher) => teacher.ApplicationList, {
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn([{ name: 'teacher_id', referencedColumnName: 'user_id' }])
-  // Teacher: Teacher;
+  // 1. teacer
+  @ManyToOne(() => Teacher, (teacher) => teacher.ApplicationList, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'teacher_id', referencedColumnName: 'user_id' }])
+  Teacher: Teacher;
 
-  // // 2. company
-  // @ManyToOne(() => Company, (company) => company.AppliedCompanyList, {
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn([{ name: 'company_id', referencedColumnName: 'id' }])
-  // AppliedCompany: Company;
+  // 2. company
+  @ManyToOne(() => Company, (company) => company.AppliedCompanyList, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'company_id', referencedColumnName: 'id' }])
+  AppliedCompany: Company;
 }

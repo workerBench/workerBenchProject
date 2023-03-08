@@ -76,19 +76,19 @@ export class Order {
 
   /* ------------------------ 관계 mapping --------------------------- */
 
-  // // 1. user
-  // @ManyToOne(() => User, (user) => user.MyOrders, {
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-  // Payer: User;
+  // 1. user
+  @ManyToOne(() => User, (user) => user.MyOrders, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  Payer: User;
 
-  // // 2. workshop
-  // @ManyToOne(() => WorkShop, (workshop) => workshop.Orders, {
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
-  // Workshop: WorkShop;
+  // 2. workshop
+  @ManyToOne(() => WorkShop, (workshop) => workshop.Orders, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
+  Workshop: WorkShop;
 }

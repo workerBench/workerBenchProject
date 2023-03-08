@@ -1,15 +1,16 @@
 import { Company } from 'src/entities/company';
+import { GenreTag } from 'src/entities/genre-tag';
 import { Teacher } from 'src/entities/teacher';
 import { User } from 'src/entities/user';
 import { WorkShop } from 'src/entities/workshop';
 import { Repository } from 'typeorm';
-import { CompanyRepository } from './teacher.repository';
 export declare class TeacherService {
     private teacherRepository;
     private userRepository;
     private workshopRepository;
     private companyRepository;
-    constructor(teacherRepository: Repository<Teacher>, userRepository: Repository<User>, workshopRepository: Repository<WorkShop>, companyRepository: CompanyRepository);
+    private genreTagRepository;
+    constructor(teacherRepository: Repository<Teacher>, userRepository: Repository<User>, workshopRepository: Repository<WorkShop>, companyRepository: Repository<Company>, genreTagRepository: Repository<GenreTag>);
     createTeacherRegister(user_id: number, phone_number: string, address: string, name: string): Promise<{
         errorMessage: string;
         message?: undefined;
@@ -18,7 +19,7 @@ export declare class TeacherService {
         errorMessage?: undefined;
     }>;
     getTeacherWorkshops(): Promise<WorkShop[]>;
-    getTeacherMypage(user_id: number): Promise<Company[]>;
+    getTeacherMypage(): Promise<Company[]>;
     createTeacherCompany(company_type: number, company_name: string, business_number: number, rrn_front: number, rrn_back: number, bank_name: string, account: number, saving_name: string, isBan: number, user_id: number): Promise<{
         message: string;
     }>;

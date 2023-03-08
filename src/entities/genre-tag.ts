@@ -41,7 +41,7 @@ export class GenreTag {
 
   /* ------------------------ 관계 mapping --------------------------- */
 
-  // // 1. workshop
-  // @OneToMany(() => WorkShop, (workshop) => workshop.GenreTag)
-  // WorkShopList: WorkShop[];
+  // 1. workshop
+  @OneToMany(() => WorkShop, (workshop) => workshop.GenreTag)
+  WorkShopList: WorkShop[];
 }

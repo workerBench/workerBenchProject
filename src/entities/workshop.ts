@@ -148,48 +148,49 @@ export class WorkShop {
   /* ------------------------ 관계 mapping --------------------------- */
 
   // 1. user
-//   @ManyToOne(() => User, (user) => user.MyWorkshops, {
-//     onDelete: 'SET NULL',
-//     onUpdate: 'CASCADE',
-//   })
-//   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-//   Owner: User;
+  @ManyToOne(() => User, (user) => user.MyWorkshops, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  // Owner: User => User: User 로 변경
+  User: User;
 
-//   // 2. workshop_instance_detail
-//   @OneToMany(
-//     () => WorkShopInstanceDetail,
-//     (workShopInstanceDetail) => workShopInstanceDetail.Workshop,
-//   )
-//   WorkShopInstances: WorkShopInstanceDetail[];
+  // 2. workshop_instance_detail
+  @OneToMany(
+    () => WorkShopInstanceDetail,
+    (workShopInstanceDetail) => workShopInstanceDetail.Workshop,
+  )
+  WorkShopInstances: WorkShopInstanceDetail[];
 
-//   // 3. review
-//   @OneToMany(() => Review, (review) => review.Workshop)
-//   Reviews: Review[];
+  // 3. review
+  @OneToMany(() => Review, (review) => review.Workshop)
+  Reviews: Review[];
 
-//   // 4. order
-//   @OneToMany(() => Order, (order) => order.Workshop)
-//   Orders: Order[];
+  // 4. order
+  @OneToMany(() => Order, (order) => order.Workshop)
+  Orders: Order[];
 
-//   // 5. workshop_image
-//   @OneToMany(() => WorkShopImage, (workshopImage) => workshopImage.Workshop)
-//   Images: WorkShopImage[];
+  // 5. workshop_image
+  @OneToMany(() => WorkShopImage, (workshopImage) => workshopImage.Workshop)
+  Images: WorkShopImage[];
 
-//   // 6. wish_list
-//   @OneToMany(() => WishList, (wishList) => wishList.Workshop)
-//   WishList: WishList[];
+  // 6. wish_list
+  @OneToMany(() => WishList, (wishList) => wishList.Workshop)
+  WishList: WishList[];
 
-//   // 7. genre_tag
-//   @ManyToOne(() => GenreTag, (genreTag) => genreTag.WorkShopList, {
-//     onDelete: 'SET NULL',
-//     onUpdate: 'CASCADE',
-//   })
-//   @JoinColumn([{ name: 'genre_id', referencedColumnName: 'id' }])
-//   GenreTag: GenreTag;
+  // 7. genre_tag
+  @ManyToOne(() => GenreTag, (genreTag) => genreTag.WorkShopList, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'genre_id', referencedColumnName: 'id' }])
+  GenreTag: GenreTag;
 
-//   // 8. workshop_purpose
-//   @OneToMany(
-//     () => WorkShopPurpose,
-//     (workshopPurpose) => workshopPurpose.Workshop,
-//   )
-//   PurposeList: WorkShopPurpose[];
- }
+  // 8. workshop_purpose
+  @OneToMany(
+    () => WorkShopPurpose,
+    (workshopPurpose) => workshopPurpose.Workshop,
+  )
+  PurposeList: WorkShopPurpose[];
+}

@@ -14,7 +14,7 @@ export declare class TeacherController {
         errorMessage?: undefined;
     }>;
     getTeacherWorkshops(): Promise<import("../entities/workshop").WorkShop[]>;
-    getTeacherMypage(user: CurrentUserDto): Promise<import("../entities/company").Company[]>;
+    getTeacherMypage(): Promise<import("../entities/company").Company[]>;
     createTeacherCompany(data: createCompanyDto, user: CurrentUserDto): Promise<{
         message: string;
     }>;

@@ -37,10 +37,10 @@ export class PurposeTag {
 
   /* ------------------------ 관계 mapping --------------------------- */
 
-  // // 1. workshop_purpose
-  // @OneToMany(
-  //   () => WorkShopPurpose,
-  //   (workshopPurpose) => workshopPurpose.PurPoseTag,
-  // )
-  // WorkShopPurPoseList: WorkShopPurpose[];
+  // 1. workshop_purpose
+  @OneToMany(
+    () => WorkShopPurpose,
+    (workshopPurpose) => workshopPurpose.PurPoseTag,
+  )
+  WorkShopPurPoseList: WorkShopPurpose[];
 }

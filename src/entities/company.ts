@@ -133,19 +133,19 @@ export class Company {
 
   /* ------------------------ 관계 mapping --------------------------- */
 
-//   // 1. teacher
-//   @OneToOne(() => Teacher, (teacher) => teacher.MyCompany)
-//   @JoinColumn([{ name: 'user_id', referencedColumnName: 'user_id' }])
-//   President: Teacher;
+  // 1. teacher
+  @OneToOne(() => Teacher, (teacher) => teacher.MyCompany)
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'user_id' }])
+  President: Teacher;
 
-//   // 2. teacher 2
-//   @OneToMany(() => Teacher, (teacher) => teacher.AffiliationCompany)
-//   EmployeeList: Teacher[];
+  // 2. teacher 2
+  @OneToMany(() => Teacher, (teacher) => teacher.AffiliationCompany)
+  EmployeeList: Teacher[];
 
-//   // 3. company_application
-//   @OneToMany(
-//     () => CompanyApplication,
-//     (companyApplication) => companyApplication.AppliedCompany,
-//   )
-//   AppliedCompanyList: CompanyApplication[];
+  // 3. company_application
+  @OneToMany(
+    () => CompanyApplication,
+    (companyApplication) => companyApplication.AppliedCompany,
+  )
+  AppliedCompanyList: CompanyApplication[];
  }

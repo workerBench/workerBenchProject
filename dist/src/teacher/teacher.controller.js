@@ -31,8 +31,8 @@ let TeacherController = class TeacherController {
     async getTeacherWorkshops() {
         return await this.teacherService.getTeacherWorkshops();
     }
-    async getTeacherMypage(user) {
-        return await this.teacherService.getTeacherMypage(user.id);
+    async getTeacherMypage() {
+        return await this.teacherService.getTeacherMypage();
     }
     createTeacherCompany(data, user) {
         return this.teacherService.createTeacherCompany(data.company_type, data.company_name, data.business_number, data.rrn_front, data.rrn_back, data.bank_name, data.account, data.saving_name, data.isBan, user.id);
@@ -70,10 +70,8 @@ __decorate([
 ], TeacherController.prototype, "getTeacherWorkshops", null);
 __decorate([
     (0, common_1.Get)('mypage'),
-    (0, common_1.UseGuards)(jwt_user_guard_1.JwtUserAuthGuard),
-    __param(0, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [current_user_dto_1.CurrentUserDto]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], TeacherController.prototype, "getTeacherMypage", null);
 __decorate([

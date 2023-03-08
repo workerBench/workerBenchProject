@@ -3,11 +3,11 @@ import { BadRequestException, Injectable, NotFoundException, UnauthorizedExcepti
 import { InjectRepository } from '@nestjs/typeorm';
 import _ from 'lodash';
 import { Company } from 'src/entities/company';
+import { GenreTag } from 'src/entities/genre-tag';
 import { Teacher } from 'src/entities/teacher';
 import { User } from 'src/entities/user';
 import { WorkShop } from 'src/entities/workshop';
 import { Repository } from 'typeorm';
-import { CompanyRepository } from './teacher.repository';
 
 @Injectable()
 export class TeacherService {
@@ -15,7 +15,8 @@ export class TeacherService {
     @InjectRepository(Teacher) private teacherRepository: Repository<Teacher>,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(WorkShop) private workshopRepository: Repository<WorkShop>,
-    private companyRepository: CompanyRepository
+    @InjectRepository(User) private companyRepository: Repository<Company>,
+    @InjectRepository(User) private genreTagRepository: Repository<GenreTag>,
   ) {}
   async createTeacherRegister(
     user_id: number,
@@ -62,21 +63,40 @@ export class TeacherService {
       throw new BadRequestException('입력된 요청이 잘못되었습니다.');
     }
   }
-  async getTeacherMypage(user_id:number) {
-    try {
-      const mypage = await this.companyRepository.find({
-        where: { deletedAt: null },
-        select:['company_type','company_name','business_number','rrn_front','rrn_back','bank_name','account','saving_name']
-      });
-      let User_id = await this.teacherRepository.findOne({
-        where:{user_id},
-        select: ['phone_number','address','name']
-      })
-      return mypage
-    } catch (error) {
-      console.log(error);
-      throw new BadRequestException('입력된 요청이 잘못되었습니다.');
-    }
+    // try {
+    //   const mypage = await this.companyRepository.find({
+    //     where: { deletedAt: null },
+    //     select:['company_type','company_name','business_number','rrn_front','rrn_back','bank_name','account','saving_name']
+    //   });
+    //   let User_id = await this.teacherRepository.findOne({
+    //     where:{user_id},
+    //     select: ['phone_number','address','name']
+    //   })
+    //   return mypage
+    // } catch (error) {
+    //   console.log(error);
+    //   throw new BadRequestException('입력된 요청이 잘못되었습니다.');
+    // }
+    // return await this.companyRepository.getTeacherMypageQuery();
+    async getTeacherMypage(): Promise<Company[]> {
+      return this.companyRepository
+        .createQueryBuilder('company')
+        .leftJoinAndSelect('company.User', 'user')
+        .select([
+          'company.id',
+          'company.company_type',
+          'company.company_name',
+          'company.business_number',
+          'company.rrn_front',
+          'company.rrn_back',
+          'company.bank_name',
+          'company.account',
+          'company.saving_name',
+          'user.phone_number',
+          'user.address',
+          'user.name',
+        ])
+        .getMany();
   }
   async createTeacherCompany(
     company_type: number,
@@ -91,15 +111,16 @@ export class TeacherService {
     user_id:number
   ) {
     try {
-      const User_id = await this.teacherRepository.findOne({
+      
+      // const Company_name = await this.companyRepository.findOne({
+      //   where: { company_name },
+      // });
+      // if (Company_name) {
+      //   throw new BadRequestException('이미 등록된 워크샵입니다.');
+      // }
+      await this.teacherRepository.findOne({
         where:{user_id}
       })
-      const Company_name = await this.companyRepository.findOne({
-        where: { company_name },
-      });
-      if (Company_name) {
-        throw new BadRequestException('이미 등록된 워크샵입니다.');
-      }
       this.companyRepository.insert({
         company_type,
         company_name,
@@ -132,6 +153,7 @@ export class TeacherService {
     location: string,
   ) {
     try {
+
       await this.workshopRepository.insert({
         category,
         genre_id,

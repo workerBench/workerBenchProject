@@ -1,3 +1,4 @@
+import { User } from './user';
 export declare class WorkShopInstanceDetail {
     id: number;
     company: string;
@@ -16,4 +17,6 @@ export declare class WorkShopInstanceDetail {
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
+    Writer: User;
+    Workshop: User;
 }

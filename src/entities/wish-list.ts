@@ -41,19 +41,19 @@ export class WishList {
 
   /* ------------------------ 관계 mapping --------------------------- */
 
-  // // 1. user
-  // @ManyToOne(() => User, (user) => user.MyWishList, {
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-  // User: User;
+  // 1. user
+  @ManyToOne(() => User, (user) => user.MyWishList, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  User: User;
 
-  // // 2. workshop
-  // @ManyToOne(() => WorkShop, (workshop) => workshop.WishList, {
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
-  // Workshop: WorkShop;
+  // 2. workshop
+  @ManyToOne(() => WorkShop, (workshop) => workshop.WishList, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
+  Workshop: WorkShop;
 }

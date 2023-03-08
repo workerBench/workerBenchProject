@@ -1,3 +1,5 @@
+import { CompanyApplication } from './company-application';
+import { Teacher } from './teacher';
 export declare class Company {
     id: number;
     company_type: number;
@@ -13,4 +15,7 @@ export declare class Company {
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
+    President: Teacher;
+    EmployeeList: Teacher[];
+    AppliedCompanyList: CompanyApplication[];
 }

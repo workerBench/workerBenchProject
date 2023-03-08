@@ -13,6 +13,14 @@ exports.WorkShop = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
+const genre_tag_1 = require("./genre-tag");
+const order_1 = require("./order");
+const review_1 = require("./review");
+const user_1 = require("./user");
+const wish_list_1 = require("./wish-list");
+const workshop_image_1 = require("./workshop-image");
+const workshop_instance_detail_1 = require("./workshop-instance.detail");
+const workshop_purpose_1 = require("./workshop-purpose");
 let WorkShop = class WorkShop {
 };
 __decorate([
@@ -151,6 +159,46 @@ __decorate([
     (0, typeorm_1.DeleteDateColumn)(),
     __metadata("design:type", Date)
 ], WorkShop.prototype, "deletedAt", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => user_1.User, (user) => user.MyWorkshops, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)([{ name: 'user_id', referencedColumnName: 'id' }]),
+    __metadata("design:type", user_1.User)
+], WorkShop.prototype, "User", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => workshop_instance_detail_1.WorkShopInstanceDetail, (workShopInstanceDetail) => workShopInstanceDetail.Workshop),
+    __metadata("design:type", Array)
+], WorkShop.prototype, "WorkShopInstances", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => review_1.Review, (review) => review.Workshop),
+    __metadata("design:type", Array)
+], WorkShop.prototype, "Reviews", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => order_1.Order, (order) => order.Workshop),
+    __metadata("design:type", Array)
+], WorkShop.prototype, "Orders", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => workshop_image_1.WorkShopImage, (workshopImage) => workshopImage.Workshop),
+    __metadata("design:type", Array)
+], WorkShop.prototype, "Images", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => wish_list_1.WishList, (wishList) => wishList.Workshop),
+    __metadata("design:type", Array)
+], WorkShop.prototype, "WishList", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => genre_tag_1.GenreTag, (genreTag) => genreTag.WorkShopList, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)([{ name: 'genre_id', referencedColumnName: 'id' }]),
+    __metadata("design:type", genre_tag_1.GenreTag)
+], WorkShop.prototype, "GenreTag", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => workshop_purpose_1.WorkShopPurpose, (workshopPurpose) => workshopPurpose.Workshop),
+    __metadata("design:type", Array)
+], WorkShop.prototype, "PurposeList", void 0);
 WorkShop = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'workshop' })
 ], WorkShop);

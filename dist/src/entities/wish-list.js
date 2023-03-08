@@ -13,6 +13,8 @@ exports.WishList = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
+const user_1 = require("./user");
+const workshop_1 = require("./workshop");
 let WishList = class WishList {
 };
 __decorate([
@@ -45,6 +47,22 @@ __decorate([
     (0, typeorm_1.DeleteDateColumn)(),
     __metadata("design:type", Date)
 ], WishList.prototype, "deletedAt", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => user_1.User, (user) => user.MyWishList, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)([{ name: 'user_id', referencedColumnName: 'id' }]),
+    __metadata("design:type", user_1.User)
+], WishList.prototype, "User", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => workshop_1.WorkShop, (workshop) => workshop.WishList, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)([{ name: 'workshop_id', referencedColumnName: 'id' }]),
+    __metadata("design:type", workshop_1.WorkShop)
+], WishList.prototype, "Workshop", void 0);
 WishList = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'wish_list' })
 ], WishList);

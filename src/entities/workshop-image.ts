@@ -46,11 +46,11 @@ export class WorkShopImage {
 
   /* ------------------------ 관계 mapping --------------------------- */
 
-  // // 1. workshop
-  // @ManyToOne(() => WorkShop, (workshop) => workshop.Orders, {
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
-  // Workshop: WorkShop;
+  // 1. workshop
+  @ManyToOne(() => WorkShop, (workshop) => workshop.Orders, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
+  Workshop: WorkShop;
 }
