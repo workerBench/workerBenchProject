@@ -124,6 +124,7 @@ __decorate([
     __metadata("design:type", Number)
 ], WorkShopInstanceDetail.prototype, "member_cnt", void 0);
 __decorate([
+    (0, class_validator_1.IsString)(),
     (0, swagger_1.ApiProperty)({
         example: '기타 문의사항은 다음과 같습니다...',
         description: '워크샵 수강 문의 등록 시 기타 문의 사항 기록',
