@@ -83,6 +83,7 @@ export class AuthService {
       err.name = 'WrongPhoneNumberError';
       throw err;
     }
+    return;
   }
 
   // 유저 회원가입 시 이메일 중복 검사
@@ -126,7 +127,7 @@ export class AuthService {
         console.log(error);
         throw new ConflictException();
       });
-    return true;
+    return;
   }
 
   // 유저 회원가입 시 이메일 인증코드 검사

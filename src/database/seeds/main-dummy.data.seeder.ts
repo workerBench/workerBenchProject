@@ -385,7 +385,7 @@ export default class MainSeeder implements Seeder {
       {
         company_type: 0,
         company_name: '가나다 회사',
-        business_number: 34374897438429,
+        business_number: 34374897,
         bank_name: '신한은행',
         account: 1114444333999,
         saving_name: '김바보',
@@ -402,7 +402,7 @@ export default class MainSeeder implements Seeder {
         user_id: 4,
       },
       {
-        company_type: 3,
+        company_type: 1,
         company_name: '사아자 회사',
         rrn_front: 901023,
         rrn_back: 1111111,
