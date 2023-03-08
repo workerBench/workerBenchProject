@@ -177,31 +177,31 @@ export default class MainSeeder implements Seeder {
 
     await genreTagRepository.insert([
       {
-        name: '문화 예술',
+        name: '문화예술',
       },
       {
-        name: '체육 실기',
+        name: '식음',
       },
       {
-        name: '사회인문학',
+        name: '심리진단',
       },
       {
-        name: '컴퓨터 공학',
-      },
-      {
-        name: '농림 수산',
+        name: '운동',
       },
     ]);
 
     await purposeTagRepository.insert([
       {
-        name: '팀웍 증진',
+        name: '동기부여',
       },
       {
-        name: '서류 작성',
+        name: '팀워크',
       },
       {
-        name: '커뮤니케이션 증진',
+        name: '회식',
+      },
+      {
+        name: '힐링',
       },
     ]);
 
@@ -385,9 +385,9 @@ export default class MainSeeder implements Seeder {
       {
         company_type: 0,
         company_name: '가나다 회사',
-        business_number: 34374897438429,
+        business_number: 12345,
         bank_name: '신한은행',
-        account: 1114444333999,
+        account: 12345,
         saving_name: '김바보',
         user_id: 3,
       },
@@ -397,7 +397,7 @@ export default class MainSeeder implements Seeder {
         rrn_front: 901023,
         rrn_back: 1111111,
         bank_name: '국민은행',
-        account: 11144358409,
+        account: 12345,
         saving_name: '민바보',
         user_id: 4,
       },
@@ -407,7 +407,7 @@ export default class MainSeeder implements Seeder {
         rrn_front: 901023,
         rrn_back: 1111111,
         bank_name: '우리은행',
-        account: 11144358409,
+        account: 12345,
         saving_name: '수바보',
         user_id: 13,
       },
