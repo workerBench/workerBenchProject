@@ -83,6 +83,15 @@ export class AdminController {
         return { message: "업체가 밴 처리 되었습니다." }
     }
 
+    // 관리자 목록 불러오기
+
+    @Get('/admin/list')
+    async getAdminList() {
+        const result = await this.adminService.getAdminList()
+
+        return result
+    }
+
     /*------------------------- 검색 기능 모음 -------------------------*/
 
     // 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀)

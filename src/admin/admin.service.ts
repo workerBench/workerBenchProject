@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { not } from 'joi';
+import { AdminUser } from 'src/entities/admin-user';
 import { Company } from 'src/entities/company';
 import { User } from 'src/entities/user';
-import { Like, SelectQueryBuilder } from 'typeorm';
+import { SelectQueryBuilder } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 import { WorkShop } from '../entities/workshop';
 
@@ -12,7 +12,8 @@ export class AdminService {
     constructor(
         @InjectRepository(WorkShop) private workshopRepository: Repository<WorkShop>,
         @InjectRepository(User) private userRepository: Repository<User>,
-        @InjectRepository(Company) private companyRepository: Repository<Company>
+        @InjectRepository(Company) private companyRepository: Repository<Company>,
+        @InjectRepository(AdminUser) private adminUserRepository: Repository<AdminUser>
     ) {}
 
     //-------------------------- 검토 대기중인 워크숍 목록 불러오기 --------------------------//
@@ -117,6 +118,14 @@ export class AdminService {
         })
         
         return await this.companyRepository.update(id, {isBan: 1})
+    }
+
+    //-------------------------- 현재 관리자 목록 불러오기 --------------------------//
+
+    async getAdminList() {
+        return await this.adminUserRepository.find({
+            where: {admin_type: 0}
+        })
     }
 
     //-------------------------- 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀) --------------------------//
