@@ -56,7 +56,7 @@ let TypeOrmConfigService = class TypeOrmConfigService {
                 workshop_purpose_1.WorkShopPurpose,
                 workshop_1.WorkShop,
             ],
-            synchronize: false,
+            synchronize: true,
             logging: true,
             keepConnectionAlive: true,
             charset: 'utf8mb4',

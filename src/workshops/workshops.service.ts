@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from 'src/entities/order';
+import { Review } from 'src/entities/review';
 import { WishList } from 'src/entities/wish-list';
 import { WorkShop } from 'src/entities/workshop';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
@@ -18,6 +19,8 @@ export class WorkshopsService {
     private readonly wishRepository: Repository<WishList>,
     @InjectRepository(WorkShopInstanceDetail)
     private readonly workshopDetailRepository: Repository<WorkShopInstanceDetail>,
+    @InjectRepository(Review)
+    private readonly reviewRepository: Repository<Review>,
   ) {}
 
   // 인기 워크샵 조회 API ★
@@ -68,8 +71,8 @@ export class WorkshopsService {
   }
 
   // 워크샵 후기 불러오기 API ★
-  async getWorkshopReviews(id: number) {
-    return await this.workshopRepository.find();
+  async getWorkshopReviews(workshop_id: number) {
+    return await this.reviewRepository.find({ relations: ['workshop'] });
   }
 
   // 워크샵 신청하기 API ★

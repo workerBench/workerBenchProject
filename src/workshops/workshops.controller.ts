@@ -42,9 +42,9 @@ export class WorkshopsController {
   }
 
   // 특정 워크샵 후기 전체 조회 API
-  @Get(':id/reviews')
-  getWorkshopReviews(@Param('id') id: number) {
-    return this.workshopsService.getWorkshopReviews(id);
+  @Get(':workshop_id/reviews')
+  async getWorkshopReviews(@Param('workshop_id') workshop_id: number) {
+    return await this.workshopsService.getWorkshopReviews(workshop_id);
   }
 
   // 워크샵 신청하기 API
