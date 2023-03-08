@@ -9,6 +9,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MypageService = void 0;
 const common_1 = require("@nestjs/common");
 let MypageService = class MypageService {
+    constructor() {
+        this.mypage = [];
+    }
+    getAllPages() {
+        return this.mypage;
+    }
 };
 MypageService = __decorate([
     (0, common_1.Injectable)()

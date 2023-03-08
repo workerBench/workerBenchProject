@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { CommonEntity } from 'src/common/entities/common.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ schema: 'workerbench', name: 'review_image' })
+@Entity({ schema: 'workerbench', name: 'review' })
 export class Review extends CommonEntity {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
   id: number;

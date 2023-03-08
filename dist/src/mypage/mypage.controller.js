@@ -13,12 +13,11 @@ exports.MypageController = void 0;
 const common_1 = require("@nestjs/common");
 const mypage_service_1 = require("./mypage.service");
 let MypageController = class MypageController {
-    getAll() {
-        return 'here is mypage';
-    }
     constructor(MypageService) {
         this.MypageService = MypageService;
-        this.MypageService = MypageService;
+    }
+    getAllpages() {
+        return this.MypageService.getAllPages();
     }
 };
 __decorate([
@@ -26,9 +25,9 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], MypageController.prototype, "getAll", null);
+], MypageController.prototype, "getAllpages", null);
 MypageController = __decorate([
-    (0, common_1.Controller)('mypage'),
+    (0, common_1.Controller)('/api/mypage'),
     __metadata("design:paramtypes", [mypage_service_1.MypageService])
 ], MypageController);
 exports.MypageController = MypageController;
