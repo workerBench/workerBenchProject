@@ -3,16 +3,9 @@ import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  // 메인 페이지 render
-  @Get()
-  @Render('main/main')
-  getMain() {
-    return;
-  }
-
-  // add a getHello method
-  @Get('/hello')
+  constructor(private readonly appService: AppService) {}
+  @Get('/')
   getHello() {
-    return 'Hello World!';
+    return this.appService.getHello();
   }
 }

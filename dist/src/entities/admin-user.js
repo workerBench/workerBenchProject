@@ -12,9 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminUser = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const common_entity_1 = require("../common/entities/common.entity");
 const typeorm_1 = require("typeorm");
-let AdminUser = class AdminUser extends common_entity_1.CommonEntity {
+let AdminUser = class AdminUser {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('increment', { type: 'int', name: 'id' }),
@@ -75,14 +74,30 @@ __decorate([
     __metadata("design:type", String)
 ], AdminUser.prototype, "phone_number", void 0);
 __decorate([
-    (0, typeorm_1.Column)('varchar', {
-        name: 'admin_type',
-        length: 20,
-        nullable: true,
-        default: 'normal_admin',
+    (0, swagger_1.ApiProperty)({
+        example: 0,
+        description: '관리자 권한 여부. 일반 관리자 = 0, 최고 관리자 = 1',
+        required: false,
     }),
-    __metadata("design:type", String)
+    (0, typeorm_1.Column)('int', {
+        name: 'admin_type',
+        nullable: false,
+        default: 0,
+    }),
+    __metadata("design:type", Number)
 ], AdminUser.prototype, "admin_type", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], AdminUser.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], AdminUser.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], AdminUser.prototype, "deletedAt", void 0);
 AdminUser = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'admin_user' })
 ], AdminUser);

@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 export class MypageService {
     private mypage = [];
 
-    getAllPages() {
+    getWorkshops() {
         return this.mypage
     }
 

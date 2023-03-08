@@ -9,17 +9,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.company = void 0;
+exports.Company = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const common_entity_1 = require("../common/entities/common.entity");
 const typeorm_1 = require("typeorm");
-let company = class company extends common_entity_1.CommonEntity {
+const company_application_1 = require("./company-application");
+const teacher_1 = require("./teacher");
+let Company = class Company {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('increment', { type: 'int', name: 'id' }),
     __metadata("design:type", Number)
-], company.prototype, "id", void 0);
+], Company.prototype, "id", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsNotEmpty)({ message: '업체 종류를 선택해 주세요' }),
@@ -33,7 +34,7 @@ __decorate([
         nullable: false,
     }),
     __metadata("design:type", Number)
-], company.prototype, "company_type", void 0);
+], Company.prototype, "company_type", void 0);
 __decorate([
     (0, class_validator_1.IsString)({ message: '업체 이름을 정확히 입력해 주세요' }),
     (0, class_validator_1.IsNotEmpty)({ message: '업체 이름을 입력해 주세요' }),
@@ -48,7 +49,7 @@ __decorate([
         nullable: false,
     }),
     __metadata("design:type", String)
-], company.prototype, "company_name", void 0);
+], Company.prototype, "company_name", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         example: '1638437489',
@@ -57,7 +58,7 @@ __decorate([
     }),
     (0, typeorm_1.Column)('int', { name: 'business_number', nullable: true }),
     __metadata("design:type", Number)
-], company.prototype, "business_number", void 0);
+], Company.prototype, "business_number", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsNotEmpty)({ message: '주민번호 앞자리를 입력해 주세요' }),
@@ -68,7 +69,7 @@ __decorate([
     }),
     (0, typeorm_1.Column)('int', { name: 'rrn_front', nullable: true }),
     __metadata("design:type", Number)
-], company.prototype, "rrn_front", void 0);
+], Company.prototype, "rrn_front", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsNotEmpty)({ message: '주민번호 뒷자리를 입력해 주세요' }),
@@ -79,7 +80,7 @@ __decorate([
     }),
     (0, typeorm_1.Column)('int', { name: 'rrn_back', nullable: true }),
     __metadata("design:type", Number)
-], company.prototype, "rrn_back", void 0);
+], Company.prototype, "rrn_back", void 0);
 __decorate([
     (0, class_validator_1.IsString)({ message: '은행 이름을 정확히 입력해 주세요' }),
     (0, class_validator_1.IsNotEmpty)({ message: '은행 이름을 입력해 주세요' }),
@@ -94,7 +95,7 @@ __decorate([
         nullable: false,
     }),
     __metadata("design:type", String)
-], company.prototype, "bank_name", void 0);
+], Company.prototype, "bank_name", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     (0, swagger_1.ApiProperty)({
@@ -104,7 +105,7 @@ __decorate([
     }),
     (0, typeorm_1.Column)('int', { name: 'account', nullable: false }),
     __metadata("design:type", Number)
-], company.prototype, "account", void 0);
+], Company.prototype, "account", void 0);
 __decorate([
     (0, class_validator_1.IsString)({ message: '예금주 성함을 정확히 입력해 주세요' }),
     (0, class_validator_1.IsNotEmpty)({ message: '예금주 성함을 입력해 주세요' }),
@@ -119,7 +120,7 @@ __decorate([
         nullable: false,
     }),
     __metadata("design:type", String)
-], company.prototype, "saving_name", void 0);
+], Company.prototype, "saving_name", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         example: 0,
@@ -128,13 +129,34 @@ __decorate([
     }),
     (0, typeorm_1.Column)('int', { name: 'isBan', nullable: false, default: 0 }),
     __metadata("design:type", Number)
-], company.prototype, "isBan", void 0);
+], Company.prototype, "isBan", void 0);
 __decorate([
     (0, typeorm_1.Column)('int', { name: 'user_id', nullable: true }),
     __metadata("design:type", Number)
-], company.prototype, "user_id", void 0);
-company = __decorate([
+], Company.prototype, "user_id", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Company.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], Company.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], Company.prototype, "deletedAt", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => teacher_1.Teacher, (teacher) => teacher.MyCompany),
+    (0, typeorm_1.JoinColumn)([{ name: 'user_id', referencedColumnName: 'user_id' }]),
+    __metadata("design:type", teacher_1.Teacher)
+], Company.prototype, "President", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => company_application_1.CompanyApplication, (companyApplication) => companyApplication.AppliedCompany),
+    __metadata("design:type", Array)
+], Company.prototype, "AppliedCompanyList", void 0);
+Company = __decorate([
     (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'company' })
-], company);
-exports.company = company;
+], Company);
+exports.Company = Company;
 //# sourceMappingURL=company.js.map

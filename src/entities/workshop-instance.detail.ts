@@ -1,10 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { CommonEntity } from 'src/common/entities/common.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { User } from './user';
+import { WorkShop } from './workshop';
 
 @Entity({ schema: 'workerbench', name: 'workshop_instance_detail' })
-export class WorkShopInstanceDetail extends CommonEntity {
+export class WorkShopInstanceDetail {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
   id: number;
 
@@ -69,7 +79,7 @@ export class WorkShopInstanceDetail extends CommonEntity {
     nullable: false,
     default: 'request',
   })
-  status: string;
+  status: 'request' | 'non_payment' | 'waiting_lecture' | 'complete';
 
   @IsString()
   @IsNotEmpty({ message: '워크샵을 희망하시는 이유를 적어주세요' })
@@ -101,6 +111,7 @@ export class WorkShopInstanceDetail extends CommonEntity {
   @Column('int', { name: 'member_cnt', nullable: false })
   member_cnt: number;
 
+  @IsString()
   @ApiProperty({
     example: '기타 문의사항은 다음과 같습니다...',
     description: '워크샵 수강 문의 등록 시 기타 문의 사항 기록',
@@ -125,4 +136,31 @@ export class WorkShopInstanceDetail extends CommonEntity {
 
   @Column('int', { name: 'workshop_id', nullable: true })
   workshop_id: number | null;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date | null;
+
+  /* ------------------------ 관계 mapping --------------------------- */
+
+  // 1. user
+  @ManyToOne(() => User, (user) => user.MyInstances, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  Writer: User;
+
+  // 2. workshop
+  @ManyToOne(() => WorkShop, (workshop) => workshop.WorkShopInstances, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
+  Workshop: User;
 }

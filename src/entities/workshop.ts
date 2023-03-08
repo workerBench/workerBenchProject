@@ -1,10 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { CommonEntity } from 'src/common/entities/common.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { GenreTag } from './genre-tag';
+import { Order } from './order';
+import { Review } from './review';
+import { User } from './user';
+import { WishList } from './wish-list';
+import { WorkShopImage } from './workshop-image';
+import { WorkShopInstanceDetail } from './workshop-instance.detail';
+import { WorkShopPurpose } from './workshop-purpose';
 
 @Entity({ schema: 'workerbench', name: 'workshop' })
-export class WorkShop extends CommonEntity {
+export class WorkShop {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
   id: number;
 
@@ -112,4 +129,62 @@ export class WorkShop extends CommonEntity {
 
   @Column('int', { name: 'genre_id', nullable: true })
   genre_id: number | null;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date | null;
+
+  /* ------------------------ 관계 mapping --------------------------- */
+
+  // 1. user
+  @ManyToOne(() => User, (user) => user.MyWorkshops, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  // Owner: User => User: User 로 변경
+  User: User;
+
+  // 2. workshop_instance_detail
+  @OneToMany(
+    () => WorkShopInstanceDetail,
+    (workShopInstanceDetail) => workShopInstanceDetail.Workshop,
+  )
+  WorkShopInstances: WorkShopInstanceDetail[];
+
+  // 3. review
+  @OneToMany(() => Review, (review) => review.Workshop)
+  Reviews: Review[];
+
+  // 4. order
+  @OneToMany(() => Order, (order) => order.Workshop)
+  Orders: Order[];
+
+  // 5. workshop_image
+  @OneToMany(() => WorkShopImage, (workshopImage) => workshopImage.Workshop)
+  Images: WorkShopImage[];
+
+  // 6. wish_list
+  @OneToMany(() => WishList, (wishList) => wishList.Workshop)
+  WishList: WishList[];
+
+  // 7. genre_tag
+  @ManyToOne(() => GenreTag, (genreTag) => genreTag.WorkShopList, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'genre_id', referencedColumnName: 'id' }])
+  GenreTag: GenreTag;
+
+  // 8. workshop_purpose
+  @OneToMany(
+    () => WorkShopPurpose,
+    (workshopPurpose) => workshopPurpose.Workshop,
+  )
+  PurposeList: WorkShopPurpose[];
 }

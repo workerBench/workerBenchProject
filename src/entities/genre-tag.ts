@@ -1,10 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { CommonEntity } from 'src/common/entities/common.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { WorkShop } from './workshop';
 
 @Entity({ schema: 'workerbench', name: 'genre_tag' })
-export class GenreTag extends CommonEntity {
+export class GenreTag {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
   id: number;
 
@@ -21,4 +29,19 @@ export class GenreTag extends CommonEntity {
     nullable: false,
   })
   name: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date | null;
+
+  /* ------------------------ 관계 mapping --------------------------- */
+
+  // 1. workshop
+  @OneToMany(() => WorkShop, (workshop) => workshop.GenreTag)
+  WorkShopList: WorkShop[];
 }

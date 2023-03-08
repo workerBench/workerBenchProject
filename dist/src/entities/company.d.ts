@@ -1,5 +1,6 @@
-import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class company extends CommonEntity {
+import { CompanyApplication } from './company-application';
+import { Teacher } from './teacher';
+export declare class Company {
     id: number;
     company_type: number;
     company_name: string;
@@ -11,4 +12,9 @@ export declare class company extends CommonEntity {
     saving_name: string;
     isBan: number;
     user_id: number | null;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
+    President: Teacher;
+    AppliedCompanyList: CompanyApplication[];
 }

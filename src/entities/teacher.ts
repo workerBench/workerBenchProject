@@ -1,10 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { CommonEntity } from 'src/common/entities/common.entity';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Company } from './company';
+import { CompanyApplication } from './company-application';
+import { User } from './user';
 
 @Entity({ schema: 'workerbench', name: 'teacher' })
-export class Teacher extends CommonEntity {
+export class Teacher {
   @PrimaryColumn('int', { name: 'user_id' })
   user_id: number;
 
@@ -41,6 +54,30 @@ export class Teacher extends CommonEntity {
   @Column('int', { name: 'affiliation_company_id', nullable: true, default: 0 })
   affiliation_company_id: number | null;
 
-  @Column('int', { name: 'possession_company_id', nullable: true, default: 0 })
-  possession_company_id: number | null;
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date | null;
+
+  /* ------------------------ 관계 mapping --------------------------- */
+
+  // 1. user
+  @OneToOne(() => User, (user) => user.TeacherProfile)
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  User: User;
+
+  // 2. company
+  @OneToOne(() => Company, (company) => company.President)
+  MyCompany: Company;
+
+  // 3. company_application
+  @OneToMany(
+    () => CompanyApplication,
+    (companyApplication) => companyApplication.Teacher,
+  )
+  ApplicationList: CompanyApplication[];
 }

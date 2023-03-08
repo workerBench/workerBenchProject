@@ -1,12 +1,12 @@
-import { CommonEntity } from 'src/common/entities/common.entity';
-export declare class WorkShopInstanceDetail extends CommonEntity {
+import { User } from './user';
+export declare class WorkShopInstanceDetail {
     id: number;
     company: string;
     name: string;
     email: string;
     phone_number: string;
     wish_date: string;
-    status: string;
+    status: 'request' | 'non_payment' | 'waiting_lecture' | 'complete';
     purpose: string;
     wish_location: string | null;
     member_cnt: number;
@@ -14,4 +14,9 @@ export declare class WorkShopInstanceDetail extends CommonEntity {
     category: 'online' | 'offline';
     user_id: number | null;
     workshop_id: number | null;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
+    Writer: User;
+    Workshop: User;
 }

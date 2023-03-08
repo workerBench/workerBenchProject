@@ -1,19 +1,19 @@
 import { Controller,Get,Render } from '@nestjs/common';
-@Controller()
+@Controller('teacher')
 export class TeacherControllerRender {
-  @Get('/teacher/manage/incomplete')
+  @Get('/manage/incomplete')
   @Render('teacher/teacher-manage-incomplete')
   q() {
   }
-  @Get('/teacher/register')
+  @Get('/register')
   @Render('teacher/teacher-register')
   b() {
   }
-  @Get('/teacher/workshop/information')
+  @Get('/workshop/information')
   @Render('teacher/teacher-workshop-information')
   c() {
   }
-  @Get('/teacher/workshop')
+  @Get('/workshop')
   @Render('teacher/teacher-workshop')
   d() {
   }
@@ -25,7 +25,7 @@ export class TeacherControllerRender {
   @Render('teacher/company-register')
   f() {
   }
-  @Get('/teacher/manage/complete')
+  @Get('/manage/complete')
   @Render('teacher/teacher-manage-complete')
   a() {
   }
