@@ -60,10 +60,6 @@ __decorate([
     __metadata("design:type", Number)
 ], Teacher.prototype, "affiliation_company_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)('int', { name: 'possession_company_id', nullable: true, default: 0 }),
-    __metadata("design:type", Number)
-], Teacher.prototype, "possession_company_id", void 0);
-__decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], Teacher.prototype, "createdAt", void 0);
@@ -84,14 +80,6 @@ __decorate([
     (0, typeorm_1.OneToOne)(() => company_1.Company, (company) => company.President),
     __metadata("design:type", company_1.Company)
 ], Teacher.prototype, "MyCompany", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => company_1.Company, (company) => company.EmployeeList, {
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE',
-    }),
-    (0, typeorm_1.JoinColumn)([{ name: 'affiliation_company_id', referencedColumnName: 'id' }]),
-    __metadata("design:type", company_1.Company)
-], Teacher.prototype, "AffiliationCompany", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => company_application_1.CompanyApplication, (companyApplication) => companyApplication.Teacher),
     __metadata("design:type", Array)

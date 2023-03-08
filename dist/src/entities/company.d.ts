@@ -16,6 +16,5 @@ export declare class Company {
     updatedAt: Date;
     deletedAt: Date | null;
     President: Teacher;
-    EmployeeList: Teacher[];
     AppliedCompanyList: CompanyApplication[];
 }
