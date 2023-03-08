@@ -81,7 +81,7 @@ export class TeacherService {
     async getTeacherMypage(): Promise<Company[]> {
       return this.companyRepository
         .createQueryBuilder('company')
-        .leftJoinAndSelect('company.User', 'user')
+        .innerJoinAndSelect('company.User', 'user')
         .select([
           'company.id',
           'company.company_type',
