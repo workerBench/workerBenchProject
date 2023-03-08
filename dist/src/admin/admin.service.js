@@ -93,8 +93,8 @@ let AdminService = class AdminService {
         }
         else if (searchField === 'email') {
             query = query
-                .innerJoinAndSelect('workshop.user', 'user')
-                .where('user.email LIKE :email', { email: `%${titleOrEmail}%` });
+                .innerJoinAndSelect('workshop.User', 'user')
+                .where('user.email = :email', { email: `${titleOrEmail}` });
         }
         const workshops = await query.getMany();
         return workshops;
@@ -104,7 +104,7 @@ let AdminService = class AdminService {
         if (searchcField === 'email') {
             query = this.userRepository
                 .createQueryBuilder('user')
-                .where('user.email Like :email', { email: `${EmailOrCompany}` });
+                .where('user.email = :email', { email: `${EmailOrCompany}` });
         }
         else if (searchcField === "company") {
             query = this.companyRepository

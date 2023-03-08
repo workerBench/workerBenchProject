@@ -162,7 +162,7 @@ __decorate([
     }),
     (0, typeorm_1.JoinColumn)([{ name: 'user_id', referencedColumnName: 'id' }]),
     __metadata("design:type", user_1.User)
-], WorkShop.prototype, "user", void 0);
+], WorkShop.prototype, "User", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => workshop_instance_detail_1.WorkShopInstanceDetail, (workShopInstanceDetail) => workShopInstanceDetail.Workshop),
     __metadata("design:type", Array)

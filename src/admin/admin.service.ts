@@ -121,15 +121,15 @@ export class AdminService {
 
     //-------------------------- 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀) --------------------------//
 
-    async searchWorkshops(titleOrEmail: string, searchField: string): Promise<WorkShop[]> {
+    async searchWorkshops(titleOrEmail: string, searchField: string) {
         let query = this.workshopRepository.createQueryBuilder('workshop');
       
         if (searchField === 'title') {
-          query = query.where('workshop.title LIKE :title', { title: `%${titleOrEmail}%` });
+          query = query.where('workshop.title LIKE :title', { title: `%${titleOrEmail}%` })
         } else if (searchField === 'email') {
             query = query
-            .innerJoinAndSelect('workshop.user', 'user')
-            .where('user.email LIKE :email', { email: `%${titleOrEmail}%` });
+            .innerJoinAndSelect('workshop.User', 'user')
+            .where('user.email = :email', { email: `${titleOrEmail}` });
         }
       
         const workshops = await query.getMany();
@@ -139,12 +139,12 @@ export class AdminService {
     //-------------------------- 업체 및 강사 검색 기능 (유저 이메일 / 업체 명) --------------------------//
     
     async searchUserOrCompany(EmailOrCompany:string, searchcField: string) {
-        let query: SelectQueryBuilder<User> | SelectQueryBuilder<Company>;
-
+        let query: SelectQueryBuilder<User> | SelectQueryBuilder<Company>
+        
         if (searchcField === 'email') {
             query = this.userRepository
             .createQueryBuilder('user')
-            .where('user.email Like :email', {email: `${EmailOrCompany}`});
+            .where('user.email = :email', {email: `${EmailOrCompany}`});
         } else if (searchcField === "company") {
             query = this. companyRepository
             .createQueryBuilder('company')
