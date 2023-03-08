@@ -6,7 +6,7 @@ export declare class WorkShopInstanceDetail {
     email: string;
     phone_number: string;
     wish_date: string;
-    status: string;
+    status: "request" | "non_payment" | "waiting_lecture" | "complete";
     purpose: string;
     wish_location: string | null;
     member_cnt: number;

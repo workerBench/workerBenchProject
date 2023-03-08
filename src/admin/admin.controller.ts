@@ -1,6 +1,9 @@
-import { Controller, Get, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Put } from '@nestjs/common';
+import { Body, Delete, Query } from '@nestjs/common/decorators';
 import { ApiTags } from '@nestjs/swagger';
+import { json } from 'stream/consumers';
 import { AdminService } from './admin.service';
+import { editWorkshopDto } from './dto/edit-workshop.dto';
 
 @ApiTags('admin')
 @Controller('api/admin')
@@ -33,6 +36,73 @@ export class AdminController {
     async getApprovedWorkshops() {
         const workshops = await this.adminService.getApprovedWorkshops()
         return workshops
+    }
+
+    // 워크숍 수정하기
+    @Put('/workshop/:id')
+    async updateWorkshop(
+        @Param("id") id: number,
+        @Body() data: editWorkshopDto
+    ) {
+        const workshop = await this.adminService.updateWorkshop(
+            id,
+            data.title,
+            data.category,
+            data.desc,
+            data.thumb,
+            data.min_member,
+            data.max_member,
+            data.total_time,
+            data.price,
+            data.location
+        )
+        return { message: "워크숍 수정이 완료되었습니다." }
+    }
+
+    // 워크숍 삭제하기
+    @Delete('workshop/:id')
+    async removeWorkshop(@Param("id") id: number) {
+        await this.adminService.removeWorkshop(id)
+
+        return { message: "워크숍이 삭제되었습니다." }
+    }
+
+    /*------------------------- 업체 및 유저 밴 기능 -------------------------*/
+
+    @Patch('ban/user')
+    async userBan(@Param("id") id: number) {
+        await this.adminService.userBan(id)
+
+        return { message: "유저가 밴 처리 되었습니다." }
+    }
+
+    @Patch('ban/company')
+    async companyBan(@Param("id") id: number) {
+        await this.adminService.companyBan(id)
+
+        return { message: "업체가 밴 처리 되었습니다." }
+    }
+
+    /*------------------------- 검색 기능 모음 -------------------------*/
+
+    // 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀)
+    @Get('search/workshops')
+    async searchWorkshops(
+        @Query('search') titleOrEmail: string,
+        @Query('searchField') searchField: string,
+    ) {
+        const workshops = await this.adminService.searchWorkshops(titleOrEmail, searchField);
+        return workshops;
+     }
+
+    // 유저 및 워크숍 검색 기능
+    @Get('search/member')
+    async searchUserOrCompany(
+        @Query('search') titleOrEmail: string,
+        @Query('searchField') searchField: string,
+    ) {
+        const member = await this.adminService.searchUserOrCompany(titleOrEmail, searchField)
+        return member;
     }
 }
 

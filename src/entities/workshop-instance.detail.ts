@@ -79,7 +79,7 @@ export class WorkShopInstanceDetail {
     nullable: false,
     default: 'request',
   })
-  status: string;
+  status: "request" | "non_payment" | "waiting_lecture" | "complete" ;
 
   @IsString()
   @IsNotEmpty({ message: '워크샵을 희망하시는 이유를 적어주세요' })
@@ -111,6 +111,7 @@ export class WorkShopInstanceDetail {
   @Column('int', { name: 'member_cnt', nullable: false })
   member_cnt: number;
 
+  @IsString()
   @ApiProperty({
     example: '기타 문의사항은 다음과 같습니다...',
     description: '워크샵 수강 문의 등록 시 기타 문의 사항 기록',
