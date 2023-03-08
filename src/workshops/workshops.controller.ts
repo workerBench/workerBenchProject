@@ -1,5 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
+import { SearchWorkshopDto } from 'src/workshops/dtos/search-workshop.dto';
 import { WorkshopsService } from 'src/workshops/workshops.service';
 
 @Controller('/api/workshops')
@@ -26,6 +35,12 @@ export class WorkshopsController {
 
   // 워크샵 검색 API
   // 워크샵 분야에 들어갈 키워드 정해야 함
+  @Get('/search')
+  async searchWorkshops(
+    @Query('searchWorkshopData') searchWorkshopData: SearchWorkshopDto,
+  ) {
+    return await this.workshopsService.searchWorkshops(searchWorkshopData);
+  }
 
   // 워크샵 상세 조회 API
   @Get('/:id')

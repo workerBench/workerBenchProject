@@ -6,6 +6,7 @@ import { WishList } from 'src/entities/wish-list';
 import { WorkShop } from 'src/entities/workshop';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
+import { SearchWorkshopDto } from 'src/workshops/dtos/search-workshop.dto';
 import { WorkshopRepository } from 'src/workshops/workshop.repository';
 import { Repository } from 'typeorm';
 
@@ -13,8 +14,6 @@ import { Repository } from 'typeorm';
 export class WorkshopsService {
   constructor(
     private readonly workshopRepository: WorkshopRepository,
-    // @InjectRepository(WishList)
-    // private readonly workshopRepository: Repository<WorkShop>,
     @InjectRepository(WishList)
     private readonly wishRepository: Repository<WishList>,
     @InjectRepository(WorkShopInstanceDetail)
@@ -23,7 +22,7 @@ export class WorkshopsService {
     private readonly reviewRepository: Repository<Review>,
   ) {}
 
-  // 인기 워크샵 조회 API ★
+  // 인기 워크샵 조회 API
   // 최근 가장 결제 횟수가 많은 순으로 워크샵을 8개까지 가져온다.
   async getBestWorkshops() {
     return await this.workshopRepository.getWorkshopsByOrder();
@@ -36,6 +35,11 @@ export class WorkshopsService {
       order: { createdAt: 'DESC' },
       take: 8,
     });
+  }
+
+  // 워크샵 검색 API
+  async searchWorkshops(searchWorkshopData: SearchWorkshopDto) {
+    return await this.workshopRepository.find();
   }
 
   // 승인된 전체 워크샵 조회 API
