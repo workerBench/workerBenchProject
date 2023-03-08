@@ -1,5 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { Order } from 'src/entities/order';
 import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
 import { WorkshopsService } from 'src/workshops/workshops.service';
 

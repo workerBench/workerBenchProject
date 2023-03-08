@@ -171,4 +171,96 @@ describe('AdminService', () => {
       expect(result).toEqual([workShops]);
     });
   });
-});
+
+  //-------------------------- 워크숍 수정하기 TEST --------------------------//
+
+  describe('updateWorkshop', () => {
+    const mockWorkshop = {
+      id: 1,
+      title: '워크숍 제목',
+      category: 'offline',
+      desc: '워크숍 설명',
+      thumb: 'https://workshop-image.com',
+      min_member: 5,
+      max_member: 20,
+      total_time: 120,
+      price: 50000,
+      location: '서울시 강남구',
+      status: 'approval',
+    };
+  
+    it('should update a workshop', async () => {
+      jest.spyOn(workShopRepository, 'findOne').mockResolvedValueOnce(mockWorkshop);
+      jest.spyOn(workShopRepository, 'update').mockResolvedValueOnce(undefined);
+  
+      const result = await adminService.updateWorkshop(
+        mockWorkshop.id,
+        '새로운 제목',
+        'online',
+        '새로운 설명',
+        'https://new-image.com',
+        10,
+        30,
+        180,
+        80000,
+        '서울시 강서구',
+      );
+  
+      expect(workShopRepository.findOne).toHaveBeenCalledWith({
+        where: { id: mockWorkshop.id, status: 'approval' },
+      });
+      expect(workShopRepository.update).toHaveBeenCalledWith(mockWorkshop.id, {
+        title: '새로운 제목',
+        category: 'online',
+        desc: '새로운 설명',
+        thumb: 'https://new-image.com',
+        min_member: 10,
+        max_member: 30,
+        total_time: 180,
+        price: 80000,
+        location: '서울시 강서구',
+      });
+      expect(result).toEqual(undefined);
+    });
+  
+    it('should throw a NotFoundException if the workshop does not exist or has not been approved', async () => {
+      jest.spyOn(workShopRepository, 'findOne').mockResolvedValueOnce(undefined);
+  
+      await expect(
+        adminService.updateWorkshop(
+          mockWorkshop.id,
+          '새로운 제목',
+          'online',
+          '새로운 설명',
+          'https://new-image.com',
+          10,
+          30,
+          180,
+          80000,
+          '서울시 강서구',
+        ),
+      ).rejects.toThrowError(new NotFoundException('없는 워크숍입니다.'));
+  
+      jest.spyOn(workShopRepository, 'findOne').mockResolvedValueOnce({
+        ...mockWorkshop,
+        status: 'request',
+      });
+  
+      await expect(
+        adminService.updateWorkshop(
+          mockWorkshop.id,
+          '새로운 제목',
+          'online',
+          '새로운 설명',
+          'https://new-image.com',
+          10,
+          30,
+          180,
+          80000,
+          '서울시 강서구',
+        ),
+      ).rejects.toThrowError(new NotFoundException('없는 워크숍입니다.'));
+    });
+  });
+    
+})

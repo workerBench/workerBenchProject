@@ -55,9 +55,9 @@ export class WorkshopsService {
   }
 
   // 워크샵 찜 or 취소하기 API
-  // wishList 엔티티에서 workshop_id와 user_id 찾은 후
-  // 만약 값이 있으면 찜 해제
-  // 없으면 user_id와 workshop_id insert
+  /* wishList 엔티티에서 workshop_id와 user_id 찾은 후
+  만약 값이 있으면 찜 해제
+  없으면 user_id와 workshop_id insert */
   async addToWish(user_id: number, workshop_id: number) {
     const IsWish = await this.wishRepository.findOne({
       where: { user_id, workshop_id },
@@ -70,12 +70,14 @@ export class WorkshopsService {
     return '찜하기 취소!';
   }
 
-  // 워크샵 후기 불러오기 API ★
+  // 워크샵 후기 불러오기 API
   async getWorkshopReviews(workshop_id: number) {
-    return await this.reviewRepository.find({ relations: ['workshop'] });
+    return await this.reviewRepository.find({
+      where: { workshop_id, deletedAt: null },
+    });
   }
 
-  // 워크샵 신청하기 API ★
+  // 워크샵 신청하기 API
   orderWorkshop(
     workshop_id: number,
     user_id: number,
