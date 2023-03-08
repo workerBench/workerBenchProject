@@ -54,6 +54,12 @@ let AdminController = class AdminController {
         await this.adminService.companyBan(id);
         return { message: "업체가 밴 처리 되었습니다." };
     }
+    async searchWorkshops(title) {
+        const workshop = await this.adminService.searchWorkshops(title);
+        console.log(workshop);
+        console.log(`${title}`);
+        return workshop;
+    }
 };
 __decorate([
     (0, common_1.Get)('/workshops/request'),
@@ -110,6 +116,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "companyBan", null);
+__decorate([
+    (0, common_1.Get)('search/workshops'),
+    __param(0, (0, decorators_1.Query)('title')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "searchWorkshops", null);
 AdminController = __decorate([
     (0, swagger_1.ApiTags)('admin'),
     (0, common_1.Controller)('api/admin'),

@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Patch, Put } from '@nestjs/common';
-import { Body, Delete } from '@nestjs/common/decorators';
+import { Body, Delete, Query } from '@nestjs/common/decorators';
 import { ApiTags } from '@nestjs/swagger';
 import { json } from 'stream/consumers';
 import { AdminService } from './admin.service';
@@ -81,6 +81,16 @@ export class AdminController {
         await this.adminService.companyBan(id)
 
         return { message: "업체가 밴 처리 되었습니다." }
+    }
+
+    /*------------------------- 검색 기능 모음 -------------------------*/
+
+    // 워크숍 검색
+    @Get('search/workshops')
+    async searchWorkshops(@Query('title') title: string) {
+        const workshop = await this.adminService.searchWorkshops(title)
+
+        return workshop
     }
 }
 

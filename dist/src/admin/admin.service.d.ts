@@ -15,4 +15,5 @@ export declare class AdminService {
     removeWorkshop(id: number): Promise<import("typeorm").UpdateResult>;
     userBan(id: number): Promise<import("typeorm").UpdateResult>;
     companyBan(id: number): Promise<import("typeorm").UpdateResult>;
+    searchWorkshops(title: string): Promise<WorkShop[]>;
 }

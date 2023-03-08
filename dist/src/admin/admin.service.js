@@ -86,6 +86,16 @@ let AdminService = class AdminService {
         });
         return await this.companyRepository.update(id, { isBan: 1 });
     }
+    async searchWorkshops(title) {
+        const workshops = await this.workshopRepository
+            .createQueryBuilder('workshop')
+            .where('workshop.title Like :title', { title: `%${title}%` })
+            .getMany();
+        if (!workshops.length) {
+            throw new common_1.NotFoundException('Workshops not found');
+        }
+        return workshops;
+    }
 };
 AdminService = __decorate([
     (0, common_1.Injectable)(),

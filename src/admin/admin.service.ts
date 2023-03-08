@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { not } from 'joi';
 import { Company } from 'src/entities/company';
 import { User } from 'src/entities/user';
+import { Like } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 import { WorkShop } from '../entities/workshop';
 
@@ -116,5 +117,20 @@ export class AdminService {
         })
         
         return await this.companyRepository.update(id, {isBan: 1})
+    }
+
+    //-------------------------- 워크숍 검색 기능 (간단하게 구현해보기) --------------------------//
+
+    async searchWorkshops(title: string) {
+        const workshops = await this.workshopRepository
+          .createQueryBuilder('workshop')
+          .where('workshop.title Like :title', { title: `%${title}%` })
+          .getMany();
+      
+        if (!workshops.length) {
+          throw new NotFoundException('Workshops not found');
+        }
+      
+        return workshops;
     }
 }

@@ -23,4 +23,5 @@ export declare class AdminController {
     companyBan(id: number): Promise<{
         message: string;
     }>;
+    searchWorkshops(title: string): Promise<import("../entities/workshop").WorkShop[]>;
 }
