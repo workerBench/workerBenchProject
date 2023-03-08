@@ -1,8 +1,15 @@
+import { RedisService } from '@liaoliaots/nestjs-redis';
+import { MailerService } from '@nestjs-modules/mailer';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Redis } from 'ioredis';
 import { AdminUser } from 'src/entities/admin-user';
 import { User } from 'src/entities/user';
 import { AuthService } from './auth.service';
+
+const mockJwt = '31k4hjk3';
 
 // User repository 에서 사용될 목 함수
 class MockUserRepository {}
@@ -10,8 +17,36 @@ class MockUserRepository {}
 // Admin repository 에서 사용될 목 함수
 class MockAdminUserRepository {}
 
+// Jwt service 에서 사용될 목 함수
+const mockJwtService = () => ({
+  signAsync: jest.fn().mockResolvedValue(mockJwt),
+});
+
+// config service 에서 사용될 목 함수
+const mockConfigService = () => ({
+  get: jest.fn().mockReturnValue('thisissecretkey'),
+});
+
+// Mailer service 에서 사용될 목 함수
+const mockMailerService = () => ({
+  sendMail: jest.fn().mockReturnValue('test'),
+});
+
+// redis service 에서 사용될 목 함수
+const mockRedisService = () => ({
+  setex: jest.fn().mockReturnValue('test'),
+  get: jest.fn().mockReturnValue('test'),
+});
+
 describe('AuthService', () => {
   let service: AuthService;
+  let jwtService: JwtService;
+  let configService: ConfigService;
+  let userRepository: MockUserRepository;
+  let adminRepository: MockAdminUserRepository;
+  let mailerService: MailerService;
+  let redisService: RedisService;
+  let redisClient: Redis;
 
   beforeEach(async () => {
     // 가짜 모듈을 만들어 줌.
@@ -26,15 +61,34 @@ describe('AuthService', () => {
           provide: getRepositoryToken(AdminUser),
           useClass: MockAdminUserRepository,
         },
+        {
+          provide: JwtService,
+          useValue: mockJwtService(),
+        },
+        {
+          provide: ConfigService,
+          useValue: mockConfigService(),
+        },
+        {
+          provide: MailerService,
+          useValue: mockMailerService(),
+        },
+        {
+          provide: RedisService,
+          useValue: mockRedisService(),
+        },
       ],
     }).compile();
 
     // 가짜 모듈을 만든 것을 서비스에 삽입.
     service = module.get<AuthService>(AuthService);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+    userRepository = module.get(getRepositoryToken(User));
+    adminRepository = module.get(getRepositoryToken(AdminUser));
+    jwtService = module.get<JwtService>(JwtService);
+    configService = module.get<ConfigService>(ConfigService);
+    mailerService = module.get<MailerService>(MailerService);
+    redisService = module.get<RedisService>(RedisService);
+    redisClient = redisService.getClient();
   });
 
   describe('checkEffective 유저 회원가입 시 유효성 검사', () => {
