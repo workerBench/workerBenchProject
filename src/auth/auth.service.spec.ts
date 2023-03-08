@@ -13,8 +13,19 @@ import * as bcrypt from 'bcrypt';
 
 const mockJwt = '31k4hjk3';
 
+interface ImockUserTable {
+  id: number;
+  email: string;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: null | Date;
+  user_type: number;
+  isBan: number;
+}
+
 const mockUserId = 1;
-const mockUserTable = [
+const mockUserTable: ImockUserTable[] = [
   {
     id: mockUserId,
     email: 'lololo@naver.com',
@@ -27,8 +38,20 @@ const mockUserTable = [
   },
 ];
 
+interface ImockAdminTable {
+  id: number;
+  email: string;
+  password: string;
+  name: string;
+  phone_number: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: null | Date;
+  admin_type: number;
+}
+
 const mockAdminId = 1;
-const mockAdminTable = [
+const mockAdminTable: ImockAdminTable[] = [
   {
     id: mockAdminId,
     email: 'lololo@naver.com',
@@ -44,13 +67,45 @@ const mockAdminTable = [
 
 const mockRedisDB = {};
 
+const userTestEmail = 'usertest@naver.com';
+const adminTestEmail = 'admintest@naver.com';
+
 // User repository 에서 사용될 목 함수
 class MockUserRepository {
-  async findOne(where: { email: string }) {
-    let result: boolean = false;
+  async findOne(param: {
+    where: { email: string };
+    select?:
+      | [id: string, email: string, password: string, user_type: string]
+      | [id: string, email: string, user_type: string, isBan: string];
+  }) {
+    let result: ImockUserTable | boolean | object = false;
     mockUserTable.forEach((user) => {
-      if (user.email === where.email) {
-        result = true;
+      if (user.email === param.where.email && !param.select) {
+        result = user;
+      }
+      if (
+        user.email === param.where.email &&
+        param.select &&
+        param.select[3] !== 'isBan'
+      ) {
+        result = {
+          id: user.id,
+          email: user.email,
+          password: user.password,
+          user_type: user.user_type,
+        };
+      }
+      if (
+        user.email === param.where.email &&
+        param.select &&
+        param.select[3] === 'isBan'
+      ) {
+        result = {
+          id: user.id,
+          email: user.email,
+          user_type: user.user_type,
+          isBan: user.isBan,
+        };
       }
     });
     return result;
@@ -73,14 +128,67 @@ class MockUserRepository {
 
 // Admin repository 에서 사용될 목 함수
 class MockAdminUserRepository {
-  async findOne(where: { email: string }) {
-    let result: boolean = false;
-    mockUserTable.forEach((user) => {
-      if (user.email === where.email) {
-        result = true;
+  async findOne(param: {
+    where: { email: string };
+    select?:
+      | [id: 'id', email: 'email', admin_type: 'admin_type']
+      | [
+          id: 'id',
+          email: 'email',
+          password: 'password',
+          admin_type: 'admin_type',
+        ];
+  }) {
+    let result: ImockAdminTable | boolean | object = false;
+    mockAdminTable.forEach((user) => {
+      if (user.email === param.where.email && !param.select) {
+        result = user;
+      }
+      if (
+        user.email === param.where.email &&
+        param.select &&
+        param.select[2] !== 'password'
+      ) {
+        result = {
+          id: user.id,
+          email: user.email,
+          admin_type: user.admin_type,
+        };
+      }
+      if (
+        user.email === param.where.email &&
+        param.select &&
+        param.select[2] === 'password'
+      ) {
+        result = {
+          id: user.id,
+          email: user.email,
+          password: user.password,
+          admin_type: user.admin_type,
+        };
       }
     });
     return result;
+  }
+
+  async save(param: {
+    email: string;
+    password: string;
+    name: string;
+    phone_number: string;
+  }) {
+    mockAdminTable.push({
+      id: mockAdminTable.length + 1,
+      email: param.email,
+      password: param.password,
+      name: param.name,
+      phone_number: param.phone_number,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+      admin_type: 0,
+    });
+    return mockAdminTable[mockAdminTable.length - 1];
   }
 }
 
@@ -103,19 +211,35 @@ const mockMailerService = () => ({
 
 // redis service 에서 사용될 목 함수
 const mockRedisService = () => ({
-  setex: jest.fn(
-    (key: string | number, time: number, value: string | number | boolean) => {
-      mockRedisDB[key] = value;
-    },
-  ),
-  get: jest.fn((key: string | number) => {
+  //   (key: string | number, time: number, value: string | number | boolean) => {
+  //     mockRedisDB[key] = value;
+  //   },
+  // ),
+  // get: jest.fn((key: string | number) => {
+  //   if (mockRedisDB[key]) {
+  //     return mockRedisDB[key];
+  //   }
+  //   return null;
+  // }),
+  getClient: jest.fn().mockReturnValue(new RedisClass()),
+});
+
+class RedisClass {
+  async setex(
+    key: string | number,
+    time: number,
+    value: string | number | boolean,
+  ) {
+    mockRedisDB[key] = value;
+  }
+
+  async get(key: string | number) {
     if (mockRedisDB[key]) {
       return mockRedisDB[key];
     }
     return null;
-  }),
-  getClient: jest.fn().mockReturnValue('getClient'),
-});
+  }
+}
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -323,20 +447,108 @@ describe('AuthService', () => {
     it.todo('이메일 인증코드 검사');
   });
 
-  describe('joinUser 유저 회원가입 시 실제로 DB 에 insert', () => {
+  describe('joinUser, joinAdminUser 회원가입 시 실제로 DB 에 insert', () => {
     it('새로운 유저를 생성 후 생성된 레코드를 반환', async () => {
-      const ps = bcrypt.hashSync('12345', 12);
-      // const ps2 = bcrypt.compare('12345', )
-      expect(await service.joinUser('kkiki@naver.com', '12345')).toMatchObject({
+      expect(await service.joinUser(userTestEmail, '12345')).toMatchObject({
         id: mockUserTable.length,
-        email: 'kkiki@naver.com',
-        password: bcrypt.hashSync('12345', 12),
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        email: userTestEmail,
+        password: expect.anything(),
+        createdAt: expect.anything(),
+        updatedAt: expect.anything(),
         deletedAt: null,
         user_type: 0,
         isBan: 0,
       });
+    });
+    it('새로운 관리자를 생성 후 생성된 레코드를 반환', async () => {
+      const parmas = {
+        email: adminTestEmail,
+        password: '12345',
+        name: '바보바보',
+        phone_number: '01033332222',
+      };
+      expect(await service.joinAdminUser(parmas)).toMatchObject({
+        id: mockAdminTable.length,
+        email: adminTestEmail,
+        password: expect.anything(),
+        name: '바보바보',
+        phone_number: '01033332222',
+        createdAt: expect.anything(),
+        updatedAt: expect.anything(),
+        deletedAt: null,
+        admin_type: 0,
+      });
+    });
+  });
+
+  describe('유저, 관리자 access token 발행', () => {
+    it('유저 access token 이 promise 로 잘 리턴되는지만 확인', async () => {
+      expect(
+        await service.makeAccessToken(1, 'lololo@naver.com', 0),
+      ).toBeDefined();
+      expect(
+        await service.makeAccessTokenForAdmin(1, 'lololo@naver.com', 0),
+      ).toBeDefined();
+    });
+  });
+
+  describe('유저, 관리자 refresh token 발행', () => {
+    it('makeRefreshToken, makeRefreshTokenForAdmin refresh 토큰 발행', async () => {
+      expect(
+        await service.makeRefreshToken(1, 'lololo@naver.com', 0, '127.0.0.1'),
+      ).toBeDefined();
+      expect(
+        await service.makeRefreshTokenForAdmin(
+          1,
+          'lololo@naver.com',
+          0,
+          '127.0.0.1',
+        ),
+      ).toBeDefined();
+    });
+  });
+
+  describe('유저 / 강사 or 관리자 로그인 시 계정 정보 DB에서 확인', () => {
+    it('checkLoginUser 유저 / 강사 db 조회 - 찾지 못한 경우', async () => {
+      try {
+        await service.checkLoginUser('asjdjsakl@dasiad.com', '12345');
+      } catch (err) {
+        expect(err.name).toBe('DoesntExistEmailOrPasswordError');
+        expect(err.message).toBe('이메일 또는 비밀번호가 일치하지 않습니다');
+      }
+
+      try {
+        await service.checkLoginUser(userTestEmail, '1234');
+      } catch (err) {
+        expect(err.name).toBe('DoesntExistEmailOrPasswordError');
+        expect(err.message).toBe('이메일 또는 비밀번호가 일치하지 않습니다');
+      }
+    });
+    it('checkLoginUser 유저 / 강사 db 조회 - 찾은 경우', async () => {
+      expect(
+        await service.checkLoginUser(userTestEmail, '12345'),
+      ).toBeDefined();
+    });
+
+    it('checkLoginAdminUser 관리자 db 조회 - 찾지 못한 경우', async () => {
+      try {
+        await service.checkLoginAdminUser('djklj@jfljsl.com', '12345');
+      } catch (err) {
+        expect(err.name).toBe('DoesntExistEmailOrPasswordError');
+        expect(err.message).toBe('이메일 또는 비밀번호가 일치하지 않습니다');
+      }
+      try {
+        await service.checkLoginAdminUser(adminTestEmail, '1234');
+      } catch (err) {
+        expect(err.name).toBe('DoesntExistEmailOrPasswordError');
+        expect(err.message).toBe('이메일 또는 비밀번호가 일치하지 않습니다');
+      }
+    });
+
+    it('checkLoginAdminUser 관리자 db 조회 - 찾은 경우', async () => {
+      expect(
+        await service.checkLoginAdminUser(adminTestEmail, '12345'),
+      ).toBeDefined();
     });
   });
 });

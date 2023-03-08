@@ -290,7 +290,6 @@ export class AuthService {
       err.name = 'DoesntExistEmailOrPasswordError';
       throw err;
     }
-
     if (!(await bcrypt.compare(password, adminInfo.password))) {
       const err = new Error('이메일 또는 비밀번호가 일치하지 않습니다');
       err.name = 'DoesntExistEmailOrPasswordError';
