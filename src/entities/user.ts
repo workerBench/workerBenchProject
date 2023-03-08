@@ -85,7 +85,7 @@ export class User {
   /* ------------------------ 관계 mapping --------------------------- */
 
   // 1. workshop
-  @OneToMany(() => WorkShop, (workshop) => workshop.Owner)
+  @OneToMany(() => WorkShop, (workshop) => workshop.user)
   MyWorkshops: WorkShop[];
 
   // 2. teacher

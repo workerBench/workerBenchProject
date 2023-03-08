@@ -85,12 +85,24 @@ export class AdminController {
 
     /*------------------------- 검색 기능 모음 -------------------------*/
 
-    // 워크숍 검색
+    // 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀)
     @Get('search/workshops')
-    async searchWorkshops(@Query('title') title: string) {
-        const workshop = await this.adminService.searchWorkshops(title)
+    async searchWorkshops(
+        @Query('search') titleOrEmail: string,
+        @Query('searchField') searchField: string,
+    ) {
+        const workshops = await this.adminService.searchWorkshops(titleOrEmail, searchField);
+        return workshops;
+     }
 
-        return workshop
+    // 유저 및 워크숍 검색 기능
+    @Get('search/member')
+    async searchUserOrCompany(
+        @Query('search') titleOrEmail: string,
+        @Query('searchField') searchField: string,
+    ) {
+        const member = await this.adminService.searchUserOrCompany(titleOrEmail, searchField)
+        return member;
     }
 }
 

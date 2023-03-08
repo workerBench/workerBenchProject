@@ -29,5 +29,22 @@ export default class DongjuSeeder implements Seeder {
     // await workShopFactory.saveMany(10);
     // 2. dummy data를 하드코딩할 경우
     // 랜덤 날짜 구하는 함수
+    const workShopRepository = await dataSource.getRepository(WorkShop);
+
+    await workShopRepository.insert([
+      {
+        id: 1,
+        title: 'test1',
+        category: 'online',
+        desc: '상세정보1',
+        thumb: '이미지 링크',
+        min_member: 5,
+        max_member: 20,
+        total_time: 120,
+        price: 30000,
+        status: 'request',
+        location: '서울',
+      },
+    ]);
   }
 }

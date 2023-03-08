@@ -23,7 +23,7 @@ export declare class WorkShop {
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
-    Owner: User;
+    user: User;
     WorkShopInstances: WorkShopInstanceDetail[];
     Reviews: Review[];
     Orders: Order[];

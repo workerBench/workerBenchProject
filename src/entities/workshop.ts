@@ -147,7 +147,7 @@ export class WorkShop {
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-  Owner: User;
+  user: User;
 
   // 2. workshop_instance_detail
   @OneToMany(

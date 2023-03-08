@@ -54,11 +54,13 @@ let AdminController = class AdminController {
         await this.adminService.companyBan(id);
         return { message: "업체가 밴 처리 되었습니다." };
     }
-    async searchWorkshops(title) {
-        const workshop = await this.adminService.searchWorkshops(title);
-        console.log(workshop);
-        console.log(`${title}`);
-        return workshop;
+    async searchWorkshops(titleOrEmail, searchField) {
+        const workshops = await this.adminService.searchWorkshops(titleOrEmail, searchField);
+        return workshops;
+    }
+    async searchUserOrCompany(titleOrEmail, searchField) {
+        const member = await this.adminService.searchUserOrCompany(titleOrEmail, searchField);
+        return member;
     }
 };
 __decorate([
@@ -118,11 +120,20 @@ __decorate([
 ], AdminController.prototype, "companyBan", null);
 __decorate([
     (0, common_1.Get)('search/workshops'),
-    __param(0, (0, decorators_1.Query)('title')),
+    __param(0, (0, decorators_1.Query)('search')),
+    __param(1, (0, decorators_1.Query)('searchField')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "searchWorkshops", null);
+__decorate([
+    (0, common_1.Get)('search/member'),
+    __param(0, (0, decorators_1.Query)('search')),
+    __param(1, (0, decorators_1.Query)('searchField')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "searchUserOrCompany", null);
 AdminController = __decorate([
     (0, swagger_1.ApiTags)('admin'),
     (0, common_1.Controller)('api/admin'),

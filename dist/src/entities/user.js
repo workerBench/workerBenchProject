@@ -93,7 +93,7 @@ __decorate([
     __metadata("design:type", Date)
 ], User.prototype, "deletedAt", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => workshop_1.WorkShop, (workshop) => workshop.Owner),
+    (0, typeorm_1.OneToMany)(() => workshop_1.WorkShop, (workshop) => workshop.user),
     __metadata("design:type", Array)
 ], User.prototype, "MyWorkshops", void 0);
 __decorate([

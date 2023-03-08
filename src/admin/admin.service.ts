@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { not } from 'joi';
 import { Company } from 'src/entities/company';
 import { User } from 'src/entities/user';
-import { Like } from 'typeorm';
+import { Like, SelectQueryBuilder } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 import { WorkShop } from '../entities/workshop';
 
@@ -119,18 +119,39 @@ export class AdminService {
         return await this.companyRepository.update(id, {isBan: 1})
     }
 
-    //-------------------------- 워크숍 검색 기능 (간단하게 구현해보기) --------------------------//
+    //-------------------------- 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀) --------------------------//
 
-    async searchWorkshops(title: string) {
-        const workshops = await this.workshopRepository
-          .createQueryBuilder('workshop')
-          .where('workshop.title Like :title', { title: `%${title}%` })
-          .getMany();
+    async searchWorkshops(titleOrEmail: string, searchField: string): Promise<WorkShop[]> {
+        let query = this.workshopRepository.createQueryBuilder('workshop');
       
-        if (!workshops.length) {
-          throw new NotFoundException('Workshops not found');
+        if (searchField === 'title') {
+          query = query.where('workshop.title LIKE :title', { title: `%${titleOrEmail}%` });
+        } else if (searchField === 'email') {
+            query = query
+            .innerJoinAndSelect('workshop.user', 'user')
+            .where('user.email LIKE :email', { email: `%${titleOrEmail}%` });
         }
       
+        const workshops = await query.getMany();
         return workshops;
+      }
+
+    //-------------------------- 업체 및 강사 검색 기능 (유저 이메일 / 업체 명) --------------------------//
+    
+    async searchUserOrCompany(EmailOrCompany:string, searchcField: string) {
+        let query: SelectQueryBuilder<User> | SelectQueryBuilder<Company>;
+
+        if (searchcField === 'email') {
+            query = this.userRepository
+            .createQueryBuilder('user')
+            .where('user.email Like :email', {email: `${EmailOrCompany}`});
+        } else if (searchcField === "company") {
+            query = this. companyRepository
+            .createQueryBuilder('company')
+            .where('company.company_name Like :company_name', {company_name: `%${EmailOrCompany}%`})
+        }
+
+        const result = await query.getMany()
+        return result
     }
 }

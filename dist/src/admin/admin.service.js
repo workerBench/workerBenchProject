@@ -86,15 +86,33 @@ let AdminService = class AdminService {
         });
         return await this.companyRepository.update(id, { isBan: 1 });
     }
-    async searchWorkshops(title) {
-        const workshops = await this.workshopRepository
-            .createQueryBuilder('workshop')
-            .where('workshop.title Like :title', { title: `%${title}%` })
-            .getMany();
-        if (!workshops.length) {
-            throw new common_1.NotFoundException('Workshops not found');
+    async searchWorkshops(titleOrEmail, searchField) {
+        let query = this.workshopRepository.createQueryBuilder('workshop');
+        if (searchField === 'title') {
+            query = query.where('workshop.title LIKE :title', { title: `%${titleOrEmail}%` });
         }
+        else if (searchField === 'email') {
+            query = query
+                .innerJoinAndSelect('workshop.user', 'user')
+                .where('user.email LIKE :email', { email: `%${titleOrEmail}%` });
+        }
+        const workshops = await query.getMany();
         return workshops;
+    }
+    async searchUserOrCompany(EmailOrCompany, searchcField) {
+        let query;
+        if (searchcField === 'email') {
+            query = this.userRepository
+                .createQueryBuilder('user')
+                .where('user.email Like :email', { email: `${EmailOrCompany}` });
+        }
+        else if (searchcField === "company") {
+            query = this.companyRepository
+                .createQueryBuilder('company')
+                .where('company.company_name Like :company_name', { company_name: `%${EmailOrCompany}%` });
+        }
+        const result = await query.getMany();
+        return result;
     }
 };
 AdminService = __decorate([

@@ -85,7 +85,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Review.prototype, "ReviewImages", void 0);
 Review = __decorate([
-    (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'review_image' })
+    (0, typeorm_1.Entity)({ schema: 'workerbench', name: 'review' })
 ], Review);
 exports.Review = Review;
 //# sourceMappingURL=review.js.map
