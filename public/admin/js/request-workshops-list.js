@@ -46,8 +46,9 @@ $(document).ready(function() {
             method: "PATCH",
             data: {},
             success: function(response) {
-                    $(`#workshop-${workshopId}`).remove();
-                    location.reload();
+                alert("워크숍이 승인되었습니다.")
+                $(`#workshop-${workshopId}`).remove();
+                location.reload();
             },
             error: function(jqXHR, textStatus, errorThrown) {
             }
@@ -61,64 +62,12 @@ $(document).ready(function() {
             method: "PATCH",
             data: {},
             success: function(response) {
-                    $(`#workshop-${workshopId}`).remove();
-                    location.reload();
+                alert("워크숍이 반려되었습니다.")
+                $(`#workshop-${workshopId}`).remove();
+                location.reload();
             },
             error: function(jqXHR, textStatus, errorThrown) {
             }
         });
     });
-    
-
-    
-
-
-// $("#workshop-list").on("click", "#approve-workshop-btn", function() {
-//     const id = $(this).data("id");
-//     const status = "approval";
-//     approveWorkshop(id, status);
-// });
-
-// $("#workshop-list").on("click", "#reject-workshop-btn", function() {
-//     const id = $(this).data("id");
-//     const status = "rejected";
-//     rejectWorkshop(id, status);
-// });
-
-// // AJAX 요청 함수
-// function approveWorkshop(id, status) {
-//     $.ajax({
-//         url: `../api/admin/workshops/approval/${id}`,
-//         method: "PATCH",
-//         data: {},
-//         success: function(result) {
-//             // 화면 갱신
-//             if (status === "approval") {
-//                 $(`#workshop-${id}`).remove();
-//             }
-//         },
-//         error: function(error) {
-//             console.error(error);
-//         }
-//     });
-// }
-
-// function rejectWorkshop(id, status) {
-//     $.ajax({
-//         url: `../api/admin/workshops/rejected/${id}`,
-//         method: "PATCH",
-//         data: {},
-//         success: function(result) {
-//             // 화면 갱신
-//             if (status === "rejected") {
-//                 $(`#workshop-${id}`).remove();
-//             }
-//         },
-//         error: function(error) {
-//             console.error(error);
-//         }
-//     });
-// }
-
-// });
 

@@ -9,7 +9,7 @@ $(document).ready(function() {
             for (let workshop of workshops) {
                 html += `
                 <div class="col">
-                    <div class="card">
+                    <div class="card" data-workshop.id="${workshop.id}">
                         <img src="${workshop.thumb}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <div class="category">
@@ -26,8 +26,8 @@ $(document).ready(function() {
                                 <span class="tag">${workshop.genre_id}</span>
                             </div>
                             <div class="approval-or-refuse">
-                                <button type="button" class="btn btn-outline-primary">수정하기</button>
-                                <button type="button" class="btn btn-outline-dark">삭제하기</button>
+                                <button type="button" class="btn btn-outline-primary" id="update-btn">수정하기</button>
+                                <button type="button" class="btn btn-outline-dark" id="remove-btn">삭제하기</button>
                             </div>
                         </div>
                     </div>
@@ -36,6 +36,23 @@ $(document).ready(function() {
             }
             
             $("#workshop-list").append(html);
+        }
+    });
+});
+
+// ---------------- 워크숍 삭제하기 버튼 ---------------- 
+$("#workshop-list").on("click", "#remove-btn", function() {
+    const workshopId = $(this).closest(".card").data('workshop.id');
+    $.ajax({
+        url: `../api/admin/workshop/${workshopId}`,
+        method: "DELETE",
+        data: {},
+        success: function(response) {
+            alert("워크숍이 삭제되었습니다.")
+            $(`#workshop-${workshopId}`).remove();
+            location.reload();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
         }
     });
 });
