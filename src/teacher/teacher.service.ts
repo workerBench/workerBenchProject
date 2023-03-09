@@ -7,7 +7,7 @@ import { GenreTag } from 'src/entities/genre-tag';
 import { Teacher } from 'src/entities/teacher';
 import { User } from 'src/entities/user';
 import { WorkShop } from 'src/entities/workshop';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 
 @Injectable()
 export class TeacherService {
@@ -15,35 +15,31 @@ export class TeacherService {
     @InjectRepository(Teacher) private teacherRepository: Repository<Teacher>,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(WorkShop) private workshopRepository: Repository<WorkShop>,
-    @InjectRepository(User) private companyRepository: Repository<Company>,
+    @InjectRepository(Company) private companyRepository: Repository<Company>,
     @InjectRepository(User) private genreTagRepository: Repository<GenreTag>,
   ) {}
   async createTeacherRegister(
-    user_id: number,
+    id: number,
     phone_number: string,
     address: string,
     name: string,
   ) {
     try {
-      // const user_id = await this.userRepository.findOne({
-      //   where: { id },
-      //   select: ['id'],
-      // });
-      const User_id = await this.teacherRepository.findOne({
-        where:{user_id}
-      })
-      if(User_id){
-        throw new UnauthorizedException('이미 등록된 강사입니다.');
-      }
+      const User_id = await this.userRepository.find({
+        where: { id,deletedAt:null },
+        select: ['id'],
+      });
+      console.log(User_id)
       this.teacherRepository.insert({
-        user_id:user_id,
+        user_id:id,
         phone_number,
         address,
         name,
       });
-      if (user_id) {
-        return { errorMessage: '이미 등록된 강사입니다.' };
-      }
+      console.log(id)
+      // if(User_id === id){
+      //   throw new BadRequestException('이미 등록된 강사입니다.')
+      // }
 
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
@@ -51,39 +47,61 @@ export class TeacherService {
       throw new error('입력된 요청이 잘못되었습니다.')
     }
   }
-  async getTeacherWorkshops() {
+  async getTeacherWorkshops(id:number) {
     try {
-      const workshop = await this.workshopRepository.find({
-        where: { deletedAt: null },
-        select: ['title', 'thumb', 'genre_id'],
-      });
-      return workshop;
+        const User_id = await this.teacherRepository.findOne({
+          where:{user_id:id,deletedAt:null},
+          select:['user_id']
+        })
+        console.log(User_id);
+        const test = (id)
+        console.log(test)
+          let result =  await this.workshopRepository
+          .createQueryBuilder('workshop')
+          .innerJoinAndSelect('workshop.GenreTag','genreTag')
+          .innerJoinAndSelect('workshop.PurposeList','workshopPurpose')
+          .innerJoinAndSelect('workshopPurpose.PurPoseTag','purposeTag')
+          .select([
+            'workshop.thumb',
+            'workshop.title',
+            'workshop.createdAt',
+            'workshop.status',
+            'genreTag.name',
+            'GROUP_CONCAT(purposeTag.name) AS purposeTag_name',
+          ])
+          .groupBy('workshop.id')
+          .getRawMany();
+          const results = result.map(workshop =>({
+          ...workshop,
+          purposeTag_name: workshop.purposeTag_name.split(',')
+          }));
+          if(id===User_id.user_id){
+            return results
+          }
+
+        
     } catch (error) {
       console.log(error);
       throw new BadRequestException('입력된 요청이 잘못되었습니다.');
     }
   }
-    // try {
-    //   const mypage = await this.companyRepository.find({
-    //     where: { deletedAt: null },
-    //     select:['company_type','company_name','business_number','rrn_front','rrn_back','bank_name','account','saving_name']
-    //   });
-    //   let User_id = await this.teacherRepository.findOne({
-    //     where:{user_id},
-    //     select: ['phone_number','address','name']
-    //   })
-    //   return mypage
-    // } catch (error) {
-    //   console.log(error);
-    //   throw new BadRequestException('입력된 요청이 잘못되었습니다.');
-    // }
-    // return await this.companyRepository.getTeacherMypageQuery();
-    async getTeacherMypage(): Promise<Company[]> {
-      return this.companyRepository
-        .createQueryBuilder('company')
-        .innerJoinAndSelect('company.User', 'user')
+  
+    async getTeacherMypage(user_id:number) {
+      const User_id = await this.teacherRepository.find({
+        where:{user_id:user_id},
+        select:['user_id']
+      })
+      console.log(User_id)
+      //user_id가 로그인한 user_id와 같으면 그것만 보여주기
+      if(User_id){
+        let query = this.teacherRepository.createQueryBuilder('teacher');
+        query
         .select([
-          'company.id',
+          'teacher.phone_number',
+          'teacher.address',
+          'teacher.name',
+          'user.email',
+          'company.*',
           'company.company_type',
           'company.company_name',
           'company.business_number',
@@ -92,11 +110,12 @@ export class TeacherService {
           'company.bank_name',
           'company.account',
           'company.saving_name',
-          'user.phone_number',
-          'user.address',
-          'user.name',
         ])
-        .getMany();
+        .innerJoin('teacher.User','user')
+        .innerJoin('teacher.MyCompany','company')
+      const Companys = await query.getMany();
+      return Companys;
+    }
   }
   async createTeacherCompany(
     company_type: number,
@@ -111,16 +130,15 @@ export class TeacherService {
     user_id:number
   ) {
     try {
-      
-      // const Company_name = await this.companyRepository.findOne({
-      //   where: { company_name },
-      // });
-      // if (Company_name) {
-      //   throw new BadRequestException('이미 등록된 워크샵입니다.');
-      // }
       await this.teacherRepository.findOne({
         where:{user_id}
       })
+      const Company_name = await this.companyRepository.findOne({
+        where: { company_name },
+      });
+      if (Company_name) {
+        throw new BadRequestException('이미 등록된 워크샵입니다.');
+      }
       this.companyRepository.insert({
         company_type,
         company_name,
@@ -133,6 +151,11 @@ export class TeacherService {
         isBan,
         user_id:user_id
       });
+      // if(user_id){
+      //   await this.teacherRepository.update({
+      //     id,{affiliation_company_id:1 })
+      // }
+      
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
       console.log(error);
@@ -151,9 +174,12 @@ export class TeacherService {
     total_time: number,
     price: number,
     location: string,
+    user_id:number
   ) {
     try {
-
+      await this.teacherRepository.findOne({
+        where:{user_id}
+      })
       await this.workshopRepository.insert({
         category,
         genre_id,
@@ -166,6 +192,7 @@ export class TeacherService {
         price,
         status:"request",
         location,
+        user_id:user_id
       });
       return {
         message:
@@ -200,9 +227,7 @@ export class TeacherService {
         throw new NotFoundException('등록된 워크샵이 없습니다.');
       }
       await this.workshopRepository.update(id,{status:"approval"})
-      if(status.status !== "approval"){
-        throw new UnauthorizedException('이미 워크샵이 수락되었습니다.');
-      }
+      
       return { message: '워크샵이 수락 되었습니다.' };
     } catch (error) {
       console.log(error);

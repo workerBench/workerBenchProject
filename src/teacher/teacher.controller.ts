@@ -23,14 +23,15 @@ export class TeacherController {
   }
   // 강사 워크샵 목록 api
   @Get('workshops')
-  async getTeacherWorkshops() {
-     return await this.teacherService.getTeacherWorkshops();
+  @UseGuards(JwtUserAuthGuard)
+  async getTeacherWorkshops(@CurrentUser() user: CurrentUserDto) {
+     return await this.teacherService.getTeacherWorkshops(user.id);
   }
   // 강사 및 업체 정보 api
   @Get('mypage')
-  async getTeacherMypage() {
-     return await this.teacherService.getTeacherMypage(
-     );
+  @UseGuards(JwtUserAuthGuard)
+  async getTeacherMypage(@CurrentUser() user: CurrentUserDto) {
+     return await this.teacherService.getTeacherMypage(user.id);
   }
   // 강사 업체 등록 api
   @Post('company')
@@ -51,7 +52,8 @@ export class TeacherController {
   }
   // 강사 워크샵 등록 api
   @Post('workshops')
-  createTeacherWorkshops(@Body() data: createWorkshopsDto) {
+  @UseGuards(JwtUserAuthGuard)
+  createTeacherWorkshops(@Body() data: createWorkshopsDto,@CurrentUser() user: CurrentUserDto) {
     return this.teacherService.createTeacherWorkshops(
      data.category, 
      data.genre_id,
@@ -63,6 +65,7 @@ export class TeacherController {
      data.total_time,
      data.price,
      data.location,
+     user.id
     );
   }
   // 강사 미완료 목록 가져오기 api

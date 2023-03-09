@@ -75,14 +75,7 @@ export class Teacher {
   @OneToOne(() => Company, (company) => company.President)
   MyCompany: Company;
 
-  // 3. company 2
-  @ManyToOne(() => Company, (company) => company.EmployeeList, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'affiliation_company_id', referencedColumnName: 'id' }])
-  AffiliationCompany: Company;
-
+  
   // 4. company_application
   @OneToMany(
     () => CompanyApplication,
