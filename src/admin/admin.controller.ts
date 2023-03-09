@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Patch, Put } from '@nestjs/common';
-import { Body, Delete, Query } from '@nestjs/common/decorators';
+import { Body, Delete, Query, UseGuards } from '@nestjs/common/decorators';
 import { ApiTags } from '@nestjs/swagger';
-import { json } from 'stream/consumers';
+import { JwtSuperAdminAuthGuard } from 'src/auth/jwt/access/admin/jwt-super-admin-guard';
 import { AdminService } from './admin.service';
 import { editWorkshopDto } from './dto/edit-workshop.dto';
 
@@ -12,6 +12,7 @@ export class AdminController {
 
     // 검토 대기중인 워크숍 목록을 불러오는 API입니다.
     @Get('/workshops/request')
+    @UseGuards(JwtSuperAdminAuthGuard)
     async requestWorkshops() {
         const requestWorkshops = await this.adminService.requestWorkshops()
         return requestWorkshops
@@ -97,10 +98,13 @@ export class AdminController {
     // 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀)
     @Get('search/workshops')
     async searchWorkshops(
-        @Query('search') titleOrEmail: string,
-        @Query('searchField') searchField: string,
+        // @Query('search') titleOrEmail: string,
+        @Query('genre') genre: string,
+        @Query('title') title: string,
+        @Query('email') email: string,
+        // @Query('searchField') searchField: string,
     ) {
-        const workshops = await this.adminService.searchWorkshops(titleOrEmail, searchField);
+        const workshops = await this.adminService.searchWorkshops({genre, title, email});
         return workshops;
      }
 

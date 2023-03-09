@@ -130,41 +130,160 @@ export class AdminService {
 
     //-------------------------- 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀) --------------------------//
 
-    async searchWorkshops(titleOrEmail: string, searchField: string) {
-        let query = this.workshopRepository
-        .createQueryBuilder('w')
-        .select([
-            'w.title', 
-            'w.category', 
-            'w.desc', 
-            'w.thumb', 
-            'w.min_member', 
-            'w.max_member', 
-            'w.total_time', 
-            'w.price', 
-            'w.location',
-            'genre.name',
-            `GROUP_CONCAT(perposetag.name SEPARATOR ',') AS perpose_name`,
-            'user.email',
-        ])
-        .innerJoin('w.GenreTag', 'genre')
-        .innerJoin('w.PurposeList', 'perpose')
-        .innerJoin('perpose.PurPoseTag', 'perposetag')
-        .innerJoin('w.User', 'user');
+    // async searchWorkshops(titleOrEmail: string, searchField: string) {
+    //     let query = this.workshopRepository
+    //     .createQueryBuilder('workshop')
+    //     .innerJoinAndSelect('workshop.GenreTag', 'genre')
+    //     .innerJoinAndSelect('workshop.PurposeList', 'purpose')
+    //     .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
+    //     .innerJoinAndSelect('workshop.User', 'user');
       
-        if (searchField === 'title') {
+    //     if (searchField === 'title') {
+    //       query = query
+    //     //   .innerJoinAndSelect('workshop.User', "user")
+    //       .where('workshop.title LIKE :title', { title: `%${titleOrEmail}%` })
+    //     } else if (searchField === 'email') {
+    //         query = query
+    //         // .innerJoinAndSelect('workshop.User', 'user')
+    //         .where('user.email = :email', { email: `${titleOrEmail}` });
+    //     }
+      
+    //     const workshops = await query.getMany();
+    //     return workshops;
+    //   }
+    // async searchWorkshops(genre: string, email: string, title: string) {
+    //     let query = this.workshopRepository
+    //       .createQueryBuilder('workshop')
+    //       .innerJoinAndSelect('workshop.GenreTag', 'genre')
+    //       .innerJoinAndSelect('workshop.PurposeList', 'purpose')
+    //       .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
+    //       .innerJoinAndSelect('workshop.User', 'user')
+    //       .select([
+    //         'workshop.title', 
+    //         'workshop.category', 
+    //         'workshop.desc', 
+    //         'workshop.thumb', 
+    //         'workshop.min_member', 
+    //         'workshop.max_member', 
+    //         'workshop.total_time', 
+    //         'workshop.price', 
+    //         'workshop.location',
+    //         'genre.name',
+    //         'GROUP_CONCAT(purposetag.name) AS purpose_name',
+    //       ])    
+    //       .groupBy('workshop.id');
+      
+    //     if (title) {
+    //       query = query
+    //         .andWhere('workshop.title LIKE :title', { title: `%${title}%` })
+    //     } if (email) {
+    //       query = query
+    //         .andWhere('user.email = :email', { email: `${email}` });
+    //     } if (genre) {
+    //         query = query
+    //         .andWhere('genre.name = :genre', { genre : `${genre}` });
+    //     }
+      
+    //     const workshops = await query.getRawMany();
+    //     return workshops.map(workshop => ({
+    //       ...workshop,
+    //       purpose_name: workshop.purpose_name.split(','),
+    //     }));
+    //   }
+
+    async searchWorkshops(options: { genre?: string, email ?: string, title ?: string }) {
+        let query = this.workshopRepository
+          .createQueryBuilder('workshop')
+          .innerJoinAndSelect('workshop.GenreTag', 'genre')
+          .innerJoinAndSelect('workshop.PurposeList', 'purpose')
+          .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
+          .innerJoinAndSelect('workshop.User', 'user')
+          .select([
+            'workshop.title', 
+            'workshop.category', 
+            'workshop.desc', 
+            'workshop.thumb', 
+            'workshop.min_member', 
+            'workshop.max_member', 
+            'workshop.total_time', 
+            'workshop.price', 
+            'workshop.location',
+            'genre.name',
+            'GROUP_CONCAT(purposetag.name) AS purpose.tag',
+          ])    
+          .groupBy('workshop.id');
+      
+        if (options.title) {
           query = query
-        //   .innerJoinAndSelect('workshop.User', "user")
-          .where('w.title LIKE :title', { title: `%${titleOrEmail}%` })
-        } else if (searchField === 'email') {
-            query = query
-            // .innerJoinAndSelect('workshop.User', 'user')
-            .where('user.email = :email', { email: `${titleOrEmail}` });
+            .andWhere('workshop.title LIKE :title', { title: `%${options.title}%` })
+        }
+      
+        if (options.email) {
+          query = query
+            .andWhere('user.email = :email', { email: `${options.email}` });
+        }
+      
+        if (options.genre) {
+          query = query
+            .andWhere('genre.name = :genre', { genre : `${options.genre}` });
         }
       
         const workshops = await query.getRawMany();
-        return workshops;
+      
+        return workshops.map(workshop => ({
+          ...workshop,
+          purpose_name: workshop.purpose_name.split(','),
+        }));
       }
+
+    //   async searchWorkshops(options: { genre?: string, email?: string, title?: string }) {
+    //     let query = this.workshopRepository
+    //       .createQueryBuilder('workshop')
+    //       .innerJoinAndSelect('workshop.GenreTag', 'genre')
+    //       .innerJoinAndSelect('workshop.PurposeList', 'purpose')
+    //       .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
+    //       .innerJoinAndSelect('workshop.User', 'user')
+    //       .select([
+    //         'workshop.title', 
+    //         'workshop.category', 
+    //         'workshop.desc', 
+    //         'workshop.thumb', 
+    //         'workshop.min_member', 
+    //         'workshop.max_member', 
+    //         'workshop.total_time', 
+    //         'workshop.price', 
+    //         'workshop.location',
+    //         'genre.name',
+    //         'GROUP_CONCAT(purposetag.name) AS purpose_name',
+    //       ])    
+    //       .groupBy('workshop.id');
+      
+    //     if (options.title) {
+    //       query = query
+    //         .andWhere('workshop.title LIKE :title', { title: `%${options.title}%` })
+    //     }
+      
+    //     if (options.email) {
+    //       query = query
+    //         .andWhere('user.email = :email', { email: `${options.email}` });
+    //     }
+      
+    //     if (options.genre) {
+    //       query = query
+    //         .andWhere('genre.name = :genre', { genre : `${options.genre}` });
+    //     }
+      
+      
+    //     const workshops = await query.getRawMany();
+      
+    //     return workshops.map(workshop => ({
+    //       ...workshop,
+    //       purpose_name: workshop.purpose_name.split(','),
+    //     }));
+    //   }
+      
+      
+      
 
     //-------------------------- 업체 및 강사 검색 기능 (유저 이메일 / 업체 명) --------------------------//
     
