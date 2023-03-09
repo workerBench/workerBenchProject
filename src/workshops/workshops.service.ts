@@ -1,26 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from 'src/entities/order';
-import { PurposeTag } from 'src/entities/purpose-tag';
 import { Review } from 'src/entities/review';
 import { WishList } from 'src/entities/wish-list';
 import { WorkShop } from 'src/entities/workshop';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
-import { SearchWorkshopDto } from 'src/workshops/dtos/search-workshop.dto';
-import { WorkshopRepository } from 'src/workshops/workshop.repository';
-import {
-  Brackets,
-  DataSource,
-  getConnection,
-  getManager,
-  Repository,
-} from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class WorkshopsService {
   constructor(
-    private readonly workshopRepository: WorkshopRepository,
+    @InjectRepository(WorkShop)
+    private readonly workshopRepository: Repository<WorkShop>,
     @InjectRepository(WishList)
     private readonly wishRepository: Repository<WishList>,
     @InjectRepository(WorkShopInstanceDetail)
@@ -58,21 +50,24 @@ export class WorkshopsService {
   }
 
   // 신규 워크샵 조회 API
-  // 전체 워크샵 중에서 createdAt이 가장 최근인 순(=내림차순)으로 정렬한 후 최대 8개를 가져온다.
+  // 전체 워크샵 중에서 updatedAt이 가장 최근인 순(=내림차순)으로 정렬한 후 최대 8개를 가져온다.
   async getNewWorkshops() {
     return await this.workshopRepository.find({
-      order: { createdAt: 'DESC' },
+      where: { deletedAt: null },
+      order: { updatedAt: 'DESC' },
       take: 8,
     });
   }
 
   // 워크샵 검색 API (옵션을 선택할 때마다 검색 결과가 조회되어야 함)
-
+  /* workshop - GenreTag - Workshop_purpose - PurposeTag 테이블을 조인한 후
+  결과를 purposeTag로 그룹핑하고 workshop.id로 묶어줌*/
   async searchWorkshops(
     category: string,
     location: string,
     genre: string,
     purpose: string,
+    memberCnt: number,
   ) {
     const queryBuilder = this.workshopRepository
       .createQueryBuilder('workshop')
@@ -118,6 +113,16 @@ export class WorkshopsService {
       });
     }
 
+    if (memberCnt) {
+      queryBuilder
+        .andWhere('workshop.min_member <= :memberCnt', {
+          memberCnt: `${memberCnt}`,
+        })
+        .andWhere('workshop.max_member >= :memberCnt', {
+          memberCnt: `${memberCnt}`,
+        });
+    }
+
     const workshops = await queryBuilder.getRawMany();
 
     // purposeTag_name 결과를 콤마(,) 기준으로 쪼개서 배열에 담아줌
@@ -159,7 +164,7 @@ export class WorkshopsService {
     return '찜하기 취소!';
   }
 
-  // 워크샵 후기 불러오기 API
+  // 특정 워크샵 후기 불러오기 API
   async getWorkshopReviews(workshop_id: number) {
     return await this.reviewRepository.find({
       where: { workshop_id, deletedAt: null },

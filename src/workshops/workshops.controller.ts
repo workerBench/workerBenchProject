@@ -40,12 +40,14 @@ export class WorkshopsController {
     @Query('location') location: string,
     @Query('genre') genre: string,
     @Query('purpose') purpose: string,
+    @Query('memberCnt') memberCnt: number,
   ) {
     return await this.workshopsService.searchWorkshops(
       category,
       location,
       genre,
       purpose,
+      memberCnt,
     );
   }
 
