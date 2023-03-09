@@ -200,7 +200,6 @@ export class TeacherService {
       const userIdInfo = await this.teacherRepository.findOne({
         where: { user_id: id },
       });
-      //
       // user_id가 있다면 생성한다.
       if (userIdInfo) {
         await this.companyRepository.insert({
@@ -224,7 +223,6 @@ export class TeacherService {
           HttpStatus.BAD_REQUEST,
         );
       }
-
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
       console.log(error);
@@ -264,7 +262,6 @@ export class TeacherService {
       const userId = await this.workshopRepository.findOne({
         where: { user_id: id },
       });
-
       // user_id가 없으면 workshop을 등록한다
       if (!userId)
         await this.workshopRepository.insert({
