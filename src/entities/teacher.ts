@@ -28,7 +28,6 @@ export class Teacher {
     description: '강사 전화번호. `-` 제외',
     required: true,
   })
-  
   @Column('varchar', { name: 'phone_number', length: 50, nullable: false })
   phone_number: string;
 
@@ -75,7 +74,6 @@ export class Teacher {
   @OneToOne(() => Company, (company) => company.President)
   MyCompany: Company;
 
-  
   // 4. company_application
   @OneToMany(
     () => CompanyApplication,

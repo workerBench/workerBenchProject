@@ -30,4 +30,11 @@ export class createWorkshopsDto {
 
   @IsString()
   readonly location: string;
+
+  @IsNumber()
+  readonly workshop_id: number;
+
+  @IsNumber()
+  readonly purpose_tag_id: number;
+
 }
