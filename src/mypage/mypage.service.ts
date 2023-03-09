@@ -24,9 +24,17 @@ export class MypageService {
 
 
     // 강사 수락 대기중, 결제 대기중, 결제완료 워크샵 출력
-    async getApprovedWorkshops() {
+    async getBeforeWorkshops() {
         return await this.workshopRepository.find({
-          where: { status: 'approval' },
+          where: { status: 'request', 'approval'},
+          order: { updatedAt: 'DESC' },
+        });
+      }
+
+    // 수강 완료한 워크샵 출력
+    async getFinishedWorkshops() {
+        return await this.workshopRepository.find({
+          where: { status: 'finished' },
           order: { updatedAt: 'DESC' },
         });
       }

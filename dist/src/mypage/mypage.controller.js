@@ -20,7 +20,7 @@ let MypageController = class MypageController {
     constructor(mypageService) {
         this.mypageService = mypageService;
     }
-    GetWorkshops(user_id) {
+    async GetWorkshops(user_id) {
         return this.mypageService.getWorkshops(id);
     }
     review(workshop_id, orderWorkshopData) {
@@ -29,11 +29,11 @@ let MypageController = class MypageController {
     }
 };
 __decorate([
-    (0, common_1.Get)('/:user_id/Workshops'),
+    (0, common_1.Get)('workshops/:user_id'),
     __param(0, (0, common_1.Param)('user_id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], MypageController.prototype, "GetWorkshops", null);
 __decorate([
     (0, common_1.Post)('/:workshop_id/review'),
