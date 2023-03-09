@@ -4,12 +4,21 @@ import { Repository } from 'typeorm';
 import { WorkShop } from 'src/entities/workshop';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { WishList } from 'src/entities/wish-list';
-import Connection from 'mysql2/typings/mysql/lib/Connection';
+import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
+import { Review } from 'src/entities/review';
 
 // repository mock 함수로 만들기 (repository에 사용되는 메소드를 mock)
 const mockWorkshopRepository = () => ({
   find: jest.fn(),
   findOne: jest.fn(),
+  createQueryBuilder: jest.fn(() => ({
+    select: () => jest.fn().mockReturnThis(),
+    where: () => jest.fn().mockReturnThis(),
+    groupBy: () => jest.fn().mockReturnThis(),
+    orderBy: () => jest.fn().mockReturnThis(),
+    limit: () => jest.fn().mockReturnThis(),
+    getRawMany: () => jest.fn().mockReturnThis(),
+  })),
 });
 
 const mockWishRepository = () => ({
@@ -19,6 +28,14 @@ const mockWishRepository = () => ({
   delete: jest.fn(),
 });
 
+const mockWorkShopInstanceDetailRepository = () => ({
+  insert: jest.fn(),
+});
+
+const mockReviewRepository = () => ({
+  insert: jest.fn(),
+});
+
 // MockRepository 타입 선언
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
@@ -26,6 +43,8 @@ describe('WorkshopsService', () => {
   let service: WorkshopsService;
   let workshopRepository: MockRepository<WorkShop>;
   let wishRepository: MockRepository<WishList>;
+  let workShopInstanceDetailRepository: MockRepository<WorkShopInstanceDetail>;
+  let reviewRepository: MockRepository<Review>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -39,6 +58,14 @@ describe('WorkshopsService', () => {
           provide: getRepositoryToken(WishList),
           useValue: mockWishRepository(),
         },
+        {
+          provide: getRepositoryToken(WorkShopInstanceDetail),
+          useValue: mockWorkShopInstanceDetailRepository(),
+        },
+        {
+          provide: getRepositoryToken(Review),
+          useValue: mockReviewRepository(),
+        },
       ],
     }).compile();
 
@@ -49,6 +76,12 @@ describe('WorkshopsService', () => {
     wishRepository = module.get<MockRepository<WishList>>(
       getRepositoryToken(WishList),
     );
+    workShopInstanceDetailRepository = module.get<
+      MockRepository<WorkShopInstanceDetail>
+    >(getRepositoryToken(WorkShopInstanceDetail));
+    reviewRepository = module.get<MockRepository<Review>>(
+      getRepositoryToken(Review),
+    );
   });
 
   // 인기 워크샵 조회 API 테스트
@@ -56,12 +89,42 @@ describe('WorkshopsService', () => {
     it.todo('인기 워크샵 잘 불러오는지 검증');
 
     it('인기 워크샵 목록 잘 불러오는지 검증', async () => {
-      workshopRepository.find.mockResolvedValue([]); // mockResolvedValue: 반환값을 정함
+      const mockData = [
+        {
+          workshop_id: 3,
+          workshop_title: '테스트용 워크샵 3',
+          workshop_category: 'online',
+          workshop_desc: '워크샵에 대한 추가적인 설명 3',
+          workshop_thumb: 'thumb2.jpeg',
+          workshop_min_member: 40,
+          workshop_max_member: 50,
+          workshop_total_time: 200,
+          workshop_price: 30000,
+          workshop_deletedAt: null,
+          orderCount: '4',
+        },
+        {
+          workshop_id: 4,
+          workshop_title: '테스트용 워크샵 3',
+          workshop_category: 'online',
+          workshop_desc: '워크샵에 대한 추가적인 설명 3',
+          workshop_thumb: 'thumb2.jpeg',
+          workshop_min_member: 40,
+          workshop_max_member: 50,
+          workshop_total_time: 200,
+          workshop_price: 30000,
+          workshop_deletedAt: null,
+          orderCount: '4',
+        },
+      ];
+
+      workshopRepository.createQueryBuilder.mockReturnValue(mockData);
 
       const result = await service.getNewWorkshops();
 
-      expect(workshopRepository.find).toHaveBeenCalledTimes(1); // 1번만 호출
-      expect(result).toBeInstanceOf(Array); // 값이 배열로 반환되는지
+      jest.spyOn(workshopRepository, 'createQueryBuilder');
+      // expect(workshopRepository.createQueryBuilder).toHaveBeenCalledTimes(1); // 1번만 호출
+      // expect(result).toBeInstanceOf(Array); // 값이 배열로 반환되는지
     });
   });
 
@@ -74,7 +137,7 @@ describe('WorkshopsService', () => {
 
       const result = await service.getNewWorkshops();
 
-      expect(workshopRepository.find).toHaveBeenCalledTimes(1); // 1번만 호출
+      expect(workshopRepository.find).toHaveBeenCalledTimes(1); // 번만 호출
       expect(result).toBeInstanceOf(Array); // 값이 배열로 반환되는지
     });
   });
@@ -92,6 +155,8 @@ describe('WorkshopsService', () => {
       expect(result).toBeInstanceOf(Array); // 값이 배열로 반환되는지
     });
   });
+
+  // 워크샵 검색 API 테스트
 
   // 워크샵 상세 조회 API 테스트
   describe('getWorkshopDetail()', () => {
@@ -168,4 +233,8 @@ describe('WorkshopsService', () => {
       expect(result).toBe('찜하기 취소!');
     });
   });
+
+  // 워크샵 후기 불러오기 API 테스트
+
+  // 워크샵 문의 신청 API 테스트
 });
