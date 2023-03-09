@@ -87,16 +87,35 @@ let AdminService = class AdminService {
         return await this.companyRepository.update(id, { isBan: 1 });
     }
     async searchWorkshops(titleOrEmail, searchField) {
-        let query = this.workshopRepository.createQueryBuilder('workshop');
+        let query = this.workshopRepository
+            .createQueryBuilder('w')
+            .select([
+            'w.title',
+            'w.category',
+            'w.desc',
+            'w.thumb',
+            'w.min_member',
+            'w.max_member',
+            'w.total_time',
+            'w.price',
+            'w.location',
+            'genre.name',
+            `GROUP_CONCAT(perposetag.name SEPARATOR ',') AS perpose_name`,
+            'user.email',
+        ])
+            .innerJoin('w.GenreTag', 'genre')
+            .innerJoin('w.PurposeList', 'perpose')
+            .innerJoin('perpose.PurPoseTag', 'perposetag')
+            .innerJoin('w.User', 'user');
         if (searchField === 'title') {
-            query = query.where('workshop.title LIKE :title', { title: `%${titleOrEmail}%` });
+            query = query
+                .where('w.title LIKE :title', { title: `%${titleOrEmail}%` });
         }
         else if (searchField === 'email') {
             query = query
-                .innerJoinAndSelect('workshop.User', 'user')
                 .where('user.email = :email', { email: `${titleOrEmail}` });
         }
-        const workshops = await query.getMany();
+        const workshops = await query.getRawMany();
         return workshops;
     }
     async searchUserOrCompany(EmailOrCompany, searchcField) {

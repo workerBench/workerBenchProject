@@ -47,7 +47,7 @@ const dataSource = new typeorm_1.DataSource({
     ],
     migrations: [__dirname + '/src/migrations/*.ts'],
     charset: 'utf8mb4_general_ci',
-    synchronize: true,
+    synchronize: false,
     logging: true,
 });
 exports.default = dataSource;

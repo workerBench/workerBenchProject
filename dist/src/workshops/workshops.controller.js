@@ -14,16 +14,24 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkshopsController = void 0;
 const common_1 = require("@nestjs/common");
+const order_workshop_dto_1 = require("./dtos/order-workshop.dto");
+const search_workshop_dto_1 = require("./dtos/search-workshop.dto");
 const workshops_service_1 = require("./workshops.service");
 let WorkshopsController = class WorkshopsController {
     constructor(workshopsService) {
         this.workshopsService = workshopsService;
     }
-    getBestWorkshops() {
-        this.workshopsService.getBestWorkshops();
+    async getBestWorkshops() {
+        return await this.workshopsService.getBestWorkshops();
     }
     getNewWorkshops() {
         return this.workshopsService.getNewWorkshops();
+    }
+    async getApprovedWorkshops() {
+        return await this.workshopsService.getApprovedWorkshops();
+    }
+    async searchWorkshops(searchWorkshopData) {
+        return await this.workshopsService.searchWorkshops(searchWorkshopData);
     }
     async getWorkshopDetail(id) {
         return await this.workshopsService.getWorkshopDetail(id);
@@ -32,16 +40,19 @@ let WorkshopsController = class WorkshopsController {
         const user_id = 2;
         return await this.workshopsService.addToWish(user_id, workshop_id);
     }
-    GetWorkshopReviews(id) {
-        return this.workshopsService.getWorkshopReviews(id);
+    async getWorkshopReviews(workshop_id) {
+        return await this.workshopsService.getWorkshopReviews(workshop_id);
     }
-    workshopOrder() { }
+    orderWorkshop(workshop_id, orderWorkshopData) {
+        const user_id = 1;
+        return this.workshopsService.orderWorkshop(workshop_id, user_id, orderWorkshopData);
+    }
 };
 __decorate([
     (0, common_1.Get)('/best'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], WorkshopsController.prototype, "getBestWorkshops", null);
 __decorate([
     (0, common_1.Get)('/new'),
@@ -49,6 +60,19 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], WorkshopsController.prototype, "getNewWorkshops", null);
+__decorate([
+    (0, common_1.Get)('/approval'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], WorkshopsController.prototype, "getApprovedWorkshops", null);
+__decorate([
+    (0, common_1.Get)('/search'),
+    __param(0, (0, common_1.Query)('searchWorkshopData')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [search_workshop_dto_1.SearchWorkshopDto]),
+    __metadata("design:returntype", Promise)
+], WorkshopsController.prototype, "searchWorkshops", null);
 __decorate([
     (0, common_1.Get)('/:id'),
     __param(0, (0, common_1.Param)('id')),
@@ -64,18 +88,20 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], WorkshopsController.prototype, "addToWish", null);
 __decorate([
-    (0, common_1.Get)(':id/reviews'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)(':workshop_id/reviews'),
+    __param(0, (0, common_1.Param)('workshop_id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
-], WorkshopsController.prototype, "GetWorkshopReviews", null);
+    __metadata("design:returntype", Promise)
+], WorkshopsController.prototype, "getWorkshopReviews", null);
 __decorate([
-    (0, common_1.Post)(),
+    (0, common_1.Post)(':workshop_id/order'),
+    __param(0, (0, common_1.Param)('workshop_id')),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Number, order_workshop_dto_1.OrderWorkshopDto]),
     __metadata("design:returntype", void 0)
-], WorkshopsController.prototype, "workshopOrder", null);
+], WorkshopsController.prototype, "orderWorkshop", null);
 WorkshopsController = __decorate([
     (0, common_1.Controller)('/api/workshops'),
     __metadata("design:paramtypes", [workshops_service_1.WorkshopsService])

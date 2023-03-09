@@ -23,6 +23,6 @@ export declare class AdminController {
     companyBan(id: number): Promise<{
         message: string;
     }>;
-    searchWorkshops(titleOrEmail: string, searchField: string): Promise<import("../entities/workshop").WorkShop[]>;
+    searchWorkshops(titleOrEmail: string, searchField: string): Promise<any[]>;
     searchUserOrCompany(titleOrEmail: string, searchField: string): Promise<import("../entities/company").Company[] | import("../entities/user").User[]>;
 }

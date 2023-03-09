@@ -8,24 +8,41 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MypageController = void 0;
 const common_1 = require("@nestjs/common");
 const mypage_service_1 = require("./mypage.service");
 let MypageController = class MypageController {
-    constructor(MypageService) {
-        this.MypageService = MypageService;
+    constructor(mypageService) {
+        this.mypageService = mypageService;
     }
-    getAllpages() {
-        return this.MypageService.getAllPages();
+    GetWorkshops(user_id) {
+        return this.mypageService.getWorkshops(id);
+    }
+    review(workshop_id, orderWorkshopData) {
+        const user_id = 1;
+        return this.workshopsService.orderWorkshop(workshop_id, user_id, orderWorkshopData);
     }
 };
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Get)('/:user_id/Workshops'),
+    __param(0, (0, common_1.Param)('user_id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
-], MypageController.prototype, "getAllpages", null);
+], MypageController.prototype, "GetWorkshops", null);
+__decorate([
+    (0, common_1.Post)('/:workshop_id/review'),
+    __param(0, (0, common_1.Param)('workshop_id')),
+    __param(1, Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, typeof (_a = typeof OrderWorkshopDto !== "undefined" && OrderWorkshopDto) === "function" ? _a : Object]),
+    __metadata("design:returntype", void 0)
+], MypageController.prototype, "review", null);
 MypageController = __decorate([
     (0, common_1.Controller)('/api/mypage'),
     __metadata("design:paramtypes", [mypage_service_1.MypageService])

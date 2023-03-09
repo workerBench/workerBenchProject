@@ -15,6 +15,6 @@ export declare class AdminService {
     removeWorkshop(id: number): Promise<import("typeorm").UpdateResult>;
     userBan(id: number): Promise<import("typeorm").UpdateResult>;
     companyBan(id: number): Promise<import("typeorm").UpdateResult>;
-    searchWorkshops(titleOrEmail: string, searchField: string): Promise<WorkShop[]>;
+    searchWorkshops(titleOrEmail: string, searchField: string): Promise<any[]>;
     searchUserOrCompany(EmailOrCompany: string, searchcField: string): Promise<Company[] | User[]>;
 }
