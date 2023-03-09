@@ -122,6 +122,7 @@ export class AdminService {
     //-------------------------- 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀) --------------------------//
 
     async searchWorkshops(titleOrEmail: string, searchField: string) {
+<<<<<<< HEAD
         let query = this.workshopRepository
         .createQueryBuilder('w')
         .select([
@@ -154,6 +155,19 @@ export class AdminService {
         }
       
         const workshops = await query.getRawMany();
+=======
+        let query = this.workshopRepository.createQueryBuilder('workshop');
+      
+        if (searchField === 'title') {
+          query = query.where('workshop.title LIKE :title', { title: `%${titleOrEmail}%` })
+        } else if (searchField === 'email') {
+            query = query
+            .innerJoinAndSelect('workshop.User', 'user')
+            .where('user.email = :email', { email: `${titleOrEmail}` });
+        }
+      
+        const workshops = await query.getMany();
+>>>>>>> d1b028a846db732bf68b82ea8564859eb4cd44ca
         return workshops;
       }
 
@@ -161,7 +175,11 @@ export class AdminService {
     
     async searchUserOrCompany(EmailOrCompany:string, searchcField: string) {
         let query: SelectQueryBuilder<User> | SelectQueryBuilder<Company>
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> d1b028a846db732bf68b82ea8564859eb4cd44ca
         if (searchcField === 'email') {
             query = this.userRepository
             .createQueryBuilder('user')

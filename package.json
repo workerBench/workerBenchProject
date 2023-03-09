@@ -77,7 +77,10 @@
     "typeorm-naming-strategies": "^4.1.0"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@babel/eslint-parser": "^7.19.1",
+=======
+>>>>>>> d1b028a846db732bf68b82ea8564859eb4cd44ca
     "@faker-js/faker": "^7.6.0",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
