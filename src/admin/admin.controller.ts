@@ -100,13 +100,13 @@ export class AdminController {
         return workshops;
      }
 
-    // 유저 및 워크숍 검색 기능
+    // 유저 및 업체 검색 기능
     @Get('search/member')
     async searchUserOrCompany(
-        @Query('search') titleOrEmail: string,
+        @Query('search') EmailOrCompany: string,
         @Query('searchField') searchField: string,
     ) {
-        const member = await this.adminService.searchUserOrCompany(titleOrEmail, searchField)
+        const member = await this.adminService.searchUserOrCompany(EmailOrCompany, searchField)
         return member;
     }
 }

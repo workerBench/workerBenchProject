@@ -1,3 +1,31 @@
+$(document).ready(function() {
+  $.ajax({
+      url: "../api/admin/admin/list",
+      method: "GET",
+      data: {},
+      success: function(adminUsers) {
+          console.log(adminUsers)
+          let html = '';
+          for (let adminUser of adminUsers) {
+              html += `
+              <tr>
+                    <td>${adminUser.id}</td>
+                    <td>${adminUser.name}</td>
+                    <td>${adminUser.email}</td>
+                    <td>${adminUser.createdAt}</td>
+                    <td>${adminUser.admin_type === 0 ? 'normal admin' : ''}</td>
+                    <td>
+                        <button class="admin-remove-btn">계정 삭제</button>
+                    </td>
+                </tr>
+              `;
+          }
+          
+          $("#admin-user-list").append(html);
+      }
+  });
+});
+
 var modal = document.getElementById("modal");
 
 var btn = document.getElementById("create-admin");
