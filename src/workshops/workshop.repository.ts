@@ -7,7 +7,6 @@ import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class WorkshopRepository extends Repository<WorkShop> {
-  connection: any;
   constructor(private dataSource: DataSource) {
     super(WorkShop, dataSource.createEntityManager());
   }
@@ -62,25 +61,24 @@ export class WorkshopRepository extends Repository<WorkShop> {
   //     'SELECT w.id, title, category, thumb, min_member, max_member, total_time, price, location, w.deletedAt, g.name, p.name FROM workshop w INNER JOIN genre_tag g INNER JOIN purpose_tag p',
   //   );
 
-  async searchWorkshops(category: string, location: string, genre: string) {
+  async searchWorkshops(
+    category: string,
+    location: string,
+    genre: string,
+    purpose: string,
+  ) {
     const queryBuilder = this.createQueryBuilder('workshop')
       .innerJoinAndSelect('workshop.GenreTag', 'genre_tag')
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose')
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag')
       .select([
         'workshop.title',
         'workshop.category',
         'workshop.location',
         'genre_tag.name',
+        'purposeTag.name',
+        'GROUP_CONCAT(purposeTag.name) AS purposeTag_name',
       ]);
-    // .innerJoinAndSelect(WorkShopPurpose, 'workshop_Purpose')
-    // .innerJoinAndSelect(PurposeTag, 'purpose');
-
-    // workshop은 purpose를 바로 참조하지 않고 workshop_purpose 테이블을 통해 연결됨
-
-    if (genre) {
-      queryBuilder.where('genre_tag.name = :genre', {
-        genre: `${genre}`,
-      });
-    }
 
     if (category) {
       queryBuilder.andWhere('workshop.category = :category', {
@@ -94,7 +92,23 @@ export class WorkshopRepository extends Repository<WorkShop> {
       });
     }
 
+    if (genre) {
+      queryBuilder.andWhere('genre_tag.name = :genre', {
+        genre: `${genre}`,
+      });
+    }
+
+    if (purpose) {
+      queryBuilder.andWhere('purposeTag.name = :purpose', {
+        purpose: `${purpose}`,
+      });
+    }
+
     const workshops = await queryBuilder.getRawMany();
-    return workshops;
+
+    return workshops.map((workshop) => ({
+      ...workshop,
+      purpose_name: workshop.purpose_name.split(','),
+    }));
   }
 }

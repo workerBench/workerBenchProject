@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from 'src/entities/order';
+import { PurposeTag } from 'src/entities/purpose-tag';
 import { Review } from 'src/entities/review';
 import { WishList } from 'src/entities/wish-list';
 import { WorkShop } from 'src/entities/workshop';
@@ -43,19 +44,57 @@ export class WorkshopsService {
     });
   }
 
-  // 워크샵 검색 API
-  // 분류한 태그에 따라 검색 결과가 조회되어야 함.
-  // join을 한 테이블에서 select 하기
+  // 워크샵 검색 API (옵션을 선택할 때마다 검색 결과가 조회되어야 함)
 
   /*'SELECT w.id, title, category, thumb, min_member, max_member, total_time, price, location, 
   w.deletedAt, g.name, p.name FROM workshop w INNER JOIN genre_tag g INNER JOIN purpose_tag p'*/
 
-  async searchWorkshops(category: string, location: string, genre: string) {
-    return await this.workshopRepository.searchWorkshops(
-      category,
-      location,
-      genre,
-    );
+  async searchWorkshops(searchData: SearchWorkshopDto) {
+    const { category, location, genre, purpose } = searchData;
+    const queryBuilder = this.workshopRepository
+      .createQueryBuilder('workshop')
+      .innerJoinAndSelect('workshop.GenreTag', 'genre_tag')
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose')
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag')
+      .select([
+        'workshop.title',
+        'workshop.category',
+        'workshop.location',
+        'genre_tag.name',
+        'purposeTag.name',
+        'GROUP_CONCAT(purposeTag.name) AS purposeTag_name',
+      ]);
+
+    if (category) {
+      queryBuilder.andWhere('workshop.category = :category', {
+        category: `${category}`,
+      });
+    }
+
+    if (location) {
+      queryBuilder.andWhere('workshop.location = :location', {
+        location: `${location}`,
+      });
+    }
+
+    if (genre) {
+      queryBuilder.andWhere('genre_tag.name = :genre', {
+        genre: `${genre}`,
+      });
+    }
+
+    if (purpose) {
+      queryBuilder.andWhere('purposeTag.name = :purpose', {
+        purpose: `${purpose}`,
+      });
+    }
+
+    const workshops = await queryBuilder.getRawMany();
+
+    return workshops.map((workshop) => ({
+      ...workshop,
+      purposeTag_name: workshop.purposeTag_name.split(','),
+    }));
   }
 
   // 승인된 전체 워크샵 조회 API
