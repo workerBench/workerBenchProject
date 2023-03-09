@@ -8,7 +8,13 @@ import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
 import { SearchWorkshopDto } from 'src/workshops/dtos/search-workshop.dto';
 import { WorkshopRepository } from 'src/workshops/workshop.repository';
-import { Repository } from 'typeorm';
+import {
+  Brackets,
+  DataSource,
+  getConnection,
+  getManager,
+  Repository,
+} from 'typeorm';
 
 @Injectable()
 export class WorkshopsService {
@@ -38,8 +44,18 @@ export class WorkshopsService {
   }
 
   // 워크샵 검색 API
-  async searchWorkshops(searchWorkshopData: SearchWorkshopDto) {
-    return await this.workshopRepository.find();
+  // 분류한 태그에 따라 검색 결과가 조회되어야 함.
+  // join을 한 테이블에서 select 하기
+
+  /*'SELECT w.id, title, category, thumb, min_member, max_member, total_time, price, location, 
+  w.deletedAt, g.name, p.name FROM workshop w INNER JOIN genre_tag g INNER JOIN purpose_tag p'*/
+
+  async searchWorkshops(category: string, location: string, genre: string) {
+    return await this.workshopRepository.searchWorkshops(
+      category,
+      location,
+      genre,
+    );
   }
 
   // 승인된 전체 워크샵 조회 API
