@@ -46,25 +46,32 @@ export class WorkshopsService {
 
   // 워크샵 검색 API (옵션을 선택할 때마다 검색 결과가 조회되어야 함)
 
-  /*'SELECT w.id, title, category, thumb, min_member, max_member, total_time, price, location, 
-  w.deletedAt, g.name, p.name FROM workshop w INNER JOIN genre_tag g INNER JOIN purpose_tag p'*/
-
-  async searchWorkshops(searchData: SearchWorkshopDto) {
-    const { category, location, genre, purpose } = searchData;
+  async searchWorkshops(
+    category: string,
+    location: string,
+    genre: string,
+    purpose: string,
+  ) {
     const queryBuilder = this.workshopRepository
       .createQueryBuilder('workshop')
-      .innerJoinAndSelect('workshop.GenreTag', 'genre_tag')
-      .innerJoinAndSelect('workshop.PurposeList', 'purpose')
-      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag')
+      .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
       .select([
+        'workshop.id',
         'workshop.title',
         'workshop.category',
         'workshop.location',
+        'workshop.price',
+        'workshop.min_member',
+        'workshop.max_member',
         'genre_tag.name',
         'purposeTag.name',
         'GROUP_CONCAT(purposeTag.name) AS purposeTag_name',
-      ]);
+      ])
+      .groupBy('workshop.id');
 
+    // 각 태그(ex. category)가 query parameter로 들어온다면 andWhere로 찾기
     if (category) {
       queryBuilder.andWhere('workshop.category = :category', {
         category: `${category}`,
@@ -91,6 +98,7 @@ export class WorkshopsService {
 
     const workshops = await queryBuilder.getRawMany();
 
+    // purposeTag_name 결과를 콤마(,) 기준으로 쪼개서 배열에 담아줌
     return workshops.map((workshop) => ({
       ...workshop,
       purposeTag_name: workshop.purposeTag_name.split(','),

@@ -34,10 +34,19 @@ export class WorkshopsController {
   }
 
   // 워크샵 검색 API
-  // 워크샵 분야에 들어갈 키워드 정해야 함
   @Get('/search')
-  async searchWorkshops(@Query('searchData') searchData: SearchWorkshopDto) {
-    return await this.workshopsService.searchWorkshops(searchData);
+  async searchWorkshops(
+    @Query('category') category: string,
+    @Query('location') location: string,
+    @Query('genre') genre: string,
+    @Query('purpose') purpose: string,
+  ) {
+    return await this.workshopsService.searchWorkshops(
+      category,
+      location,
+      genre,
+      purpose,
+    );
   }
 
   // 워크샵 상세 조회 API
