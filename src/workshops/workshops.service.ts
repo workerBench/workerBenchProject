@@ -30,9 +30,31 @@ export class WorkshopsService {
   ) {}
 
   // 인기 워크샵 조회 API
-  // 최근 가장 결제 횟수가 많은 순으로 워크샵을 8개까지 가져온다.
+  // 가장 결제 횟수가 많은 순으로 워크샵을 8개까지 가져온다.
   async getBestWorkshops() {
-    return await this.workshopRepository.getWorkshopsByOrder();
+    const result = await this.workshopRepository
+      .createQueryBuilder('workshop')
+      .select([
+        'COUNT(o.workshop_id) as orderCount', // order id 개수를 세서 카운트
+        'workshop.id',
+        'workshop.title',
+        'workshop.category',
+        'workshop.desc',
+        'workshop.thumb',
+        'workshop.min_member',
+        'workshop.max_member',
+        'workshop.total_time',
+        'workshop.price',
+        'workshop.deletedAt',
+      ])
+      .innerJoin(Order, 'o', 'workshop.id = o.workshop_id') // order 테이블과 join
+      .where('workshop.deletedAt IS NULL')
+      .groupBy('workshop.id') // workshop id로 결제 내역을 그룹핑
+      .orderBy('orderCount', 'DESC') // 결제 횟수로 내림차순
+      .limit(8)
+      .getRawMany();
+
+    return result;
   }
 
   // 신규 워크샵 조회 API
