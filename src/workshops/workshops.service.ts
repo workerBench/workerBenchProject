@@ -24,8 +24,11 @@ export class WorkshopsService {
   // 인기 워크샵 조회 API
   // 가장 결제 횟수가 많은 순으로 워크샵을 8개까지 가져온다.
   async getBestWorkshops() {
-    const result = await this.workshopRepository
+    const querybuilder = await this.workshopRepository
       .createQueryBuilder('workshop')
+      .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
       .select([
         'COUNT(o.workshop_id) as orderCount', // order id 개수를 세서 카운트
         'workshop.id',
@@ -37,6 +40,8 @@ export class WorkshopsService {
         'workshop.max_member',
         'workshop.total_time',
         'workshop.price',
+        'genre_tag.name',
+        'GROUP_CONCAT(purposetag.name) AS purpose_name',
         'workshop.deletedAt',
       ])
       .innerJoin(Order, 'o', 'workshop.id = o.workshop_id') // order 테이블과 join
@@ -45,6 +50,12 @@ export class WorkshopsService {
       .orderBy('orderCount', 'DESC') // 결제 횟수로 내림차순
       .limit(8)
       .getRawMany();
+
+    // , 기준으로 나누고 purpose_name 값 중복 제거
+    const result = querybuilder.map((workshop) => ({
+      ...workshop,
+      purpose_name: Array.from(new Set(workshop.purpose_name.split(','))),
+    }));
 
     return result;
   }
