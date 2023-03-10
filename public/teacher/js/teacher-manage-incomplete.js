@@ -3,44 +3,54 @@ document.addEventListener('DOMContentLoaded', () => {
   // document.ready(function () {
   axios({
     method: 'get',
-    url: '/api/teacher/workshops/request',
+    url: '/api/teacher/workshops/incomplete',
     data: {},
   })
     .then((response) => {
       console.log(response);
       const data = response.data;
       for (let i = 0; i < data.length; i++) {
-        const title = data[i].title;
-        const min_member = data[i].min_member;
-        const max_member = data[i].max_member;
-        const genre_id = data[i].genre_id;
-        const total_time = data[i].total_time;
-        const price = data[i].price;
-        const desc = data[i].desc;
-        // const price = data[i].price;
-        // const price = data[i].price;
-        // const price = data[i].price;
-        // const price = data[i].price;
-        const createdAt = data[i].createdAt;
+        const workshop_thumb = data[i].workshop_thumb;
+        const workshop_title = data[i].workshop_title;
+        const min_member = data[i].workshop_min_member;
+        const max_member = data[i].workshop_max_member;
+        const genreTag_name = data[i].genreTag_name;
+        const total_time = data[i].workshop_total_time;
+        const price = data[i].workshop_price;
+        const etc = data[i].workShopInstanceDetail_etc;
+        const company = data[i].workShopInstanceDetail_company;
+        const phone_number = data[i].workShopInstanceDetail_phone_number;
+        const member_cnt = data[i].workShopInstanceDetail_member_cnt;
+        const email = data[i].workShopInstanceDetail_email;
+        const createdAt = data[i].workShopInstanceDetail_createdAt;
+        const status = data[i].workshop_status;
+        if (status === 'request') {
+        }
+        if (status === 'non_payment') {
+        }
+        if (status === 'waiting_lecture') {
+        }
+        if (status === 'complete') {
+        }
         let tempHtml = ``;
-
         tempHtml = `
         <div class="teacher-manage-div" >
             <div class="workshop-information-div">
                 <img src="/images/images.jpg" alt="" />
-                <li for="purpose-tag" class="workshop-information">${title}</li>
+                <li for="purpose-tag" class="workshop-information">${workshop_thumb}</li>
+                <li for="purpose-tag" class="workshop-information">${workshop_title}</li>
                 <li for="purpose-tag" class="workshop-information">${min_member}</li>
                 <li for="purpose-tag" class="workshop-information">${max_member}</li>
-                <li for="purpose-tag" class="workshop-information">${genre_id}</li>
+                <li for="purpose-tag" class="workshop-information">${genreTag_name}</li>
                 <li for="purpose-tag" class="workshop-information">${total_time}</li>
                 <li for="purpose-tag" class="workshop-information">${price}</li>
             </div>
             <div class="company-information-div">
-                <li for="purpose-tag" class="company-information">${desc}</li>
-                <li for="purpose-tag" class="company-information">회사</li>
-                <li for="purpose-tag" class="company-information">전화번호</li>
-                <li for="purpose-tag" class="company-information">인원</li>
-                <li for="purpose-tag" class="company-information">이메일</li>
+                <li for="purpose-tag" class="company-information">${etc}</li>
+                <li for="purpose-tag" class="company-information">${company}</li>
+                <li for="purpose-tag" class="company-information">${phone_number}</li>
+                <li for="purpose-tag" class="company-information">${member_cnt}</li>
+                <li for="purpose-tag" class="company-information">${email}</li>
                 <li for="purpose-tag" class="company-information">${createdAt}</li>
                 <button type="radio" id="button1">수락 하기</button>
                 <button type="radio" id="button1">취소 하기</button>

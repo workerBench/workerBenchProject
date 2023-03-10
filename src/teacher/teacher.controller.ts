@@ -70,7 +70,7 @@ export class TeacherController {
     return this.teacherService.createTeacherWorkshops(data);
   }
   // 강사 미완료 목록 가져오기 api
-  @Get('workshops/request')
+  @Get('workshops/incomplete')
   // @UseGuards(JwtUserAuthGuard)
   getTeacherIncompleteWorkshop(@CurrentUser() user: CurrentUserDto) {
     return this.teacherService

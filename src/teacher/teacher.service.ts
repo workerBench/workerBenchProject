@@ -35,8 +35,7 @@ export class TeacherService {
     @InjectRepository(WorkShopInstanceDetail)
     private workShopInstanceDetailRepository: Repository<WorkShopInstanceDetail>,
   ) {}
-  // 안되는것 : 강사 전용 전체 워크샵 목록 에서 같은 user_id에서 내용이 다른 워크샵을 등록하면 내용이 안바뀜 purposeTag만 바뀜
-  // 워크샵 등록할때 purposeTag가 여러개 있을시 여러개를 동시에 등록을 못함
+  // 안되는것 : 워크샵 등록할때 purposeTag가 여러개 있을시 여러개를 동시에 등록을 못함
 
   // 강사 등록 api
   async createTeacherRegister(
@@ -285,14 +284,60 @@ export class TeacherService {
 
   // 강사 미완료 워크샵 보기 api
   async getTeacherIncompleteWorkshop() {
-    const id = 1;
-    const request = await this.workShopInstanceDetailRepository.find({
-      where: {
-        user_id: id,
-        status: In(['request', 'non_payment', 'waiting_lecture']),
-      },
-    });
-    return request;
+    // const id = 1;
+    // const request = await this.workShopInstanceDetailRepository.find({
+    //   where: {
+    //     workshop_id: id,
+    //     status: In(['request', 'non_payment', 'waiting_lecture']),
+    //   },
+    // });
+    // return request;
+    try {
+      const id = 10; // 예시
+      const workshop_id = 83;
+      const userIdInfo = await this.workshopRepository.find({
+        where: { user_id: id },
+        select: ['user_id'],
+      });
+      if (!userIdInfo) {
+        throw new HttpException(
+          '등록되지 않은 유저 입니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        let result = await this.workshopRepository
+          .createQueryBuilder('workshop')
+          .where('workshop.id = :id ', {
+            id: workshop_id,
+          })
+          .innerJoinAndSelect('workshop.GenreTag', 'genreTag')
+          .innerJoinAndSelect(
+            'workshop.WorkShopInstances',
+            'workShopInstanceDetail',
+          )
+          .select([
+            'workshop.thumb',
+            'workshop.title',
+            'workshop.min_member',
+            'workshop.max_member',
+            'genreTag.name',
+            'workshop.total_time',
+            'workshop.price',
+            'workShopInstanceDetail.etc',
+            'workShopInstanceDetail.company',
+            'workShopInstanceDetail.phone_number',
+            'workShopInstanceDetail.member_cnt',
+            'workShopInstanceDetail.email',
+            'workShopInstanceDetail.createdAt',
+            'workshop.status',
+          ])
+          .getRawMany();
+        return result;
+      }
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException('입력된 요청이 잘못되었습니다.');
+    }
   }
 
   // 강사 완료 워크샵 보기 api
@@ -301,7 +346,7 @@ export class TeacherService {
     const id = 1;
     const request = await this.workShopInstanceDetailRepository.find({
       where: {
-        user_id: id,
+        workshop_id: id,
         status: 'complete',
       },
     });
