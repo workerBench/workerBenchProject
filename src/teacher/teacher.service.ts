@@ -298,11 +298,14 @@ export class TeacherService {
   // 강사 완료 워크샵 보기 api
   async getTeacherComplete() {
     // id: number
-    const id = 10;
-    const complete = await this.workshopRepository.find({
-      where: { user_id: id, status: 'approval' },
+    const id = 1;
+    const request = await this.workShopInstanceDetailRepository.find({
+      where: {
+        user_id: id,
+        status: 'complete',
+      },
     });
-    return complete;
+    return request;
   }
 
   async updateTeacherAccept(id: number) {
