@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <title>Document</title>
   </head>
   <style>
@@ -95,8 +96,78 @@
       <button onclick="submitContent()">전송하기</button>
     </div>
 
+    <div style="margin-top: 50px; margin-left: 50px">
+      <button onclick="getThumbImg()">썸네일 가져오기.</button>
+      <div>
+        !! 주의. 현재 썸네일 이름을 따로 DB에 저장하고 있지 않기 때문에 직접
+        버킷에서 이름을 복사해서 백엔드의 auth.service.ts 파일
+        workshopThumbImg() 함수의 thumbName 변수에 입력해 줘야 함.
+      </div>
+      <div style="max-width: 500px; width: 500px; margin-bottom: 200px">
+        <img id="thumb-show" style="max-width: 100%; display: block" />
+      </div>
+    </div>
+
+    <div
+      style="
+        margin-top: 50px;
+        margin-left: 50px;
+        margin-bottom: 200px;
+        border: 3px solid rgb(64, 64, 218);
+      "
+    >
+      <p>
+        동영상 파일 선택하기 및 S3 로 전송하기. 파일 선택 후 이미지 업로드 클릭
+      </p>
+      <input
+        type="file"
+        name="file"
+        id="video-file"
+        required="true"
+        accept="video/*"
+      />
+      <button onclick="submitVideo()">서버로 비디오 업로드</button>
+      <div id="video-wrap-div" style="margin-bottom: 100px; width: 500px">
+        <video
+          id="video-show-div"
+          style="display: none"
+          width="500px"
+          controls
+        ></video>
+      </div>
+    </div>
+
+    <div
+      style="
+        margin-top: 100px;
+        width: 700px;
+        height: 500px;
+        border: 3px solid black;
+      "
+    >
+      <p>
+        이미지와 마찬가지로 auth.service.ts 파일의 getVideoUrl 함수의 videoName
+        변수에 직접 입력해야 함. s3 버킷에 업로드 된 동영상 폴더의 이름을
+        가져와서.
+      </p>
+      <p style="font-size: 20px; font-weight: bold; color: red">
+        허나 문제 발생. 아마존 S3 의 주소 만으로는 동영상을 불러오는 데에
+        실패했음. 추후 Cloud Front 와 연결하면 가능할 것으로 보임. 일단 해당
+        기능은 보류. 현재 사용 불가.
+      </p>
+      <button onclick="getReviewVideo()">동영상 링크 가져오기.</button>
+      <video id="s3-video-show" style="display: none" width="500px" controls>
+        <source
+          src="https://workerbench.s3.ap-northeast-2.amazonaws.com/videos/review/1/d2049ab0-1b35-4868-9b50-b37b62906eaf.mov"
+          id="video-show-target"
+          type="application/x-mpegURL"
+        />
+      </video>
+    </div>
+
     <script>
       $(document).ready(function () {
+        // 이미지 미리보기
         const thumbImg = document.querySelector('#thumb-img-file');
         thumbImg.addEventListener('change', function (event) {
           let files = event.target.files;
@@ -140,6 +211,25 @@
           });
           reader.readAsDataURL(file);
         }
+
+        // 비디오 미리보기
+        const videoFile = document.querySelector('#video-file');
+        videoFile.addEventListener('change', (event) => {
+          let files = event.target.files;
+          if (files.length >= 1) {
+            const videoShow = document.querySelector('#video-show-div');
+            const videourl = URL.createObjectURL(files[0]);
+            videoShow.setAttribute('style', 'display:inline');
+            videoShow.setAttribute('src', videourl);
+            // videoShow.play();
+          }
+          if (!files.length) {
+            const videoWrap = document.querySelector('#video-wrap-div');
+            videoWrap.innerHTML = `<video id="video-show-div" style="display:none" width="500px" controls></video>`;
+            // const videoShow = document.querySelector('#video-show-div');
+            // videoShow.removeAttribute('src');
+          }
+        });
       });
 
       const submitContent = async () => {
@@ -175,22 +265,65 @@
           }
         }
 
-        $.ajax({
-          type: 'POST',
-          enctype: 'multipart/form-data',
-          url: '/api/auth/img-s3-test',
-          data: formData,
-          processData: false,
-          contentType: false,
-          cache: false,
-          success: function (response) {
-            console.log('okay~~~~');
-          },
-          error: function (request, status, error) {
-            console.log(
-              `${request.status} ${error} / ${request.responseJSON.msg}`,
-            );
-          },
+        // 첫 번째 인자가 api 주소, 두 번째 인자가 데이터, 세 번째 인자가 config
+        axios
+          .post('/api/auth/img-s3-test', formData, {
+            headers: {
+              'content-type': 'multipart/form-data',
+            },
+          })
+          .then((response) => {
+            console.log('무사히 통신 완료');
+            console.log(response);
+          })
+          .catch((err) => {
+            console.log('에러 발생. 400 번대 코드가 반환되면 catch로.');
+            console.log(err);
+          });
+      };
+
+      const getThumbImg = () => {
+        axios.get('/api/auth/img-s3-url').then((res) => {
+          console.log('썸네일 주소 가져오기 api 무사히 작동');
+          console.log(res.data.data);
+          document.querySelector('#thumb-show').src = res.data.data;
+        });
+      };
+
+      // 동영상 보내기
+      const submitVideo = () => {
+        // 비디오 파일
+        const check = document.querySelector('#video-file').files.length;
+        if (!check) {
+          return;
+        }
+        const video = document.querySelector('#video-file').files[0];
+
+        const formData = new FormData();
+        formData.append('video', video);
+
+        axios
+          .post('/api/auth/video-s3-test', formData, {
+            headers: {
+              'content-type': 'multipart/form-data',
+            },
+          })
+          .then((res) => {
+            console.log('정상 작동');
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log('에러 발생');
+            console.log(err);
+          });
+      };
+
+      const getReviewVideo = () => {
+        axios.get('/api/auth/video-s3-url').then((res) => {
+          console.log('무사히 비디오 url 가져옴');
+          console.log(res.data.data);
+          // document.querySelector('#s3-video-show').src = res.data.data;
+          // document.querySelector('#video-show-target').src = res.data.data;
         });
       };
     </script>
