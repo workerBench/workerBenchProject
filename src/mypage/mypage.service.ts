@@ -2,41 +2,62 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Review } from 'src/entities/review';
 import { ReviewImage } from 'src/entities/review-image';
-import { WishList } from 'src/entities/wish-list';
+import { WishList } from 'src/entities/wish-list'
+import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { ReviewDto } from 'src/mypage/dtos/review.dto';
 import { ReviewImageDto } from 'src/mypage/dtos/review-image.dto';
+import { WorkshopRepository } from 'src/workshops/workshop.repository';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class MypageService {
     constructor(
+        private readonly workshopRepository: WorkshopRepository,
         @InjectRepository(WishList)
         private readonly wishRepository: Repository<WishList>,
         @InjectRepository(Review)
         private readonly reviewRepository: Repository<Review>,
         @InjectRepository(ReviewImage)
         private readonly reviewImageRepository: Repository<ReviewImage>,
+        @InjectRepository(WorkShopInstanceDetail)
+        private readonly workShopInstanceDetailRepository: Repository<WorkShopInstanceDetail>,
     ){}
 
-    getWorkshops() {
-        return this.mypage
-    }
 
-
-    // 강사 수락 대기중, 결제 대기중, 결제완료 워크샵 출력
-    async getBeforeWorkshops() {
-        return await this.workshopRepository.find({
-          where: { status: 'request', 'approval'},
+    // 수강 예정 워크샵 출력
+    async getRequestWorkshops() {
+        return await this.workShopInstanceDetailRepository.find({
+          where: [{ status: 'request' }, { status: 'non_payment'}, { status: 'waiting_lecture'} ],
           order: { updatedAt: 'DESC' },
         });
       }
 
+
     // 수강 완료한 워크샵 출력
-    async getFinishedWorkshops() {
-        return await this.workshopRepository.find({
-          where: { status: 'finished' },
+    async getCompleteWorkshops() {
+        return await this.workShopInstanceDetailRepository.find({
+          where: { status: 'complete' },
           order: { updatedAt: 'DESC' },
         });
+      }
+
+
+
+      
+      // 워크샵 찜 or 취소하기 API
+      /* wishList 엔티티에서 workshop_id와 user_id 찾은 후
+      만약 값이 있으면 찜 해제
+      없으면 user_id와 workshop_id insert */
+      async addToWish(user_id: number, workshop_id: number) {
+        const IsWish = await this.wishRepository.findOne({
+          where: { user_id, workshop_id },
+        });
+        if (IsWish === null) {
+          await this.wishRepository.insert({ user_id, workshop_id });
+          return '찜하기 성공!';
+        }
+        await this.wishRepository.delete({ user_id, workshop_id }); // 찜 해제
+        return '찜하기 취소!';
       }
 
 
@@ -44,13 +65,15 @@ export class MypageService {
   review(
     workshop_id: number,
     user_id: number,
-    reviewDto: reviewDto,
+    reviewDto: ReviewDto,
   ) {
     const {
       content,
       star,
     } = reviewDto;
     this.reviewRepository.insert({
+        user_id,
+        workshop_id,
         content,
         star,
     });
@@ -59,7 +82,7 @@ export class MypageService {
 
     // 리뷰 이미지 첨부 API
     reviewImage(
-        reviewImageDto: reviewImageDto,
+        reviewImageDto: ReviewImageDto,
       ) {
         const {
           img_name,

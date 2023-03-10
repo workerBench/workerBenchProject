@@ -5,6 +5,7 @@ import { MypageService } from './mypage.service';
 import { Review } from 'src/entities/review';
 import { ReviewImage } from 'src/entities/review-image';
 import { WishList } from 'src/entities/wish-list';
+import { MyPageRepository } from 'src/mypage/mypage.repository';
 import { ReviewRepository } from 'src/mypage/review.repository';
 import { ReviewImageRepository } from 'src/mypage/review-image.repository';
 import { MypageControllerRender } from './mypage.render.controller';
@@ -18,6 +19,6 @@ import { MypageControllerRender } from './mypage.render.controller';
     ]),
   ],
   controllers: [MypageController,MypageControllerRender],
-  providers: [MypageService, ReviewRepository, ReviewImageRepository ],
+  providers: [MypageService, MyPageRepository ,ReviewRepository, ReviewImageRepository ],
 })
 export class MypageModule {}
