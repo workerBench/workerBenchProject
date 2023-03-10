@@ -1,18 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { not } from 'joi';
+import { AdminUser } from 'src/entities/admin-user';
 import { Company } from 'src/entities/company';
 import { User } from 'src/entities/user';
-import { Like, SelectQueryBuilder } from 'typeorm';
+import { SelectQueryBuilder } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 import { WorkShop } from '../entities/workshop';
+import { editWorkshopDto } from './dto/edit-workshop.dto';
 
 @Injectable()
 export class AdminService {
     constructor(
         @InjectRepository(WorkShop) private workshopRepository: Repository<WorkShop>,
         @InjectRepository(User) private userRepository: Repository<User>,
-        @InjectRepository(Company) private companyRepository: Repository<Company>
+        @InjectRepository(Company) private companyRepository: Repository<Company>,
+        @InjectRepository(AdminUser) private adminUserRepository: Repository<AdminUser>
     ) {}
 
     //-------------------------- 검토 대기중인 워크숍 목록 불러오기 --------------------------//
@@ -59,17 +61,10 @@ export class AdminService {
     //-------------------------- 워크숍 수정하기 --------------------------//
 
     async updateWorkshop(
+        data: editWorkshopDto,
         id: number, 
-        title: string, 
-        category: "online" | "offline", 
-        desc: string, 
-        thumb: string,
-        min_member: number,
-        max_member: number,
-        total_time: number,
-        price: number,
-        location: string,
         ) {
+            const { title, category, desc, thumb, min_member, max_member, total_time, price, location } = data
             const workshop = await this.workshopRepository.findOne({
                 where:{id, status: "approval", deletedAt: null}
             })
@@ -119,28 +114,67 @@ export class AdminService {
         return await this.companyRepository.update(id, {isBan: 1})
     }
 
+    //-------------------------- 현재 관리자 목록 불러오기 --------------------------//
+
+    async getAdminList() {
+        return await this.adminUserRepository.find({
+            where: {admin_type: 0}
+        })
+    }
+
     //-------------------------- 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀) --------------------------//
 
-    async searchWorkshops(titleOrEmail: string, searchField: string) {
-        let query = this.workshopRepository.createQueryBuilder('workshop');
+    async searchWorkshops(options: { genre?: string, email ?: string, title ?: string }) {
+        let query = this.workshopRepository
+          .createQueryBuilder('workshop')
+          .innerJoinAndSelect('workshop.GenreTag', 'genre')
+          .innerJoinAndSelect('workshop.PurposeList', 'purpose')
+          .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
+          .innerJoinAndSelect('workshop.User', 'user')
+          .select([
+            'workshop.title', 
+            'workshop.category', 
+            'workshop.desc', 
+            'workshop.thumb', 
+            'workshop.min_member', 
+            'workshop.max_member', 
+            'workshop.total_time', 
+            'workshop.price', 
+            'workshop.location',
+            'genre.name',
+            'GROUP_CONCAT(purposetag.name) AS purpose_name',
+          ])    
+          .groupBy('workshop.id');
       
-        if (searchField === 'title') {
-          query = query.where('workshop.title LIKE :title', { title: `%${titleOrEmail}%` })
-        } else if (searchField === 'email') {
-            query = query
-            .innerJoinAndSelect('workshop.User', 'user')
-            .where('user.email = :email', { email: `${titleOrEmail}` });
+        if (options.title) {
+          query = query
+            .andWhere('workshop.title LIKE :title', { title: `%${options.title}%` })
         }
       
-        const workshops = await query.getMany();
-        return workshops;
+        if (options.email) {
+          query = query
+            .andWhere('user.email = :email', { email: `${options.email}` });
+        }
+      
+        if (options.genre) {
+          query = query
+            .andWhere('genre.name = :genre', { genre : `${options.genre}` });
+        }
+      
+        const workshops = await query.getRawMany();
+      
+        return workshops.map(workshop => ({
+          ...workshop,
+          purpose_name: workshop.purpose_name.split(','),
+        }));
       }
+      
 
     //-------------------------- 업체 및 강사 검색 기능 (유저 이메일 / 업체 명) --------------------------//
     
     async searchUserOrCompany(EmailOrCompany:string, searchcField: string) {
         let query: SelectQueryBuilder<User> | SelectQueryBuilder<Company>
-        
+
         if (searchcField === 'email') {
             query = this.userRepository
             .createQueryBuilder('user')
