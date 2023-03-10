@@ -22,24 +22,23 @@ import { TeacherService } from './teacher.service';
 @Controller('/api/teacher')
 export class TeacherController {
   constructor(private readonly teacherService: TeacherService) {}
+
   // 강사 등록 api
   @Post()
   // @UseGuards(JwtUserAuthGuard)
   createTeacherRegister(
     @Body() data: createTeacherDto,
-    // @CurrentUser() user: CurrentUserDto,
+    @CurrentUser() user: CurrentUserDto,
   ) {
     return this.teacherService.createTeacherRegister(
       data, //user
     );
   }
-  // 강사 워크샵 목록 api
 
+  // 강사 전체 워크샵 목록 api
   @Get('workshops')
-
   // @UseGuards(JwtUserAuthGuard)
-  async getTeacherWorkshops() {
-    // @CurrentUser() user: CurrentUserDto
+  async getTeacherWorkshops(@CurrentUser() user: CurrentUserDto) {
     return await this.teacherService.getTeacherWorkshops();
 
     // user.id
@@ -47,8 +46,7 @@ export class TeacherController {
   // 강사 및 업체 정보 api
   @Get('mypage')
   // @UseGuards(JwtUserAuthGuard)
-  async getTeacherMypage() {
-    //@CurrentUser() user: CurrentUserDto
+  async getTeacherMypage(@CurrentUser() user: CurrentUserDto) {
     return await this.teacherService
       .getTeacherMypage //user.id
       ();
@@ -74,9 +72,9 @@ export class TeacherController {
   // 강사 미완료 목록 가져오기 api
   @Get('workshops/request')
   // @UseGuards(JwtUserAuthGuard)
-  getTeacherRequest(@CurrentUser() user: CurrentUserDto) {
+  getTeacherIncompleteWorkshop(@CurrentUser() user: CurrentUserDto) {
     return this.teacherService
-      .getTeacherRequest //user.id
+      .getTeacherIncompleteWorkshop //user.id
       ();
   }
   // 강사 완료 목록 가져오기 api

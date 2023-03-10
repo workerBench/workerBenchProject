@@ -13,8 +13,9 @@ import { PurposeTag } from 'src/entities/purpose-tag';
 import { Teacher } from 'src/entities/teacher';
 import { User } from 'src/entities/user';
 import { WorkShop } from 'src/entities/workshop';
+import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { WorkShopPurpose } from 'src/entities/workshop-purpose';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { In, Repository, SelectQueryBuilder } from 'typeorm';
 import { createCompanyDto } from './dto/CreateCompanyDto';
 import { createTeacherDto } from './dto/createTeacherDto';
 import { createWorkshopsDto } from './dto/createWorkshopsDto';
@@ -31,9 +32,12 @@ export class TeacherService {
     private purposeTagIdRepository: Repository<WorkShopPurpose>,
     @InjectRepository(PurposeTag)
     private purposeTagRepository: Repository<PurposeTag>,
+    @InjectRepository(WorkShopInstanceDetail)
+    private workShopInstanceDetailRepository: Repository<WorkShopInstanceDetail>,
   ) {}
   // 안되는것 : 강사 전용 전체 워크샵 목록 에서 같은 user_id에서 내용이 다른 워크샵을 등록하면 내용이 안바뀜 purposeTag만 바뀜
   // 워크샵 등록할때 purposeTag가 여러개 있을시 여러개를 동시에 등록을 못함
+
   // 강사 등록 api
   async createTeacherRegister(
     data: createTeacherDto, //user: CurrentUserDto
@@ -219,17 +223,18 @@ export class TeacherService {
   async createTeacherWorkshops(data: createWorkshopsDto) {
     try {
       const {
-        category,
-        genre_id,
-        title,
-        desc,
         thumb,
+        category,
+        title,
         min_member,
         max_member,
+        genre_id,
+        purpose_tag_id,
         total_time,
+        desc,
         price,
-        location,
       } = data;
+      console.log(data.category);
       const id = 10;
       const teacherInfo = await this.teacherRepository.findOne({
         where: { user_id: id },
@@ -260,17 +265,13 @@ export class TeacherService {
         total_time,
         price,
         status: 'request',
-        location,
+        location: '서울',
         user_id: id,
       });
       await this.workshopRepository.save(workshop);
-      const purposeTagId = await this.purposeTagRepository.findOne({
-        where: { deletedAt: null },
-        select: ['id'],
-      });
       this.purposeTagIdRepository.insert({
         workshop_id: workshop.id,
-        purpose_tag_id: purposeTagId.id,
+        purpose_tag_id: purpose_tag_id,
       });
       return {
         message:
@@ -283,11 +284,13 @@ export class TeacherService {
   }
 
   // 강사 미완료 워크샵 보기 api
-  async getTeacherRequest() {
-    //id: number
-    const id = 10;
-    const request = await this.workshopRepository.find({
-      where: { user_id: id, status: 'request' },
+  async getTeacherIncompleteWorkshop() {
+    const id = 1;
+    const request = await this.workShopInstanceDetailRepository.find({
+      where: {
+        user_id: id,
+        status: In(['request', 'non_payment', 'waiting_lecture']),
+      },
     });
     return request;
   }

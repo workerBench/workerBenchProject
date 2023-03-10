@@ -32,5 +32,5 @@ export class createWorkshopsDto {
   readonly location: string;
 
   @IsNumber()
-  readonly workshop_id: number;
+  readonly purpose_tag_id: number;
 }
