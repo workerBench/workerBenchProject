@@ -1,17 +1,13 @@
-$(document).ready(function() {
-    $.ajax({
-        url: "../api/admin/workshops",
-        method: "GET",
-        data: {},
-        success: function(workshops) {
-            console.log(workshops)
+axios.get('../api/admin/workshops')
+  .then(function(response) {
+        const workshops = response.data;
             let html = '';
             for (let workshop of workshops) {
                 html += `
                 <div class="col">
-                    <div class="card" data-workshop.id="${workshop.id}">
+                    <div class="card">
                         <img src="${workshop.thumb}" class="card-img-top" alt="...">
-                        <div class="card-body">
+                        <div class="card-body" data-workshop.id="${workshop.id}">
                             <div class="category">
                                 ${workshop.category === 'online' ? '<div class="online">온라인</div>' : ''}
                                 ${workshop.category === 'offline' ? '<div class="offline">오프라인</div>' : ''}
@@ -36,24 +32,24 @@ $(document).ready(function() {
             }
             
             $("#workshop-list").append(html);
-        }
-    });
+        })
+    .catch(function(error) {
+        console.log(error);
 });
 
-// ---------------- 워크숍 삭제하기 버튼 ---------------- 
+// ---------------- 워크숍 삭제하기 버튼 ---------------- //
+
+
 $("#workshop-list").on("click", "#remove-btn", function() {
-    const workshopId = $(this).closest(".card").data('workshop.id');
-    $.ajax({
-        url: `../api/admin/workshop/${workshopId}`,
-        method: "DELETE",
-        data: {},
-        success: function(response) {
+    const workshopId = $(this).closest(".card-body").data('workshop.id');
+    axios.delete(`../api/admin/workshop/${workshopId}`)
+        .then(function(response) {
             alert("워크숍이 삭제되었습니다.")
-            $(`#workshop-${workshopId}`).remove();
             location.reload();
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-        }
-    });
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
 });
+
 
