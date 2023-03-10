@@ -9,7 +9,13 @@ import {
   HttpException,
   UseGuards,
   Req,
+  Render,
+  UploadedFiles,
+  UploadedFile,
+  Patch,
+  Delete,
 } from '@nestjs/common';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 import { RealIP } from 'nestjs-real-ip';
@@ -114,7 +120,7 @@ export class AuthController {
     type: RegisterJoinDto,
   })
   @ApiOperation({ summary: '로그인 api' })
-  @Post('login')
+  @Post('login/user')
   async login(
     @Body() body: LoginDto,
     @Res({ passthrough: true }) response: Response,
@@ -203,7 +209,7 @@ export class AuthController {
     description: '성공',
   })
   @ApiOperation({ summary: '관리자 등록' })
-  @Post('admin/register')
+  @Post('admin')
   async adminRegister(
     @Body() body: AdminRegisterJoinDto,
     @Res({ passthrough: true }) response: Response,
@@ -252,7 +258,7 @@ export class AuthController {
     description: '실패',
   })
   @ApiOperation({ summary: '관리자 로그인 api' })
-  @Post('admin/login')
+  @Post('login/admin')
   async adminLogin(
     @Body() body: AdminLoginDto,
     @Res({ passthrough: true }) response: Response,
@@ -340,7 +346,7 @@ export class AuthController {
     type: AdminRemoveDto,
   })
   @ApiOperation({ summary: '관리자 삭제' })
-  @Post('admin/remove')
+  @Delete('admin')
   async removeAdminAccount(@Body() body: AdminRemoveDto) {
     return await this.authService.removeAdmin(body.email);
   }
@@ -351,7 +357,7 @@ export class AuthController {
     description: '성공',
   })
   @ApiOperation({ summary: '유저 로그아웃 api' })
-  @Post('logout/user')
+  @Get('logout/user')
   async logOutUser(@Res({ passthrough: true }) response: Response) {
     response.clearCookie(TOKEN_NAME.userAccess);
     response.clearCookie(TOKEN_NAME.userRefresh);
@@ -364,7 +370,7 @@ export class AuthController {
     description: '성공',
   })
   @ApiOperation({ summary: '관리자 로그아웃 api' })
-  @Post('logout/admin')
+  @Get('logout/admin')
   async logOutAdmin(@Res({ passthrough: true }) response: Response) {
     response.clearCookie(TOKEN_NAME.adminAccess);
     response.clearCookie(TOKEN_NAME.adminRefresh);
@@ -380,7 +386,7 @@ export class AuthController {
   @ApiOperation({
     summary: '유저 비밀번호 재설정 하기 - 이메일을 입력하여 재설정 시도',
   })
-  @Post('resetps/email')
+  @Post('reset-password')
   @UseGuards(JwtUserAuthGuard)
   async emailForResetPassWord(
     @Body() body: EmailForReset,
@@ -410,7 +416,7 @@ export class AuthController {
   @ApiOperation({
     summary: '유저 비밀번호 재설정 하기 - 이메일 인증코드 발송',
   })
-  @Post('resetps/email/code')
+  @Post('reset-password/email-code')
   @UseGuards(JwtUserAuthGuard)
   async authCodeForResetPassword(
     @Body() body: AuthCodeForRePs,
@@ -438,7 +444,7 @@ export class AuthController {
     status: 400,
     description: '비밀번호 재설정 - 적합하지 않은 비밀번호 입력 시 실패',
   })
-  @Post('resetps/password')
+  @Patch('reset-password')
   @UseGuards(JwtUserAuthGuard)
   async resetPassword(
     @Body() body: ResetPassword,
@@ -491,5 +497,26 @@ export class AuthController {
   async test77(@CurrentUser() admin: CurrentAdminDto) {
     console.log('최고 관리자 테스트!');
     console.log(admin);
+  }
+
+  /* -------------------------------- S3 업로드 테스트용  API -------------------------------- */
+
+  // S3 - cloudFront 실험 api - ejs 랜더링
+  @Get('img-test')
+  @Render('test-minsoo/index')
+  test333() {
+    return;
+  }
+
+  // S3 - cloudFront 실험 api - 데이터 받아오기
+  @Post('img-s3-test')
+  @UseInterceptors(FilesInterceptor('images'))
+  async uploadFileTest(
+    @UploadedFiles() images: Array<Express.Multer.File>,
+    @Body() body: any,
+  ) {
+    console.log(images);
+    console.log(JSON.parse(body.jsonData).title);
+    return;
   }
 }

@@ -198,7 +198,7 @@ export class AuthService {
       { id, email, adminType },
       {
         secret: this.configService.get('JWT_SECRET_KEY_ADMIN'),
-        expiresIn: '600',
+        expiresIn: '600s',
         algorithm: 'HS256',
       },
     );
@@ -514,4 +514,6 @@ export class AuthService {
 
     return;
   }
+
+  /* -------------------------------- 테스트용 API -------------------------------- */
 }
