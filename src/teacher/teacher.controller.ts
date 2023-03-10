@@ -6,83 +6,100 @@ import {
   Post,
   Param,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
+import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { PurposeTag } from 'src/entities/purpose-tag';
 import { createCompanyDto } from './dto/CreateCompanyDto';
 import { createTeacherDto } from './dto/createTeacherDto';
 import { createWorkshopsDto } from './dto/createWorkshopsDto';
 import { creatpurposeDto } from './dto/purposeTagDto';
 import { TeacherService } from './teacher.service';
+// @UseInterceptors(SuccessInterceptor)
 @Controller('/api/teacher')
 export class TeacherController {
   constructor(private readonly teacherService: TeacherService) {}
   // 강사 등록 api
   @Post()
-  @UseGuards(JwtUserAuthGuard)
+  // @UseGuards(JwtUserAuthGuard)
   createTeacherRegister(
     @Body() data: createTeacherDto,
-    @CurrentUser() user: CurrentUserDto,
+    // @CurrentUser() user: CurrentUserDto,
   ) {
     return this.teacherService.createTeacherRegister(
-      user.id,
-      data.phone_number,
-      data.address,
-      data.name,
+      data, //user
     );
   }
   // 강사 워크샵 목록 api
+
   @Get('workshops')
-  @UseGuards(JwtUserAuthGuard)
-  async getTeacherWorkshops(@CurrentUser() user: CurrentUserDto) {
-    return await this.teacherService.getTeacherWorkshops(user.id);
+
+  // @UseGuards(JwtUserAuthGuard)
+  async getTeacherWorkshops() {
+    // @CurrentUser() user: CurrentUserDto
+    return await this.teacherService.getTeacherWorkshops();
+
+    // user.id
   }
   // 강사 및 업체 정보 api
   @Get('mypage')
-  @UseGuards(JwtUserAuthGuard)
-  async getTeacherMypage(@CurrentUser() user: CurrentUserDto) {
-    return await this.teacherService.getTeacherMypage(user.id);
+  // @UseGuards(JwtUserAuthGuard)
+  async getTeacherMypage() {
+    //@CurrentUser() user: CurrentUserDto
+    return await this.teacherService
+      .getTeacherMypage //user.id
+      ();
   }
   // 강사 업체 등록 api
   @Post('company')
-  @UseGuards(JwtUserAuthGuard)
+  // @UseGuards(JwtUserAuthGuard)
   createTeacherCompany(
     @Body() data: createCompanyDto,
-    @CurrentUser() user: CurrentUserDto,
+    // @CurrentUser() user: CurrentUserDto,
   ) {
-    return this.teacherService.createTeacherCompany(data, user);
+    return this.teacherService.createTeacherCompany(data);
   }
   // 강사 워크샵 등록 api
   @Post('workshops')
-  @UseGuards(JwtUserAuthGuard)
+  // @UseGuards(JwtUserAuthGuard)
   createTeacherWorkshops(
     @Body() data: createWorkshopsDto,
-    @CurrentUser() user: CurrentUserDto,
+    // @CurrentUser() user: CurrentUserDto,
   ) {
-    return this.teacherService.createTeacherWorkshops(data, user);
+    return this.teacherService.createTeacherWorkshops(data);
   }
   // 강사 미완료 목록 가져오기 api
   @Get('workshops/request')
-  @UseGuards(JwtUserAuthGuard)
+  // @UseGuards(JwtUserAuthGuard)
   getTeacherRequest(@CurrentUser() user: CurrentUserDto) {
-    return this.teacherService.getTeacherRequest(user.id);
+    return this.teacherService
+      .getTeacherRequest //user.id
+      ();
   }
   // 강사 완료 목록 가져오기 api
   @Get('workshops/complete')
-  @UseGuards(JwtUserAuthGuard)
+  // @UseGuards(JwtUserAuthGuard)
   getTeacherComplete(@CurrentUser() user: CurrentUserDto) {
-    return this.teacherService.getTeacherComplete(user.id);
+    return this.teacherService
+      .getTeacherComplete //user.id
+      ();
   }
   // 강사 수강 문의 관리 (수락하기) api
   @Patch('workshops/manage/accept/:id')
   updateTeacherAccept(@Param('id') id: number) {
     return this.teacherService.updateTeacherAccept(id);
   }
-  // 강사 수강 문의 관리 (종료하기) pai
+  // 강사 수강 문의 관리 (종료하기) api
   @Patch('workshops/manage/complete/:id')
   updateTeacherComplete(@Param('id') id: number) {
     return this.teacherService.updateTeacherComplete(id);
+  }
+  // 강사 수강 문의 관리 (반려하기) api
+  @Patch('workshops/manage/reject/:id')
+  updateTeacherRejected(@Param('id') id: number) {
+    return this.teacherService.updateTeacherRejected(id);
   }
 }

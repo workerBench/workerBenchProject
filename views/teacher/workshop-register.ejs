@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link
@@ -37,17 +38,21 @@
             </div>
         </div>
         <div class="workshop-information">
+          <div class="mb-3">
+            <label for="title" class="form-label">카테고리</label>
+            <input type="text" class="form-control" id="category" placeholder="카테고리">
+          </div>
             <div class="mb-3">
               <label for="title" class="form-label">강의제목</label>
               <input type="text" class="form-control" id="title" placeholder="강의제목">
             </div>
             <div class="mb-3">
                 <label for="minimum-people" class="form-label">최소 인원수</label>
-                <input type="text" class="form-control" id="minimum-people" placeholder="최소 인원수">
+                <input type="text" class="form-control" id="min_member" placeholder="최소 인원수">
               </div>
               <div class="mb-3">
                 <label for="Maximum-people" class="form-label">최대 인원수</label>
-                <input type="text" class="form-control" id="Maximum-people" placeholder="최대 인원수">
+                <input type="text" class="form-control" id="max_member" placeholder="최대 인원수">
               </div>
               <div class="mb-3">
                 <label for="genre" class="form-label">분야</label>
