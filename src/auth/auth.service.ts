@@ -6,21 +6,26 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Redis } from 'ioredis';
 import { User } from 'src/entities/user';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { RegisterAuthDto } from './dtos/register-auth.dto';
 import { randomBytes } from 'crypto';
 import * as bcrypt from 'bcrypt';
 import {
   emailAuthCodeRedisKey,
+  emailAuthCodeRedisKeyForResetPs,
   refreshTokenRedisKey,
+  thisUserOnTheWayToChangePs,
 } from './naming/redis-key-name';
 import { adminTypeNaming, userTypeNaming } from './naming/user-type';
 import { AdminUser } from 'src/entities/admin-user';
 import { AdminRegisterJoinDto } from './dtos/admin-register-join';
+import { ResetPassword } from './dtos/reset-password.dto';
 
 @Injectable()
 export class AuthService {
   private readonly redisClient: Redis;
+  private readonly userDataSource: Repository<User>; // 추가
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -30,14 +35,19 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService,
     private readonly redisService: RedisService,
+
+    private readonly dataSource: DataSource, // 추가
   ) {
     this.redisClient = redisService.getClient();
+
+    this.userDataSource = this.dataSource // 추가
+      .createQueryRunner()
+      .manager.getRepository(User);
   }
 
   // 유저 회원가입 시 유효성 검사
   async checkEffective(userInfo: RegisterAuthDto) {
     const { email, password, authentNum } = userInfo;
-
     if (!email || !email.includes('@') || !email.includes('.')) {
       const err = new Error('이메일 형식이 올바르지 않습니다.');
       err.name = 'WrongEmailError';
@@ -83,6 +93,7 @@ export class AuthService {
       err.name = 'WrongPhoneNumberError';
       throw err;
     }
+    return;
   }
 
   // 유저 회원가입 시 이메일 중복 검사
@@ -126,7 +137,7 @@ export class AuthService {
         console.log(error);
         throw new ConflictException();
       });
-    return true;
+    return;
   }
 
   // 유저 회원가입 시 이메일 인증코드 검사
@@ -187,7 +198,7 @@ export class AuthService {
       { id, email, adminType },
       {
         secret: this.configService.get('JWT_SECRET_KEY_ADMIN'),
-        expiresIn: '600',
+        expiresIn: '600s',
         algorithm: 'HS256',
       },
     );
@@ -289,7 +300,6 @@ export class AuthService {
       err.name = 'DoesntExistEmailOrPasswordError';
       throw err;
     }
-
     if (!(await bcrypt.compare(password, adminInfo.password))) {
       const err = new Error('이메일 또는 비밀번호가 일치하지 않습니다');
       err.name = 'DoesntExistEmailOrPasswordError';
@@ -412,4 +422,98 @@ export class AuthService {
     await this.adminUserRepository.softDelete({ email });
     return;
   }
+
+  // 비밀번호 재설정 시 이메일 검증
+  async findByEmail(email: string, id: number) {
+    // 이메일로 계정 찾기
+    const user = await this.userRepository.findOne({ where: { id, email } });
+    if (!user) {
+      const err = new Error('존재하지 않는 계정입니다.');
+      err.name = 'NotExistUser';
+      throw err;
+    }
+  }
+
+  // 비밀번호 재설정 시도 시 이메일 인증 후 이메일로 인증코드 발송
+  async sendingEmailResetCode(email: string) {
+    const auth_num = randomBytes(3).toString('hex');
+    await this.redisClient.setex(
+      emailAuthCodeRedisKeyForResetPs(email),
+      300,
+      auth_num,
+    ); // redis set
+
+    this.mailerService
+      .sendMail({
+        to: email,
+        from: this.configService.get('GOOGLE_MAIL'),
+        subject: 'workshop 비밀번호 재설정 인증',
+        html: `<h1>인증번호 : ${auth_num}</h1>`,
+      })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+        throw new ConflictException();
+      });
+    return;
+  }
+
+  // 유저 비밀번호 재설정 시 이메일 인증코드 검사
+  async checkingResetCode(email: string, emailAuthCode: string, id: number) {
+    const authCodeOfRedis = await this.redisClient.get(
+      emailAuthCodeRedisKeyForResetPs(email),
+    );
+    if (authCodeOfRedis !== emailAuthCode) {
+      const err = new Error('입력하신 인증번호가 적합하지 않습니다.');
+      err.name = 'WrongEmailAuthCode';
+      throw err;
+    }
+
+    // 해당 유저가 비밀번호를 바꾸는 절차를 진행중이다 라고 증거를 남김
+    await this.redisClient.setex(
+      thisUserOnTheWayToChangePs(email, id),
+      6000,
+      'true',
+    );
+
+    return;
+  }
+
+  async checkEffectiveForResetPs(info: ResetPassword) {
+    const { password, authentNum } = info;
+    if (password !== authentNum) {
+      const err = new Error('패스워드가 일치하지 않습니다.');
+      err.name = 'WrongPasswordError';
+      throw err;
+    }
+    if (password.length < 4) {
+      const err = new Error('패스워드가 짧습니다.');
+      err.name = 'WrongPasswordError';
+      throw err;
+    }
+  }
+
+  async changePassword(password: string, id: number, email: string) {
+    const newPassword = await bcrypt.hash(password, 12);
+    await this.userRepository.update({ id, email }, { password: newPassword });
+    return;
+  }
+
+  async checkResetPsOnTheWay(id: number, email: string) {
+    const result = await this.redisClient.get(
+      thisUserOnTheWayToChangePs(email, id),
+    );
+
+    if (!result) {
+      const err = new Error('이메일 인증 절차를 거치지 않은 상태입니다.');
+      err.name = 'NeedToEmailAuthCode';
+      throw err;
+    }
+
+    return;
+  }
+
+  /* -------------------------------- 테스트용 API -------------------------------- */
 }
