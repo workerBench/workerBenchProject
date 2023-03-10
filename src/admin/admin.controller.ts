@@ -62,14 +62,14 @@ export class AdminController {
 
     /*------------------------- 업체 및 유저 밴 기능 -------------------------*/
 
-    @Patch('ban/user')
+    @Patch('ban/user/:id')
     async userBan(@Param("id") id: number) {
         await this.adminService.userBan(id)
 
         return { message: "유저가 밴 처리 되었습니다." }
     }
 
-    @Patch('ban/company')
+    @Patch('ban/company:id')
     async companyBan(@Param("id") id: number) {
         await this.adminService.companyBan(id)
 
@@ -91,22 +91,21 @@ export class AdminController {
     @Get('search/workshops')
     async searchWorkshops(
         // @Query('search') titleOrEmail: string,
-        @Query('genre') genre: string,
         @Query('title') title: string,
         @Query('email') email: string,
         // @Query('searchField') searchField: string,
     ) {
-        const workshops = await this.adminService.searchWorkshops({genre, title, email});
+        const workshops = await this.adminService.searchWorkshops({title, email});
         return workshops;
      }
 
     // 유저 및 업체 검색 기능
-    @Get('search/member')
+    @Get('search/members')
     async searchUserOrCompany(
-        @Query('search') EmailOrCompany: string,
-        @Query('searchField') searchField: string,
+        @Query('email') email: string,
+        @Query('company') company: string,
     ) {
-        const member = await this.adminService.searchUserOrCompany(EmailOrCompany, searchField)
+        const member = await this.adminService.searchUserOrCompany(email, company)
         return member;
     }
 }

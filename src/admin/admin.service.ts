@@ -124,13 +124,55 @@ export class AdminService {
 
     //-------------------------- 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀) --------------------------//
 
-    async searchWorkshops(options: { genre?: string, email ?: string, title ?: string }) {
+    // async searchWorkshops(options: { email : string, title : string }) {
+    //     let query = this.workshopRepository
+    //       .createQueryBuilder('workshop')
+    //       .innerJoinAndSelect('workshop.GenreTag', 'genre')
+    //       .innerJoinAndSelect('workshop.PurposeList', 'purpose')
+    //       .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
+    //       .innerJoinAndSelect('workshop.User', 'user')
+    //       .select([
+    //         'workshop.title', 
+    //         'workshop.category', 
+    //         'workshop.desc', 
+    //         'workshop.thumb', 
+    //         'workshop.min_member', 
+    //         'workshop.max_member', 
+    //         'workshop.total_time', 
+    //         'workshop.price', 
+    //         'workshop.location',
+    //         'genre.name',
+    //         'GROUP_CONCAT(purposetag.name) AS purpose_name',
+    //       ])    
+    //       .groupBy('workshop.id');
+      
+    //     if (options.title) {
+    //       query = query
+    //         .where('workshop.title LIKE :title', { title: `%${options.title}%` })
+    //     }
+      
+    //     if (options.email) {
+    //       query = query
+    //         .where('user.email = :email', { email: `${options.email}` });
+    //     }
+      
+    //     const workshops = await query.getRawMany();
+      
+    //     return workshops
+    //     .map(workshop => ({
+    //       ...workshop,
+    //       purpose_name: workshop.purpose_name.split(','),
+    //     }));
+    //   }
+
+      async searchWorkshops(options: { email : string, title : string }) {
         let query = this.workshopRepository
           .createQueryBuilder('workshop')
-          .innerJoinAndSelect('workshop.GenreTag', 'genre')
-          .innerJoinAndSelect('workshop.PurposeList', 'purpose')
-          .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
-          .innerJoinAndSelect('workshop.User', 'user')
+          .where('workshop.status = :status', { status: 'approval' })
+          .leftJoinAndSelect('workshop.GenreTag', 'genre')
+          .leftJoinAndSelect('workshop.PurposeList', 'purpose')
+          .leftJoinAndSelect('purpose.PurPoseTag', 'purposetag')
+          .leftJoinAndSelect('workshop.User', 'user')
           .select([
             'workshop.title', 
             'workshop.category', 
@@ -138,51 +180,47 @@ export class AdminService {
             'workshop.thumb', 
             'workshop.min_member', 
             'workshop.max_member', 
-            'workshop.total_time', 
+            'workshop.total_time',
             'workshop.price', 
             'workshop.location',
+            'workshop.status',
             'genre.name',
-            'GROUP_CONCAT(purposetag.name) AS purpose_name',
-          ])    
-          .groupBy('workshop.id');
+          ])
+          .orderBy('workshop.id')
       
         if (options.title) {
-          query = query
+            query
             .andWhere('workshop.title LIKE :title', { title: `%${options.title}%` })
         }
-      
         if (options.email) {
-          query = query
-            .andWhere('user.email = :email', { email: `${options.email}` });
+            query
+            .andWhere('user.email = :email', { email: `${options.email}` })
         }
+
+  
+
+        const workshops = await query.getMany();
       
-        if (options.genre) {
-          query = query
-            .andWhere('genre.name = :genre', { genre : `${options.genre}` });
-        }
-      
-        const workshops = await query.getRawMany();
-      
-        return workshops.map(workshop => ({
-          ...workshop,
-          purpose_name: workshop.purpose_name.split(','),
-        }));
-      }
+        return workshops
+    }
       
 
     //-------------------------- 업체 및 강사 검색 기능 (유저 이메일 / 업체 명) --------------------------//
     
-    async searchUserOrCompany(EmailOrCompany:string, searchcField: string) {
+    async searchUserOrCompany(email:string, company: string) {
         let query: SelectQueryBuilder<User> | SelectQueryBuilder<Company>
 
-        if (searchcField === 'email') {
+        if (email) {
             query = this.userRepository
             .createQueryBuilder('user')
-            .where('user.email = :email', {email: `${EmailOrCompany}`});
-        } else if (searchcField === "company") {
+            .where('user.email = :email', {email: `${email}`})
+            .andWhere('user.isBan = :isBan', {isBan: 0})
+        }
+        if (company) {
             query = this. companyRepository
             .createQueryBuilder('company')
-            .where('company.company_name Like :company_name', {company_name: `%${EmailOrCompany}%`})
+            .where('company.company_name Like :company_name', {company_name: `%${company}%`})
+            .andWhere('company.isBan = :isBan', {isBan: 0})
         }
 
         const result = await query.getMany()
