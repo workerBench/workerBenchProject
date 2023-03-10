@@ -6,6 +6,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { WishList } from 'src/entities/wish-list';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { Review } from 'src/entities/review';
+import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
 
 // repository mock 함수로 만들기 (repository에 사용되는 메소드를 mock)
 const mockWorkshopRepository = () => ({
@@ -33,7 +34,7 @@ const mockWorkShopInstanceDetailRepository = () => ({
 });
 
 const mockReviewRepository = () => ({
-  insert: jest.fn(),
+  find: jest.fn(),
 });
 
 // MockRepository 타입 선언
@@ -235,6 +236,72 @@ describe('WorkshopsService', () => {
   });
 
   // 워크샵 후기 불러오기 API 테스트
+  describe('getWorkshopReviews()', () => {
+    it.todo('특정 워크샵 후기를 잘 반환하는지 검증');
+
+    it('특정 워크샵 후기를 잘 반환하는지 검증', async () => {
+      // 후기 데이터가 있다고 가정
+      const workshop_id = 1;
+      const workshopReviews = [
+        {
+          id: 1,
+          content: '재밌었어요 1',
+          star: '4',
+          user_id: 1,
+          workshop_id: 1,
+          createdAt: '2023-03-08T02:42:02.884Z',
+          updatedAt: '2023-03-08T02:42:02.884Z',
+          deletedAt: null,
+        },
+      ];
+
+      jest.spyOn(reviewRepository, 'find');
+
+      reviewRepository.find.mockResolvedValue(workshopReviews);
+
+      const result = await service.getWorkshopReviews(workshop_id);
+      expect(reviewRepository.find).toHaveBeenCalledTimes(1);
+      expect(result).toBeInstanceOf(Array);
+    });
+  });
 
   // 워크샵 문의 신청 API 테스트
+  describe('orderWorkshop()', () => {
+    it.todo('워크샵 문의 신청이 정상적으로 완료되는지 검증');
+
+    it('워크샵 문의 신청이 정상적으로 완료되는지 검증', async () => {
+      type Category = 'online' | 'offline';
+      const category: Category = 'offline';
+
+      // 데이터가 있다고 가정
+      const workshop_id = 1;
+      const user_id = 1;
+      const mockData = {
+        company: '신청회사 1',
+        name: '회사 대표 1',
+        email: 'aaaa@test.com',
+        phone_number: '01099993333',
+        wish_date: '2023/04/05',
+        purpose: '팀웍 증진을 위해서',
+        wish_location: '서울시 어딘가',
+        member_cnt: 14,
+        etc: '잘 부탁 드립니다.',
+        category: category,
+      };
+
+      jest.spyOn(workShopInstanceDetailRepository, 'insert');
+
+      workShopInstanceDetailRepository.insert.mockResolvedValue(
+        Promise.resolve(),
+      );
+
+      const result = await service.orderWorkshop(
+        workshop_id,
+        user_id,
+        mockData,
+      );
+      expect(workShopInstanceDetailRepository.insert).toHaveBeenCalledTimes(1);
+      expect(result).toBe('워크샵 문의 신청이 완료되었습니다.');
+    });
+  });
 });
