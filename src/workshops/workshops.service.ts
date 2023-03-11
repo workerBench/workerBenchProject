@@ -24,7 +24,7 @@ export class WorkshopsService {
   // 인기 워크샵 조회 API
   // 가장 결제 횟수가 많은 순으로 워크샵을 8개까지 가져온다.
   async getBestWorkshops() {
-    const querybuilder = await this.workshopRepository
+    const queryBuilder = await this.workshopRepository
       .createQueryBuilder('workshop')
       .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
       .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
@@ -52,7 +52,7 @@ export class WorkshopsService {
       .getRawMany();
 
     // , 기준으로 나누고 purpose_name 값 중복 제거
-    const result = querybuilder.map((workshop) => ({
+    const result = queryBuilder.map((workshop) => ({
       ...workshop,
       purpose_name: Array.from(new Set(workshop.purpose_name.split(','))),
     }));
@@ -63,11 +63,39 @@ export class WorkshopsService {
   // 신규 워크샵 조회 API
   // 전체 워크샵 중에서 updatedAt이 가장 최근인 순(=내림차순)으로 정렬한 후 최대 8개를 가져온다.
   async getNewWorkshops() {
-    return await this.workshopRepository.find({
-      where: { deletedAt: null },
-      order: { updatedAt: 'DESC' },
-      take: 8,
-    });
+    const queryBuilder = await this.workshopRepository
+      .createQueryBuilder('workshop')
+      .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
+      .select([
+        'workshop.id',
+        'workshop.title',
+        'workshop.category',
+        'workshop.desc',
+        'workshop.thumb',
+        'workshop.min_member',
+        'workshop.max_member',
+        'workshop.total_time',
+        'workshop.price',
+        'genre_tag.name',
+        'GROUP_CONCAT(purposetag.name) AS purpose_name',
+        'workshop.updatedAt',
+        'workshop.deletedAt',
+      ])
+      .where('workshop.deletedAt IS NULL')
+      .orderBy('workshop.updatedAt', 'DESC') // 업데이트 최신순으로 정렬
+      .groupBy('workshop.id')
+      .limit(8)
+      .getRawMany();
+
+    // , 기준으로 나누고 purpose_name 값 중복 제거
+    const result = queryBuilder.map((workshop) => ({
+      ...workshop,
+      purpose_name: Array.from(new Set(workshop.purpose_name.split(','))),
+    }));
+
+    return result;
   }
 
   // 워크샵 검색 API (옵션을 선택할 때마다 검색 결과가 조회되어야 함)
@@ -156,7 +184,43 @@ export class WorkshopsService {
   // 워크샵 상세 조회 API
   // id에 해당하는 워크샵 정보만 가져온다.
   async getWorkshopDetail(id: number) {
-    return await this.workshopRepository.findOne({ where: { id } });
+    const queryBuilder = await this.workshopRepository
+      .createQueryBuilder('workshop')
+      .leftJoinAndSelect('workshop.Reviews', 'review') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
+
+      .select([
+        'workshop.id',
+        'workshop.title',
+        'workshop.category',
+        'workshop.desc',
+        'workshop.thumb',
+        'workshop.min_member',
+        'workshop.max_member',
+        'workshop.total_time',
+        'workshop.price',
+        'workshop.location',
+        'GROUP_CONCAT(review.star) as star',
+        'GROUP_CONCAT(purposeTag.name) as purpose',
+        'GROUP_CONCAT(genre_tag.name) as genre',
+        'workshop.updatedAt',
+        'workshop.deletedAt',
+      ])
+
+      .where('workshop.id = :id', { id })
+      .groupBy('workshop.id')
+      .getRawMany();
+
+    // , 기준으로 나누고 purpose_name 값 중복 제거
+    const result = queryBuilder.map((workshop) => ({
+      ...workshop,
+      purpose: Array.from(new Set(workshop.purpose.split(','))),
+      genre: Array.from(new Set(workshop.genre.split(','))),
+    }));
+
+    return result;
   }
 
   // 워크샵 찜 or 취소하기 API

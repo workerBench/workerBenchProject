@@ -10,6 +10,8 @@
       integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
       crossorigin="anonymous"
     />
+    <!-- JQuery import -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/workshops/css/workshop-detail.css" />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -18,39 +20,7 @@
   <body>
     <%- include ("header.ejs") %>    
     <!-- 워크샵 상품 이미지 -->
-    <div class="container text-center">
-      <div class="row">
-        <div class="col">
-          <div class="workshop-thumb">
-            <img src="/images/eraser-class-thumb.jpg" alt="..." />
-          </div>
-        </div>
-
-        <!-- 워크샵 개요 -->
-        <div class="col">
-          <div class="workshop-summary">
-            <div class="workshop-title">워크샵 제목</div>
-            <div class="workshop-star">별점</div>
-            <div class="workshop-category">온라인</div>
-            <div class="workshop-location">
-              활동 가능 지역 &nbsp<span>서울/경기</span>
-            </div>
-            <div class="workshop-member-cnt">인원 &nbsp<span>00명</span></div>
-            <div class="workshop-total-time">시간 &nbsp<span>00분</span></div>
-            <div class="workshop-genre">분야 &nbsp<span>예술</span></div>
-            <div class="workshop-purpose">목적 &nbsp<span>힐링</span></div>
-            <div class="workshop-price">38500원</div>
-            <div>*1인 기준</div>
-            <div class="order-wish-buttons">
-              <button type="button" class="btn btn-primary order" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                신청하기
-              </button>
-              <button type="button" class="btn btn-outline-primary wish">
-                찜하기
-              </button>
-            </div>
-          </div>
-        </div>
+    <div id="workshop-image-info">
       </div>
 
       <!-- 워크샵 신청하기 Modal -->
@@ -110,7 +80,8 @@
           </div>
         </div>
       </div>
-      
+
+  <div class="container text-center">
    <!-- 하단 탭 (상세정보 / 후기) -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
@@ -241,5 +212,7 @@
       document.getElementById("date-now").valueAsDate = new Date();
       
   </script>
+     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+     <script src="/workshops/js/workshop-detail.js"></script>
   </body>
 </html>
