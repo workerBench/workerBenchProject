@@ -214,11 +214,23 @@ export class WorkshopsService {
       .getRawMany();
 
     // , 기준으로 나누고 purpose_name 값 중복 제거
-    const result = queryBuilder.map((workshop) => ({
-      ...workshop,
-      purpose: Array.from(new Set(workshop.purpose.split(','))),
-      genre: Array.from(new Set(workshop.genre.split(','))),
-    }));
+    // star == null 일 때 예외 처리가 필요함
+    const result = queryBuilder.map((workshop) => {
+      const starArray = workshop.star ? workshop.star.split(',') : []; // star가 null일 경우 빈 배열로 초기화
+      const halfIndex = Math.floor(starArray.length / 2);
+      const halfStars = starArray.slice(0, halfIndex); // 중복 값이 나오므로 배열 길이의 반만큼 잘라줘야 함
+      const averageStar =
+        halfStars.reduce((acc, cur) => acc + parseFloat(cur), 0) /
+          halfStars.length || 0;
+
+      return {
+        ...workshop,
+        star: starArray.length ? starArray : ['0.0'], // star가 빈 문자열인 경우 '0.0'으로 초기화
+        purpose: Array.from(new Set(workshop.purpose.split(','))),
+        genre: Array.from(new Set(workshop.genre.split(','))),
+        averageStar: averageStar.toFixed(1),
+      };
+    });
 
     return result;
   }
@@ -233,10 +245,11 @@ export class WorkshopsService {
     });
     if (IsWish === null) {
       await this.wishRepository.insert({ user_id, workshop_id });
-      return '찜하기 성공!';
+      return { message: '찜하기 성공!' };
+    } else {
+      await this.wishRepository.delete({ user_id, workshop_id }); // 찜 해제
+      return { message: '찜하기 취소!' };
     }
-    await this.wishRepository.delete({ user_id, workshop_id }); // 찜 해제
-    return '찜하기 취소!';
   }
 
   // 특정 워크샵 후기 불러오기 API
@@ -278,6 +291,6 @@ export class WorkshopsService {
       user_id,
       workshop_id,
     });
-    return '워크샵 문의 신청이 완료되었습니다.';
+    return { message: '워크샵 문의 신청이 완료되었습니다.' };
   }
 }

@@ -6,9 +6,13 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
+import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
+import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
 import { WorkshopsService } from 'src/workshops/workshops.service';
@@ -93,9 +97,14 @@ export class WorkshopsController {
   })
   @ApiOperation({ summary: '워크샵 찜하기 api' })
   @Post('/:workshop_id/wish')
-  async addToWish(@Param('workshop_id') workshop_id: number) {
-    const user_id = 2; // 하드코딩한 데이터 (user_id를 임의로 삽입함)
-    return await this.workshopsService.addToWish(user_id, workshop_id);
+  @UseGuards(JwtUserAuthGuard)
+  async addToWish(
+    @CurrentUser() user: CurrentUserDto,
+    @Param('workshop_id') workshop_id: number,
+  ) {
+    // *user_id가 없으면 에러 처리 필요 ('로그인 후 이용 가능한 서비스입니다')
+    // const user_id = 1;
+    return await this.workshopsService.addToWish(user.id, workshop_id);
   }
 
   // 특정 워크샵 후기 전체 조회 API
