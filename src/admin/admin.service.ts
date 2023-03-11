@@ -98,20 +98,53 @@ export class AdminService {
 
     async userBan(id: number) {
         const user = await this.userRepository.findOne({
-            where:{id}
+            where:{id, isBan : 0}
         })
 
         return await this.userRepository.update(id, {isBan: 1})
+    }
+
+    //-------------------------- 유저 밴 해제하기 (isBam : 1 => 0) --------------------------//
+
+    async userUnban(id: number) {
+        const user = await this.userRepository.findOne({
+            where: {id, isBan: 1}
+        })
+
+        return await this.userRepository.update(id, {isBan : 0} )
     }
 
     //-------------------------- 업체 밴 처리하기 (isBam : 0 => 1) --------------------------//
 
     async companyBan(id: number) {
         const company = await this.companyRepository.findOne({
-            where:{id}
+            where:{id, isBan: 0}
         })
         
         return await this.companyRepository.update(id, {isBan: 1})
+    }
+
+    //-------------------------- 업체 밴 해제하기 (isBam : 1 => 0) --------------------------//
+
+    async companyUnban(id: number) {
+        const company = await this.companyRepository.findOne({
+            where: {id, isBan: 1}
+        })
+
+        return await this.companyRepository.update(id, {isBan : 0} )
+    }
+
+    //-------------------------- 밴 처리된 업체/유저 목록 불러오기 --------------------------//
+
+    async banList() {
+        const company = await this.companyRepository.find({
+            where: {isBan: 1}
+        })
+        const user = await this.userRepository.find({
+            where: {isBan: 1}
+        })
+
+        return {company, user}
     }
 
     //-------------------------- 현재 관리자 목록 불러오기 --------------------------//

@@ -42,6 +42,8 @@ import { JwtAdminRefreshAuthGuard } from './jwt/refresh/admin/jwt-admin-refresh-
 import { JwtRefreshAuthGuard } from './jwt/refresh/user/jwt-user-refresh-guard';
 import { TOKEN_NAME } from './naming/token-name';
 
+type NewType = Express.Multer.File;
+
 @ApiTags('auth')
 @UseInterceptors(SuccessInterceptor)
 @Controller('api/auth')
@@ -512,7 +514,7 @@ export class AuthController {
   @Post('img-s3-test')
   @UseInterceptors(FilesInterceptor('images'))
   async uploadFileTest(
-    @UploadedFiles() images: Array<Express.Multer.File>,
+    @UploadedFiles() images: Array<NewType>,
     @Body() body: any,
   ) {
     console.log(images);

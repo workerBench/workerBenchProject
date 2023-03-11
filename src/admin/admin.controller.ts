@@ -60,7 +60,7 @@ export class AdminController {
         return { message: "워크숍이 삭제되었습니다." }
     }
 
-    /*------------------------- 업체 및 유저 밴 기능 -------------------------*/
+    /*------------------------- 업체 및 유저 Ban/Unban 기능 -------------------------*/
 
     @Patch('ban/user/:id')
     async userBan(@Param("id") id: number) {
@@ -69,11 +69,33 @@ export class AdminController {
         return { message: "유저가 밴 처리 되었습니다." }
     }
 
+    @Patch('unban/user/:id')
+    async userUnban(@Param("id") id: number) {
+        await this.adminService.userUnban(id)
+
+        return { message: "블랙이 해제 되었습니다." }
+    }
+
     @Patch('ban/company:id')
     async companyBan(@Param("id") id: number) {
         await this.adminService.companyBan(id)
 
         return { message: "업체가 밴 처리 되었습니다." }
+    }
+
+    @Patch('ban/company:id')
+    async companyUnban(@Param("id") id: number) {
+        await this.adminService.companyUnban(id)
+
+        return { message: "블랙이 해제 되었습니다." }
+    }
+
+    // 밴 처리 된 유저/업체 목록 불러오기
+    @Get('ban/members')
+    async banList() {
+        const list = await this.adminService.banList()
+
+        return list
     }
 
     // 관리자 목록 불러오기
