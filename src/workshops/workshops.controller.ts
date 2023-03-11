@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Query,
+  UnauthorizedException,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -87,7 +88,8 @@ export class WorkshopsController {
   @ApiOperation({ summary: '워크샵 상세 조회 api' })
   @Get('/:workshop_id')
   async getWorkshopDetail(@Param('workshop_id') workshop_id: number) {
-    return await this.workshopsService.getWorkshopDetail(workshop_id);
+    const user_id = 2;
+    return await this.workshopsService.getWorkshopDetail(user_id, workshop_id);
   }
 
   // 워크샵 찜 or 취소하기 AP
@@ -97,14 +99,20 @@ export class WorkshopsController {
   })
   @ApiOperation({ summary: '워크샵 찜하기 api' })
   @Post('/:workshop_id/wish')
-  @UseGuards(JwtUserAuthGuard)
+  // @UseGuards(JwtUserAuthGuard)
   async addToWish(
-    @CurrentUser() user: CurrentUserDto,
+    // @CurrentUser() user: CurrentUserDto,
     @Param('workshop_id') workshop_id: number,
   ) {
     // *user_id가 없으면 에러 처리 필요 ('로그인 후 이용 가능한 서비스입니다')
-    // const user_id = 1;
-    return await this.workshopsService.addToWish(user.id, workshop_id);
+
+    const user_id = 1;
+
+    if (!user_id) {
+      throw new UnauthorizedException('로그인 후 이용 가능한 서비스입니다.');
+    }
+
+    return await this.workshopsService.addToWish(user_id, workshop_id);
   }
 
   // 특정 워크샵 후기 전체 조회 API

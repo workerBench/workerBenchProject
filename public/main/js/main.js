@@ -13,7 +13,7 @@ function getBestWorkshops() {
       console.log(workshops);
 
       workshops.forEach((element) => {
-        let temp_html = `<div class="col">
+        let tempHtml = `<div class="col">
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${element.workshop_id}">
         <img
@@ -32,7 +32,7 @@ function getBestWorkshops() {
           </div>
         </div>
       </div>`;
-        $('#best-workshop-list').append(temp_html);
+        $('#best-workshop-list').append(tempHtml);
       });
     })
     .catch((error) => {});
