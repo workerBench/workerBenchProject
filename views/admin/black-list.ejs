@@ -19,8 +19,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Ubuntu&display=swap" rel="stylesheet">
 
 
-    <link href="/admin/css/user-or-company-manage.css" rel="stylesheet" />
-    <script src="/admin/js/user-or-company-manage.js" defer></script>
+    <link href="/admin/css/black-list.css" rel="stylesheet" />
+    <script src="/admin/js/black-list.js" defer></script>
 
     <title>Document</title>
 </head>
@@ -30,10 +30,21 @@
     <div class="wrapper">
         <!--sidebar 구역입니다.-->
         <div class="sidebar">
-            <li class="target-li link-li" onclick="location.href='request-workshops-list'">검토 대기 목록</li>
-            <li class="target-li link-li" onclick="location.href='workshops-manage'">워크숍 관리</li>
-            <li class="target-li active-li" onclick="location.href='user-or-company-manage'">유저 및 업체 관리</li>
-            <li class="target-li link-li" onclick="location.href='admin-manage'">관리자 계정 관리</li>
+            <div class="ul-title">워크숍 관리</div>
+            <ul class="ul-category">
+                <li class="target-li link-li" onclick="location.href='workshops-request'">- 검토 대기중인 워크숍</li>
+                <li class="target-li link-li" onclick="location.href='workshops-approval'">- 현재 진행중인 워크숍</li>
+                <li class="target-li link-li" onclick="location.href='workshops-finished'">- 종료된 워크숍</li>  
+            </ul>
+            <div class="ul-title">유저 및 업체 관리</div>
+            <ul class="ul-category">
+                <li class="target-li link-li" onclick="location.href='black-register'">- 블랙리스트 등록하기</li>
+                <li class="target-li active-li" onclick="location.href='black-list'">- 블랙리스트 목록</li>
+            </ul>
+            <div class="ul-title">관리자 계정 관리</div>
+            <ul class="ul-category">
+                <li class="target-li link-li" onclick="location.href='admin-manage'">- 관리자 계정 등록 및 삭제</li>
+            </ul>
         </div>
         <!--main-content 구역입니다.-->
         <div class="main-content">
