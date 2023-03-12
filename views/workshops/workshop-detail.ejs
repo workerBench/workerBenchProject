@@ -67,8 +67,11 @@
                   <input type="radio" id="showAddress" name="category" value="offline"> 오프라인
                 </div>
                 <div class="mb-3" id="address">
-                  <input type="text" class="form-control" name="wish_location" id="wish_location" value="주소">
-                  <p>* 원하는 출강 위치의 주소를 정확히 입력해주세요.</p>
+                  <!-- <input type="text" class="form-control" name="wish_location" id="wish_location" value="주소">
+                  <p>* 원하는 출강 위치의 주소를 정확히 입력해주세요.</p> -->
+                  <input id="zip-code"  type="text" placeholder="우편번호 검색" readonly onclick="findAddr()">
+                  <input id="input-address" type="text" placeholder="주소" value="주소" readonly> <br>
+                  <input id="input_addr_detail" type="text" placeholder="상세 주소">
                 </div>
                 <div class="mb-3">
                   <input type="text" class="form-control" name="purpose" id="purpose" placeholder="목적">
@@ -202,6 +205,7 @@
   </script>
      <script src="/workshops/js/workshop-detail.js"></script>
      <!-- 다음 주소 api import -->
+
      <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>  
     </body>
 </html>

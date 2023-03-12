@@ -129,6 +129,28 @@ function getWorkshopReviews() {
 // 워크샵 문의 신청하기
 const form = document.getElementById('form');
 
+// 다음 지도 api
+function findAddr() {
+  new daum.Postcode({
+    oncomplete: function (data) {
+      console.log(data);
+
+      // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+      // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+      // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+      var roadAddr = data.roadAddress; // 도로명 주소 변수
+      var jibunAddr = data.jibunAddress; // 지번 주소 변수
+      // 우편번호와 주소 정보를 해당 필드에 넣는다.
+      document.getElementById('zip-code').value = data.zonecode;
+      if (roadAddr !== '') {
+        document.getElementById('input-address').value = roadAddr;
+      } else if (jibunAddr !== '') {
+        document.getElementById('input_addr_detail').value = jibunAddr;
+      }
+    },
+  }).open();
+}
+
 form.addEventListener('submit', function (e) {
   // submit 버튼 클릭 시 즉시 redirect 방지
   e.preventDefault();
@@ -143,7 +165,10 @@ form.addEventListener('submit', function (e) {
   const phone_number = document.getElementById('phone_number').value;
   const wish_date = document.getElementById('wish_date').value;
   const category = $('input[name=category]:checked').val();
-  const wish_location = document.getElementById('wish_location').value;
+  const wish_location =
+    document.getElementById('input-address').value +
+    ' ' +
+    document.getElementById('input_addr_detail').value;
   const member_cnt = document.getElementById('member_cnt').value;
   const purpose = document.getElementById('purpose').value;
   const etc = document.getElementById('etc').value;
