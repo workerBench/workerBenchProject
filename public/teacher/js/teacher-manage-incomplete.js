@@ -30,8 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (status === 'waiting_lecture') {
         }
-        if (status === 'complete') {
-        }
+
         let tempHtml = ``;
         tempHtml = `
         <div class="teacher-manage-div" >

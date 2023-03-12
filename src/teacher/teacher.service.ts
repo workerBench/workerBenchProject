@@ -284,14 +284,6 @@ export class TeacherService {
 
   // 강사 미완료 워크샵 보기 api
   async getTeacherIncompleteWorkshop() {
-    // const id = 1;
-    // const request = await this.workShopInstanceDetailRepository.find({
-    //   where: {
-    //     workshop_id: id,
-    //     status: In(['request', 'non_payment', 'waiting_lecture']),
-    //   },
-    // });
-    // return request;
     try {
       const id = 10; // 예시
       const workshop_id = 83;
@@ -307,8 +299,14 @@ export class TeacherService {
       } else {
         let result = await this.workshopRepository
           .createQueryBuilder('workshop')
-          .where('workshop.id = :id ', {
-            id: workshop_id,
+          .where('workshop.user_id = :user_id ', {
+            user_id: id,
+          })
+          .andWhere('workShopInstanceDetail.user_id  = :user_id ', {
+            user_id: id,
+          })
+          .andWhere('workShopInstanceDetail.status IN (:...status)', {
+            status: ['request', 'non_payment', 'waiting_lecture'],
           })
           .innerJoinAndSelect('workshop.GenreTag', 'genreTag')
           .innerJoinAndSelect(
@@ -342,15 +340,58 @@ export class TeacherService {
 
   // 강사 완료 워크샵 보기 api
   async getTeacherComplete() {
-    // id: number
-    const id = 1;
-    const request = await this.workShopInstanceDetailRepository.find({
-      where: {
-        workshop_id: id,
-        status: 'complete',
-      },
-    });
-    return request;
+    try {
+      const id = 10; // 예시
+      const workshop_id = 83;
+      const userIdInfo = await this.workshopRepository.find({
+        where: { user_id: id },
+        select: ['user_id'],
+      });
+      if (!userIdInfo) {
+        throw new HttpException(
+          '등록되지 않은 유저 입니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        let result = await this.workshopRepository
+          .createQueryBuilder('workshop')
+          .where('workshop.user_id = :user_id ', {
+            user_id: id,
+          })
+          .andWhere('workShopInstanceDetail.user_id  = :user_id ', {
+            user_id: id,
+          })
+          .andWhere('workShopInstanceDetail.status = :status', {
+            status: 'complete',
+          })
+          .innerJoinAndSelect('workshop.GenreTag', 'genreTag')
+          .innerJoinAndSelect(
+            'workshop.WorkShopInstances',
+            'workShopInstanceDetail',
+          )
+          .select([
+            'workshop.thumb',
+            'workshop.title',
+            'workshop.min_member',
+            'workshop.max_member',
+            'genreTag.name',
+            'workshop.total_time',
+            'workshop.price',
+            'workShopInstanceDetail.etc',
+            'workShopInstanceDetail.company',
+            'workShopInstanceDetail.phone_number',
+            'workShopInstanceDetail.member_cnt',
+            'workShopInstanceDetail.email',
+            'workShopInstanceDetail.createdAt',
+            'workshop.status',
+          ])
+          .getRawMany();
+        return result;
+      }
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException('입력된 요청이 잘못되었습니다.');
+    }
   }
 
   async updateTeacherAccept(id: number) {
