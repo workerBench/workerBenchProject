@@ -23,6 +23,14 @@ export class MypageService {
         private readonly workShopInstanceDetailRepository: Repository<WorkShopInstanceDetail>,
     ){}
 
+    // 나의 워크샵 목록
+    async GetMyWorkshops() {
+      const workshop = await this.workshopRepository.find({
+        where: { deletedAt: null },
+        select: ['title', 'thumb', 'genre_id'],
+      });
+      return workshop;
+    }
 
     // 수강 예정 워크샵 출력
     async getRequestWorkshops() {
@@ -48,7 +56,7 @@ export class MypageService {
       /* wishList 엔티티에서 workshop_id와 user_id 찾은 후
       만약 값이 있으면 찜 해제
       없으면 user_id와 workshop_id insert */
-      async addToWish(user_id: number, workshop_id: number) {
+      async deleteToWish(user_id: number, workshop_id: number) {
         const IsWish = await this.wishRepository.findOne({
           where: { user_id, workshop_id },
         });
