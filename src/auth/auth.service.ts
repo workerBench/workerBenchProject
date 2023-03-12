@@ -1,6 +1,6 @@
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { MailerService } from '@nestjs-modules/mailer';
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, HttpException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,11 +20,15 @@ import { adminTypeNaming, userTypeNaming } from './naming/user-type';
 import { AdminUser } from 'src/entities/admin-user';
 import { AdminRegisterJoinDto } from './dtos/admin-register-join';
 import { ResetPassword } from './dtos/reset-password.dto';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class AuthService {
   private readonly redisClient: Redis;
-  private readonly userDataSource: Repository<User>; // 추가
+
+  private readonly s3Client: S3Client;
+  public readonly S3_BUCKET_NAME: string;
 
   constructor(
     @InjectRepository(User)
@@ -35,14 +39,18 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService,
     private readonly redisService: RedisService,
-
-    private readonly dataSource: DataSource, // 추가
   ) {
+    // redis 세팅
     this.redisClient = redisService.getClient();
-
-    this.userDataSource = this.dataSource // 추가
-      .createQueryRunner()
-      .manager.getRepository(User);
+    // S3 세팅
+    this.s3Client = new S3Client({
+      region: this.configService.get('AWS_S3_REGION'),
+      credentials: {
+        accessKeyId: this.configService.get('AWS_ACCESS_KEY'),
+        secretAccessKey: this.configService.get('AWS_SECRET_KEY'),
+      },
+    });
+    this.S3_BUCKET_NAME = this.configService.get('AWS_S3_BUCKET_NAME');
   }
 
   // 유저 회원가입 시 유효성 검사
@@ -417,7 +425,6 @@ export class AuthService {
       err.name = 'DoesntExistAdminAccount';
       throw err;
     }
-
     // soft delete
     await this.adminUserRepository.softDelete({ email });
     return;
@@ -516,4 +523,108 @@ export class AuthService {
   }
 
   /* -------------------------------- 테스트용 API -------------------------------- */
+
+  // 유저가 업로드한 사진을 S3 에 저장
+  async uploadFileToS3(images: Array<Express.Multer.File>, workshopInfo: any) {
+    // 썸네일 이미지 이름 만들기. 프론트에서는 썸네일을 가장 먼저 formData 에 저장하기에 무조건 배열의 첫 번째 사진이 썸네일.
+    const thumbImgType = images[0].originalname.substring(
+      images[0].originalname.lastIndexOf('.'),
+      images[0].originalname.length,
+    );
+    const thumbImgName = uuid() + thumbImgType;
+
+    /*
+    여기서 워크샵을 insert 해야 함. 할 때 썸네일 경로, 이름과 같이 insert. insert 결과를 insertResult 변수에 저장.
+    insert 한 후 insertResult.identifiers[0].id 로 id 를 가져와.
+    가져와서 아래의 else 문 안에서 미리 바깥에서 만들어 둔 배열에 [img_name: "ddd", workshop_id: insertResult.identifiers[0].id]
+    이런 식으로 push. 
+    이렇게 만들어 진 배열을 workshop_image 에 insert 한다.
+    */
+    workshopInfo.thumb = `images/workshop/1/${thumbImgName}`;
+
+    // 이제 썸네일 이미지와 서브 이미지들을 S3 에 저장해야 해.
+    try {
+      images.forEach(async (image, index) => {
+        // 첫 번째 image 일 경우 해당 이미지는 썸네일 이미지로 간주한다.
+        if (index === 0) {
+          const s3OptionForThumbImg = {
+            Bucket: this.S3_BUCKET_NAME, // S3의 버킷 이름.
+            Key: `images/workshop/1/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
+            Body: image.buffer, // 업로드 하고자 하는 파일.
+          };
+          await this.s3Client.send(new PutObjectCommand(s3OptionForThumbImg)); // 실제로 S3 클라우드로 파일을 전송 및 업로드 하는 코드.
+        } else {
+          const subImgType = image.originalname.substring(
+            image.originalname.lastIndexOf('.'),
+            image.originalname.length,
+          );
+          const subImgName = uuid() + subImgType;
+          const s3OptionForSubImg = {
+            Bucket: this.S3_BUCKET_NAME,
+            Key: `images/workshop/1/${subImgName}`,
+            Body: image.buffer,
+          };
+          await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
+        }
+      });
+    } catch (err) {
+      throw new HttpException('s3 이미지 업로드 도중 오류 발생', 400);
+    }
+  }
+
+  // 워크샵 썸네일 가져오기. 이건... S3 버킷에 가서 파일 이름을 직접 복사해 와서 thumbName 변수에 넣어주셔야 합니다.
+  async workshopThumbImg() {
+    const workshop_id = 1;
+    const region = this.configService.get('AWS_S3_REGION');
+    const thumbName =
+      'images/workshop/1/e1564aae-939b-4e38-81d0-81d316d30266.jpeg';
+
+    const thumbUrl = `https://workerbench.s3.${region}.amazonaws.com/${thumbName}`;
+    return thumbUrl;
+  }
+
+  // 동영상 저장
+  async uploadVideoToS3(video: Express.Multer.File) {
+    const review_id = 1; // 리뷰의 id 가 1 이라고 가정.
+
+    // 랜덤한 이름 생성
+    const videoTypeName = video.originalname.substring(
+      video.originalname.lastIndexOf('.'),
+      video.originalname.length,
+    );
+    const videoName = uuid() + videoTypeName;
+
+    // s3 에 입력할 옵션
+    const s3OptionForReviewVideo = {
+      Bucket: this.S3_BUCKET_NAME,
+      Key: `videos/review/1/${videoName}`,
+      Body: video.buffer,
+    };
+
+    // 실제로 s3 버킷에 업로드
+    await this.s3Client.send(new PutObjectCommand(s3OptionForReviewVideo));
+
+    return;
+  }
+
+  // S3 에서 비디오 url 가져오기. 버킷에서 비디오의 제목을 가져와서 여기에 직접 입력해야 함.
+  async getVideoUrl() {
+    const review_id = 1;
+    const region = this.configService.get('AWS_S3_REGION');
+    const videoName =
+      'videos/review/1/d2049ab0-1b35-4868-9b50-b37b62906eaf.mov';
+    const videoUrl = `https://workerbench.s3.${region}.amazonaws.com/${videoName}`;
+    return videoUrl;
+  }
+
+  // // 배열로 여러 개의 데이터를 한 번에 insert 가능한가 실험. 결과는 성공.
+  // async userUptest() {
+  //   const testResult: { email: string; password: string }[] = [
+  //     { email: 'save1@test.com', password: '12345' },
+  //     { email: 'save2@test.com', password: '12345' },
+  //   ];
+
+  //   await this.userRepository.insert(testResult);
+  //   return;
+  // }
 }
