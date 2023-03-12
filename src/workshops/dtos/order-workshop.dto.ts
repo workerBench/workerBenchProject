@@ -6,10 +6,11 @@ export class OrderWorkshopDto extends PickType(WorkShopInstanceDetail, [
   'name',
   'email',
   'phone_number',
+  'member_cnt',
   'wish_date',
+  'category',
   'purpose',
   'wish_location',
-  'member_cnt',
   'etc',
   'category',
 ] as const) {}

@@ -125,3 +125,68 @@ function getWorkshopReviews() {
     })
     .catch((err) => {});
 }
+
+// 워크샵 문의 신청하기
+const form = document.getElementById('form');
+
+form.addEventListener('submit', function (e) {
+  // submit 버튼 클릭 시 즉시 redirect 방지
+  e.preventDefault();
+
+  let query = window.location.search;
+  let param = new URLSearchParams(query);
+  let workshopId = param.get('workshopId');
+
+  const company = document.getElementById('company').value;
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const phone_number = document.getElementById('phone_number').value;
+  const wish_date = document.getElementById('wish_date').value;
+  const category = $('input[name=category]:checked').val();
+  const wish_location = document.getElementById('wish_location').value;
+  const member_cnt = document.getElementById('member_cnt').value;
+  const purpose = document.getElementById('purpose').value;
+  const etc = document.getElementById('etc').value;
+
+  let orderForm = new FormData();
+  orderForm.append('company', company);
+  orderForm.append('name', name);
+  orderForm.append('email', email);
+  orderForm.append('phone_number', phone_number);
+  orderForm.append('wish_date', wish_date);
+  orderForm.append('category', category);
+  orderForm.append('wish_location', wish_location);
+  orderForm.append('member_cnt', member_cnt);
+  orderForm.append('purpose', purpose);
+  orderForm.append('etc', etc);
+
+  axios
+    .post(
+      `/api/workshops/${workshopId}/order`,
+      {
+        company,
+        name,
+        email,
+        phone_number,
+        member_cnt,
+        wish_date,
+        category,
+        purpose,
+        wish_location,
+        etc,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        },
+      },
+    )
+    .then((res) => {
+      alert(res.data.data.message);
+      location.reload();
+    })
+    .catch((err) => {
+      console.log(err);
+      alert(err.response.data.message);
+    });
+});

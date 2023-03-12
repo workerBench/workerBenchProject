@@ -5,6 +5,7 @@ import { Review } from 'src/entities/review';
 import { WishList } from 'src/entities/wish-list';
 import { WorkShop } from 'src/entities/workshop';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
+import { OrderDto } from 'src/workshops/dtos/order-data.dto';
 import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
 import { Repository } from 'typeorm';
 
@@ -271,10 +272,10 @@ export class WorkshopsService {
     });
 
     const result = reviews.map((review) => {
-      // 입력받은 날짜 문자열을 Date 객체로 파싱합니다.
+      // 입력받은 날짜 문자열을 Date 객체로 파싱
       const inputDate = new Date(review.createdAt);
 
-      // 원하는 날짜 형식으로 변환합니다. (yyyy-mm-dd)
+      // (yyyy-mm-dd) 날짜 형식으로 변환
       const year = inputDate.getFullYear();
       const month = String(inputDate.getMonth() + 1).padStart(2, '0');
       const day = String(inputDate.getDate()).padStart(2, '0');
@@ -286,7 +287,7 @@ export class WorkshopsService {
   }
 
   // 워크샵 신청하기 API
-  orderWorkshop(
+  async orderWorkshop(
     workshop_id: number,
     user_id: number,
     orderWorkshopDto: OrderWorkshopDto,
@@ -296,26 +297,26 @@ export class WorkshopsService {
       name,
       email,
       phone_number,
+      member_cnt,
       wish_date,
+      category,
       purpose,
       wish_location,
-      member_cnt,
       etc,
-      category,
     } = orderWorkshopDto;
-    this.workshopDetailRepository.insert({
+    await this.workshopDetailRepository.insert({
+      user_id,
+      workshop_id,
       company,
       name,
       email,
       phone_number,
+      member_cnt,
       wish_date,
+      category,
       purpose,
       wish_location,
-      member_cnt,
       etc,
-      category,
-      user_id,
-      workshop_id,
     });
     return { message: '워크샵 문의 신청이 완료되었습니다.' };
   }
