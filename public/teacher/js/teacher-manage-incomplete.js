@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const workshopcompleteList = document.getElementById('teacher-incompleteBox');
-  // document.ready(function () {
+  const workshopincompleteList = document.getElementById(
+    'teacher-incompleteBox',
+  );
   axios({
     method: 'get',
     url: '/api/teacher/workshops/incomplete',
@@ -23,14 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const member_cnt = data[i].workShopInstanceDetail_member_cnt;
         const email = data[i].workShopInstanceDetail_email;
         const createdAt = data[i].workShopInstanceDetail_createdAt;
-        const status = data[i].workshop_status;
-        // if (status === 'request') {
-        // }
-        // if (status === 'non_payment') {
-        // }
-        // if (status === 'waiting_lecture') {
-        // }
-
+        const status = data[i].workShopInstanceDetail_status;
+        console.log(status);
         let tempHtml = ``;
         tempHtml = `
         <div class="teacher-manage-div" >
@@ -45,26 +40,123 @@ document.addEventListener('DOMContentLoaded', () => {
                 <li for="purpose-tag" class="workshop-information">${price}</li>
             </div>
             <div class="company-information-div">
-                <li for="purpose-tag" class="company-information">${etc}</li>
-                <li for="purpose-tag" class="company-information">${company}</li>
-                <li for="purpose-tag" class="company-information">${phone_number}</li>
-                <li for="purpose-tag" class="company-information">${member_cnt}</li>
-                <li for="purpose-tag" class="company-information">${email}</li>
-                <li for="purpose-tag" class="company-information">${createdAt}</li>
-                <button type="radio" id="button1">수락 하기</button>
-                <button type="radio" id="button1">취소 하기</button>
-                <button type="radio" id="button2">수정 하기</button>
+                <div class="company-information">
+                    <li for="purpose-tag" class="company-input">${etc}</li>
+                    <li for="purpose-tag" class="company-input">${company}</li>
+                    <li for="purpose-tag" class="company-input">${phone_number}</li>
+                    <li for="purpose-tag" class="company-input">${member_cnt}</li>
+                    <li for="purpose-tag" class="company-input">${email}</li>
+                    <li for="purpose-tag" class="company-input">${createdAt}</li>
+                </div>
+                <div id = button-div>
+                    <button type="radio" id="approvalButton">결제 대기</button>
+                    <button type="radio" id="rejectButton">취소 하기</button>
+                    <button type="radio" id="editButton">수정 하기</button>
+                </div>
             </div>
         </div>
       `;
-        workshopcompleteList.insertAdjacentHTML('beforeend', tempHtml);
+        if (status === 'request') {
+          tempHtml = `
+          <div class="teacher-manage-div" >
+              <div class="workshop-information-div">
+                  <img src="/images/images.jpg" alt="" />
+                  <li for="purpose-tag" class="workshop-information">${workshop_thumb}</li>
+                  <li for="purpose-tag" class="workshop-information">${workshop_title}</li>
+                  <li for="purpose-tag" class="workshop-information">${min_member}</li>
+                  <li for="purpose-tag" class="workshop-information">${max_member}</li>
+                  <li for="purpose-tag" class="workshop-information">${genreTag_name}</li>
+                  <li for="purpose-tag" class="workshop-information">${total_time}</li>
+                  <li for="purpose-tag" class="workshop-information">${price}</li>
+              </div>
+              <div class="company-information-div">
+                  <div class="company-information">
+                      <li for="purpose-tag" class="company-input">${etc}</li>
+                      <li for="purpose-tag" class="company-input">${company}</li>
+                      <li for="purpose-tag" class="company-input">${phone_number}</li>
+                      <li for="purpose-tag" class="company-input">${member_cnt}</li>
+                      <li for="purpose-tag" class="company-input">${email}</li>
+                      <li for="purpose-tag" class="company-input">${createdAt}</li>
+                  </div>
+                  <div id = button-div>
+                      <button type="radio" id="approvalButton">수락 하기</button>
+                      <button type="radio" id="rejectButton">취소 하기</button>
+                      <button type="radio" id="editButton">수정 하기</button>
+                  </div>
+              </div>
+          </div>
+        `;
+        }
+        if (status === 'non_payment') {
+          tempHtml = `
+          <div class="teacher-manage-div" >
+              <div class="workshop-information-div">
+                  <img src="/images/images.jpg" alt="" />
+                  <li for="purpose-tag" class="workshop-information">${workshop_thumb}</li>
+                  <li for="purpose-tag" class="workshop-information">${workshop_title}</li>
+                  <li for="purpose-tag" class="workshop-information">${min_member}</li>
+                  <li for="purpose-tag" class="workshop-information">${max_member}</li>
+                  <li for="purpose-tag" class="workshop-information">${genreTag_name}</li>
+                  <li for="purpose-tag" class="workshop-information">${total_time}</li>
+                  <li for="purpose-tag" class="workshop-information">${price}</li>
+              </div>
+              <div class="company-information-div">
+                  <div class="company-information">
+                      <li for="purpose-tag" class="company-input">${etc}</li>
+                      <li for="purpose-tag" class="company-input">${company}</li>
+                      <li for="purpose-tag" class="company-input">${phone_number}</li>
+                      <li for="purpose-tag" class="company-input">${member_cnt}</li>
+                      <li for="purpose-tag" class="company-input">${email}</li>
+                      <li for="purpose-tag" class="company-input">${createdAt}</li>
+                  </div>
+                  <div id = button-div>
+                      <button type="radio" id="approvalButton">결제 대기</button>
+                      <button type="radio" id="rejectButton">취소 하기</button>
+                      <button type="radio" id="editButton">수정 하기</button>
+                  </div>
+              </div>
+          </div>
+        `;
+        }
+        if (status === 'waiting_lecture') {
+          tempHtml = `
+          <div class="teacher-manage-div" >
+              <div class="workshop-information-div">
+                  <img src="/images/images.jpg" alt="" />
+                  <li for="purpose-tag" class="workshop-information">${workshop_thumb}</li>
+                  <li for="purpose-tag" class="workshop-information">${workshop_title}</li>
+                  <li for="purpose-tag" class="workshop-information">${min_member}</li>
+                  <li for="purpose-tag" class="workshop-information">${max_member}</li>
+                  <li for="purpose-tag" class="workshop-information">${genreTag_name}</li>
+                  <li for="purpose-tag" class="workshop-information">${total_time}</li>
+                  <li for="purpose-tag" class="workshop-information">${price}</li>
+              </div>
+              <div class="company-information-div">
+                  <div class="company-information">
+                      <li for="purpose-tag" class="company-input">${etc}</li>
+                      <li for="purpose-tag" class="company-input">${company}</li>
+                      <li for="purpose-tag" class="company-input">${phone_number}</li>
+                      <li for="purpose-tag" class="company-input">${member_cnt}</li>
+                      <li for="purpose-tag" class="company-input">${email}</li>
+                      <li for="purpose-tag" class="company-input">${createdAt}</li>
+                  </div>
+                  <div id = button-div>
+                      <button type="radio" id="approvalButton">결제 완료</button>
+                      <button type="radio" id="rejectButton">취소 하기</button>
+                      <button type="radio" id="editButton">수정 하기</button>
+                  </div>
+              </div>
+          </div>
+        `;
+        }
+        workshopincompleteList.insertAdjacentHTML('beforeend', tempHtml);
       }
     })
     .catch((response) => {
-      console.log(response);
+      const { data } = response.response;
+      alert(data.message);
     });
 });
-
 function workshop() {
   window.location.href = '/teacher/workshop';
 }

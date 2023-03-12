@@ -286,6 +286,7 @@ export class TeacherService {
   async getTeacherIncompleteWorkshop() {
     try {
       const id = 10; // 예시
+      const Workshop_id = 83;
       const userIdInfo = await this.workshopRepository.find({
         where: { user_id: id },
         select: ['user_id'],
@@ -301,8 +302,8 @@ export class TeacherService {
           .where('workshop.user_id = :user_id ', {
             user_id: id,
           })
-          .andWhere('workShopInstanceDetail.user_id  = :user_id ', {
-            user_id: id,
+          .andWhere('workShopInstanceDetail.workshop_id  = :workshop_id ', {
+            workshop_id: Workshop_id,
           })
           .andWhere('workShopInstanceDetail.status IN (:...status)', {
             status: ['request', 'non_payment', 'waiting_lecture'],
@@ -320,7 +321,7 @@ export class TeacherService {
             'genreTag.name',
             'workshop.total_time',
             'workshop.price',
-            'workshop.id',
+            'workShopInstanceDetail.id',
             'workShopInstanceDetail.etc',
             'workShopInstanceDetail.company',
             'workShopInstanceDetail.phone_number',
@@ -395,28 +396,47 @@ export class TeacherService {
   }
 
   // 강사 수강 문의 수락하기 api
+  // async updateTeacherAccept(id: number) {
+  //   try {
+  //     const userId = 10;
+  //     const workshopId = 83;
+  //     const instanceStatus =
+  //       await this.workShopInstanceDetailRepository.findOne({
+  //         where: { user_id: userId, status: 'request' },
+  //         select: ['status'],
+  //       });
+  //     if (instanceStatus.status === 'request') {
+  //       await this.workShopInstanceDetailRepository.update(id, {
+  //         status: 'non_payment',
+  //       });
+  //     }
+  //     if (instanceStatus.status !== 'request') {
+  //       throw new BadRequestException('입력된 요청이 잘못되었습니다.');
+  //     }
+  //     return { message: '워크샵이 수락 되었습니다.' };
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw new BadRequestException('입력된 요청이 잘못되었습니다.');
+  //   }
+  // }
   async updateTeacherAccept(id: number) {
     try {
-      const userId = 10;
-      const workshopId = 83;
-      const status = await this.workshopRepository.findOne({
-        where: { id },
-        select: ['status'],
-      });
-      if (!status) {
-        throw new NotFoundException('등록된 워크샵이 없습니다.');
-      }
       const instanceStatus =
         await this.workShopInstanceDetailRepository.findOne({
-          where: { user_id: userId, workshop_id: workshopId },
+          where: { id: id, status: 'request' },
           select: ['status'],
         });
-      if (instanceStatus.status === 'request') {
+      if (instanceStatus && instanceStatus.status === 'request') {
         await this.workShopInstanceDetailRepository.update(id, {
           status: 'non_payment',
         });
+        return { message: '워크샵이 수락 되었습니다.' };
+      } else {
+        throw new HttpException(
+          '이미 수락된 워크샵 입니다.',
+          HttpStatus.BAD_REQUEST,
+        );
       }
-      return { message: '워크샵이 수락 되었습니다.' };
     } catch (error) {
       console.log(error);
       throw new BadRequestException('입력된 요청이 잘못되었습니다.');
@@ -426,26 +446,22 @@ export class TeacherService {
   // 강사 수강 문의 종료하기 api
   async updateTeacherComplete(id: number) {
     try {
-      const userId = 10;
-      const workshopId = 83;
-      const status = await this.workshopRepository.findOne({
-        where: { id },
-        select: ['status'],
-      });
-      if (!status) {
-        throw new NotFoundException('등록된 워크샵이 없습니다.');
-      }
       const instanceStatus =
         await this.workShopInstanceDetailRepository.findOne({
-          where: { user_id: userId, workshop_id: workshopId },
+          where: { id: id, status: 'waiting_lecture' },
           select: ['status'],
         });
-      if (instanceStatus.status === 'waiting_lecture') {
+      if (instanceStatus && instanceStatus.status === 'waiting_lecture') {
         await this.workShopInstanceDetailRepository.update(id, {
           status: 'complete',
         });
+        return { message: '워크샵이 종료 되었습니다.' };
+      } else {
+        throw new HttpException(
+          '이미 종료된 워크샵 입니다.',
+          HttpStatus.BAD_REQUEST,
+        );
       }
-      return { message: '워크샵이 종료 되었습니다.' };
     } catch (error) {
       console.log(error);
       throw new BadRequestException('입력된 요청이 잘못되었습니다.');

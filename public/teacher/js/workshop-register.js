@@ -31,13 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
       },
     })
       .then((response) => {
-        console.log(response);
         const data = response.data;
         alert(data.message);
         window.location.href = '/teacher/workshop';
       })
       .catch((response) => {
-        console.log(response);
         const { data } = response.response;
         alert(data.message);
       });

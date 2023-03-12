@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const workshopIncompleteList = document.getElementById('teacher-completeBox');
+  const workshopcompleteList = document.getElementById('teacher-completeBox');
   // document.ready(function () {
   axios({
     method: 'get',
@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data;
       for (let i = 0; i < data.length; i++) {
         const workshop_thumb = data[i].workshop_thumb;
@@ -62,38 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </div>
       `;
-        workshopIncompleteList.insertAdjacentHTML('beforeend', tempHtml);
-        // 먼저 해당 워크샵의 id를 찾고
-        // 버튼을 누르면 해당 아이디 의 status의 request를 approval로 바꾼다.
-        const workshopIncompleteButton = document.getElementById(
-          'approvalButton',
-          'rejectButton',
-          'editButton',
-        );
-        workshopIncompleteButton.addEventListener('click', () => {
-          axios({
-            method: 'patch',
-            url: `/api/teacher/workshops/manage/accept/:${id}`,
-            data: {
-              status,
-            },
-          })
-            .then((response) => {
-              console.log(response);
-              const data = response.data;
-              alert(data.message);
-              // window.location.href = '/teacher/workshop';
-            })
-            .catch((response) => {
-              console.log(response);
-              const { data } = response.response;
-              alert(data.error);
-            });
-        });
+        workshopcompleteList.insertAdjacentHTML('beforeend', tempHtml);
       }
     })
     .catch((response) => {
-      console.log(response);
+      const { data } = response.response;
+      alert(data.message);
     });
 });
 
