@@ -148,9 +148,24 @@ td {
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 90%;
 }
 
+.form-wrap {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.input-form {
+    font-size: 14px;
+    border : 1px solid gray;
+    border-radius: 5px;
+    margin: 5px;
+    padding : 2px 5px 2px 5px;
+    width: 90%;
+    height: 40px;
+}
 .close {
     color: #aaa;
     float: right;

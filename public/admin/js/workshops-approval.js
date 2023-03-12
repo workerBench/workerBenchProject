@@ -6,7 +6,7 @@ axios.get('../api/admin/workshops/approval')
                 html += `
                 <div class="col">
                     <div class="card">
-                        <img src="${workshop.thumb}" class="card-img-top" alt="...">
+                        <img src="/images/admin-image/workshop-example.jpg" class="card-img-top" alt="...">
                         <div class="card-body" data-workshop.id="${workshop.id}">
                             <div class="category">
                                 ${workshop.category === 'online' ? '<div class="online">온라인</div>' : ''}
