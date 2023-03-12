@@ -44,8 +44,7 @@ axios.get('../api/admin/ban/users')
     console.log(error);
   });
 
-  // 밴 해제
-
+  // 유저 밴 해제 함수
   async function unbanUser(id) {
     try {
       const response = await axios.patch(`/api/admin/unban/user/${id}`);
@@ -56,7 +55,7 @@ axios.get('../api/admin/ban/users')
     }
   }
   
-  // 업체 밴 처리 함수
+  // 업체 밴 해제 함수
   async function unbanCompany(id) {
     try {
       const response = await axios.patch(`/api/admin/unban/company/${id}`);
