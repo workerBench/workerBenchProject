@@ -1,4 +1,4 @@
-axios.get('../api/admin/workshops/approval')
+axios.get('../api/admin/workshops/finished')
   .then(function(response) {
         const workshops = response.data;
             let html = '';
@@ -21,10 +21,6 @@ axios.get('../api/admin/workshops/approval')
                             <div class="workshop-tag">
                                 <span class="tag">${workshop.genre_id}</span>
                             </div>
-                            <div class="approval-or-refuse">
-                                <button type="button" class="btn btn-outline-primary" id="update-btn">수정하기</button>
-                                <button type="button" class="btn btn-outline-dark" id="remove-btn">삭제하기</button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -37,21 +33,6 @@ axios.get('../api/admin/workshops/approval')
         console.log(error);
 });
 
-// ---------------- 워크숍 삭제하기 버튼 ---------------- //
-
-
-$("#workshop-list").on("click", "#remove-btn", function() {
-    const workshopId = $(this).closest(".card-body").data('workshop.id');
-    axios.delete(`../api/admin/workshop/${workshopId}`)
-        .then(function(response) {
-            alert("워크숍이 삭제되었습니다.")
-            location.reload();
-        })
-        .catch(function(error) {
-            console.log(error);
-        });
-});
-
 // -------------------- 워크숍 검색기능 --------------------- //
 
 $(document).ready(() => {
@@ -61,7 +42,7 @@ $(document).ready(() => {
       try {
         const params = new URLSearchParams();
         params.append(searchField, searchText);
-        const { data } = await axios.get(`/api/admin/search/workshops/approval?${params.toString()}`);
+        const { data } = await axios.get(`/api/admin/search/workshops/finished?${params.toString()}`);
         const workshopList = $('#workshop-list');
         workshopList.empty();
         data.forEach(workshop => {
@@ -82,10 +63,6 @@ $(document).ready(() => {
                   </div>
                   <div class="workshop-tag">
                     <span class="tag">${workshop.GenreTag.name}</span>
-                  </div>
-                  <div class="approval-or-refuse">
-                    <button type="button" class="btn btn-outline-primary" id="update-btn">수정하기</button>
-                    <button type="button" class="btn btn-outline-dark" id="remove-btn">삭제하기</button>
                   </div>
                 </div>
               </div>

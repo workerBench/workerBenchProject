@@ -48,24 +48,48 @@
         </div>
         <!--main-content 구역입니다.-->
         <div class="main-content">
-            <div class="user-or-company-search">유저 및 업체 검색창 입니다.
-                <div class="search-wrap">
+            <!-- <div class="user-or-company-search">블랙리스트 목록입니다. -->
+                <!-- <div class="search-wrap">
                     <select class="form-select">
                     <option value="1">유저 이메일</option>
                     <option value="2">업체 이름</option>
                     </select>
                     <input class="search-box" type="text" placeholder="검색어 입력">
                     <button class="search-button">검색</button>
-                </div>
-            </div>
-            <div class="user-list-wrap">
-                <!-- <div class="user-data">abc@naver.com</div>
-                <div class="ban-btn" onclick="">Black</div> -->
-            </div>
-            <div class="company-list-wrap">
-                <!-- <div class="company-data">팀 스파르타</div>
-                <div class="ban-btn" onclick="">Black</div> -->
-            </div>
+                </div> -->
+            <!-- </div> -->
+
+            <div class="area">유저 블랙리스트 목록입니다.</div>
+            <div class="division-line"></div>
+
+            <table class="user-list-table">
+                <thead>
+                <tr>
+                    <th>이메일</th>
+                    <th>밴 처리 날짜</th>
+                    <th>사유</th>
+                    <th>비고</th>
+                </tr>
+                </thead>
+                <tbody id="user-list-wrap">
+                </tbody>
+            </table>
+
+            <div class="area">업체 블랙리스트 목록입니다.</div>
+            <div class="division-line"></div>
+
+            <table class="company-list-table">
+                <thead>
+                <tr>
+                    <th>업체 명</th>
+                    <th>밴 처리 날짜</th>
+                    <th>사유</th>
+                    <th>비고</th>
+                </tr>
+                </thead>
+                <tbody id="company-list-wrap">
+                </tbody>
+            </table>
         </div>
     </div>
 </body>

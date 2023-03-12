@@ -10,12 +10,50 @@ import { editWorkshopDto } from './dto/edit-workshop.dto';
 export class AdminController {
     constructor(private readonly adminService: AdminService) {}
 
-    // 검토 대기중인 워크숍 목록을 불러오는 API입니다.
-    @Get('/workshops/request')
+    // 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀)
+    @Get('search/workshops/request')
+    async searchrequestWorkshops(
+        @Query('title') title: string,
+        @Query('email') email: string,
+    ) {
+        const workshops = await this.adminService.searchRequestWorkshops({title, email});
+        return workshops;
+        }
 
+    @Get('search/workshops/approval')
+    async searchApprovalWorkshops(
+        @Query('title') title: string,
+        @Query('email') email: string,
+    ) {
+        const workshops = await this.adminService.searchApprovalWorkshops({title, email});
+        return workshops;
+        }
+
+    @Get('search/workshops/finished')
+    async searchFinishedWorkshops(
+        @Query('title') title: string,
+        @Query('email') email: string,
+    ) {
+        const workshops = await this.adminService.searchFinishedWorkshops({title, email});
+        return workshops;
+        }
+
+    // 검토 대기중인 워크숍 목록 불러오기
+    @Get('/workshops/request')
     async requestWorkshops() {
-        const requestWorkshops = await this.adminService.requestWorkshops()
-        return requestWorkshops
+        return await this.adminService.requestWorkshops()
+    }
+
+    // 현재 진행중인 워크숍 목록 불러오기
+    @Get('/workshops/approval')
+    async getApprovedWorkshops() {
+        return await this.adminService.getApprovedWorkshops()
+    }
+
+    // 종료된 워크숍 목록 불러오기
+    @Get('workshops/finished')
+    async getFinishedWorkshops() {
+        return await this.adminService.getFinishedWorkshops()
     }
 
     // 워크숍 승인하기 (status:"request" => "approval")
@@ -30,13 +68,6 @@ export class AdminController {
     async rejectWorkshop(@Param("id") id: number) {
         await this.adminService.rejectWorkshop(id)
         return { message: "워크숍이 반려 되었습니다."}
-    }
-
-    // status:"approval"인 모든 워크숍 목록 가져오기
-    @Get('/workshops')
-    async getApprovedWorkshops() {
-        const workshops = await this.adminService.getApprovedWorkshops()
-        return workshops
     }
 
     // 워크숍 수정하기
@@ -60,13 +91,38 @@ export class AdminController {
         return { message: "워크숍이 삭제되었습니다." }
     }
 
+
+
     /*------------------------- 업체 및 유저 Ban/Unban 기능 -------------------------*/
+
+    // 밴 처리 된 유저/업체 목록 불러오기
+
+    @Get('ban/users')
+    async banList() {
+        const list = await this.adminService.userBanList()
+
+        return list
+    }
+
+    @Get('ban/companies')
+    async companyBanList() {
+        const list = await this.adminService.companyBanList()
+
+        return list
+    }
 
     @Patch('ban/user/:id')
     async userBan(@Param("id") id: number) {
         await this.adminService.userBan(id)
 
         return { message: "유저가 밴 처리 되었습니다." }
+    }
+
+    @Patch('ban/company/:id')
+    async companyBan(@Param("id") id: number) {
+        await this.adminService.companyBan(id)
+
+        return { message: "업체가 밴 처리 되었습니다." }
     }
 
     @Patch('unban/user/:id')
@@ -77,25 +133,10 @@ export class AdminController {
     }
 
     @Patch('ban/company:id')
-    async companyBan(@Param("id") id: number) {
-        await this.adminService.companyBan(id)
-
-        return { message: "업체가 밴 처리 되었습니다." }
-    }
-
-    @Patch('ban/company:id')
     async companyUnban(@Param("id") id: number) {
         await this.adminService.companyUnban(id)
 
         return { message: "블랙이 해제 되었습니다." }
-    }
-
-    // 밴 처리 된 유저/업체 목록 불러오기
-    @Get('ban/members')
-    async banList() {
-        const list = await this.adminService.banList()
-
-        return list
     }
 
     // 관리자 목록 불러오기
@@ -107,19 +148,8 @@ export class AdminController {
         return result
     }
 
-    /*------------------------- 검색 기능 모음 -------------------------*/
 
-    // 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀)
-    @Get('search/workshops')
-    async searchWorkshops(
-        // @Query('search') titleOrEmail: string,
-        @Query('title') title: string,
-        @Query('email') email: string,
-        // @Query('searchField') searchField: string,
-    ) {
-        const workshops = await this.adminService.searchWorkshops({title, email});
-        return workshops;
-     }
+
 
     // 유저 및 업체 검색 기능
     @Get('search/members')
@@ -130,6 +160,7 @@ export class AdminController {
         const member = await this.adminService.searchUserOrCompany(email, company)
         return member;
     }
+    
 }
 
 

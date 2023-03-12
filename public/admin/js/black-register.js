@@ -20,11 +20,12 @@ $(document).ready(() => {
             `;
             $('.user-list-wrap').append(userHtml);
           });
-        } else {
+        }
+        if (searchField === 'company') {
           data.forEach(company => {
             const companyHtml = `
               <div class="company-data">${company.company_name}</div>
-              <div class="ban-btn" onclick="banCompany('${company.id}')>Black</div>
+              <div class="ban-btn" onclick="banCompany('${company.id}')">Black</div>
             `;
             $('.company-list-wrap').append(companyHtml);
           });
