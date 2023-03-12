@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const teacherWorkshopList = document.getElementById('teacher-workshopInfo');
-  const teacherCompanyList = document.getElementById('teacher-companyInfo');
+  const workshopIncompleteList = document.getElementById('teacher-completeBox');
   // document.ready(function () {
   axios({
     method: 'get',
@@ -11,146 +10,86 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log(response);
       const data = response.data;
       for (let i = 0; i < data.length; i++) {
-        const title = data[i].title;
+        const workshop_thumb = data[i].workshop_thumb;
+        const workshop_title = data[i].workshop_title;
         const min_member = data[i].workshop_min_member;
         const max_member = data[i].workshop_max_member;
-        const genre_id = data[i].genre_id;
-        const total_time = data[i].total_time;
-        const price = data[i].price;
-        const desc = data[i].desc;
-        const company = data[i].company;
-        const phone_number = data[i].phone_number;
-        const member_cnt = data[i].member_cnt;
-        const email = data[i].email;
-        const createdAt = data[i].createdAt;
-        let tempHtml = ``;
+        const genreTag_name = data[i].genreTag_name;
+        const total_time = data[i].workshop_total_time;
+        const price = data[i].workshop_price;
+        const etc = data[i].workShopInstanceDetail_etc;
+        const company = data[i].workShopInstanceDetail_company;
+        const phone_number = data[i].workShopInstanceDetail_phone_number;
+        const member_cnt = data[i].workShopInstanceDetail_member_cnt;
+        const email = data[i].workShopInstanceDetail_email;
+        const createdAt = data[i].workShopInstanceDetail_createdAt;
+        const status = data[i].workshop_status;
+        const id = data[i].workshop_id;
+        // if (status === 'request') {
+        // }
+        // if (status === 'non_payment') {
+        // }
+        // if (status === 'waiting_lecture') {
+        // }
 
-        tempHtml = `
-         
-              <div class="workshop-information-div">
-                  <img src="/images/images.jpg" alt="" />
-                  <li for="purpose-tag" class="workshop-information">${title}</li>
-                  <li for="purpose-tag" class="workshop-information">${min_member}</li>
-                  <li for="purpose-tag" class="workshop-information">${max_member}</li>
-                  <li for="purpose-tag" class="workshop-information">${genre_id}</li>
-                  <li for="purpose-tag" class="workshop-information">${total_time}</li>
-                  <li for="purpose-tag" class="workshop-information">${price}</li>
-              </div>
-              <div class="company-information-div">
-                  <li for="purpose-tag" class="company-information">${desc}</li>
-                  <li for="purpose-tag" class="company-information">${company}</li>
-                  <li for="purpose-tag" class="company-information">${phone_number}</li>
-                  <li for="purpose-tag" class="company-information">${member_cnt}</li>
-                  <li for="purpose-tag" class="company-information">${email}</li>
-                  <li for="purpose-tag" class="company-information">${createdAt}</li>
-                  <button type="radio" id="button1">수락 하기</button>
-                  <button type="radio" id="button1">취소 하기</button>
-                  <button type="radio" id="button2">수정 하기</button>
-              </div>
-        `;
-        teacherWorkshopList.insertAdjacentHTML('beforeend', tempHtml);
-      }
-    })
-    .catch((response) => {
-      console.log(response);
-    });
-  axios({
-    method: 'get',
-    url: '/api/teacher/workshops/complete',
-    data: {},
-  })
-    .then((response) => {
-      console.log(response);
-      const data = response.data;
-      for (let i = 0; i < data.length; i++) {
-        const title = data[i].workshop_title;
-        const min_member = data[i].workshop_thumb;
-        const max_member = data[i].max_member;
-        const genre_id = data[i].genre_id;
-        const total_time = data[i].total_time;
-        const price = data[i].price;
-        const desc = data[i].desc;
-        const company = data[i].company;
-        const phone_number = data[i].phone_number;
-        const member_cnt = data[i].member_cnt;
-        const email = data[i].email;
-        const createdAt = data[i].createdAt;
         let tempHtml = ``;
         tempHtml = `
-              <div class="workshop-information-div">
-                  <img src="/images/images.jpg" alt="" />
-                  <li for="purpose-tag" class="workshop-information">${title}</li>
-                  <li for="purpose-tag" class="workshop-information">${min_member}</li>
-                  <li for="purpose-tag" class="workshop-information">${max_member}</li>
-                  <li for="purpose-tag" class="workshop-information">${genre_id}</li>
-                  <li for="purpose-tag" class="workshop-information">${total_time}</li>
-                  <li for="purpose-tag" class="workshop-information">${price}</li>
-              </div>
-              <div class="company-information-div">
-                  <li for="purpose-tag" class="company-information">${desc}</li>
-                  <li for="purpose-tag" class="company-information">${company}</li>
-                  <li for="purpose-tag" class="company-information">${phone_number}</li>
-                  <li for="purpose-tag" class="company-information">${member_cnt}</li>
-                  <li for="purpose-tag" class="company-information">${email}</li>
-                  <li for="purpose-tag" class="company-information">${createdAt}</li>
-                  <button type="radio" id="button1">수락 하기</button>
-                  <button type="radio" id="button1">취소 하기</button>
-                  <button type="radio" id="button2">수정 하기</button>
-              </div>
-        `;
-        teacherWorkshopList.insertAdjacentHTML('beforeend', tempHtml);
-      }
-    })
-    .catch((response) => {
-      console.log(response);
-    });
-  axios({
-    method: 'get',
-    url: '/api/teacher/workshops/complete',
-    data: {},
-  })
-    .then((response) => {
-      console.log(response);
-      const data = response.data;
-      for (let i = 0; i < data.length; i++) {
-        const title = data[i].title;
-        const min_member = data[i].min_member;
-        const max_member = data[i].max_member;
-        const genre_id = data[i].genre_id;
-        const total_time = data[i].total_time;
-        const price = data[i].price;
-        const desc = data[i].desc;
-        const company = data[i].company;
-        const phone_number = data[i].phone_number;
-        const member_cnt = data[i].member_cnt;
-        const email = data[i].email;
-        const createdAt = data[i].createdAt;
-        let tempHtml = ``;
-
-        tempHtml = `
-           
-                <div class="workshop-information-div">
-                    <img src="/images/images.jpg" alt="" />
-                    <li for="purpose-tag" class="workshop-information">${title}</li>
-                    <li for="purpose-tag" class="workshop-information">${min_member}</li>
-                    <li for="purpose-tag" class="workshop-information">${max_member}</li>
-                    <li for="purpose-tag" class="workshop-information">${genre_id}</li>
-                    <li for="purpose-tag" class="workshop-information">${total_time}</li>
-                    <li for="purpose-tag" class="workshop-information">${price}</li>
+        <div class="teacher-manage-div" >
+            <div class="workshop-information-div">
+                <img src="/images/images.jpg" alt="" />
+                <li for="purpose-tag" class="workshop-information">${workshop_thumb}</li>
+                <li for="purpose-tag" class="workshop-information">${workshop_title}</li>
+                <li for="purpose-tag" class="workshop-information">${min_member}</li>
+                <li for="purpose-tag" class="workshop-information">${max_member}</li>
+                <li for="purpose-tag" class="workshop-information">${genreTag_name}</li>
+                <li for="purpose-tag" class="workshop-information">${total_time}</li>
+                <li for="purpose-tag" class="workshop-information">${price}</li>
+            </div>
+            <div class="company-information-div">
+                <div class="company-information">
+                    <li for="purpose-tag" class="company-input">${etc}</li>
+                    <li for="purpose-tag" class="company-input">${company}</li>
+                    <li for="purpose-tag" class="company-input">${phone_number}</li>
+                    <li for="purpose-tag" class="company-input">${member_cnt}</li>
+                    <li for="purpose-tag" class="company-input">${email}</li>
+                    <li for="purpose-tag" class="company-input">${createdAt}</li>
                 </div>
-                <div class="company-information-div">
-                    <li for="purpose-tag" class="company-information">${desc}</li>
-                    <li for="purpose-tag" class="company-information">${company}</li>
-                    <li for="purpose-tag" class="company-information">${phone_number}</li>
-                    <li for="purpose-tag" class="company-information">${member_cnt}</li>
-                    <li for="purpose-tag" class="company-information">${email}</li>
-                    <li for="purpose-tag" class="company-information">${createdAt}</li>
-                    <button type="radio" id="button1">수락 하기</button>
-                    <button type="radio" id="button1">취소 하기</button>
-                    <button type="radio" id="button2">수정 하기</button>
+                <div id = button-div>
+                    <button type="radio" id="approvalButton">수락 하기</button>
+                    <button type="radio" id="rejectButton">취소 하기</button>
+                    <button type="radio" id="editButton">수정 하기</button>
                 </div>
-          `;
-        teacherWorkshopList.insertAdjacentHTML('beforeend', tempHtml);
+            </div>
+        </div>
+      `;
+        workshopIncompleteList.insertAdjacentHTML('beforeend', tempHtml);
+        // 먼저 해당 워크샵의 id를 찾고
+        // 버튼을 누르면 해당 아이디 의 status의 request를 approval로 바꾼다.
+        const workshopIncompleteButton = document.getElementById(
+          'approvalButton',
+          'rejectButton',
+          'editButton',
+        );
+        workshopIncompleteButton.addEventListener('click', () => {
+          axios({
+            method: 'patch',
+            url: `/api/teacher/workshops/manage/accept/:${id}`,
+            data: {
+              status,
+            },
+          })
+            .then((response) => {
+              console.log(response);
+              const data = response.data;
+              alert(data.message);
+              // window.location.href = '/teacher/workshop';
+            })
+            .catch((response) => {
+              console.log(response);
+              const { data } = response.response;
+              alert(data.error);
+            });
+        });
       }
     })
     .catch((response) => {

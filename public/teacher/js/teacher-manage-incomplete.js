@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const workshopIncompleteList = document.getElementById('teacher-manageBox');
+  const workshopcompleteList = document.getElementById('teacher-incompleteBox');
   // document.ready(function () {
   axios({
     method: 'get',
@@ -24,12 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = data[i].workShopInstanceDetail_email;
         const createdAt = data[i].workShopInstanceDetail_createdAt;
         const status = data[i].workshop_status;
-        if (status === 'request') {
-        }
-        if (status === 'non_payment') {
-        }
-        if (status === 'waiting_lecture') {
-        }
+        // if (status === 'request') {
+        // }
+        // if (status === 'non_payment') {
+        // }
+        // if (status === 'waiting_lecture') {
+        // }
 
         let tempHtml = ``;
         tempHtml = `
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </div>
       `;
-        workshopIncompleteList.insertAdjacentHTML('beforeend', tempHtml);
+        workshopcompleteList.insertAdjacentHTML('beforeend', tempHtml);
       }
     })
     .catch((response) => {

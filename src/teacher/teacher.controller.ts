@@ -95,9 +95,4 @@ export class TeacherController {
   updateTeacherComplete(@Param('id') id: number) {
     return this.teacherService.updateTeacherComplete(id);
   }
-  // 강사 수강 문의 관리 (반려하기) api
-  @Patch('workshops/manage/reject/:id')
-  updateTeacherRejected(@Param('id') id: number) {
-    return this.teacherService.updateTeacherRejected(id);
-  }
 }
