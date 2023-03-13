@@ -1,4 +1,4 @@
-import { IsString,IsNumber } from 'class-validator';
+import { IsString, IsNumber } from 'class-validator';
 
 export class createWorkshopsDto {
   @IsString()
@@ -30,4 +30,10 @@ export class createWorkshopsDto {
 
   @IsString()
   readonly location: string;
+
+  @IsNumber()
+  readonly genre_id: number;
+
+  @IsNumber()
+  readonly purpose_tag_id: number;
 }

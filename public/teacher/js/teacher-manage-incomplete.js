@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = data[i].workShopInstanceDetail_email;
         const createdAt = data[i].workShopInstanceDetail_createdAt;
         const status = data[i].workShopInstanceDetail_status;
-
         let buttonHtml = '';
         switch (status) {
           case 'request':
@@ -77,11 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <li for="purpose-tag" class="company-input">${createdAt}</li>
             </div>
             <div id = button-div>
-                ${buttonHtml}
-            </div>
+            ${buttonHtml}
         </div>
     </div>
-`;
+    </div>
+    `;
         workshopincompleteList.insertAdjacentHTML('beforeend', tempHtml);
 
         const requestButton = document.getElementById('requestButton');

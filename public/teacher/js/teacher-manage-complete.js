@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // }
         // if (status === 'waiting_lecture') {
         // }
-
         let tempHtml = ``;
         tempHtml = `
         <div class="teacher-manage-div" >
@@ -54,13 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     <li for="purpose-tag" class="company-input">${createdAt}</li>
                 </div>
                 <div id = button-div>
-                    <button type="radio" class="Button" id="approvalButton">수락 하기</button>
-                    <button type="radio" class="Button" id="rejectButton">취소 하기</button>
-                    <button type="radio" class="Button" id="editButton">수정 하기</button>
-                </div>
+                <button type="radio" class="Button" id="approvalButton">수락 하기</button>
+                <button type="radio" class="Button" id="rejectButton">취소 하기</button>
+                <button type="radio" class="Button" id="editButton">수정 하기</button>
             </div>
         </div>
-      `;
+    </div>
+  `;
         workshopcompleteList.insertAdjacentHTML('beforeend', tempHtml);
       }
     })
@@ -69,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
       alert(data.message);
     });
 });
-
 function workshop() {
   window.location.href = '/teacher/workshop';
 }
