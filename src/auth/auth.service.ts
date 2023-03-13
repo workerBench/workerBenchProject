@@ -122,6 +122,7 @@ export class AuthService {
       .then(result => {
         console.log(result);
       })
+      .catch((error) => {
       .catch(error => {
         console.log('33333333333333333');
         console.log(error);

@@ -20,7 +20,7 @@
 }
 #workshop-registerBox {
     width: 1000px;
-    height: 650px;
+    height: 600px;
     margin: 0 auto;
     margin-top: 100px;
     padding: 20px;
@@ -38,15 +38,17 @@
     width: 400px;
     height: 300px;
     margin-top: 50px;
+    /* border: 2px solid lavender; */
+}
+#formFileMultiple{
+    width: 300px;
 }
 .image-register{
     width: 300px;
     height: 70px;
+    /* border: 2px solid lavender; */
 }
-#img{
-    width: 300px;
-}
-/* #image-registerBtn{
+#image-registerBtn{
     width: 300px;
     height: 50px;
     margin: 0 auto;
@@ -57,7 +59,7 @@
 }
 #image-registerBtn {
     background-color: rgb(102, 102, 249);
-} */
+}
 .wating-workshop{
     width:250px;
     height: 50px;
@@ -92,7 +94,7 @@
     list-style: none;
     border: 2px solid #000000;
 }
-#desc{
+#contents{
     width: 1000px;
     height: 300px;
     font-size: 30px;
@@ -102,7 +104,7 @@
     margin-left: 1250px;
     /* border: 2px solid #000000; */
 }
-#workshopRegisterBtn {
+#registerBtn {
     width: 200px;
     height: 50px;
     margin: 0 auto;
@@ -111,6 +113,6 @@
     color: white;
     border:none ;
 }
-#workshopRegisterBtn:hover {
+#registerBtn:hover {
     background-color: rgb(102, 102, 249);
 }
