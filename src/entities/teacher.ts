@@ -74,7 +74,7 @@ export class Teacher {
   @OneToOne(() => Company, (company) => company.President)
   MyCompany: Company;
 
-  // 3. company_application
+  // 4. company_application
   @OneToMany(
     () => CompanyApplication,
     (companyApplication) => companyApplication.Teacher,

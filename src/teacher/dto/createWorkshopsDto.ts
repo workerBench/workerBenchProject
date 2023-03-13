@@ -1,11 +1,14 @@
-import { IsString,IsNumber } from 'class-validator';
+import { IsString, IsNumber } from 'class-validator';
 
 export class createWorkshopsDto {
   @IsString()
-  readonly title: string;
+  readonly category: 'online' | 'offline';
 
   @IsString()
-  readonly category: string;
+  readonly title: string;
+
+  @IsNumber()
+  readonly genre_id: number;
 
   @IsString()
   readonly desc: string;
@@ -26,8 +29,8 @@ export class createWorkshopsDto {
   readonly price: number;
 
   @IsString()
-  readonly status: string;
-
-  @IsString()
   readonly location: string;
+
+  @IsNumber()
+  readonly purpose_tag_id: number;
 }
