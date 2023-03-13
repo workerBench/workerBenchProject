@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class AuthCodeForRePs {
   @IsEmail()
-  @IsString({ message: '이메일을 정확히 입력해 주세요' })
+  @IsString()
   @IsNotEmpty({ message: '이메일을 입력해 주세요' })
   @ApiProperty({
     example: 'lololo@efj.com',

@@ -22,7 +22,7 @@ export class User {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
   id: number;
 
-  @IsEmail()
+  @IsEmail({}, { message: '이메일을 정확히 입력해 주세요' })
   @IsString({ message: '이메일을 정확히 입력해 주세요' })
   @IsNotEmpty({ message: '이메일을 입력해 주세요' })
   @ApiProperty({
@@ -85,6 +85,7 @@ export class User {
   /* ------------------------ 관계 mapping --------------------------- */
 
   // 1. workshop
+  // workshop.Owner => workshop.User 변경
   @OneToMany(() => WorkShop, (workshop) => workshop.User)
   MyWorkshops: WorkShop[];
 

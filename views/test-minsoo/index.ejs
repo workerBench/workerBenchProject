@@ -315,6 +315,17 @@
           .catch((err) => {
             console.log('에러 발생');
             console.log(err);
+            if (err.status === 404) {
+              axios
+                .get('/api/auth/refreshtoken/user')
+                .then(() => {
+                  submitVideo();
+                })
+                .catch((err) => {
+                  alert('로그인을 다시 진행해주세요');
+                  location.href = 'login';
+                });
+            }
           });
       };
 

@@ -1,6 +1,6 @@
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { MailerService } from '@nestjs-modules/mailer';
-import { ConflictException, HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,7 +14,7 @@ import {
   emailAuthCodeRedisKey,
   emailAuthCodeRedisKeyForResetPs,
   refreshTokenRedisKey,
-  thisUserOnTheWayToChangePs,
+  thisUserOnTheWayToChangePs
 } from './naming/redis-key-name';
 import { adminTypeNaming, userTypeNaming } from './naming/user-type';
 import { AdminUser } from 'src/entities/admin-user';
@@ -38,7 +38,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService,
-    private readonly redisService: RedisService,
+    private readonly redisService: RedisService
   ) {
     // redis 세팅
     this.redisClient = redisService.getClient();
@@ -47,8 +47,8 @@ export class AuthService {
       region: this.configService.get('AWS_S3_REGION'),
       credentials: {
         accessKeyId: this.configService.get('AWS_ACCESS_KEY'),
-        secretAccessKey: this.configService.get('AWS_SECRET_KEY'),
-      },
+        secretAccessKey: this.configService.get('AWS_SECRET_KEY')
+      }
     });
     this.S3_BUCKET_NAME = this.configService.get('AWS_S3_BUCKET_NAME');
   }
@@ -56,20 +56,15 @@ export class AuthService {
   // 유저 회원가입 시 유효성 검사
   async checkEffective(userInfo: RegisterAuthDto) {
     const { email, password, authentNum } = userInfo;
+
     if (!email || !email.includes('@') || !email.includes('.')) {
-      const err = new Error('이메일 형식이 올바르지 않습니다.');
-      err.name = 'WrongEmailError';
-      throw err;
+      throw new BadRequestException('이메일 형식이 올바르지 않습니다.');
     }
     if (password !== authentNum) {
-      const err = new Error('패스워드가 일치하지 않습니다.');
-      err.name = 'WrongPasswordError';
-      throw err;
+      throw new BadRequestException('패스워드가 일치하지 않습니다.');
     }
     if (password.length < 4) {
-      const err = new Error('패스워드가 짧습니다.');
-      err.name = 'WrongPasswordError';
-      throw err;
+      throw new BadRequestException('패스워드가 짧습니다.');
     }
   }
 
@@ -78,58 +73,42 @@ export class AuthService {
     const { email, password, name, phone_number } = adminInfo;
 
     if (!email || !email.includes('@') || !email.includes('.')) {
-      const err = new Error('이메일 형식이 올바르지 않습니다.');
-      err.name = 'WrongEmailError';
-      throw err;
+      throw new BadRequestException('이메일 형식이 올바르지 않습니다.');
     }
     if (password.length < 4) {
-      const err = new Error('패스워드가 짧습니다.');
-      err.name = 'WrongPasswordError';
-      throw err;
+      throw new BadRequestException('패스워드가 짧습니다.');
     }
     if (!name) {
-      const err = new Error('올바른 이름이 아닙니다.');
-      err.name = 'WrongNameError';
-      throw err;
+      throw new BadRequestException('올바른 이름이 아닙니다.');
     }
-    if (
-      !phone_number ||
-      phone_number.includes('-') ||
-      phone_number.length !== 11
-    ) {
-      const err = new Error('올바른 전화번호가 아닙니다.');
-      err.name = 'WrongPhoneNumberError';
-      throw err;
+    if (!phone_number || phone_number.includes('-') || phone_number.length !== 11) {
+      throw new BadRequestException('올바른 전화번호가 아닙니다.');
     }
     return;
   }
 
   // 유저 회원가입 시 이메일 중복 검사
   async checkingAccount(email: string) {
-    console.log('111111')
+    console.log('111111');
     const check_email = await this.userRepository.findOne({ where: { email } });
     if (check_email) {
-      const err = new Error('이미 존재하는 이메일 입니다.');
-      err.name = 'DuplicationEmailError';
-      throw err;
+      throw new BadRequestException('이미 존재하는 이메일 입니다.');
     }
   }
 
   // 관리자 회원가입 시 이메일 중복 검사
   async checkingAdminAccount(email: string) {
     const check_email = await this.adminUserRepository.findOne({
-      where: { email },
+      where: { email }
     });
     if (check_email) {
-      const err = new Error('이미 존재하는 이메일 입니다.');
-      err.name = 'DuplicationEmailError';
-      throw err;
+      throw new BadRequestException('이미 존재하는 이메일 입니다.');
     }
   }
 
   // 유저 회원가입 시 이메일 인증코드 발송
   async sendingEmailAuthCode(email: string) {
-    console.log('2222222222')
+    console.log('2222222222');
     const auth_num = randomBytes(3).toString('hex');
     await this.redisClient.setex(emailAuthCodeRedisKey(email), 300, auth_num); // redis set
 
@@ -138,13 +117,14 @@ export class AuthService {
         to: email,
         from: this.configService.get('GOOGLE_MAIL'),
         subject: 'workshop 회원가입 이메일 인증',
-        html: `<h1>인증번호 : ${auth_num}</h1>`,
+        html: `<h1>인증번호 : ${auth_num}</h1>`
       })
-      .then((result) => {
+      .then(result => {
         console.log(result);
       })
       .catch((error) => {
-        console.log('33333333333333333')
+      .catch(error => {
+        console.log('33333333333333333');
         console.log(error);
         throw new ConflictException();
       });
@@ -153,13 +133,9 @@ export class AuthService {
 
   // 유저 회원가입 시 이메일 인증코드 검사
   async checkingEmailCode(email: string, emailAuthCode: string) {
-    const authCodeOfRedis = await this.redisClient.get(
-      emailAuthCodeRedisKey(email),
-    );
+    const authCodeOfRedis = await this.redisClient.get(emailAuthCodeRedisKey(email));
     if (authCodeOfRedis !== emailAuthCode) {
-      const err = new Error('입력하신 인증번호가 적합하지 않습니다.');
-      err.name = 'WrongEmailAuthCode';
-      throw err;
+      throw new BadRequestException('입력하신 인증번호가 적합하지 않습니다.');
     }
     return;
   }
@@ -171,7 +147,7 @@ export class AuthService {
     // 회원가입
     const saveResult = await this.userRepository.save({
       email,
-      password: hashedPassword,
+      password: hashedPassword
     });
     return saveResult;
   }
@@ -185,7 +161,7 @@ export class AuthService {
       email: adminInfo.email,
       password: hashedPassword,
       name: adminInfo.name,
-      phone_number: adminInfo.phone_number,
+      phone_number: adminInfo.phone_number
     });
     return saveResult;
   }
@@ -197,8 +173,8 @@ export class AuthService {
       {
         secret: this.configService.get('JWT_SECRET_KEY'),
         expiresIn: '600s',
-        algorithm: 'HS256',
-      },
+        algorithm: 'HS256'
+      }
     );
     return accessToekn;
   }
@@ -210,19 +186,14 @@ export class AuthService {
       {
         secret: this.configService.get('JWT_SECRET_KEY_ADMIN'),
         expiresIn: '600s',
-        algorithm: 'HS256',
-      },
+        algorithm: 'HS256'
+      }
     );
     return accessToekn;
   }
 
   // 유저 or 강사 refresh token 발행
-  async makeRefreshToken(
-    id: number,
-    email: string,
-    userType: number,
-    clientIp: string,
-  ) {
+  async makeRefreshToken(id: number, email: string, userType: number, clientIp: string) {
     let userTypeString: string;
     if (userType === 0) {
       userTypeString = userTypeNaming.user;
@@ -236,24 +207,19 @@ export class AuthService {
       {
         secret: this.configService.get('JWT_SECRET_KEY'),
         expiresIn: '3000s',
-        algorithm: 'HS256',
-      },
+        algorithm: 'HS256'
+      }
     );
     await this.redisClient.setex(
       refreshTokenRedisKey(userTypeString, id),
-      100,
-      `${clientIp}_#_${refreshToekn}`,
+      3000,
+      `${clientIp}_#_${refreshToekn}`
     );
     return refreshToekn;
   }
 
   // 관리자 refresh token 발행
-  async makeRefreshTokenForAdmin(
-    id: number,
-    email: string,
-    adminType: number,
-    clientIp: string,
-  ) {
+  async makeRefreshTokenForAdmin(id: number, email: string, adminType: number, clientIp: string) {
     let adminTypeString: string;
     if (adminType === 0) {
       adminTypeString = adminTypeNaming.normal;
@@ -267,14 +233,14 @@ export class AuthService {
       {
         secret: this.configService.get('JWT_SECRET_KEY_ADMIN'),
         expiresIn: '3000s',
-        algorithm: 'HS256',
-      },
+        algorithm: 'HS256'
+      }
     );
 
     await this.redisClient.setex(
       refreshTokenRedisKey(adminTypeString, id),
-      100,
-      `${clientIp}_#_${refreshToekn}`,
+      3000,
+      `${clientIp}_#_${refreshToekn}`
     );
     return refreshToekn;
   }
@@ -283,18 +249,14 @@ export class AuthService {
   async checkLoginUser(email: string, password: string) {
     const userInfo = await this.userRepository.findOne({
       where: { email },
-      select: ['id', 'email', 'password', 'user_type'],
+      select: ['id', 'email', 'password', 'user_type']
     });
     if (!userInfo) {
-      const err = new Error('이메일 또는 비밀번호가 일치하지 않습니다');
-      err.name = 'DoesntExistEmailOrPasswordError';
-      throw err;
+      throw new BadRequestException('이메일 또는 비밀번호가 일치하지 않습니다.');
     }
 
     if (!(await bcrypt.compare(password, userInfo.password))) {
-      const err = new Error('이메일 또는 비밀번호가 일치하지 않습니다');
-      err.name = 'DoesntExistEmailOrPasswordError';
-      throw err;
+      throw new BadRequestException('이메일 또는 비밀번호가 일치하지 않습니다.');
     }
 
     return userInfo;
@@ -304,7 +266,7 @@ export class AuthService {
   async checkLoginAdminUser(email: string, password: string) {
     const adminInfo = await this.adminUserRepository.findOne({
       where: { email },
-      select: ['id', 'email', 'password', 'admin_type'],
+      select: ['id', 'email', 'password', 'admin_type']
     });
     if (!adminInfo) {
       const err = new Error('이메일 또는 비밀번호가 일치하지 않습니다');
@@ -321,40 +283,27 @@ export class AuthService {
   }
 
   // user access token 에서 id 와 email 로 user 검사
-  async checkUserFromUserAccessToken(
-    id: number,
-    email: string,
-    userType: number,
-  ) {
+  async checkUserFromUserAccessToken(id: number, email: string, userType: number) {
     const userInfo = await this.userRepository.findOne({
       where: { id, email, user_type: userType },
-      select: ['id', 'email', 'user_type', 'isBan'],
+      select: ['id', 'email', 'user_type', 'isBan']
     });
 
     return userInfo;
   }
 
   // admin access token 에서 id 와 email 로 user 검사
-  async checkAdminFromAdminAccessToken(
-    id: number,
-    email: string,
-    adminType: number,
-  ) {
+  async checkAdminFromAdminAccessToken(id: number, email: string, adminType: number) {
     const adminInfo = await this.adminUserRepository.findOne({
       where: { id, email, admin_type: adminType },
-      select: ['id', 'email', 'admin_type'],
+      select: ['id', 'email', 'admin_type']
     });
 
     return adminInfo;
   }
 
   // redis 의 user refresh token 검사
-  async checkRefreshTokenInRedis(
-    id: number,
-    userType: number,
-    ip: string,
-    refreshToken: string,
-  ) {
+  async checkRefreshTokenInRedis(id: number, userType: number, ip: string, refreshToken: string) {
     let userTypeString: string;
     if (userType === 0) {
       userTypeString = userTypeNaming.user;
@@ -387,7 +336,7 @@ export class AuthService {
     id: number,
     adminType: number,
     ip: string,
-    refreshToken: string,
+    refreshToken: string
   ) {
     let adminTypeString: string;
     if (adminType === 0) {
@@ -420,7 +369,7 @@ export class AuthService {
   async removeAdmin(email: string) {
     // 부 관리자 계정이 존재하는지 체크
     const adminInfo = await this.adminUserRepository.findOne({
-      where: { email },
+      where: { email }
     });
 
     if (!adminInfo) {
@@ -434,59 +383,62 @@ export class AuthService {
   }
 
   // 비밀번호 재설정 시 이메일 검증
-  async findByEmail(email: string, id: number) {
+  async findByEmail(email: string) {
     // 이메일로 계정 찾기
-    const user = await this.userRepository.findOne({ where: { id, email } });
+    const user = await this.userRepository.findOne({ where: { email } });
     if (!user) {
-      const err = new Error('존재하지 않는 계정입니다.');
-      err.name = 'NotExistUser';
-      throw err;
+      throw new BadRequestException('존재하지 않는 계정입니다.');
     }
   }
 
   // 비밀번호 재설정 시도 시 이메일 인증 후 이메일로 인증코드 발송
   async sendingEmailResetCode(email: string) {
     const auth_num = randomBytes(3).toString('hex');
-    await this.redisClient.setex(
-      emailAuthCodeRedisKeyForResetPs(email),
-      300,
-      auth_num,
-    ); // redis set
+    await this.redisClient.setex(emailAuthCodeRedisKeyForResetPs(email), 300, auth_num); // redis set
 
     this.mailerService
       .sendMail({
         to: email,
         from: this.configService.get('GOOGLE_MAIL'),
         subject: 'workshop 비밀번호 재설정 인증',
-        html: `<h1>인증번호 : ${auth_num}</h1>`,
+        html: `<h1>인증번호 : ${auth_num}</h1>`
       })
-      .then((result) => {
+      .then(result => {
         console.log(result);
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
-        throw new ConflictException();
+        throw new ConflictException(
+          '이메일에 인증코드를 발송하는 과정에서 문제가 발생하였습니다. 다시 시도해 주십시오.'
+        );
       });
     return;
   }
 
   // 유저 비밀번호 재설정 시 이메일 인증코드 검사
-  async checkingResetCode(email: string, emailAuthCode: string, id: number) {
-    const authCodeOfRedis = await this.redisClient.get(
-      emailAuthCodeRedisKeyForResetPs(email),
-    );
+  async checkingResetCode(email: string, emailAuthCode: string, ip: string) {
+    const authCodeOfRedis = await this.redisClient.get(emailAuthCodeRedisKeyForResetPs(email));
+    if (!authCodeOfRedis) {
+      throw new BadRequestException('입력 제한시간이 지났습니다. 이메일 인증 재시도 부탁드립니다.');
+    }
     if (authCodeOfRedis !== emailAuthCode) {
-      const err = new Error('입력하신 인증번호가 적합하지 않습니다.');
-      err.name = 'WrongEmailAuthCode';
-      throw err;
+      throw new BadRequestException('입력하신 인증번호가 적합하지 않습니다.');
     }
 
     // 해당 유저가 비밀번호를 바꾸는 절차를 진행중이다 라고 증거를 남김
-    await this.redisClient.setex(
-      thisUserOnTheWayToChangePs(email, id),
-      6000,
-      'true',
-    );
+    await this.redisClient.setex(thisUserOnTheWayToChangePs(email, ip), 600, 'true');
+
+    return;
+  }
+
+  async checkResetPsOnTheWay(email: string, ip: string) {
+    const result = await this.redisClient.get(thisUserOnTheWayToChangePs(email, ip));
+
+    if (!result) {
+      throw new BadRequestException(
+        '이메일 인증 절차를 거치지 않은 상태이거나 이메일 인증 유효 기간이 만료되었습니다.'
+      );
+    }
 
     return;
   }
@@ -494,34 +446,16 @@ export class AuthService {
   async checkEffectiveForResetPs(info: ResetPassword) {
     const { password, authentNum } = info;
     if (password !== authentNum) {
-      const err = new Error('패스워드가 일치하지 않습니다.');
-      err.name = 'WrongPasswordError';
-      throw err;
+      throw new BadRequestException('패스워드가 일치하지 않습니다.');
     }
     if (password.length < 4) {
-      const err = new Error('패스워드가 짧습니다.');
-      err.name = 'WrongPasswordError';
-      throw err;
+      throw new BadRequestException('패스워드가 짧습니다.');
     }
   }
 
-  async changePassword(password: string, id: number, email: string) {
+  async changePassword(email: string, password: string) {
     const newPassword = await bcrypt.hash(password, 12);
-    await this.userRepository.update({ id, email }, { password: newPassword });
-    return;
-  }
-
-  async checkResetPsOnTheWay(id: number, email: string) {
-    const result = await this.redisClient.get(
-      thisUserOnTheWayToChangePs(email, id),
-    );
-
-    if (!result) {
-      const err = new Error('이메일 인증 절차를 거치지 않은 상태입니다.');
-      err.name = 'NeedToEmailAuthCode';
-      throw err;
-    }
-
+    await this.userRepository.update({ email }, { password: newPassword });
     return;
   }
 
@@ -532,7 +466,7 @@ export class AuthService {
     // 썸네일 이미지 이름 만들기. 프론트에서는 썸네일을 가장 먼저 formData 에 저장하기에 무조건 배열의 첫 번째 사진이 썸네일.
     const thumbImgType = images[0].originalname.substring(
       images[0].originalname.lastIndexOf('.'),
-      images[0].originalname.length,
+      images[0].originalname.length
     );
     const thumbImgName = uuid() + thumbImgType;
 
@@ -553,19 +487,19 @@ export class AuthService {
           const s3OptionForThumbImg = {
             Bucket: this.S3_BUCKET_NAME, // S3의 버킷 이름.
             Key: `images/workshop/1/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
-            Body: image.buffer, // 업로드 하고자 하는 파일.
+            Body: image.buffer // 업로드 하고자 하는 파일.
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForThumbImg)); // 실제로 S3 클라우드로 파일을 전송 및 업로드 하는 코드.
         } else {
           const subImgType = image.originalname.substring(
             image.originalname.lastIndexOf('.'),
-            image.originalname.length,
+            image.originalname.length
           );
           const subImgName = uuid() + subImgType;
           const s3OptionForSubImg = {
             Bucket: this.S3_BUCKET_NAME,
             Key: `images/workshop/1/${subImgName}`,
-            Body: image.buffer,
+            Body: image.buffer
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
         }
@@ -579,8 +513,7 @@ export class AuthService {
   async workshopThumbImg() {
     const workshop_id = 1;
     const region = this.configService.get('AWS_S3_REGION');
-    const thumbName =
-      'images/workshop/1/e1564aae-939b-4e38-81d0-81d316d30266.jpeg';
+    const thumbName = 'images/workshop/1/e1564aae-939b-4e38-81d0-81d316d30266.jpeg';
 
     const thumbUrl = `https://workerbench.s3.${region}.amazonaws.com/${thumbName}`;
     return thumbUrl;
@@ -593,7 +526,7 @@ export class AuthService {
     // 랜덤한 이름 생성
     const videoTypeName = video.originalname.substring(
       video.originalname.lastIndexOf('.'),
-      video.originalname.length,
+      video.originalname.length
     );
     const videoName = uuid() + videoTypeName;
 
@@ -601,7 +534,7 @@ export class AuthService {
     const s3OptionForReviewVideo = {
       Bucket: this.S3_BUCKET_NAME,
       Key: `videos/review/1/${videoName}`,
-      Body: video.buffer,
+      Body: video.buffer
     };
 
     // 실제로 s3 버킷에 업로드
@@ -614,8 +547,7 @@ export class AuthService {
   async getVideoUrl() {
     const review_id = 1;
     const region = this.configService.get('AWS_S3_REGION');
-    const videoName =
-      'videos/review/1/d2049ab0-1b35-4868-9b50-b37b62906eaf.mov';
+    const videoName = 'videos/review/1/d2049ab0-1b35-4868-9b50-b37b62906eaf.mov';
     const videoUrl = `https://workerbench.s3.${region}.amazonaws.com/${videoName}`;
     return videoUrl;
   }

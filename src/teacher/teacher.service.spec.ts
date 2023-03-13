@@ -1,4 +1,3 @@
-import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Company } from 'src/entities/company';
@@ -9,13 +8,10 @@ import { Repository } from 'typeorm';
 import { TeacherService } from './teacher.service';
 
 const mockteacherRepository = () =>({
-  findOne : jest.fn(),
   insert : jest.fn(),
-  find : jest.fn(),
 })
 const mockcompanyRepository = () =>({
   insert : jest.fn(),
-  findOne : jest.fn(),
 })
 const mockworkshopRepository = () =>({
   find : jest.fn(),
@@ -72,24 +68,25 @@ describe('TeacherService', () => {
       getRepositoryToken(User),
     );
   });
-
-// 업체 등록 테스트코드
+// company 테스트코듬 
   describe('createTeacherCompany', () => {
     it('should insert a new company and return a success message', async () => {
+      // Given
       const companyData = {
         company_type: 1,
         company_name: 'Test Company',
-        business_number: 1234,
+        business_number: 1234567890,
         rrn_front: 123,
         rrn_back: 45,
         bank_name: 'Test Bank',
-        account: 123490,
+        account: 1234567890,
         saving_name: 'Test Account',
-        isBan: 0,
+        isBan: 1,
         user_id: 1,
       };
       const expectedMessage = { message: '등록이 완료되었습니다.' };
-
+      
+      // When
       const result = await service.createTeacherCompany(
         companyData.company_type,
         companyData.company_name,
@@ -103,101 +100,46 @@ describe('TeacherService', () => {
         companyData.user_id,
       );
 
+      // Then
       expect(companyRepository.insert).toHaveBeenCalledWith(companyData);
       expect(result).toEqual(expectedMessage);
     });
 
-    it('should insert company and return success message', async () => {
+    it('should return an error message when insert throws an error', async () => {
+      // Given
+      const companyData = {
+        company_type: 1,
+        company_name: 'Test Company',
+        business_number: 1234567890,
+        rrn_front: 123,
+        rrn_back: 45,
+        bank_name: 'Test Bank',
+        account: 1234567890,
+        saving_name: 'Test Account',
+        isBan: 1,
+        user_id: 1,
+      };
+      const errorMessage = 'Error inserting company data.';
+      (companyRepository.insert as jest.Mock).mockRejectedValueOnce(new Error(errorMessage));
+      const expectedMessage = { errorMessage: '입력한 요청이 잘못되었습니다.' };
 
-      jest.spyOn(companyRepository, 'findOne').mockResolvedValue(null);
-
+      // When
       const result = await service.createTeacherCompany(
-        1,
-        'company name',
-        1234567890,
-        1234,
-        5678,
-        'bank name',
-        123456,
-        'saving name',
-        0,
-        1,
+        companyData.company_type,
+        companyData.company_name,
+        companyData.business_number,
+        companyData.rrn_front,
+        companyData.rrn_back,
+        companyData.bank_name,
+        companyData.account,
+        companyData.saving_name,
+        companyData.isBan,
+        companyData.user_id,
       );
 
-      expect(companyRepository.insert).toHaveBeenCalledWith({
-        company_type: 1,
-        company_name:'company name',
-        business_number: 1234567890,
-        rrn_front: 1234,
-        rrn_back: 5678,
-        bank_name: 'bank name',
-        account: 123456,
-        saving_name: 'saving name',
-        isBan: 0,
-        user_id: 1,
-      });
-      expect(result).toEqual({ message: '등록이 완료되었습니다.' });
+      // Then
+      expect(companyRepository.insert).toHaveBeenCalledWith(companyData);
+      expect(result).toEqual(expectedMessage);
     });
   });
-
-
-    
-    // it('should return an error message when insert throws an error', async () => {
-    //   // Given
-    //   const companyData = {
-    //     company_type: 1,
-    //     company_name: 'Test Company',
-    //     business_number: 1234567890,
-    //     rrn_front: 123,
-    //     rrn_back: 45,
-    //     bank_name: 'Test Bank',
-    //     account: 1234567890,
-    //     saving_name: 'Test Account',
-    //     isBan: 0,
-    //     user_id: 1,
-    //   };
-    //   const errorMessage = 'Error inserting company data.';
-    //   (companyRepository.insert as jest.Mock).mockRejectedValueOnce(new Error(errorMessage));
-    //   const expectedMessage = { errorMessage: '입력한 요청이 잘못되었습니다.' };
-
-    //   // When
-    //   const result = await service.createTeacherCompany(
-    //     companyData.company_type,
-    //     companyData.company_name,
-    //     companyData.business_number,
-    //     companyData.rrn_front,
-    //     companyData.rrn_back,
-    //     companyData.bank_name,
-    //     companyData.account,
-    //     companyData.saving_name,
-    //     companyData.isBan,
-    //     companyData.user_id,
-    //   );
-
-    //   // Then
-    //   expect(companyRepository.insert).toHaveBeenCalledWith(companyData);
-    //   expect(result).toEqual(expectedMessage);
-    // })
-        // 강사 워크샵 테스트코드
-      describe('getTeacherWorkshops()', () => {
-        it('should getTeacherWorkshops success message', async () => {
-          workshopRepository.find.mockResolvedValue([]); // mockResolvedValue: 반환값을 정함
-
-          const result = await service.getTeacherWorkshops();
-    
-          expect(workshopRepository.find).toHaveBeenCalledTimes(1); // 1번만 호출
-          expect(result).toBeInstanceOf(Array); // 값이 배열로 반환
-        });
-      });
-      //강사 마이페이지 조회 테스트코드
-    //   describe('getTeacherMypage()', () => {
-    //     it('should getTeacherMypage success message', async () => {
-    //       teacherRepository.find.mockResolvedValue([]); // mockResolvedValue: 반환값을 정함
-
-    //       const result = await service.getTeacherMypage();
-    
-    //       expect(teacherRepository.find).toHaveBeenCalledTimes(1); // 1번만 호출
-    //       expect(result).toBeInstanceOf(Array); // 값이 배열로 반환
-    //     });
-    // });
-  });
+});

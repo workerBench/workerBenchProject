@@ -11,10 +11,12 @@
     integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
     crossorigin="anonymous"
   ></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <link href="/auth/css/signup.css" rel="stylesheet"/>
     <title>회원가입</title>
   </head>
   <body>
+    <%- include('header.ejs') %>
     <div id="signupBox">
         <h1>회원가입</h1>
         <div class="mb-3">
@@ -30,17 +32,17 @@
           <input type="password" class="form-control" id="checkPassword"></input>
         </div>
         <div class="btn" id="add-btn">
-            <button type="button" id="signupBtn">가입하기</button>
+            <button type="button" id="signupBtn" onclick="checkRegisterInfo()">가입하기</button>
             <div class="modal" id="modal">
                 <div class="modal_body ">
                     <div class="password-reset">
                         <h1>이메일로 인증코드를 발송하였습니다.</h1>
                         <div class="mb-3 Certification-Number">
                             <input type="text" class="form-control" id="Certification-Number-input" placeholder="인증번호 입력">
-                            <button type="button" id="auth-confirm">인증 확인</button>
+                            <button type="button" id="auth-confirm" onclick="checkCode()">인증 확인</button>
                         </div>
                         <div class="close-btn">
-                             <button id="close-btn">나가기</button>
+                             <button id="close-btn" onclick="closeModal()">나가기</button>
                         </div>
                     </div>
                 </div>
@@ -50,14 +52,69 @@
                 
   </body>
 
+  <!-- script 구성 -->
   <script>
-    $(document).on('click', '#add-btn', function (e) {
-    $(e.target).next('.modal').addClass('show')
-    });
-
     // 모달 닫기
-    $(document).on('click', '#close-btn', function (e) {
-    $(e.target).parents('.modal').removeClass('show')
-    });
+    const closeModal = () => {
+      const modal = document.querySelector("#modal");
+      modal.classList.remove('show');
+    }
+
+    // 가입하기 버튼 클릭 시 유효성 검사 및 이메일 인증 코드 발송
+    const checkRegisterInfo = async () => {
+      const email = document.querySelector("#email").value;
+      const password = document.querySelector("#password").value;
+      const authentNum = document.querySelector('#checkPassword').value;
+
+      if (!email || !email.includes("@") || !email.includes(".")) {
+        alert("이메일을 정확히 입력해 주세요");
+        return 
+      }
+      if (password !== authentNum) {
+        alert("패스워드가 일치하지 않습니다.");
+        return;
+      }
+      if (password.length < 4 ) {
+        alert("비밀번호가 너무 짧습니다.");
+        return
+      }
+      
+      try {
+        const res = await axios({
+          method: 'POST',
+          url: '/api/auth/register',
+          data: {email, password, authentNum},
+        });
+        const modal = document.querySelector("#modal");
+        modal.classList.add('show');
+      } catch (err) {
+        // console.log(err.response.data);   // 서버 측 글로벌 에러 필터에서 리턴한 값이 여기에 담겨 있어.
+        alert(`에러 코드: ${err.response.data.statusCode} / message: ${err.response.data.message}`);
+      }
+    }
+
+    // 이메일 인증 코드 입력 후 서버로 전송. 성공 시 회원가입 완료
+    const checkCode = async () => {
+      const email = document.querySelector("#email").value;
+      const password = document.querySelector("#password").value;
+      const emailAuthCode = document.querySelector("#Certification-Number-input").value;
+
+      if (!emailAuthCode) {
+        alert("이메일 인증 코드를 입력해 주세요!");
+        return;
+      }
+
+      try {
+        const res2 = await axios({
+          method: 'POST',
+          url: '/api/auth/register/join',
+          data: {email, password, emailAuthCode},
+        });
+        location.href="/";
+      } catch (err) {
+        alert(`에러 코드: ${err.response.data.statusCode} / message: ${err.response.data.message}`);
+      }
+
+    }
   </script>
 </html>
