@@ -87,6 +87,7 @@ export class AuthService {
 
   // 유저 회원가입 시 이메일 중복 검사
   async checkingAccount(email: string) {
+    console.log('111111')
     const check_email = await this.userRepository.findOne({ where: { email } });
     if (check_email) {
       const err = new Error('이미 존재하는 이메일 입니다.');
@@ -109,6 +110,7 @@ export class AuthService {
 
   // 유저 회원가입 시 이메일 인증코드 발송
   async sendingEmailAuthCode(email: string) {
+    console.log('2222222222')
     const auth_num = randomBytes(3).toString('hex');
     await this.redisClient.setex(emailAuthCodeRedisKey(email), 300, auth_num); // redis set
 
@@ -123,6 +125,7 @@ export class AuthService {
         console.log(result);
       })
       .catch((error) => {
+        console.log('33333333333333333')
         console.log(error);
         throw new ConflictException();
       });
