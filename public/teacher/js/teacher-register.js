@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
   const registerBtn = document.getElementById('registerBtn');
-
   registerBtn.addEventListener('click', () => {
     const phone_number = document.getElementById('phone').value;
     const address = document.getElementById('address').value;
@@ -23,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch((response) => {
         console.log(response);
         const { data } = response.response;
-        console.log(data);
         alert(data.error);
       });
   });
