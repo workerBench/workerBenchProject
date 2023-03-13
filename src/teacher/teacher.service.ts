@@ -45,7 +45,7 @@ export class TeacherService {
     const { phone_number, address, name } = data;
     // const { id } = user;
     try {
-      const id = 11;
+      const id = 15;
       const userIdInfo = await this.userRepository.findOne({
         where: { id },
         select: ['id'],

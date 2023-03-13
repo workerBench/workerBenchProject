@@ -8,16 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data;
       for (let i = 0; i < data.length; i++) {
         const email = data[i].User.email;
-        console.log(email);
         const name = data[i].name;
         const address = data[i].address;
         const phone_number = data[i].phone_number;
         const company_type = data[i].MyCompany.company_type;
-        console.log(company_type);
         const company_name = data[i].MyCompany.company_name;
         const business_number = data[i].MyCompany.business_number;
         const bank_name = data[i].MyCompany.bank_name;
@@ -25,24 +22,46 @@ document.addEventListener('DOMContentLoaded', () => {
         const saving_name = data[i].MyCompany.saving_name;
         let tempHtml = ``;
         tempHtml = `
-          <div class="workshop-div1">
-          <li class="wating-workshop">강사 정보</li>
-          <div class="wating-workshop-div">
-            <li class="wating-workshop">${email}email</li>
-            <li class="wating-workshop">${name}이름</li>
-            <li class="wating-workshop">${address}주소</li>
-            <li class="wating-workshop">${phone_number}전화번호</li>
+        <div class="workshop-div">
+        <div class="teacher-li-div">
+            <li class="teacher-li">강사 정보</li>
+        </div>
+        <div class="teacher-wrokshop-div">
+          <div class="teacher-workshop-li-div">
+            <li class="teacher-workshop-li">email</li>
+            <li class="teacher-workshop-li">이름</li>
+            <li class="teacher-workshop-li">주소</li>
+            <li class="teacher-workshop-li">전화번호</li>
+          </div>
+          <div class="workshop-information-div">
+            <li class="workshop-information-li">${email}</li>
+            <li class="workshop-information-li">${name}</li>
+            <li class="workshop-information-li">${address}</li>
+            <li class="workshop-information-li">${phone_number}</li>
           </div>
         </div>
-        <div class="workshop-div1">
-          <li class="wating-workshop">강사 정보</li>
-          <div class="wating-workshop-div">
-            <li class="wating-workshop">${company_type}업체 종류</li>
-            <li class="wating-workshop">${company_name}업체명</li>
-            <li class="wating-workshop">${business_number}사업자 번호</li>
-            <li class="wating-workshop">${bank_name}지정은행</li>
-            <li class="wating-workshop">${account}계좌 번호</li>
-            <li class="wating-workshop">${saving_name}예금주 명</li>
+    </div>
+    <div class="workshop-div">
+            <div class="teacher-li-div">
+                <li class="teacher-li">업체 정보</li>  
+            </div>
+            <div class="teacher-wrokshop-div">
+            <div class="teacher-workshop-li-div">
+              <li class="teacher-workshop-li">업체종류</li>
+              <li class="teacher-workshop-li">업체명</li>
+              <li class="teacher-workshop-li">사업자 번호</li>
+              <li class="teacher-workshop-li">지정은행</li>
+              <li class="teacher-workshop-li">계좌 번호</li>
+              <li class="teacher-workshop-li">예금주명</li>
+            </div>
+            <div class="workshop-information-div">
+              <li class="workshop-information-li">${company_type}</li>
+              <li class="workshop-information-li">${company_name}</li>
+              <li class="workshop-information-li">${business_number}</li>
+              <li class="workshop-information-li">${bank_name}</li>
+              <li class="workshop-information-li">${account}</li>
+              <li class="workshop-information-li">${saving_name}</li>
+            </div>
           </div>
         </div>
         `;
@@ -50,9 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
     .catch((response) => {
-      console.log(response);
+      const { data } = response.response;
+      alert(data.message);
     });
 });
+
 function workshop() {
   window.location.href = '/teacher/workshop';
 }

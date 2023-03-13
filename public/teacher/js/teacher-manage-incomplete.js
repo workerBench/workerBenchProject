@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = data[i].workShopInstanceDetail_email;
         const createdAt = data[i].workShopInstanceDetail_createdAt;
         const status = data[i].workShopInstanceDetail_status;
+
         let buttonHtml = '';
         switch (status) {
           case 'request':
@@ -57,30 +58,30 @@ document.addEventListener('DOMContentLoaded', () => {
         let tempHtml = `
         <div class="teacher-manage-div" >
         <div class="workshop-information-div">
-            <img src="/images/images.jpg" alt="" />
-            <li for="purpose-tag" class="workshop-information">${workshop_thumb}</li>
-            <li for="purpose-tag" class="workshop-information">${workshop_title}</li>
-            <li for="purpose-tag" class="workshop-information">${min_member}</li>
-            <li for="purpose-tag" class="workshop-information">${max_member}</li>
-            <li for="purpose-tag" class="workshop-information">${genreTag_name}</li>
-            <li for="purpose-tag" class="workshop-information">${total_time}</li>
-            <li for="purpose-tag" class="workshop-information">${price}</li>
-        </div>
-        <div class="company-information-div">
-            <div class="company-information">
-                <li for="purpose-tag" class="company-input">${etc}</li>
-                <li for="purpose-tag" class="company-input">${company}</li>
-                <li for="purpose-tag" class="company-input">${phone_number}</li>
-                <li for="purpose-tag" class="company-input">${member_cnt}</li>
-                <li for="purpose-tag" class="company-input">${email}</li>
-                <li for="purpose-tag" class="company-input">${createdAt}</li>
-            </div>
-            <div id = button-div>
-            ${buttonHtml}
-        </div>
+        <img src="/images/images.jpg" alt="" />
+        <li for="purpose-tag" class="workshop-information">${workshop_thumb}</li>
+        <li for="purpose-tag" class="workshop-information">${workshop_title}</li>
+        <li for="purpose-tag" class="workshop-information">${min_member}</li>
+        <li for="purpose-tag" class="workshop-information">${max_member}</li>
+        <li for="purpose-tag" class="workshop-information">${genreTag_name}</li>
+        <li for="purpose-tag" class="workshop-information">${total_time}</li>
+        <li for="purpose-tag" class="workshop-information">${price}</li>
     </div>
+    <div class="company-information-div">
+        <div class="company-information">
+            <li for="purpose-tag" class="company-input">${etc}</li>
+            <li for="purpose-tag" class="company-input">${company}</li>
+            <li for="purpose-tag" class="company-input">${phone_number}</li>
+            <li for="purpose-tag" class="company-input">${member_cnt}</li>
+            <li for="purpose-tag" class="company-input">${email}</li>
+            <li for="purpose-tag" class="company-input">${createdAt}</li>
+        </div>
+        <div id = button-div>
+        ${buttonHtml}
     </div>
-    `;
+</div>
+</div>
+`;
         workshopincompleteList.insertAdjacentHTML('beforeend', tempHtml);
 
         const requestButton = document.getElementById('requestButton');
