@@ -574,10 +574,10 @@ export class AuthService {
 
   // 워크샵 썸네일 가져오기. 이건... S3 버킷에 가서 파일 이름을 직접 복사해 와서 thumbName 변수에 넣어주셔야 합니다.
   async workshopThumbImg() {
-    const workshop_id = 1;
+    const workshop_id = 3;
     const region = this.configService.get('AWS_S3_REGION');
     const thumbName =
-      'images/workshop/1/e1564aae-939b-4e38-81d0-81d316d30266.jpeg';
+      'eraser-class-review.jpg';
 
     const thumbUrl = `https://workerbench.s3.${region}.amazonaws.com/${thumbName}`;
     return thumbUrl;

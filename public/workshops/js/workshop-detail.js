@@ -1,5 +1,6 @@
 window.addEventListener('DOMContentLoaded', function () {
   getWorkshopDetail();
+  getThumbImg();
   getWorkshopReviews();
 });
 
@@ -20,7 +21,7 @@ function getWorkshopDetail() {
       <div class="col">
         <div class="workshop-thumb">
           <img src="/images/eraser-class-thumb.jpg" alt="..." />
-        </div>
+        </div>...
       </div>
 
       <!-- 워크샵 개요 -->
@@ -78,6 +79,15 @@ function getWorkshopDetail() {
     .catch((error) => {});
 }
 
+// 썸네일 가져오기
+const getThumbImg = () => {
+  axios.get('/api/auth/img-s3-url').then((res) => {
+    console.log('썸네일 주소 가져오기 api 무사히 작동');
+    console.log(res.data.data);
+    document.querySelector('#workshop-thumb').src = res.data.data;
+  });
+};
+
 // 찜하기
 function addToWish(user_id, workshop_id) {
   let query = window.location.search;
@@ -89,17 +99,12 @@ function addToWish(user_id, workshop_id) {
     .then((res) => {
       console.log(res);
       alert(res.data.data.message);
-      const wishBtn = document.querySelector('.wish');
-      if (wishBtn.innerText == '♥') {
-        wishBtn.innerText = '♡';
-      } else {
-        wishBtn.innerText = '♥';
-      }
     })
-    .catch((err) => {});
+    .catch((err) => {
+      console.log(err);
+      alert(err.response.message);
+    });
 }
-
-// ${workshop.wish_user_id.includes(user_id) === true ? '♥' : '♡'}
 
 // 후기 불러오기
 function getWorkshopReviews() {
@@ -221,6 +226,6 @@ form.addEventListener('submit', function (e) {
     })
     .catch((err) => {
       console.log(err);
-      alert(err.response.data.message);
+      alert('로그인 후 이용 가능합니다!');
     });
 });

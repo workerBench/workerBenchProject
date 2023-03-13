@@ -212,7 +212,7 @@ describe('WorkshopsService', () => {
 
       expect(wishRepository.findOne).toHaveBeenCalledTimes(1);
       expect(wishRepository.insert).toHaveBeenCalledTimes(1);
-      expect(result).toBe('찜하기 성공!');
+      expect(result).toBe('찜하기 완료!');
     });
 
     it('회원이 해당 워크샵을 이미 찜했으면 찜 취소하기 검증', async () => {
