@@ -24,7 +24,10 @@ const dataSource = new DataSource({
   port: Number(process.env.DB_PORT),
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  database:
+    process.env.NODE_ENV === 'test'
+      ? process.env.TEST_DB_NAME
+      : process.env.DB_NAME,
   entities: [
     AdminUser,
     CompanyApplication,

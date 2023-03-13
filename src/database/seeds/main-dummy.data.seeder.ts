@@ -402,7 +402,7 @@ export default class MainSeeder implements Seeder {
         user_id: 4,
       },
       {
-        company_type: 3,
+        company_type: 1,
         company_name: '사아자 회사',
         rrn_front: 901023,
         rrn_back: 1111111,
