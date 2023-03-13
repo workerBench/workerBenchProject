@@ -3,4 +3,5 @@ export const TOKEN_NAME = {
   userRefresh: 'refreshToken',
   adminAccess: 'adminAccessToken',
   adminRefresh: 'adminRefreshToken',
+  emailForChangePs: 'emailForChangePassword',
 };

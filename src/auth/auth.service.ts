@@ -345,10 +345,7 @@ export class AuthService {
     if (userType === 1) {
       userTypeString = userTypeNaming.teacher;
     }
-    console.log('111');
-    console.log(
-      await this.redisClient.get(refreshTokenRedisKey(userTypeString, id)),
-    );
+
     const clientInfoFromRedis = (
       await this.redisClient.get(refreshTokenRedisKey(userTypeString, id))
     ).split('_#_');
@@ -420,22 +417,12 @@ export class AuthService {
   }
 
   // 비밀번호 재설정 시 이메일 검증
-  async findByEmail(email: string, id: number) {
+  async findByEmail(email: string) {
     // 이메일로 계정 찾기
-    const user = await this.userRepository.findOne({ where: { id, email } });
+    const user = await this.userRepository.findOne({ where: { email } });
     if (!user) {
       throw new BadRequestException('존재하지 않는 계정입니다.');
     }
-  }
-
-  // 비밀번호 재설정을 시도하는 이메일이 로그인 유저 본인이 맞는지 검증
-  async checkUserForPasswordChange(bodyEmail: string, tokenEmail: string) {
-    if (bodyEmail !== tokenEmail) {
-      throw new BadRequestException(
-        '입력한 이메일은 현재 로그인 중인 계정의 이메일이 아닙니다.',
-      );
-    }
-    return;
   }
 
   // 비밀번호 재설정 시도 시 이메일 인증 후 이메일로 인증코드 발송
@@ -467,7 +454,7 @@ export class AuthService {
   }
 
   // 유저 비밀번호 재설정 시 이메일 인증코드 검사
-  async checkingResetCode(email: string, emailAuthCode: string, id: number) {
+  async checkingResetCode(email: string, emailAuthCode: string, ip: string) {
     const authCodeOfRedis = await this.redisClient.get(
       emailAuthCodeRedisKeyForResetPs(email),
     );
@@ -482,22 +469,22 @@ export class AuthService {
 
     // 해당 유저가 비밀번호를 바꾸는 절차를 진행중이다 라고 증거를 남김
     await this.redisClient.setex(
-      thisUserOnTheWayToChangePs(email, id),
-      6000,
+      thisUserOnTheWayToChangePs(email, ip),
+      600,
       'true',
     );
 
     return;
   }
 
-  async checkResetPsOnTheWay(id: number, email: string) {
+  async checkResetPsOnTheWay(email: string, ip: string) {
     const result = await this.redisClient.get(
-      thisUserOnTheWayToChangePs(email, id),
+      thisUserOnTheWayToChangePs(email, ip),
     );
 
     if (!result) {
       throw new BadRequestException(
-        '이메일 인증 절차를 거치지 않은 상태입니다.',
+        '이메일 인증 절차를 거치지 않은 상태이거나 이메일 인증 유효 기간이 만료되었습니다.',
       );
     }
 
@@ -514,9 +501,9 @@ export class AuthService {
     }
   }
 
-  async changePassword(password: string, id: number, email: string) {
+  async changePassword(email: string, password: string) {
     const newPassword = await bcrypt.hash(password, 12);
-    await this.userRepository.update({ id, email }, { password: newPassword });
+    await this.userRepository.update({ email }, { password: newPassword });
     return;
   }
 

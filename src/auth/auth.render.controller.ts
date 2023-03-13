@@ -42,6 +42,8 @@ export class AuthControllerRender {
         return res.render('auth/login-user-go-to-main');
       } catch (err) {
         // 로그인은 되어 있으나, refresh 토큰에 뭔가 문제가 있거나 redis 에서 로그인 기록을 찾지를 못하고 있다.
+        res.clearCookie(TOKEN_NAME.userAccess);
+        res.clearCookie(TOKEN_NAME.userRefresh);
         return res.render('auth/non-authority');
       }
     }
@@ -69,12 +71,12 @@ export class AuthControllerRender {
     @CurrentUser() user: CurrentUserDto | boolean,
     @Res() res: Response,
   ) {
-    // 토큰 인증을 통과하지 못했다 = 로그인 상태가 아니니 로그인 화면으로 가라는 페이지를 보여준다.
+    // 토큰 인증을 통과하지 못했다 = 로그인 상태가 아니니 페이지 열람 가능.
     if (typeof user === 'boolean' && user === false) {
-      return res.render('auth/non-login');
+      return res.render('auth/password-reset');
     }
-    // 토큰 인증을 통과 했다 = 로그인 된 상태이니 이메인 인증 신청 페이지를 보여준다.
-    return res.render('auth/password-reset');
+    // 토큰 인증을 통과 했다 = 로그인 된 상태이니 로그아웃 후 진행하라 표시해준다.
+    return res.render('auth/login-user-go-to-main');
   }
 
   // 비밀번호 재설정 시도 시 이메일 인증 통과 후 재설정 페이지.
@@ -86,28 +88,21 @@ export class AuthControllerRender {
     @Res() res: Response,
     @RealIP() clientIp: string,
   ) {
-    // 토큰 검증을 통과하지 못했다 = 로그인이 필요하다.
-    if (typeof user === 'boolean' && user === false) {
-      return res.render('auth/non-login');
-    }
+    // 토큰 검증을 통과했다 = 로그인 상태이니 로그아웃 후 다시 진행하라는 페이지를 보여줌.
     if (typeof user === 'object') {
-      try {
-        // 사용자의 refresh token 을 가져온다
-        const refreshToken = req.cookies[TOKEN_NAME.userRefresh];
-        // refresh 토큰 인증 검사
-        await this.authService.checkRefreshTokenInRedis(
-          user.id,
-          user.user_type,
-          clientIp,
-          refreshToken,
-        );
-        // 이메일 인증을 통한 비밀번호 재설정 절차를 진행중인 유저인지 확인한다.
-        await this.authService.checkResetPsOnTheWay(user.id, user.email);
+      return res.render('auth/login-user-go-to-main');
+    }
 
+    // 토큰 검증을 통과하지 못했다 = 로그인 상태가 아니니 계속해서 진행
+    if (typeof user === 'boolean' && user === false) {
+      try {
+        // 사용자의 refresh token 을 가져온다. 이메일이 담겨 있음.
+        const email = req.cookies['emailForChangePassword'];
+        // 이메일 인증을 통한 비밀번호 재설정 절차를 진행중인 유저인지 확인한다.
+        await this.authService.checkResetPsOnTheWay(email, clientIp);
         // 해당 유저가 로그인 된 유저이며 적합한 절차로 비밀번호 재설정을 진행하고 있음. 따라서 재설정 페이지를 보여준다.
         return res.render('auth/password-change');
       } catch (err) {
-        // 토큰 인증, 혹은 이메일 인증 절차 진행 중임을 증명하지 못했음으로 자격이 없다는 페이지를 보여준다.
         return res.render('auth/non-authority');
       }
     }

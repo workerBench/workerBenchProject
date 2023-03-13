@@ -395,16 +395,10 @@ export class AuthController {
     summary: '유저 비밀번호 재설정 하기 - 이메일을 입력하여 재설정 시도',
   })
   @Post('reset-password')
-  @UseGuards(JwtUserAuthGuard)
-  async emailForResetPassWord(
-    @Body() body: EmailForReset,
-    @CurrentUser() user: CurrentUserDto,
-  ) {
+  async emailForResetPassWord(@Body() body: EmailForReset) {
     try {
-      // 비밀번호 재설정을 시도하는 이메일이 로그인 유저 본인이 맞는지 검증
-      await this.authService.checkUserForPasswordChange(body.email, user.email);
       // 이메일의 존재유무 검증
-      await this.authService.findByEmail(body.email, user.id);
+      await this.authService.findByEmail(body.email);
       // 이메일이 존재한다면, 해당 이메일로 인증번호 발송
       await this.authService.sendingEmailResetCode(body.email);
       return;
@@ -427,18 +421,20 @@ export class AuthController {
     summary: '유저 비밀번호 재설정 하기 - 이메일 인증코드 발송',
   })
   @Post('reset-password/email-code')
-  @UseGuards(JwtUserAuthGuard)
   async authCodeForResetPassword(
     @Body() body: AuthCodeForRePs,
-    @CurrentUser() user: CurrentUserDto,
+    @Res({ passthrough: true }) response: Response,
+    @RealIP() clientIp: string,
   ) {
     try {
-      // 입력받은 이메일 인증번호 검증
+      // 입력받은 이메일 인증번호 검증. 검증이 완료되면 비밀번호 재설정 절차에 진입한다.
       await this.authService.checkingResetCode(
         body.email,
         body.emailAuthCode,
-        user.id,
+        clientIp,
       );
+      // 이메일을 잠시 쿠키에 저장
+      response.cookie(TOKEN_NAME.emailForChangePs, body.email);
       return;
     } catch (err) {
       throw err;
@@ -455,20 +451,25 @@ export class AuthController {
     description: '비밀번호 재설정 - 적합하지 않은 비밀번호 입력 시 실패',
   })
   @Patch('reset-password')
-  @UseGuards(JwtUserAuthGuard)
   async resetPassword(
     @Body() body: ResetPassword,
-    @CurrentUser() user: CurrentUserDto,
     @Res({ passthrough: true }) response: Response,
+    @Req() request: Request,
+    @RealIP() clientIp: string,
   ) {
     try {
       // 해당 유저가 진정 이메일 인증 절차를 진행하여 비밀번호를 재설정 하려 하는 것인지 검사
-      await this.authService.checkResetPsOnTheWay(user.id, user.email);
+      const email = request.cookies[TOKEN_NAME.emailForChangePs];
+      await this.authService.checkResetPsOnTheWay(email, clientIp);
+
       // 입력받은 비밀번호, 확인용 비밀번호 2가지 유효성 검사
       await this.authService.checkEffectiveForResetPs(body);
+
       // 유효성 검사 후 비밀번호 실제 변경.
-      await this.authService.changePassword(body.password, user.id, user.email);
+      await this.authService.changePassword(email, body.password);
+
       // 변경된 비밀번호로 재로그인 하기 위해 쿠키를 지워준다.
+      response.clearCookie('emailForChangePassword');
       response.clearCookie(TOKEN_NAME.userAccess);
       response.clearCookie(TOKEN_NAME.userRefresh);
       return;
