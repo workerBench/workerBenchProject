@@ -3,18 +3,12 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
   Param,
   Post,
   Query,
-  UnauthorizedException,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
-import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
-import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
 import { WorkshopsService } from 'src/workshops/workshops.service';
@@ -67,17 +61,17 @@ export class WorkshopsController {
   @Get('/search')
   async searchWorkshops(
     @Query('category') category: string,
-    @Query('memberCnt') memberCnt: number,
     @Query('location') location: string,
-    @Query('purpose') purpose: string,
     @Query('genre') genre: string,
+    @Query('purpose') purpose: string,
+    @Query('memberCnt') memberCnt: number,
   ) {
     return await this.workshopsService.searchWorkshops(
       category,
-      memberCnt,
       location,
-      purpose,
       genre,
+      purpose,
+      memberCnt,
     );
   }
 
@@ -88,12 +82,8 @@ export class WorkshopsController {
   })
   @ApiOperation({ summary: '워크샵 상세 조회 api' })
   @Get('/:workshop_id')
-  async getWorkshopDetail(
-    @CurrentUser() user: CurrentUserDto,
-    @Param('workshop_id') workshop_id: number,
-  ) {
-    const user_id = user?.id;
-    return await this.workshopsService.getWorkshopDetail(user_id, workshop_id);
+  async getWorkshopDetail(@Param('workshop_id') workshop_id: number) {
+    return await this.workshopsService.getWorkshopDetail(workshop_id);
   }
 
   // 워크샵 찜 or 취소하기 AP
@@ -103,23 +93,9 @@ export class WorkshopsController {
   })
   @ApiOperation({ summary: '워크샵 찜하기 api' })
   @Post('/:workshop_id/wish')
-  @UseGuards(JwtUserAuthGuard)
-  async addToWish(
-    @CurrentUser() user: CurrentUserDto,
-    @Param('workshop_id') workshop_id: number,
-  ) {
-    try {
-      // *user_id가 없으면 에러 처리 필요 ('로그인 후 이용 가능한 서비스입니다')
-
-      const user_id = user.id;
-
-      if (!user_id) {
-        throw new UnauthorizedException('로그인 후 이용 가능합니다!');
-      }
-      return await this.workshopsService.addToWish(user_id, workshop_id);
-    } catch (err) {
-      throw new HttpException(`${err.message}`, 401);
-    }
+  async addToWish(@Param('workshop_id') workshop_id: number) {
+    const user_id = 2; // 하드코딩한 데이터 (user_id를 임의로 삽입함)
+    return await this.workshopsService.addToWish(user_id, workshop_id);
   }
 
   // 특정 워크샵 후기 전체 조회 API

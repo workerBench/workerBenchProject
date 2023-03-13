@@ -106,7 +106,6 @@ export class AuthService {
 
   // 유저 회원가입 시 이메일 중복 검사
   async checkingAccount(email: string) {
-    console.log('111111')
     const check_email = await this.userRepository.findOne({ where: { email } });
     if (check_email) {
       const err = new Error('이미 존재하는 이메일 입니다.');
@@ -129,7 +128,6 @@ export class AuthService {
 
   // 유저 회원가입 시 이메일 인증코드 발송
   async sendingEmailAuthCode(email: string) {
-    console.log('2222222222')
     const auth_num = randomBytes(3).toString('hex');
     await this.redisClient.setex(emailAuthCodeRedisKey(email), 300, auth_num); // redis set
 
@@ -144,7 +142,6 @@ export class AuthService {
         console.log(result);
       })
       .catch((error) => {
-        console.log('33333333333333333')
         console.log(error);
         throw new ConflictException();
       });
@@ -577,10 +574,10 @@ export class AuthService {
 
   // 워크샵 썸네일 가져오기. 이건... S3 버킷에 가서 파일 이름을 직접 복사해 와서 thumbName 변수에 넣어주셔야 합니다.
   async workshopThumbImg() {
-    const workshop_id = 3;
+    const workshop_id = 1;
     const region = this.configService.get('AWS_S3_REGION');
     const thumbName =
-      'eraser-class-review.jpg';
+      'images/workshop/1/e1564aae-939b-4e38-81d0-81d316d30266.jpeg';
 
     const thumbUrl = `https://workerbench.s3.${region}.amazonaws.com/${thumbName}`;
     return thumbUrl;

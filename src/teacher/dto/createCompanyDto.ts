@@ -1,4 +1,4 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString,IsNumber } from 'class-validator';
 
 export class createCompanyDto {
   @IsNumber()
@@ -28,6 +28,6 @@ export class createCompanyDto {
   @IsNumber()
   readonly isBan: number;
 
-  // @IsNumber()
-  // readonly affiliation_company_id: number;
+  @IsNumber()
+  readonly user_id: number;
 }

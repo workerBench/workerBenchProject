@@ -58,7 +58,6 @@ export class AuthController {
   @ApiOperation({ summary: '회원가입 - 인증 api' })
   @Post('register')
   async register(@Body() body: RegisterAuthDto) {
-    console.log(body)
     try {
       // 유효성 검사
       await this.authService.checkEffective(body);

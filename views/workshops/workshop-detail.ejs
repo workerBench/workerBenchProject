@@ -4,32 +4,53 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>워크샵 상세 페이지</title>
-
-    <!-- BootStrap import -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
       crossorigin="anonymous"
     />
-
-    <!-- JQuery import -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    
-    <!-- Axios import -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    
-    <!-- SweetAlert import -->
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-    <!-- css import -->
     <link rel="stylesheet" href="/workshops/css/workshop-detail.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     
   </head>
   <body>
     <%- include ("header.ejs") %>    
     <!-- 워크샵 상품 이미지 -->
-    <div id="workshop-image-info">
+    <div class="container text-center">
+      <div class="row">
+        <div class="col">
+          <div class="workshop-thumb">
+            <img src="/images/eraser-class-thumb.jpg" alt="..." />
+          </div>
+        </div>
+
+        <!-- 워크샵 개요 -->
+        <div class="col">
+          <div class="workshop-summary">
+            <div class="workshop-title">워크샵 제목</div>
+            <div class="workshop-star">별점</div>
+            <div class="workshop-category">온라인</div>
+            <div class="workshop-location">
+              활동 가능 지역 &nbsp<span>서울/경기</span>
+            </div>
+            <div class="workshop-member-cnt">인원 &nbsp<span>00명</span></div>
+            <div class="workshop-total-time">시간 &nbsp<span>00분</span></div>
+            <div class="workshop-genre">분야 &nbsp<span>예술</span></div>
+            <div class="workshop-purpose">목적 &nbsp<span>힐링</span></div>
+            <div class="workshop-price">38500원</div>
+            <div>*1인 기준</div>
+            <div class="order-wish-buttons">
+              <button type="button" class="btn btn-primary order" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                신청하기
+              </button>
+              <button type="button" class="btn btn-outline-primary wish">
+                찜하기
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- 워크샵 신청하기 Modal -->
@@ -41,43 +62,44 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form id="form">
+              <form action="" method="post">
                 <div class="mb-3">
-                  <input type="text" class="form-control" name="company" id="company" placeholder="회사명" required>
+                  <input type="text" class="form-control" id="recipient-name" placeholder="회사명" required>
                 </div>
                 <div class="mb-3">
-                  <input type="text" class="form-control" name="name" id="name" placeholder="신청자 성함" required>
+                  <input type="text" class="form-control" id="recipient-name" placeholder="신청자 성함" required>
                 </div>
                 <div class="mb-3">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="이메일" required>
+                  <input type="email" class="form-control" id="recipient-name" placeholder="이메일" required>
                 </div>
                 <div class="mb-3">
-                  <input type="text" class="form-control" name="phone_number" id="phone_number" placeholder="전화번호" required>
+                  <input type="text" class="form-control" id="recipient-name" placeholder="전화번호" required>
                   <p>* '-' 없이 입력해주세요. (ex. 01012341234)</p>
                 </div>
                 <div class="mb-3">
-                  <input type="number" class="form-control" name="member_cnt" id="member_cnt" placeholder="인원">
+                  <input type="number" class="form-control" placeholder="인원">
                 </div>
                 <div class="mb-3">
-                  <input type="date" class="form-control" name="wish_date" id="wish_date">
+                  <input type="date" class="form-control" id="date-now">
                   <p>* 희망하는 진행일을 선택해주세요.</p>
                 </div>
                 <div class="on-off-buttons">
-                  <input type="radio" id="hideAddress" name="category" value="online"> 온라인 &nbsp; &nbsp;
-                  <input type="radio" id="showAddress" name="category" value="offline"> 오프라인
+                  <button id="hideAddress" type="button" class="btn btn-primary">
+                    온라인
+                  </button>
+                  <button id="showAddress" type="button" class="btn btn-outline-primary">
+                    오프라인
+                  </button>
                 </div>
                 <div class="mb-3" id="address">
-                  <!-- <input type="text" class="form-control" name="wish_location" id="wish_location" value="주소">
-                  <p>* 원하는 출강 위치의 주소를 정확히 입력해주세요.</p> -->
-                  <input id="zip-code"  type="text" placeholder="우편번호 검색" readonly onclick="findAddr()"> <br>
-                  <input id="input-address" type="text" placeholder="주소" value="주소" readonly> <br>
-                  <input id="input_addr_detail" type="text" placeholder="상세 주소">
+                  <input type="email" class="form-control" placeholder="주소">
+                  <p>* 원하는 출강 위치의 주소를 정확히 입력해주세요.</p>
                 </div>
                 <div class="mb-3">
-                  <input type="text" class="form-control" name="purpose" id="purpose" placeholder="목적">
+                  <input type="email" class="form-control" id="recipient-name" placeholder="목적">
                 </div>
                 <div class="mb-3">
-                  <textarea class="form-control" name="etc" id="etc" placeholder="기타 문의"></textarea>
+                  <textarea class="form-control" id="message-text" placeholder="기타 문의"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -88,8 +110,7 @@
           </div>
         </div>
       </div>
-
-  <div class="container text-center">
+      
    <!-- 하단 탭 (상세정보 / 후기) -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
@@ -150,7 +171,15 @@
       </li>
     </ul>
     <div class="tab-content" id="myTabContent">
-      <!-- 워크샵 상세 정보 데이터 추가 위치 -->
+      <div
+        class="tab-pane fade show active"
+        id="home-tab-pane"
+        role="tabpanel"
+        aria-labelledby="home-tab"
+        tabindex="0"
+      >
+        워크샵 상세 정보입니다.
+      </div>
       <div
         class="tab-pane fade"
         id="profile-tab-pane"
@@ -158,12 +187,21 @@
         aria-labelledby="profile-tab"
         tabindex="0"
       >
-
-      <div id="workshop-reviews">
-      <!-- 워크샵 후기 데이터 추가 위치 -->
+      <div class="card mb-3" style="max-width: 700px; margin-top: 50px">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="/images/eraser-class-review.jpg" class="img-fluid rounded-start" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <p class="card-text">고객들의 후기 내용입니다.</p>
+              <p class="card-text">별점</p>
+              <p class="card-text"><small class="text-muted">후기 작성 날짜</small></p>
+            </div>
+          </div>
+        </div>
       </div>
-      
-    </div>
+      </div>
       <div
         class="tab-pane fade"
         id="contact-tab-pane"
@@ -171,7 +209,7 @@
         aria-labelledby="contact-tab"
         tabindex="0"
       >
-        환불규정입니다.
+        ...
       </div>
       <div
         class="tab-pane fade"
@@ -180,7 +218,7 @@
         aria-labelledby="disabled-tab"
         tabindex="0"
       >
-        배송비입니다.
+        ...
       </div>
     </div>
     <script
@@ -200,12 +238,8 @@
       })
 
       // 달력에 오늘 날짜 가져오기
-      document.getElementById("wish_date").valueAsDate = new Date();
+      document.getElementById("date-now").valueAsDate = new Date();
       
   </script>
-     <script src="/workshops/js/workshop-detail.js"></script>
-    
-     <!-- 다음 주소 api import -->
-     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>  
-    </body>
+  </body>
 </html>
