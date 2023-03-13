@@ -512,13 +512,45 @@ export class AuthController {
 
   // S3 - cloudFront 실험 api - 데이터 받아오기
   @Post('img-s3-test')
-  @UseInterceptors(FilesInterceptor('images'))
+  @UseInterceptors(FilesInterceptor('images', 4))
   async uploadFileTest(
     @UploadedFiles() images: Array<NewType>,
     @Body() body: any,
   ) {
+    console.log('백엔드로 진입했어.');
     console.log(images);
     console.log(JSON.parse(body.jsonData).title);
+
+    await this.authService.uploadFileToS3(images, JSON.parse(body.jsonData));
+    return true;
+  }
+
+  // S3 - 썸네일 url 받아오기
+  @Get('img-s3-url')
+  async test222222() {
+    const thumbImgUrl = await this.authService.workshopThumbImg();
+    return thumbImgUrl;
+  }
+
+  // S3 - 리뷰 작성 시 동영상 받아오기.
+  @Post('video-s3-test')
+  @UseInterceptors(FileInterceptor('video'))
+  async uploadVideoFileTest(@UploadedFile() video: Express.Multer.File) {
+    console.log('동영상 보내기 api 메소드에 진입');
+    console.log(video);
+    await this.authService.uploadVideoToS3(video);
     return;
   }
+
+  // S3 - 리뷰 동영상 url 받아오기
+  @Get('video-s3-url')
+  async rwjioenw() {
+    const videoUrl = await this.authService.getVideoUrl();
+    return videoUrl;
+  }
+
+  // @Get('pleace')
+  // async ttttttt() {
+  //   await this.authService.userUptest();
+  // }
 }
