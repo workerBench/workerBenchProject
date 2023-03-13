@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Matches,
+} from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -55,6 +62,7 @@ export class WorkShopInstanceDetail {
 
   @IsString({ message: '전화번호를 정확히 입력해 주세요' })
   @IsNotEmpty({ message: '전화번호를 입력해 주세요' })
+  @Matches(/^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/)
   @ApiProperty({
     example: '01022224444',
     description: '수강 문의 신청자의 전화번호. `-` 제외',
@@ -101,6 +109,7 @@ export class WorkShopInstanceDetail {
   @Column('varchar', { name: 'wish_location', length: 100, nullable: true })
   wish_location: string | null;
 
+  @Type(() => Number) // 숫자 타입으로 변환
   @IsNumber()
   @IsNotEmpty({ message: '희망하시는 인원을 적어 주세요' })
   @ApiProperty({
