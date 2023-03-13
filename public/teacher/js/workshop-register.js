@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
   const workshopRegisterBtn = document.getElementById('workshopRegisterBtn');
-
   workshopRegisterBtn.addEventListener('click', () => {
     const thumb = document.getElementById('img').value;
     const category = document.getElementById('category').value;
@@ -36,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/teacher/workshop';
       })
       .catch((response) => {
+        console.log(response);
         const { data } = response.response;
         alert(data.message);
       });

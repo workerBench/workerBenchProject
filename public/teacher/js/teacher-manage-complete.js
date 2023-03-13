@@ -54,9 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <li for="purpose-tag" class="company-input">${createdAt}</li>
                 </div>
                 <div id = button-div>
-                    <button type="radio" id="approvalButton">수락 하기</button>
-                    <button type="radio" id="rejectButton">취소 하기</button>
-                    <button type="radio" id="editButton">수정 하기</button>
+                    <button type="radio" class="Button" id="approvalButton">수락 하기</button>
+                    <button type="radio" class="Button" id="rejectButton">취소 하기</button>
+                    <button type="radio" class="Button" id="editButton">수정 하기</button>
                 </div>
             </div>
         </div>

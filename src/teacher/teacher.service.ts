@@ -44,7 +44,7 @@ export class TeacherService {
     const { phone_number, address, name } = data;
     // const { id } = user;
     try {
-      const id = 10;
+      const id = 11;
       const userIdInfo = await this.userRepository.findOne({
         where: { id },
         select: ['id'],
@@ -72,7 +72,7 @@ export class TeacherService {
           name,
         });
       }
-      return data;
+      return { message: '등록이 완료되었습니다.' };
     } catch (error) {
       console.log(error);
       throw error;
@@ -282,15 +282,17 @@ export class TeacherService {
     }
   }
 
-  // 강사 미완료 워크샵 보기 api
+  // 강사 미완료 워크샵 목록 api
   async getTeacherIncompleteWorkshop() {
     try {
       const id = 10; // 예시
       const Workshop_id = 83;
       const userIdInfo = await this.workshopRepository.find({
         where: { user_id: id },
-        select: ['user_id'],
+        select: ['user_id', 'id'],
       });
+      const workshopIds = userIdInfo.map((info) => info.id);
+      console.log(workshopIds);
       if (!userIdInfo) {
         throw new HttpException(
           '등록되지 않은 유저 입니다.',
@@ -339,7 +341,7 @@ export class TeacherService {
     }
   }
 
-  // 강사 완료 워크샵 보기 api
+  // 강사 완료 워크샵 목록 api
   async getTeacherComplete() {
     try {
       const id = 10; // 예시
@@ -359,8 +361,8 @@ export class TeacherService {
           .where('workshop.user_id = :user_id ', {
             user_id: id,
           })
-          .andWhere('workShopInstanceDetail.user_id  = :user_id ', {
-            user_id: id,
+          .andWhere('workShopInstanceDetail.workshop_id  = :workshop_id ', {
+            workshop_id: workshop_id,
           })
           .andWhere('workShopInstanceDetail.status = :status', {
             status: 'complete',
@@ -396,29 +398,6 @@ export class TeacherService {
   }
 
   // 강사 수강 문의 수락하기 api
-  // async updateTeacherAccept(id: number) {
-  //   try {
-  //     const userId = 10;
-  //     const workshopId = 83;
-  //     const instanceStatus =
-  //       await this.workShopInstanceDetailRepository.findOne({
-  //         where: { user_id: userId, status: 'request' },
-  //         select: ['status'],
-  //       });
-  //     if (instanceStatus.status === 'request') {
-  //       await this.workShopInstanceDetailRepository.update(id, {
-  //         status: 'non_payment',
-  //       });
-  //     }
-  //     if (instanceStatus.status !== 'request') {
-  //       throw new BadRequestException('입력된 요청이 잘못되었습니다.');
-  //     }
-  //     return { message: '워크샵이 수락 되었습니다.' };
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw new BadRequestException('입력된 요청이 잘못되었습니다.');
-  //   }
-  // }
   async updateTeacherAccept(id: number) {
     try {
       const instanceStatus =
