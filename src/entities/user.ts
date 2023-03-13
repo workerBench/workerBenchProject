@@ -22,7 +22,7 @@ export class User {
   @PrimaryGeneratedColumn('increment', { type: 'int', name: 'id' })
   id: number;
 
-  @IsEmail()
+  @IsEmail({}, { message: '이메일을 정확히 입력해 주세요' })
   @IsString({ message: '이메일을 정확히 입력해 주세요' })
   @IsNotEmpty({ message: '이메일을 입력해 주세요' })
   @ApiProperty({
