@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import _ from 'lodash';
 import { Company } from 'src/entities/company';
@@ -9,6 +14,7 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class TeacherService {
+  workShopInstanceDetailRepository: any;
   constructor(
     @InjectRepository(Teacher) private teacherRepository: Repository<Teacher>,
     @InjectRepository(User) private userRepository: Repository<User>,
