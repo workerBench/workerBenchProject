@@ -1,28 +1,115 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Render, Req, Res, UseGuards } from '@nestjs/common';
+import { CurrentUser } from 'src/common/decorators/user.decorator';
+import { Response, Request } from 'express';
+import { CurrentUserDto } from './dtos/current-user.dto';
+import { JwtUserPageGuard } from './jwt/refresh-page-check/user/jwt-user-page-guard';
+import { TOKEN_NAME } from './naming/token-name';
+import { RealIP } from 'nestjs-real-ip';
+import { AuthService } from './auth.service';
 
 @Controller()
 export class AuthControllerRender {
+  constructor(private readonly authService: AuthService) {}
+
+  // 로그인 페이지
   @Get('/auth/login')
-  @Render('auth/login')
-  q() {
-    return;
+  @UseGuards(JwtUserPageGuard)
+  async getLoginPage(
+    @CurrentUser() user: CurrentUserDto | boolean,
+    @Req() req: Request,
+    @Res() res: Response,
+    @RealIP() clientIp: string,
+  ) {
+    // 로그인이 되어 있지 않을 경우. 로그인 화면을 그냥 보여준다.
+    if (typeof user === 'boolean' && user === false) {
+      return res.render('auth/login');
+    }
+
+    // 로그인이 되어 있는 경우. 이미 로그인이 되어 있으니 메인 화면으로 가라는 페이지를 보여준다.
+    // 해당 페이지가 정말로 중요한 페이지다? ip와 redis 까지 명백히 검사. 아니면 그냥 render 를 바로 리턴.
+    if (typeof user === 'object') {
+      try {
+        // 사용자의 refresh token 을 가져온다
+        const refreshToken = req.cookies[TOKEN_NAME.userRefresh];
+        // refresh 토큰 인증 검사
+        await this.authService.checkRefreshTokenInRedis(
+          user.id,
+          user.user_type,
+          clientIp,
+          refreshToken,
+        );
+        // 해당 유저가 확실하게 로그인된 상태임을 알았으니, 이미 로그인이 되어 있다는 화면을 전달.
+        return res.render('auth/login-user-go-to-main');
+      } catch (err) {
+        // 로그인은 되어 있으나, refresh 토큰에 뭔가 문제가 있거나 redis 에서 로그인 기록을 찾지를 못하고 있다.
+        return res.render('auth/non-authority');
+      }
+    }
   }
 
-  @Get('/auth/password/change')
-  @Render('auth/password-change')
-  b() {
-    return;
-  }
-
-  @Get('/auth/password/reset')
-  @Render('auth/password-reset')
-  c() {
-    return;
-  }
-
+  // 회원가입 페이지
   @Get('/auth/signup')
-  @Render('auth/signup')
-  d() {
-    return;
+  @UseGuards(JwtUserPageGuard)
+  async getRegisterPage(
+    @CurrentUser() user: CurrentUserDto | boolean,
+    @Res() res: Response,
+  ) {
+    // 토큰 인증을 통과하지 못했다 = 즉 로그인 상태가 아니니 회원가입 페이지를 보여준다.
+    if (typeof user === 'boolean' && user === false) {
+      return res.render('auth/signup');
+    }
+    // 토큰 인증을 통과했다 = 즉 로그인 상태이니 회원가입이 필요없다며 메인으로 가라는 페이지를 보여준다.
+    return res.render('auth/login-user-go-to-main');
+  }
+
+  // 비밀번호 재설정 시도 시 이메일 인증 신청 페이지.
+  @Get('/auth/password/reset')
+  @UseGuards(JwtUserPageGuard)
+  async getEmailAuthPageForPasswordReset(
+    @CurrentUser() user: CurrentUserDto | boolean,
+    @Res() res: Response,
+  ) {
+    // 토큰 인증을 통과하지 못했다 = 로그인 상태가 아니니 로그인 화면으로 가라는 페이지를 보여준다.
+    if (typeof user === 'boolean' && user === false) {
+      return res.render('auth/non-login');
+    }
+    // 토큰 인증을 통과 했다 = 로그인 된 상태이니 이메인 인증 신청 페이지를 보여준다.
+    return res.render('auth/password-reset');
+  }
+
+  // 비밀번호 재설정 시도 시 이메일 인증 통과 후 재설정 페이지.
+  @Get('/auth/password/change')
+  @UseGuards(JwtUserPageGuard)
+  async getPasswordResetPage(
+    @CurrentUser() user: CurrentUserDto | boolean,
+    @Req() req: Request,
+    @Res() res: Response,
+    @RealIP() clientIp: string,
+  ) {
+    // 토큰 검증을 통과하지 못했다 = 로그인이 필요하다.
+    if (typeof user === 'boolean' && user === false) {
+      return res.render('auth/non-login');
+    }
+    if (typeof user === 'object') {
+      try {
+        // 사용자의 refresh token 을 가져온다
+        const refreshToken = req.cookies[TOKEN_NAME.userRefresh];
+        // refresh 토큰 인증 검사
+        await this.authService.checkRefreshTokenInRedis(
+          user.id,
+          user.user_type,
+          clientIp,
+          refreshToken,
+        );
+        // 이메일 인증을 통한 비밀번호 재설정 절차를 진행중인 유저인지 확인한다.
+        await this.authService.checkResetPsOnTheWay(user.id, user.email);
+
+        // 해당 유저가 로그인 된 유저이며 적합한 절차로 비밀번호 재설정을 진행하고 있음. 따라서 재설정 페이지를 보여준다.
+        return res.render('auth/password-change');
+      } catch (err) {
+        // 토큰 인증, 혹은 이메일 인증 절차 진행 중임을 증명하지 못했음으로 자격이 없다는 페이지를 보여준다.
+        return res.render('auth/non-authority');
+      }
+    }
   }
 }

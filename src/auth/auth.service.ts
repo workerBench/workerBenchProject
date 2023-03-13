@@ -1,6 +1,11 @@
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { MailerService } from '@nestjs-modules/mailer';
-import { ConflictException, HttpException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  HttpException,
+  Injectable,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -56,20 +61,15 @@ export class AuthService {
   // 유저 회원가입 시 유효성 검사
   async checkEffective(userInfo: RegisterAuthDto) {
     const { email, password, authentNum } = userInfo;
+
     if (!email || !email.includes('@') || !email.includes('.')) {
-      const err = new Error('이메일 형식이 올바르지 않습니다.');
-      err.name = 'WrongEmailError';
-      throw err;
+      throw new BadRequestException('이메일 형식이 올바르지 않습니다.');
     }
     if (password !== authentNum) {
-      const err = new Error('패스워드가 일치하지 않습니다.');
-      err.name = 'WrongPasswordError';
-      throw err;
+      throw new BadRequestException('패스워드가 일치하지 않습니다.');
     }
     if (password.length < 4) {
-      const err = new Error('패스워드가 짧습니다.');
-      err.name = 'WrongPasswordError';
-      throw err;
+      throw new BadRequestException('패스워드가 짧습니다.');
     }
   }
 
@@ -78,28 +78,20 @@ export class AuthService {
     const { email, password, name, phone_number } = adminInfo;
 
     if (!email || !email.includes('@') || !email.includes('.')) {
-      const err = new Error('이메일 형식이 올바르지 않습니다.');
-      err.name = 'WrongEmailError';
-      throw err;
+      throw new BadRequestException('이메일 형식이 올바르지 않습니다.');
     }
     if (password.length < 4) {
-      const err = new Error('패스워드가 짧습니다.');
-      err.name = 'WrongPasswordError';
-      throw err;
+      throw new BadRequestException('패스워드가 짧습니다.');
     }
     if (!name) {
-      const err = new Error('올바른 이름이 아닙니다.');
-      err.name = 'WrongNameError';
-      throw err;
+      throw new BadRequestException('올바른 이름이 아닙니다.');
     }
     if (
       !phone_number ||
       phone_number.includes('-') ||
       phone_number.length !== 11
     ) {
-      const err = new Error('올바른 전화번호가 아닙니다.');
-      err.name = 'WrongPhoneNumberError';
-      throw err;
+      throw new BadRequestException('올바른 전화번호가 아닙니다.');
     }
     return;
   }
@@ -108,9 +100,7 @@ export class AuthService {
   async checkingAccount(email: string) {
     const check_email = await this.userRepository.findOne({ where: { email } });
     if (check_email) {
-      const err = new Error('이미 존재하는 이메일 입니다.');
-      err.name = 'DuplicationEmailError';
-      throw err;
+      throw new BadRequestException('이미 존재하는 이메일 입니다.');
     }
   }
 
@@ -120,9 +110,7 @@ export class AuthService {
       where: { email },
     });
     if (check_email) {
-      const err = new Error('이미 존재하는 이메일 입니다.');
-      err.name = 'DuplicationEmailError';
-      throw err;
+      throw new BadRequestException('이미 존재하는 이메일 입니다.');
     }
   }
 
@@ -154,9 +142,7 @@ export class AuthService {
       emailAuthCodeRedisKey(email),
     );
     if (authCodeOfRedis !== emailAuthCode) {
-      const err = new Error('입력하신 인증번호가 적합하지 않습니다.');
-      err.name = 'WrongEmailAuthCode';
-      throw err;
+      throw new BadRequestException('입력하신 인증번호가 적합하지 않습니다.');
     }
     return;
   }
@@ -238,7 +224,7 @@ export class AuthService {
     );
     await this.redisClient.setex(
       refreshTokenRedisKey(userTypeString, id),
-      100,
+      3000,
       `${clientIp}_#_${refreshToekn}`,
     );
     return refreshToekn;
@@ -270,7 +256,7 @@ export class AuthService {
 
     await this.redisClient.setex(
       refreshTokenRedisKey(adminTypeString, id),
-      100,
+      3000,
       `${clientIp}_#_${refreshToekn}`,
     );
     return refreshToekn;
@@ -283,15 +269,15 @@ export class AuthService {
       select: ['id', 'email', 'password', 'user_type'],
     });
     if (!userInfo) {
-      const err = new Error('이메일 또는 비밀번호가 일치하지 않습니다');
-      err.name = 'DoesntExistEmailOrPasswordError';
-      throw err;
+      throw new BadRequestException(
+        '이메일 또는 비밀번호가 일치하지 않습니다.',
+      );
     }
 
     if (!(await bcrypt.compare(password, userInfo.password))) {
-      const err = new Error('이메일 또는 비밀번호가 일치하지 않습니다');
-      err.name = 'DoesntExistEmailOrPasswordError';
-      throw err;
+      throw new BadRequestException(
+        '이메일 또는 비밀번호가 일치하지 않습니다.',
+      );
     }
 
     return userInfo;
@@ -359,7 +345,10 @@ export class AuthService {
     if (userType === 1) {
       userTypeString = userTypeNaming.teacher;
     }
-
+    console.log('111');
+    console.log(
+      await this.redisClient.get(refreshTokenRedisKey(userTypeString, id)),
+    );
     const clientInfoFromRedis = (
       await this.redisClient.get(refreshTokenRedisKey(userTypeString, id))
     ).split('_#_');
@@ -488,6 +477,20 @@ export class AuthService {
     return;
   }
 
+  async checkResetPsOnTheWay(id: number, email: string) {
+    const result = await this.redisClient.get(
+      thisUserOnTheWayToChangePs(email, id),
+    );
+
+    if (!result) {
+      const err = new Error('이메일 인증 절차를 거치지 않은 상태입니다.');
+      err.name = 'NeedToEmailAuthCode';
+      throw err;
+    }
+
+    return;
+  }
+
   async checkEffectiveForResetPs(info: ResetPassword) {
     const { password, authentNum } = info;
     if (password !== authentNum) {
@@ -505,20 +508,6 @@ export class AuthService {
   async changePassword(password: string, id: number, email: string) {
     const newPassword = await bcrypt.hash(password, 12);
     await this.userRepository.update({ id, email }, { password: newPassword });
-    return;
-  }
-
-  async checkResetPsOnTheWay(id: number, email: string) {
-    const result = await this.redisClient.get(
-      thisUserOnTheWayToChangePs(email, id),
-    );
-
-    if (!result) {
-      const err = new Error('이메일 인증 절차를 거치지 않은 상태입니다.');
-      err.name = 'NeedToEmailAuthCode';
-      throw err;
-    }
-
     return;
   }
 

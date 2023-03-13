@@ -63,13 +63,10 @@ export class AuthController {
       await this.authService.checkingAccount(body.email);
       // 이메일 인증 코드 발급. 발급된 인증코드는 redis 에 캐싱으로 저장
       await this.authService.sendingEmailAuthCode(body.email);
-
       return true;
     } catch (err) {
-      // 에러가 string. 지역 에러
-      throw new HttpException(`${err.message}`, 401);
-      // 에러가 객체. 전역 에러
-      // throw new BadRequestException(`${err.message}`);
+      //throw new BadRequestException({}, `베드 리퀘스트임!`);
+      throw err;
     }
   }
 
@@ -109,7 +106,7 @@ export class AuthController {
       response.cookie(TOKEN_NAME.userRefresh, refreshToken, { httpOnly: true });
       return true;
     } catch (err) {
-      throw new BadRequestException(`${err.message}`);
+      throw err;
     }
   }
 
@@ -123,6 +120,7 @@ export class AuthController {
   @Post('login/user')
   async login(
     @Body() body: LoginDto,
+    @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
     @RealIP() clientIp: string,
   ) {
@@ -130,10 +128,18 @@ export class AuthController {
     let userInfo: User;
 
     try {
+      // 유저가 로그인 한 뒤 뒤로가기 버튼으로 다시 로그인 화면으로 돌아와 재차 로그인을 시도할 경우
+      // 사용자의 refresh token 을 가져온다
+      const refreshToken = request.cookies[TOKEN_NAME.userRefresh];
+      if (refreshToken) {
+        throw new BadRequestException(
+          '현재 로그인 기록이 남아있는 상태입니다. 로그아웃 후 재시도 부탁드립니다.',
+        );
+      }
       // 유저 찾기
       userInfo = await this.authService.checkLoginUser(email, password);
     } catch (err) {
-      throw new BadRequestException(`${err.message}`);
+      throw err;
     }
 
     // 검증 후 토큰 발행

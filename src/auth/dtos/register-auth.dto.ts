@@ -7,7 +7,7 @@ export class RegisterAuthDto extends PickType(User, [
   'password',
 ] as const) {
   @IsString()
-  @IsNotEmpty({ message: '비밀번호가 일치하지 않습니다' })
+  @IsNotEmpty()
   @ApiProperty({
     example: '12345',
     description: 'password 2차 검증',
