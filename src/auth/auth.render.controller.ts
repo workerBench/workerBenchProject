@@ -18,7 +18,7 @@ export class AuthControllerRender {
     @CurrentUser() user: CurrentUserDto | boolean,
     @Req() req: Request,
     @Res() res: Response,
-    @RealIP() clientIp: string,
+    @RealIP() clientIp: string
   ) {
     // 로그인이 되어 있지 않을 경우. 로그인 화면을 그냥 보여준다.
     if (typeof user === 'boolean' && user === false) {
@@ -36,7 +36,7 @@ export class AuthControllerRender {
           user.id,
           user.user_type,
           clientIp,
-          refreshToken,
+          refreshToken
         );
         // 해당 유저가 확실하게 로그인된 상태임을 알았으니, 이미 로그인이 되어 있다는 화면을 전달.
         return res.render('auth/login-user-go-to-main');
@@ -52,10 +52,7 @@ export class AuthControllerRender {
   // 회원가입 페이지
   @Get('/auth/signup')
   @UseGuards(JwtUserPageGuard)
-  async getRegisterPage(
-    @CurrentUser() user: CurrentUserDto | boolean,
-    @Res() res: Response,
-  ) {
+  async getRegisterPage(@CurrentUser() user: CurrentUserDto | boolean, @Res() res: Response) {
     // 토큰 인증을 통과하지 못했다 = 즉 로그인 상태가 아니니 회원가입 페이지를 보여준다.
     if (typeof user === 'boolean' && user === false) {
       return res.render('auth/signup');
@@ -69,7 +66,7 @@ export class AuthControllerRender {
   @UseGuards(JwtUserPageGuard)
   async getEmailAuthPageForPasswordReset(
     @CurrentUser() user: CurrentUserDto | boolean,
-    @Res() res: Response,
+    @Res() res: Response
   ) {
     // 토큰 인증을 통과하지 못했다 = 로그인 상태가 아니니 페이지 열람 가능.
     if (typeof user === 'boolean' && user === false) {
@@ -86,7 +83,7 @@ export class AuthControllerRender {
     @CurrentUser() user: CurrentUserDto | boolean,
     @Req() req: Request,
     @Res() res: Response,
-    @RealIP() clientIp: string,
+    @RealIP() clientIp: string
   ) {
     // 토큰 검증을 통과했다 = 로그인 상태이니 로그아웃 후 다시 진행하라는 페이지를 보여줌.
     if (typeof user === 'object') {

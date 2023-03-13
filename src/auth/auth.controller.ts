@@ -13,7 +13,7 @@ import {
   UploadedFiles,
   UploadedFile,
   Patch,
-  Delete,
+  Delete
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -53,12 +53,11 @@ export class AuthController {
   // 유저 회원가입 시도 시 유효성 검사
   @ApiResponse({
     status: 201,
-    description: '성공',
+    description: '성공'
   })
   @ApiOperation({ summary: '회원가입 - 인증 api' })
   @Post('register')
   async register(@Body() body: RegisterAuthDto) {
-    console.log(body)
     try {
       // 유효성 검사
       await this.authService.checkEffective(body);
@@ -77,14 +76,14 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: '성공',
-    type: Boolean,
+    type: Boolean
   })
   @ApiOperation({ summary: '회원가입 - join api' })
   @Post('register/join')
   async registerJoin(
     @Body() body: RegisterJoinDto,
     @Res({ passthrough: true }) response: Response,
-    @RealIP() clientIp: string,
+    @RealIP() clientIp: string
   ) {
     const { email, password, emailAuthCode } = body;
 
@@ -97,13 +96,13 @@ export class AuthController {
       const accessToken = await this.authService.makeAccessToken(
         createdUser.id,
         createdUser.email,
-        createdUser.user_type,
+        createdUser.user_type
       );
       const refreshToken = await this.authService.makeRefreshToken(
         createdUser.id,
         createdUser.email,
         createdUser.user_type,
-        clientIp,
+        clientIp
       );
       response.cookie(TOKEN_NAME.userAccess, accessToken, { httpOnly: true });
       response.cookie(TOKEN_NAME.userRefresh, refreshToken, { httpOnly: true });
@@ -117,7 +116,7 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: '성공',
-    type: RegisterJoinDto,
+    type: RegisterJoinDto
   })
   @ApiOperation({ summary: '로그인 api' })
   @Post('login/user')
@@ -125,7 +124,7 @@ export class AuthController {
     @Body() body: LoginDto,
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
-    @RealIP() clientIp: string,
+    @RealIP() clientIp: string
   ) {
     const { email, password } = body;
     let userInfo: User;
@@ -138,7 +137,7 @@ export class AuthController {
         response.clearCookie(TOKEN_NAME.userAccess);
         response.clearCookie(TOKEN_NAME.userRefresh);
         throw new BadRequestException(
-          '기존의 로그인 기록이 남아있는 상태입니다. 로그인 재시도 부탁드립니다.',
+          '기존의 로그인 기록이 남아있는 상태입니다. 로그인 재시도 부탁드립니다.'
         );
       }
       // 유저 찾기
@@ -151,13 +150,13 @@ export class AuthController {
     const accessToken = await this.authService.makeAccessToken(
       userInfo.id,
       userInfo.email,
-      userInfo.user_type,
+      userInfo.user_type
     );
     const refreshToken = await this.authService.makeRefreshToken(
       userInfo.id,
       userInfo.email,
       userInfo.user_type,
-      clientIp,
+      clientIp
     );
 
     response.cookie(TOKEN_NAME.userAccess, accessToken, { httpOnly: true });
@@ -169,14 +168,14 @@ export class AuthController {
   // 유저 or 강사의 access token 에 문제가 있을 시 refresh token 검증 요청
   @ApiResponse({
     status: 200,
-    description: '성공',
+    description: '성공'
   })
   @ApiResponse({
     status: 400,
-    description: '실패',
+    description: '실패'
   })
   @ApiOperation({
-    summary: 'refresh token 이 유효하다면 access token 을 재발급',
+    summary: 'refresh token 이 유효하다면 access token 을 재발급'
   })
   @Get('refreshtoken/user')
   @UseGuards(JwtRefreshAuthGuard)
@@ -184,7 +183,7 @@ export class AuthController {
     @CurrentUser() user: CurrentUserDto,
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
-    @RealIP() clientIp: string,
+    @RealIP() clientIp: string
   ) {
     try {
       // 사용자의 refresh token 을 가져온다
@@ -195,14 +194,14 @@ export class AuthController {
         user.id,
         user.user_type,
         clientIp,
-        refreshToken,
+        refreshToken
       );
 
       // 토큰 검증에 문제가 없을 경우 access token 을 재발급 해준다.
       const accessToken = await this.authService.makeAccessToken(
         user.id,
         user.email,
-        user.user_type,
+        user.user_type
       );
 
       response.cookie(TOKEN_NAME.userAccess, accessToken, { httpOnly: true });
@@ -217,14 +216,14 @@ export class AuthController {
   // 관리자 등록 (회원가입)
   @ApiResponse({
     status: 201,
-    description: '성공',
+    description: '성공'
   })
   @ApiOperation({ summary: '관리자 등록' })
   @Post('admin')
   async adminRegister(
     @Body() body: AdminRegisterJoinDto,
     @Res({ passthrough: true }) response: Response,
-    @RealIP() clientIp: string,
+    @RealIP() clientIp: string
   ) {
     try {
       // 유효성 검사
@@ -237,18 +236,18 @@ export class AuthController {
       const accessToken = await this.authService.makeAccessTokenForAdmin(
         createdAdminUser.id,
         createdAdminUser.email,
-        createdAdminUser.admin_type,
+        createdAdminUser.admin_type
       );
       const refreshToken = await this.authService.makeRefreshTokenForAdmin(
         createdAdminUser.id,
         createdAdminUser.email,
         createdAdminUser.admin_type,
-        clientIp,
+        clientIp
       );
       // 토큰 쿠키에 삽입
       response.cookie(TOKEN_NAME.adminAccess, accessToken, { httpOnly: true });
       response.cookie(TOKEN_NAME.adminRefresh, refreshToken, {
-        httpOnly: true,
+        httpOnly: true
       });
 
       return true;
@@ -262,18 +261,18 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: '성공',
-    type: AdminLoginDto,
+    type: AdminLoginDto
   })
   @ApiResponse({
     status: 400,
-    description: '실패',
+    description: '실패'
   })
   @ApiOperation({ summary: '관리자 로그인 api' })
   @Post('login/admin')
   async adminLogin(
     @Body() body: AdminLoginDto,
     @Res({ passthrough: true }) response: Response,
-    @RealIP() clientIp: string,
+    @RealIP() clientIp: string
   ) {
     const { email, password } = body;
     let adminInfo: AdminUser;
@@ -289,13 +288,13 @@ export class AuthController {
     const accessToken = await this.authService.makeAccessTokenForAdmin(
       adminInfo.id,
       adminInfo.email,
-      adminInfo.admin_type,
+      adminInfo.admin_type
     );
     const refreshToken = await this.authService.makeRefreshTokenForAdmin(
       adminInfo.id,
       adminInfo.email,
       adminInfo.admin_type,
-      clientIp,
+      clientIp
     );
 
     // 쿠키에 토큰 삽입
@@ -308,14 +307,14 @@ export class AuthController {
   // 관리자의 access token 에 문제가 있을 시 refresh token 검증 요청
   @ApiResponse({
     status: 200,
-    description: '성공',
+    description: '성공'
   })
   @ApiResponse({
     status: 400,
-    description: '실패',
+    description: '실패'
   })
   @ApiOperation({
-    summary: 'refresh token 이 유효하다면 access token 을 재발급',
+    summary: 'refresh token 이 유효하다면 access token 을 재발급'
   })
   @Get('refreshtoken/admin')
   @UseGuards(JwtAdminRefreshAuthGuard)
@@ -323,7 +322,7 @@ export class AuthController {
     @CurrentUser() user: CurrentAdminDto,
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
-    @RealIP() clientIp: string,
+    @RealIP() clientIp: string
   ) {
     try {
       // 관리자의 refresh token 을 가져온다
@@ -333,13 +332,13 @@ export class AuthController {
         user.id,
         user.admin_type,
         clientIp,
-        refreshToken,
+        refreshToken
       );
       // 토큰 검증에 문제가 없을 경우 access token 을 재발급 해준다.
       const accessToken = await this.authService.makeAccessTokenForAdmin(
         user.id,
         user.email,
-        user.admin_type,
+        user.admin_type
       );
       response.cookie(TOKEN_NAME.adminAccess, accessToken, { httpOnly: true });
       return true;
@@ -354,7 +353,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: '성공',
-    type: AdminRemoveDto,
+    type: AdminRemoveDto
   })
   @ApiOperation({ summary: '관리자 삭제' })
   @Delete('admin')
@@ -365,7 +364,7 @@ export class AuthController {
   // 유저 로그아웃
   @ApiResponse({
     status: 200,
-    description: '성공',
+    description: '성공'
   })
   @ApiOperation({ summary: '유저 로그아웃 api' })
   @Get('logout/user')
@@ -378,7 +377,7 @@ export class AuthController {
   // 관리자 로그아웃
   @ApiResponse({
     status: 200,
-    description: '성공',
+    description: '성공'
   })
   @ApiOperation({ summary: '관리자 로그아웃 api' })
   @Get('logout/admin')
@@ -391,11 +390,10 @@ export class AuthController {
   // 유저 비밀번호 재설정 하기 - 이메일을 입력하여 재설정 시도
   @ApiResponse({
     status: 201,
-    description:
-      '비밀번호 재설정 시도 시 이메일 입력 후 해당 이메일이 가입자라면 인증코드 발송',
+    description: '비밀번호 재설정 시도 시 이메일 입력 후 해당 이메일이 가입자라면 인증코드 발송'
   })
   @ApiOperation({
-    summary: '유저 비밀번호 재설정 하기 - 이메일을 입력하여 재설정 시도',
+    summary: '유저 비밀번호 재설정 하기 - 이메일을 입력하여 재설정 시도'
   })
   @Post('reset-password')
   async emailForResetPassWord(@Body() body: EmailForReset) {
@@ -413,29 +411,24 @@ export class AuthController {
   // 유저 비밀번호 재설정 하기 - 이메일 인증코드 입력
   @ApiResponse({
     status: 201,
-    description: '비밀번호 재설정 시도 시 이메일 인증코드 입력 - 성공',
+    description: '비밀번호 재설정 시도 시 이메일 인증코드 입력 - 성공'
   })
   @ApiResponse({
     status: 400,
-    description:
-      '비밀번호 재설정 시도 시 이메일 인증코드 입력 - 코드 불일치로 인한 실패',
+    description: '비밀번호 재설정 시도 시 이메일 인증코드 입력 - 코드 불일치로 인한 실패'
   })
   @ApiOperation({
-    summary: '유저 비밀번호 재설정 하기 - 이메일 인증코드 발송',
+    summary: '유저 비밀번호 재설정 하기 - 이메일 인증코드 발송'
   })
   @Post('reset-password/email-code')
   async authCodeForResetPassword(
     @Body() body: AuthCodeForRePs,
     @Res({ passthrough: true }) response: Response,
-    @RealIP() clientIp: string,
+    @RealIP() clientIp: string
   ) {
     try {
       // 입력받은 이메일 인증번호 검증. 검증이 완료되면 비밀번호 재설정 절차에 진입한다.
-      await this.authService.checkingResetCode(
-        body.email,
-        body.emailAuthCode,
-        clientIp,
-      );
+      await this.authService.checkingResetCode(body.email, body.emailAuthCode, clientIp);
       // 이메일을 잠시 쿠키에 저장
       response.cookie(TOKEN_NAME.emailForChangePs, body.email);
       return;
@@ -447,18 +440,18 @@ export class AuthController {
   // 유저 비밀번호 재설정 - 이메일 인증 완료 후 비밀번호 재설정
   @ApiResponse({
     status: 201,
-    description: '비밀번호 재설정 - 성공',
+    description: '비밀번호 재설정 - 성공'
   })
   @ApiResponse({
     status: 400,
-    description: '비밀번호 재설정 - 적합하지 않은 비밀번호 입력 시 실패',
+    description: '비밀번호 재설정 - 적합하지 않은 비밀번호 입력 시 실패'
   })
   @Patch('reset-password')
   async resetPassword(
     @Body() body: ResetPassword,
     @Res({ passthrough: true }) response: Response,
     @Req() request: Request,
-    @RealIP() clientIp: string,
+    @RealIP() clientIp: string
   ) {
     try {
       // 해당 유저가 진정 이메일 인증 절차를 진행하여 비밀번호를 재설정 하려 하는 것인지 검사
@@ -529,10 +522,7 @@ export class AuthController {
   // S3 - cloudFront 실험 api - 데이터 받아오기
   @Post('img-s3-test')
   @UseInterceptors(FilesInterceptor('images', 4))
-  async uploadFileTest(
-    @UploadedFiles() images: Array<NewType>,
-    @Body() body: any,
-  ) {
+  async uploadFileTest(@UploadedFiles() images: Array<NewType>, @Body() body: any) {
     console.log('백엔드로 진입했어.');
     console.log(images);
     console.log(JSON.parse(body.jsonData).title);
