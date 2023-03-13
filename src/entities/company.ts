@@ -137,11 +137,10 @@ export class Company {
   @OneToOne(() => Teacher, (teacher) => teacher.MyCompany)
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'user_id' }])
   President: Teacher;
-
-  // 2. company_application
+  // 3. company_application
   @OneToMany(
     () => CompanyApplication,
     (companyApplication) => companyApplication.AppliedCompany,
   )
   AppliedCompanyList: CompanyApplication[];
-}
+ }
