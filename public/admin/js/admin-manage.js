@@ -5,7 +5,6 @@ axios.get("../api/admin/admin/list")
     for (let adminUser of adminUsers) {
       html += `
         <tr>
-          <td>${adminUser.id}</td>
           <td>${adminUser.name}</td>
           <td>${adminUser.email}</td>
           <td>${adminUser.createdAt.split('T')[0]}</td>
