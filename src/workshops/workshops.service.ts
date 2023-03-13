@@ -41,7 +41,7 @@ export class WorkshopsService {
         'workshop.total_time',
         'workshop.price',
         'genre_tag.name',
-        'GROUP_CONCAT(purposetag.name) AS purpose_name',
+        'GROUP_CONCAT(purposeTag.name) AS purpose_name',
         'workshop.deletedAt',
       ])
       .innerJoin(Order, 'o', 'workshop.id = o.workshop_id') // order 테이블과 join
@@ -79,7 +79,7 @@ export class WorkshopsService {
         'workshop.total_time',
         'workshop.price',
         'genre_tag.name',
-        'GROUP_CONCAT(purposetag.name) AS purpose_name',
+        'GROUP_CONCAT(purposeTag.name) AS purpose_name',
         'workshop.updatedAt',
         'workshop.deletedAt',
       ])
