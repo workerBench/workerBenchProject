@@ -20,7 +20,7 @@ export class MypageService {
     constructor(
         private readonly workshopRepository: WorkshopRepository,
         @InjectRepository(WishList)
-        private readonly wishRepository: Repository<WishList>,
+        private readonly wishListRepository: Repository<WishList>,
         @InjectRepository(Review)
         private readonly reviewRepository: Repository<Review>,
         @InjectRepository(ReviewImage)
@@ -29,43 +29,7 @@ export class MypageService {
         private readonly workShopInstanceDetailRepository: Repository<WorkShopInstanceDetail>,
     ){}
 
-    // 나의 워크샵 목록
-    async GetMyWorkshops() {
-      // id:number
-      try {
-        const id = 10; // 예시
-        const userIdInfo = await this.workshopRepository.find({
-          where: { user_id: id },
-          select: ['user_id'],
-        });
-        if (!userIdInfo) {
-          throw new HttpException(
-            '등록되지 않은 유저 입니다.',
-            HttpStatus.BAD_REQUEST,
-          );
-        } else {
-          let result = await this.workshopRepository
-            .createQueryBuilder('workshop')
-            .where('workshop.user_id = :user_id', { user_id: id })
-            .innerJoinAndSelect('workshop.GenreTag', 'genreTag')
-            .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
-            .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
-            .select([
-              'workshop.thumb',
-              'workshop.title',
-              'workshop.createdAt',
-              'workshop.status',
-              'genreTag.name',
-              'purposeTag.name',
-            ])
-            .getRawMany();
-          return result;
-        }
-      } catch (error) {
-        console.log(error);
-        throw new BadRequestException('입력된 요청이 잘못되었습니다.');
-      }
-    }
+
 
 
     // 수강 예정 워크샵 출력
@@ -73,6 +37,7 @@ export class MypageService {
         return await this.workShopInstanceDetailRepository.find({
           where: [{ status: 'request' }, { status: 'non_payment'}, { status: 'waiting_lecture'} ],
           order: { updatedAt: 'DESC' },
+          take: 999,
         });
       }
 
@@ -94,11 +59,11 @@ export class MypageService {
             select: ['status'],
           });
           if (!status) {
-            throw new NotFoundException('등록된 워크샵이 없습니다.');
+            throw new NotFoundException('해당하는 워크샵 id가 없습니다.');
           } else {
             await this.workShopInstanceDetailRepository.update(id, { status: 'waiting_lecture' });
           }
-          return { message: '워크샵이 결제 되었습니다.' };
+          return { message: '결제가 완료되었습니다.' };
         } catch (error) {
           console.log(error);
           throw new BadRequestException('입력된 요청이 잘못되었습니다.');
@@ -113,7 +78,7 @@ export class MypageService {
         // id:number
         try {
           const id = 10; // 예시
-          const userIdInfo = await this.workshopRepository.find({
+          const userIdInfo = await this.wishListRepository.find({
             where: { user_id: id },
             select: ['user_id'],
           });
@@ -123,7 +88,7 @@ export class MypageService {
               HttpStatus.BAD_REQUEST,
             );
           } else {
-            let result = await this.workshopRepository
+            let result = await this.wishListRepository
               .createQueryBuilder('workshop')
               .where('workshop.user_id = :user_id', { user_id: id })
               .innerJoinAndSelect('workshop.GenreTag', 'genreTag')
@@ -154,14 +119,14 @@ export class MypageService {
       만약 값이 있으면 찜 해제
       없으면 user_id와 workshop_id insert */
       async updateWishListCancel(user_id: number, workshop_id: number) {
-        const IsWish = await this.wishRepository.findOne({
+        const IsWish = await this.wishListRepository.findOne({
           where: { user_id, workshop_id },
         });
         if (IsWish === null) {
-          await this.wishRepository.insert({ user_id, workshop_id });
+          await this.wishListRepository.insert({ user_id, workshop_id });
           return '찜하기 성공!';
         }
-        await this.wishRepository.delete({ user_id, workshop_id }); // 찜 해제
+        await this.wishListRepository.delete({ user_id, workshop_id }); // 찜 해제
         return '찜하기 취소!';
       }
 

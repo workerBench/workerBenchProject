@@ -1,25 +1,32 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller,Get,Render } from '@nestjs/common';
 @Controller('teacher')
 export class TeacherControllerRender {
   @Get('/manage/incomplete')
   @Render('teacher/teacher-manage-incomplete')
-  q() {}
+  q() {
+  }
   @Get('/register')
   @Render('teacher/teacher-register')
-  b() {}
+  b() {
+  }
   @Get('/workshop/information')
   @Render('teacher/teacher-workshop-information')
-  c() {}
+  c() {
+  }
   @Get('/workshop')
   @Render('teacher/teacher-workshop')
-  d() {}
+  d() {
+  }
   @Get('/workshop/register')
   @Render('teacher/workshop-register')
-  e() {}
+  e() {
+  }
   @Get('/company/register')
   @Render('teacher/company-register')
-  f() {}
+  f() {
+  }
   @Get('/manage/complete')
   @Render('teacher/teacher-manage-complete')
-  a() {}
+  a() {
+  }
 }
