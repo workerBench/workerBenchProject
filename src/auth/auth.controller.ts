@@ -9,7 +9,13 @@ import {
   HttpException,
   UseGuards,
   Req,
+  Render,
+  UploadedFiles,
+  UploadedFile,
+  Patch,
+  Delete,
 } from '@nestjs/common';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 import { RealIP } from 'nestjs-real-ip';
@@ -21,10 +27,13 @@ import { AuthService } from './auth.service';
 import { AdminLoginDto } from './dtos/admin-login.dto';
 import { AdminRegisterJoinDto } from './dtos/admin-register-join';
 import { AdminRemoveDto } from './dtos/admin-remove.dto';
+import { AuthCodeForRePs } from './dtos/authcode-re-ps.dto';
 import { CurrentAdminDto, CurrentUserDto } from './dtos/current-user.dto';
+import { EmailForReset } from './dtos/email-re-ps.dto';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterAuthDto } from './dtos/register-auth.dto';
 import { RegisterJoinDto } from './dtos/register-join';
+import { ResetPassword } from './dtos/reset-password.dto';
 import { JwtNormalAdminAuthGuard } from './jwt/access/admin/jwt-normal-admin-guard';
 import { JwtSuperAdminAuthGuard } from './jwt/access/admin/jwt-super-admin-guard';
 import { JwtTeacherAuthGuard } from './jwt/access/user/jwt-teacher-guard';
@@ -41,7 +50,7 @@ export class AuthController {
 
   // 유저 회원가입 시도 시 유효성 검사
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: '성공',
   })
   @ApiOperation({ summary: '회원가입 - 인증 api' })
@@ -67,7 +76,7 @@ export class AuthController {
 
   // 유저 회원가입 시도 시 유효성 검사 통과 후 실제 join
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: '성공',
     type: Boolean,
   })
@@ -107,12 +116,12 @@ export class AuthController {
 
   // 유저, 강사 로그인
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: '성공',
     type: RegisterJoinDto,
   })
   @ApiOperation({ summary: '로그인 api' })
-  @Post('login')
+  @Post('login/user')
   async login(
     @Body() body: LoginDto,
     @Res({ passthrough: true }) response: Response,
@@ -148,6 +157,14 @@ export class AuthController {
   }
 
   // 유저 or 강사의 access token 에 문제가 있을 시 refresh token 검증 요청
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiResponse({
+    status: 400,
+    description: '실패',
+  })
   @ApiOperation({
     summary: 'refresh token 이 유효하다면 access token 을 재발급',
   })
@@ -189,11 +206,11 @@ export class AuthController {
 
   // 관리자 등록 (회원가입)
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: '성공',
   })
   @ApiOperation({ summary: '관리자 등록' })
-  @Post('admin/register')
+  @Post('admin')
   async adminRegister(
     @Body() body: AdminRegisterJoinDto,
     @Res({ passthrough: true }) response: Response,
@@ -233,12 +250,16 @@ export class AuthController {
 
   // 관리자 로그인
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: '성공',
     type: AdminLoginDto,
   })
+  @ApiResponse({
+    status: 400,
+    description: '실패',
+  })
   @ApiOperation({ summary: '관리자 로그인 api' })
-  @Post('admin/login')
+  @Post('login/admin')
   async adminLogin(
     @Body() body: AdminLoginDto,
     @Res({ passthrough: true }) response: Response,
@@ -275,6 +296,14 @@ export class AuthController {
   }
 
   // 관리자의 access token 에 문제가 있을 시 refresh token 검증 요청
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiResponse({
+    status: 400,
+    description: '실패',
+  })
   @ApiOperation({
     summary: 'refresh token 이 유효하다면 access token 을 재발급',
   })
@@ -318,7 +347,7 @@ export class AuthController {
     type: AdminRemoveDto,
   })
   @ApiOperation({ summary: '관리자 삭제' })
-  @Post('admin/remove')
+  @Delete('admin')
   async removeAdminAccount(@Body() body: AdminRemoveDto) {
     return await this.authService.removeAdmin(body.email);
   }
@@ -329,7 +358,7 @@ export class AuthController {
     description: '성공',
   })
   @ApiOperation({ summary: '유저 로그아웃 api' })
-  @Post('logout/user')
+  @Get('logout/user')
   async logOutUser(@Res({ passthrough: true }) response: Response) {
     response.clearCookie(TOKEN_NAME.userAccess);
     response.clearCookie(TOKEN_NAME.userRefresh);
@@ -342,12 +371,100 @@ export class AuthController {
     description: '성공',
   })
   @ApiOperation({ summary: '관리자 로그아웃 api' })
-  @Post('logout/admin')
+  @Get('logout/admin')
   async logOutAdmin(@Res({ passthrough: true }) response: Response) {
     response.clearCookie(TOKEN_NAME.adminAccess);
     response.clearCookie(TOKEN_NAME.adminRefresh);
     return true;
   }
+
+  // 유저 비밀번호 재설정 하기 - 이메일을 입력하여 재설정 시도
+  @ApiResponse({
+    status: 201,
+    description:
+      '비밀번호 재설정 시도 시 이메일 입력 후 해당 이메일이 가입자라면 인증코드 발송',
+  })
+  @ApiOperation({
+    summary: '유저 비밀번호 재설정 하기 - 이메일을 입력하여 재설정 시도',
+  })
+  @Post('reset-password')
+  @UseGuards(JwtUserAuthGuard)
+  async emailForResetPassWord(
+    @Body() body: EmailForReset,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    try {
+      // 이메일의 존재유무 검증
+      await this.authService.findByEmail(body.email, user.id);
+      // 이메일이 존재한다면, 해당 이메일로 인증번호 발송
+      await this.authService.sendingEmailResetCode(body.email);
+      return;
+    } catch (err) {
+      throw new HttpException(`${err.message}`, 400);
+    }
+  }
+
+  // 유저 비밀번호 재설정 하기 - 이메일 인증코드 입력
+  @ApiResponse({
+    status: 201,
+    description: '비밀번호 재설정 시도 시 이메일 인증코드 입력 - 성공',
+  })
+  @ApiResponse({
+    status: 400,
+    description:
+      '비밀번호 재설정 시도 시 이메일 인증코드 입력 - 코드 불일치로 인한 실패',
+  })
+  @ApiOperation({
+    summary: '유저 비밀번호 재설정 하기 - 이메일 인증코드 발송',
+  })
+  @Post('reset-password/email-code')
+  @UseGuards(JwtUserAuthGuard)
+  async authCodeForResetPassword(
+    @Body() body: AuthCodeForRePs,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    try {
+      // 입력받은 이메일 인증번호 검증
+      await this.authService.checkingResetCode(
+        body.email,
+        body.emailAuthCode,
+        user.id,
+      );
+      return;
+    } catch (err) {
+      throw new HttpException(`${err.message}`, 400);
+    }
+  }
+
+  // 유저 비밀번호 재설정 - 이메일 인증 완료 후 비밀번호 재설정
+  @ApiResponse({
+    status: 201,
+    description: '비밀번호 재설정 - 성공',
+  })
+  @ApiResponse({
+    status: 400,
+    description: '비밀번호 재설정 - 적합하지 않은 비밀번호 입력 시 실패',
+  })
+  @Patch('reset-password')
+  @UseGuards(JwtUserAuthGuard)
+  async resetPassword(
+    @Body() body: ResetPassword,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    try {
+      // 해당 유저가 진정 이메일 인증 절차를 진행하여 비밀번호를 재설정 하려 하는 것인지 검사
+      await this.authService.checkResetPsOnTheWay(user.id, user.email);
+      // 입력받은 비밀번호, 확인용 비밀번호 2가지 유효성 검사
+      await this.authService.checkEffectiveForResetPs(body);
+      // 유효성 검사 후 비밀번호 실제 변경.
+      await this.authService.changePassword(body.password, user.id, user.email);
+      return;
+    } catch (err) {
+      throw new HttpException(`${err.message}`, 400);
+    }
+  }
+
+  /* -------------------------------- 테스트용 API -------------------------------- */
 
   // 유저 테스트
   @Get('test')
@@ -382,4 +499,57 @@ export class AuthController {
     console.log('최고 관리자 테스트!');
     console.log(admin);
   }
+
+  /* -------------------------------- S3 업로드 테스트용  API -------------------------------- */
+
+  // S3 - cloudFront 실험 api - ejs 랜더링
+  @Get('img-test')
+  @Render('test-minsoo/index')
+  test333() {
+    return;
+  }
+
+  // S3 - cloudFront 실험 api - 데이터 받아오기
+  @Post('img-s3-test')
+  @UseInterceptors(FilesInterceptor('images', 4))
+  async uploadFileTest(
+    @UploadedFiles() images: Array<Express.Multer.File>,
+    @Body() body: any,
+  ) {
+    console.log('백엔드로 진입했어.');
+    console.log(images);
+    console.log(JSON.parse(body.jsonData).title);
+
+    await this.authService.uploadFileToS3(images, JSON.parse(body.jsonData));
+    return true;
+  }
+
+  // S3 - 썸네일 url 받아오기
+  @Get('img-s3-url')
+  async test222222() {
+    const thumbImgUrl = await this.authService.workshopThumbImg();
+    return thumbImgUrl;
+  }
+
+  // S3 - 리뷰 작성 시 동영상 받아오기.
+  @Post('video-s3-test')
+  @UseInterceptors(FileInterceptor('video'))
+  async uploadVideoFileTest(@UploadedFile() video: Express.Multer.File) {
+    console.log('동영상 보내기 api 메소드에 진입');
+    console.log(video);
+    await this.authService.uploadVideoToS3(video);
+    return;
+  }
+
+  // S3 - 리뷰 동영상 url 받아오기
+  @Get('video-s3-url')
+  async rwjioenw() {
+    const videoUrl = await this.authService.getVideoUrl();
+    return videoUrl;
+  }
+
+  // @Get('pleace')
+  // async ttttttt() {
+  //   await this.authService.userUptest();
+  // }
 }
