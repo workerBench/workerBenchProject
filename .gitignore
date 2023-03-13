@@ -1,6 +1,8 @@
 # compiled output
 dist
 /dist
+coverage
+/coverage
 /node_modules
 
 # Logs
