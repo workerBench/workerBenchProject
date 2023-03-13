@@ -14,6 +14,7 @@ function getWorkshopDetail() {
     .then((res) => {
       const workshop = res.data.data[0];
       console.log(workshop);
+      const user_id = 1;
 
       let workshopInfo = `<div class="row">
       <div class="col">
@@ -57,6 +58,14 @@ function getWorkshopDetail() {
     </div>`;
       $('#workshop-image-info').append(workshopInfo);
 
+      // 찜하기 유저에 있으면 하트 칠하기
+      if (workshop.wish_user_id.includes(user_id)) {
+        document.querySelector('.wish').textContent = '♥';
+      } else {
+        document.querySelector('.wish').textContent = '♡';
+      }
+
+      // 워크샵 상세 정보
       let workshopDesc = `<div class="tab-pane fade show active"
       id="home-tab-pane"
       role="tabpanel"

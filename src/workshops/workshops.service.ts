@@ -5,7 +5,6 @@ import { Review } from 'src/entities/review';
 import { WishList } from 'src/entities/wish-list';
 import { WorkShop } from 'src/entities/workshop';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
-import { OrderDto } from 'src/workshops/dtos/order-data.dto';
 import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
 import { Repository } from 'typeorm';
 
@@ -122,6 +121,7 @@ export class WorkshopsService {
         'workshop.price',
         'workshop.min_member',
         'workshop.max_member',
+        'workshop.total_time',
         'genre_tag.name',
         'purposeTag.name',
         'GROUP_CONCAT(purposeTag.name) AS purposeTag_name',
@@ -237,7 +237,7 @@ export class WorkshopsService {
 
       return {
         ...workshop,
-        wish_user_id: Array.from(new Set(halfWish)),
+        wish_user_id: Array.from(new Set(halfWish)).map((el) => Number(el)),
         star: starArray.length ? starArray : ['0.0'], // star가 빈 문자열인 경우 '0.0'으로 초기화
         purpose: Array.from(new Set(workshop.purpose.split(','))),
         genre: Array.from(new Set(workshop.genre.split(','))),

@@ -15,7 +15,6 @@ import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
-import { OrderDto } from 'src/workshops/dtos/order-data.dto';
 import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
 import { WorkshopsService } from 'src/workshops/workshops.service';
 
@@ -89,7 +88,7 @@ export class WorkshopsController {
   @ApiOperation({ summary: '워크샵 상세 조회 api' })
   @Get('/:workshop_id')
   async getWorkshopDetail(@Param('workshop_id') workshop_id: number) {
-    const user_id = 2;
+    const user_id = 1;
     return await this.workshopsService.getWorkshopDetail(user_id, workshop_id);
   }
 
