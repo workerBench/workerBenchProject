@@ -67,17 +67,17 @@ export class WorkshopsController {
   @Get('/search')
   async searchWorkshops(
     @Query('category') category: string,
-    @Query('location') location: string,
-    @Query('genre') genre: string,
-    @Query('purpose') purpose: string,
     @Query('memberCnt') memberCnt: number,
+    @Query('location') location: string,
+    @Query('purpose') purpose: string,
+    @Query('genre') genre: string,
   ) {
     return await this.workshopsService.searchWorkshops(
       category,
-      location,
-      genre,
-      purpose,
       memberCnt,
+      location,
+      purpose,
+      genre,
     );
   }
 

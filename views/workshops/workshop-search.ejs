@@ -25,14 +25,10 @@
       <div class="workshop-search-title">
         우리 팀/회사에 딱 맞는 워크샵 찾아보기
       </div>
-      <select
-        class="form-select category"
-        aria-label="Default select example"
-        onchange="location.href=this.value"
-      >
-        <option selected disabled>온라인 / 오프라인</option>
-        <option value="?category=online">온라인</option>
-        <option value="?category=offline">오프라인</option>
+      <select class="form-select category" aria-label="Default select example">
+        <option selected>온라인 / 오프라인</option>
+        <option value="online">온라인</option>
+        <option value="offline">오프라인</option>
       </select>
       <select
         class="form-select member-cnt"
@@ -44,22 +40,19 @@
         <option value="2">31~50명</option>
         <option value="2">50명 초과</option>
       </select>
-      <select
-        class="form-select location"
-        aria-label="Default select example"
-        onchange="location.href=this.value"
-      >
+      <select class="form-select location" aria-label="Default select example">
         <option selected>지역</option>
-        <option value="?location=서울시 종로구">서울시 종로구</option>
-        <option value="2">오프라인</option>
+        <option value="서울시 종로구">서울시 종로구</option>
+        <option value="서울시 마포구">서울시 마포구</option>
       </select>
-      <select class="form-select puprpose" aria-label="Default select example">
+      <select class="form-select purpose" aria-label="Default select example">
         <option selected>목적</option>
-        <option value="1">추가</option>
+        <option value="팀웍 증진">팀웍 증진</option>
+        <option value="서류 작성">서류 작성</option>
       </select>
       <select class="form-select genre" aria-label="Default select example">
         <option selected>분야</option>
-        <option value="1">추가</option>
+        <option value="문화 예술">문화 예술</option>
       </select>
     </div>
 

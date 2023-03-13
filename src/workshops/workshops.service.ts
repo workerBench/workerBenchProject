@@ -103,14 +103,14 @@ export class WorkshopsService {
   결과를 purposeTag로 그룹핑하고 workshop.id로 묶어줌*/
   async searchWorkshops(
     category: string,
-    location: string,
-    genre: string,
-    purpose: string,
     memberCnt: number,
+    location: string,
+    purpose: string,
+    genre: string,
   ) {
     const queryBuilder = this.workshopRepository
       .createQueryBuilder('workshop')
-      .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.GenreTag', 'genre') // workshop - GenreTag 테이블 조인
       .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
       .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
       .select([
@@ -122,7 +122,7 @@ export class WorkshopsService {
         'workshop.min_member',
         'workshop.max_member',
         'workshop.total_time',
-        'genre_tag.name',
+        'genre.name',
         'purposeTag.name',
         'GROUP_CONCAT(purposeTag.name) AS purposeTag_name',
       ])
@@ -142,7 +142,7 @@ export class WorkshopsService {
     }
 
     if (genre) {
-      queryBuilder.andWhere('genre_tag.name = :genre', {
+      queryBuilder.andWhere('genre.name = :genre', {
         genre: `${genre}`,
       });
     }

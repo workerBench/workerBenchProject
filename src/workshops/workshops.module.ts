@@ -21,6 +21,6 @@ import { WorkshopsService } from './workshops.service';
     ]),
   ],
   controllers: [WorkshopsController, WorkshopsControllerRender],
-  providers: [WorkshopsService, WorkshopRepository],
+  providers: [WorkshopsService],
 })
 export class WorkshopsModule {}
