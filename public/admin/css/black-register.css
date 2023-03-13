@@ -21,6 +21,19 @@
     color: white;
     padding-top: 30px;
 }
+.ul-title {
+    padding-top: 10px;
+    padding-left: 15px;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 30px;
+
+}
+.ul-category {
+    display: block;
+    margin-top: 5px;
+    padding: 0;
+}
 .target-li {
     display: block;
     padding-left: 20px;
@@ -73,7 +86,7 @@
 }
 
 .search-wrap > .form-select {
-    width:80px;
+    width:110px;
     font-size: 13px;
 }
 
@@ -142,6 +155,6 @@
     color: white;
 }
 .ban-btn:hover {
-    border: 3px solid #9F70FB;
+    border: 2px solid #9F70FB;
     cursor: pointer;
 }

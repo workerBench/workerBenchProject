@@ -1,51 +1,84 @@
-$(document).ready(function() {
-  $.ajax({
-      url: "../api/admin/admin/list",
-      method: "GET",
-      data: {},
-      success: function(adminUsers) {
-          console.log(adminUsers)
-          let html = '';
-          for (let adminUser of adminUsers) {
-              html += `
-              <tr>
-                    <td>${adminUser.id}</td>
-                    <td>${adminUser.name}</td>
-                    <td>${adminUser.email}</td>
-                    <td>${adminUser.createdAt}</td>
-                    <td>${adminUser.admin_type === 0 ? 'normal admin' : ''}</td>
-                    <td>
-                        <button class="admin-remove-btn">계정 삭제</button>
-                    </td>
-                </tr>
-              `;
-          }
-          
-          $("#admin-user-list").append(html);
-      }
+axios.get("../api/admin/admin/list")
+  .then(function(response) {
+    let adminUsers = response.data;
+    let html = '';
+    for (let adminUser of adminUsers) {
+      html += `
+        <tr>
+          <td>${adminUser.name}</td>
+          <td>${adminUser.email}</td>
+          <td>${adminUser.createdAt.split('T')[0]}</td>
+          <td>${adminUser.admin_type === 0 ? 'normal admin' : ''}</td>
+          <td>
+            <button class="admin-remove-btn">계정 삭제</button>
+          </td>
+        </tr>
+      `;
+    }
+    $("#admin-user-list").append(html);
+  })
+  .catch(function(error) {
+    console.log(error);
   });
-});
 
-var modal = document.getElementById("modal");
 
-var btn = document.getElementById("create-admin");
+// ------------------------ 계정 생성 버튼 (+모달) ------------------------ //
 
-// 계정 생성 버튼
-var create_button = document.getElementById("create");
-
-var close_btn = document.getElementById("close_btn");
+// 계정 생성 버튼 (모달창 띄우기)
+const btn = document.getElementById("create-admin");
 
 btn.onclick = function() {
   modal.style.display = "block";
 }
 
-create_button = function() {
-    modal.style.display = "none";
-}
+// 취소하기 버튼 클릭시 닫힘
+const closeBtn = document.getElementById('close-btn');
+
+closeBtn.addEventListener('click', function() {
+  const modal = document.getElementById('modal');
+  modal.style.display = 'none';
+});
+
+const closeBtn2 = document.querySelector('.btn-close');
+
+closeBtn2.addEventListener('click', function() {
+  const modal = document.getElementById('modal');
+  modal.style.display = 'none';
+});
+
+
+// 모달창 외부를 클릭하면 닫힘
+const modal = document.getElementById("modal");
 
 modal.addEventListener("click", e => {
   const evTarget = e.target
   if(evTarget.classList.contains("modal")) {
       modal.style.display = "none"
   }
+});
+
+
+// ------------------------ 모달창 내부의 실제 관리자 생성 버튼 ------------------------ //
+
+$(document).ready(function() {
+  $("#create").on("click", function() {
+    const email = $("#email").val();
+    const password = $("#password").val();
+    const name = $("#name").val();
+    const phone = $("#phone").val();
+    axios
+      .post("../api/auth/admin", {
+        email: email,
+        password: password,
+        name: name,
+        phone_number: phone,
+      })
+      .then((response) => {
+        alert("관리자 계정이 생성되었습니다.");
+        location.reload(); // 페이지 새로고침
+      })
+      .catch((error) => {
+        alert(error.response.data.message);
+      });
+  });
 });
