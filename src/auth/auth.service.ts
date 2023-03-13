@@ -424,10 +424,18 @@ export class AuthService {
     // 이메일로 계정 찾기
     const user = await this.userRepository.findOne({ where: { id, email } });
     if (!user) {
-      const err = new Error('존재하지 않는 계정입니다.');
-      err.name = 'NotExistUser';
-      throw err;
+      throw new BadRequestException('존재하지 않는 계정입니다.');
     }
+  }
+
+  // 비밀번호 재설정을 시도하는 이메일이 로그인 유저 본인이 맞는지 검증
+  async checkUserForPasswordChange(bodyEmail: string, tokenEmail: string) {
+    if (bodyEmail !== tokenEmail) {
+      throw new BadRequestException(
+        '입력한 이메일은 현재 로그인 중인 계정의 이메일이 아닙니다.',
+      );
+    }
+    return;
   }
 
   // 비밀번호 재설정 시도 시 이메일 인증 후 이메일로 인증코드 발송
@@ -451,7 +459,9 @@ export class AuthService {
       })
       .catch((error) => {
         console.log(error);
-        throw new ConflictException();
+        throw new ConflictException(
+          '이메일에 인증코드를 발송하는 과정에서 문제가 발생하였습니다. 다시 시도해 주십시오.',
+        );
       });
     return;
   }
@@ -461,10 +471,13 @@ export class AuthService {
     const authCodeOfRedis = await this.redisClient.get(
       emailAuthCodeRedisKeyForResetPs(email),
     );
+    if (!authCodeOfRedis) {
+      throw new BadRequestException(
+        '입력 제한시간이 지났습니다. 이메일 인증 재시도 부탁드립니다.',
+      );
+    }
     if (authCodeOfRedis !== emailAuthCode) {
-      const err = new Error('입력하신 인증번호가 적합하지 않습니다.');
-      err.name = 'WrongEmailAuthCode';
-      throw err;
+      throw new BadRequestException('입력하신 인증번호가 적합하지 않습니다.');
     }
 
     // 해당 유저가 비밀번호를 바꾸는 절차를 진행중이다 라고 증거를 남김
@@ -483,9 +496,9 @@ export class AuthService {
     );
 
     if (!result) {
-      const err = new Error('이메일 인증 절차를 거치지 않은 상태입니다.');
-      err.name = 'NeedToEmailAuthCode';
-      throw err;
+      throw new BadRequestException(
+        '이메일 인증 절차를 거치지 않은 상태입니다.',
+      );
     }
 
     return;
@@ -494,14 +507,10 @@ export class AuthService {
   async checkEffectiveForResetPs(info: ResetPassword) {
     const { password, authentNum } = info;
     if (password !== authentNum) {
-      const err = new Error('패스워드가 일치하지 않습니다.');
-      err.name = 'WrongPasswordError';
-      throw err;
+      throw new BadRequestException('패스워드가 일치하지 않습니다.');
     }
     if (password.length < 4) {
-      const err = new Error('패스워드가 짧습니다.');
-      err.name = 'WrongPasswordError';
-      throw err;
+      throw new BadRequestException('패스워드가 짧습니다.');
     }
   }
 

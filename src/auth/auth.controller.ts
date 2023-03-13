@@ -129,11 +129,13 @@ export class AuthController {
 
     try {
       // 유저가 로그인 한 뒤 뒤로가기 버튼으로 다시 로그인 화면으로 돌아와 재차 로그인을 시도할 경우
-      // 사용자의 refresh token 을 가져온다
+      // 사용자의 refresh token 을 가져온다. 존재한다면, 쿠키를 삭제하고 다시 로그인하라 지시.
       const refreshToken = request.cookies[TOKEN_NAME.userRefresh];
       if (refreshToken) {
+        response.clearCookie(TOKEN_NAME.userAccess);
+        response.clearCookie(TOKEN_NAME.userRefresh);
         throw new BadRequestException(
-          '현재 로그인 기록이 남아있는 상태입니다. 로그아웃 후 재시도 부탁드립니다.',
+          '기존의 로그인 기록이 남아있는 상태입니다. 로그인 재시도 부탁드립니다.',
         );
       }
       // 유저 찾기
@@ -399,13 +401,15 @@ export class AuthController {
     @CurrentUser() user: CurrentUserDto,
   ) {
     try {
+      // 비밀번호 재설정을 시도하는 이메일이 로그인 유저 본인이 맞는지 검증
+      await this.authService.checkUserForPasswordChange(body.email, user.email);
       // 이메일의 존재유무 검증
       await this.authService.findByEmail(body.email, user.id);
       // 이메일이 존재한다면, 해당 이메일로 인증번호 발송
       await this.authService.sendingEmailResetCode(body.email);
       return;
     } catch (err) {
-      throw new HttpException(`${err.message}`, 400);
+      throw err;
     }
   }
 
@@ -437,7 +441,7 @@ export class AuthController {
       );
       return;
     } catch (err) {
-      throw new HttpException(`${err.message}`, 400);
+      throw err;
     }
   }
 
@@ -455,6 +459,7 @@ export class AuthController {
   async resetPassword(
     @Body() body: ResetPassword,
     @CurrentUser() user: CurrentUserDto,
+    @Res({ passthrough: true }) response: Response,
   ) {
     try {
       // 해당 유저가 진정 이메일 인증 절차를 진행하여 비밀번호를 재설정 하려 하는 것인지 검사
@@ -463,9 +468,12 @@ export class AuthController {
       await this.authService.checkEffectiveForResetPs(body);
       // 유효성 검사 후 비밀번호 실제 변경.
       await this.authService.changePassword(body.password, user.id, user.email);
+      // 변경된 비밀번호로 재로그인 하기 위해 쿠키를 지워준다.
+      response.clearCookie(TOKEN_NAME.userAccess);
+      response.clearCookie(TOKEN_NAME.userRefresh);
       return;
     } catch (err) {
-      throw new HttpException(`${err.message}`, 400);
+      throw err;
     }
   }
 

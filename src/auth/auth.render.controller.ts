@@ -22,7 +22,7 @@ export class AuthControllerRender {
   ) {
     // 로그인이 되어 있지 않을 경우. 로그인 화면을 그냥 보여준다.
     if (typeof user === 'boolean' && user === false) {
-      return res.render('auth/login');
+      return res.render('auth/login', { user_id: 1 });
     }
 
     // 로그인이 되어 있는 경우. 이미 로그인이 되어 있으니 메인 화면으로 가라는 페이지를 보여준다.
