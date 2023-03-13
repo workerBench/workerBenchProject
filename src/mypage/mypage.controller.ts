@@ -47,21 +47,30 @@ import { ReviewImageDto } from 'src/mypage/dtos/review-image.dto';
     }
 
 
-    // 워크샵 결제하기
+    // 워크샵 결제하기 api
+    @ApiResponse({
+      status: 200,
+      description: '성공',
+    })
+    @ApiOperation({ summary: '워크샵 결제하기 api' })
     @Patch('workshops/:id/order')
     updateWorkshopPayment(@Param('id') id: number) {
       return this.mypageService.updateWorkshopPayment(id);
     }
 
 
-    // 리뷰 작성 페이지
-
+    // 리뷰 작성 페이지 api
+    @ApiResponse({
+      status: 201,
+      description: '성공',
+    })
+    @ApiOperation({ summary: '리뷰 작성 페이지 api' })
     @Post('/:workshop_id/review')
     review(
-    @Param('workshop_id') workshop_id: number,
-    @Body() review: Review,
-  ) {
-    const user_id = 1;
+      @Param('workshop_id') workshop_id: number,
+      @Body() review: ReviewDto,
+      ) {
+    const user_id = 1;    
     return this.mypageService.review(
       workshop_id,
       user_id,
@@ -70,18 +79,29 @@ import { ReviewImageDto } from 'src/mypage/dtos/review-image.dto';
   }
 
 
-  // 찜 목록 페이지에 찜한 워크샵 불러오기
 
+  // 찜 목록 페이지에 찜한 워크샵 불러오기 api
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '찜 목록 페이지에 찜한 워크샵 불러오기 api' })
   @Get('/workshops/wish-list')
   getWishList(@Param('workshop_id') workshop_id: number) {
-    return this.mypageService.getWishList(workshop_id);
+    const user_id = 2; // 하드코딩한 데이터 (user_id를 임의로 삽입함)
+    return this.mypageService.getWishList();
   }
 
 
   // 찜 목록의 워크샵 찜 취소
-
+  @ApiResponse({
+    status: 201,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '워크샵 찜하기 취소 api' })
   @Patch('/workshops/wish-list/:id')
-  updateWishListCancel(@Param('workshop_id') user_id: number, workshop_id: number) {
+  updateWishListCancel(@Param('workshop_id') workshop_id: number) {
+    const user_id = 2; // 하드코딩한 데이터 (user_id를 임의로 삽입함)
     return this.mypageService.updateWishListCancel( user_id, workshop_id );
   }
     

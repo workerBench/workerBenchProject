@@ -12,13 +12,11 @@ import { WishList } from 'src/entities/wish-list'
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { ReviewDto } from 'src/mypage/dtos/review.dto';
 import { ReviewImageDto } from 'src/mypage/dtos/review-image.dto';
-import { WorkshopRepository } from 'src/workshops/workshop.repository';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class MypageService {
     constructor(
-        private readonly workshopRepository: WorkshopRepository,
         @InjectRepository(WishList)
         private readonly wishListRepository: Repository<WishList>,
         @InjectRepository(Review)

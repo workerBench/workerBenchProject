@@ -5,10 +5,10 @@ import { MypageService } from './mypage.service';
 import { Review } from 'src/entities/review';
 import { ReviewImage } from 'src/entities/review-image';
 import { WishList } from 'src/entities/wish-list';
-import { WorkshopRepository } from 'src/workshops/workshop.repository';
 import { ReviewRepository } from 'src/mypage/review.repository';
 import { ReviewImageRepository } from 'src/mypage/review-image.repository';
 import { MypageControllerRender } from './mypage.render.controller';
+import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 
 @Module({
   imports: [
@@ -16,9 +16,10 @@ import { MypageControllerRender } from './mypage.render.controller';
       Review,
       ReviewImage,
       WishList,
+      WorkShopInstanceDetail,
     ]),
   ],
   controllers: [MypageController,MypageControllerRender],
-  providers: [MypageService, WorkshopRepository ,ReviewRepository, ReviewImageRepository ],
+  providers: [MypageService ,ReviewRepository, ReviewImageRepository ],
 })
 export class MypageModule {}
