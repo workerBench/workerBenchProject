@@ -20,7 +20,7 @@ export class WorkShopPurpose {
   workshop_id: number | null;
 
   @Column('int', { name: 'purpose_tag_id', nullable: true })
-  purpose_tag_id: number | null;
+  purpose_tag_id: number[] | number | null;
 
   @CreateDateColumn()
   createdAt: Date;

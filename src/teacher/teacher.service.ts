@@ -214,7 +214,6 @@ export class TeacherService {
       throw error;
     }
   }
-  // 강사 워크샵 등록 api
   async createTeacherWorkshops(data: createWorkshopsDto) {
     try {
       const {
@@ -224,7 +223,7 @@ export class TeacherService {
         min_member,
         max_member,
         genre_id,
-        purpose_tag_id,
+        purpose_tag_id, // 수정된 부분
         total_time,
         desc,
         price,
@@ -263,10 +262,14 @@ export class TeacherService {
         user_id: id,
       });
       await this.workshopRepository.save(workshop);
-      this.purposeTagIdRepository.insert({
+
+      // bulk insert 구현
+      const purposeTagIds = purpose_tag_id.map((tag_id) => ({
         workshop_id: workshop.id,
-        purpose_tag_id: purpose_tag_id,
-      });
+        purpose_tag_id: tag_id,
+      }));
+      await this.purposeTagIdRepository.insert(purposeTagIds);
+
       return {
         message:
           '워크샵 등록 신청이 완료되었습니다. 관리자의 수락을 기다려 주세요',
