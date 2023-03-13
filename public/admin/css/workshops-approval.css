@@ -21,6 +21,19 @@
     color: white;
     padding-top: 30px;
 }
+.ul-title {
+    padding-top: 10px;
+    padding-left: 15px;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 30px;
+
+}
+.ul-category {
+    display: block;
+    margin-top: 5px;
+    padding: 0;
+}
 .target-li {
     display: block;
     padding-left: 20px;
@@ -28,10 +41,10 @@
     line-height: 35px;
     font-size: 14px;
 }
-.target-li a{
+/* .target-li a{
     color: white;
     display: block;
-}
+} */
 .link-li:hover{
     background-color: white;
     color: black;
@@ -54,9 +67,9 @@
     margin-left:30px;
 }
 
-.check-list-box{
+.workshop-search{
     font-weight: bold;
-    width: 500px;
+    width: 700px;
     padding: 30px 45px 40px;
     background-color: rgb(255, 255, 255);
     box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
@@ -67,8 +80,36 @@
     justify-content: center;
     align-items: center;
 }
+.search-wrap {
+    height: 40px;
+    width: 600px;
+    background-color: #ffffff;
+    display: flex;
+    margin-top: 20px;
+}
+.search-wrap > .form-select {
+    width: 135px;
+    font-size: 13px;
+}
 
-/*워크숍 목록 구간입니다.*/
+.search-box {
+    border: 1px solid #9F70FB;
+    font-size: 16px;
+    width: 400px;
+    padding: 10px;
+    outline: none;
+    float: left;
+}
+.search-button {
+    width: 50px;
+    height: 100%;
+    border: 0px;
+    background: #9F70FB;
+    outline: none;
+    float: right;
+    color: white;
+    cursor: pointer;
+}
 
 .col{
     width: 280px;
