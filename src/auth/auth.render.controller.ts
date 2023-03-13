@@ -1,4 +1,4 @@
-import { Controller, Get, Render, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { Response, Request } from 'express';
 import { CurrentUserDto } from './dtos/current-user.dto';
