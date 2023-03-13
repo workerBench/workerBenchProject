@@ -5,7 +5,6 @@ import { Review } from 'src/entities/review';
 import { WishList } from 'src/entities/wish-list';
 import { WorkShop } from 'src/entities/workshop';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
-import { WorkshopRepository } from 'src/workshops/workshop.repository';
 import { WorkshopsController } from './workshops.controller';
 import { WorkshopsControllerRender } from './workshops.render.controller';
 import { WorkshopsService } from './workshops.service';
@@ -21,6 +20,6 @@ import { WorkshopsService } from './workshops.service';
     ]),
   ],
   controllers: [WorkshopsController, WorkshopsControllerRender],
-  providers: [WorkshopsService, WorkshopRepository],
+  providers: [WorkshopsService],
 })
 export class WorkshopsModule {}
