@@ -116,7 +116,7 @@ export class TeacherService {
       throw new BadRequestException('입력된 요청이 잘못되었습니다.');
     }
   }
-  // 강사 전용 마이 페이지 api
+  // 강사 및 업체 정보 api
   async getTeacherMypage() {
     //id: number
     const id = 10;
@@ -133,14 +133,13 @@ export class TeacherService {
       let query = this.teacherRepository
         .createQueryBuilder('teacher')
         .innerJoin('teacher.User', 'user')
-        .innerJoin('teacher.MyCompany', 'company')
+        .leftJoin('teacher.MyCompany', 'company')
         .where('teacher.user_id = :user_id', { user_id: id })
         .select([
           'teacher.phone_number',
           'teacher.address',
           'teacher.name',
           'user.email',
-          'company.*',
           'company.company_type',
           'company.company_name',
           'company.business_number',
@@ -229,9 +228,7 @@ export class TeacherService {
         total_time,
         desc,
         price,
-        location,
       } = data;
-      console.log(data.category);
       const id = 10;
       const teacherInfo = await this.teacherRepository.findOne({
         where: { user_id: id },
@@ -252,7 +249,7 @@ export class TeacherService {
         );
       }
       const workshop = this.workshopRepository.create({
-        category: 'online' || 'offline',
+        category: 'offline' || 'online',
         genre_id,
         title,
         desc,
@@ -262,7 +259,7 @@ export class TeacherService {
         total_time,
         price,
         status: 'request',
-        location,
+        location: '서울',
         user_id: id,
       });
       await this.workshopRepository.save(workshop);
