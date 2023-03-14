@@ -338,7 +338,7 @@ export class TeacherService {
       }
     } catch (error) {
       console.log(error);
-      throw new BadRequestException('입력된 요청이 잘못되었습니다.');
+      throw error;
     }
   }
   // 강사 완료 워크샵 목록 api
@@ -422,7 +422,7 @@ export class TeacherService {
       }
     } catch (error) {
       console.log(error);
-      throw new BadRequestException('입력된 요청이 잘못되었습니다.');
+      throw error;
     }
   }
   // 강사 수강 문의 종료하기 api
