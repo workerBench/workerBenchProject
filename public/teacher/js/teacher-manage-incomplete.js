@@ -26,15 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const createdAt = data[i].workShopInstanceDetail_createdAt;
         const status = data[i].workShopInstanceDetail_status;
         const Id = data[i].workShopInstanceDetail_id;
-
         let buttonHtml = '';
         switch (status) {
           case 'request':
             buttonHtml = `
                         <button type="radio" class="Button" onclick="request(${Id})" id="requestButton">수락 하기</button>
-                            <button type="radio" class="Button" id="rejectButton">취소 하기</button>
-                            <button type="radio" class="Button" id="editButton">수정 하기</button>
-                        `;
+                        <button type="radio" class="Button" id="rejectButton">취소 하기</button>
+                        <button type="radio" class="Button" id="editButton">수정 하기</button>
+                         `;
             break;
           case 'non_payment':
             buttonHtml = `
@@ -48,37 +47,37 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button type="radio" class="Button" onclick="waiting_lecture(${Id})" id="completeButton">결제 완료</button>
                         <button type="radio" class="Button" id="rejectButton">취소 하기</button>
                         <button type="radio" class="Button" id="editButton">수정 하기</button>
-                         `;
+                        `;
             break;
         }
         let tempHtml = ``;
         tempHtml += `
-        <div class="teacher-manage-div" >
-            <div class="workshop-information-div">
-                <img src="/images/images.jpg" alt="" />
-                    <li for="purpose-tag" class="workshop-information">${workshop_thumb}</li>
-                    <li for="purpose-tag" class="workshop-information">${workshop_title}</li>
-                    <li for="purpose-tag" class="workshop-information">${min_member}</li>
-                    <li for="purpose-tag" class="workshop-information">${max_member}</li>
-                    <li for="purpose-tag" class="workshop-information">${genreTag_name}</li>
-                    <li for="purpose-tag" class="workshop-information">${total_time}</li>
-                    <li for="purpose-tag" class="workshop-information">${price}</li>
-                </div>
-        <div class="company-information-div">
-            <div class="company-information">
-                <li for="purpose-tag" class="company-input">${etc}</li>
-                <li for="purpose-tag" class="company-input">${company}</li>
-                <li for="purpose-tag" class="company-input">${phone_number}</li>
-                <li for="purpose-tag" class="company-input">${member_cnt}</li>
-                <li for="purpose-tag" class="company-input">${email}</li>
-                <li for="purpose-tag" class="company-input">${createdAt}</li>
-            </div>
-                <div id = button-div>
-                    ${buttonHtml}
-                </div>
-            </div>
-        </div>
-`;
+                    <div class="teacher-manage-div" >
+                       <div class="workshop-information-div">
+                            <img src="/images/images.jpg" alt="" />
+                            <li for="purpose-tag" class="workshop-information">${workshop_thumb}</li>
+                            <li for="purpose-tag" class="workshop-information">${workshop_title}</li>
+                            <li for="purpose-tag" class="workshop-information">${min_member}</li>
+                            <li for="purpose-tag" class="workshop-information">${max_member}</li>
+                            <li for="purpose-tag" class="workshop-information">${genreTag_name}</li>
+                            <li for="purpose-tag" class="workshop-information">${total_time}</li>
+                            <li for="purpose-tag" class="workshop-information">${price}</li>
+                    </div>
+                    <div class="company-information-div">
+                          <div class="company-information">
+                              <li for="purpose-tag" class="company-input">${etc}</li>
+                              <li for="purpose-tag" class="company-input">${company}</li>
+                              <li for="purpose-tag" class="company-input">${phone_number}</li>
+                              <li for="purpose-tag" class="company-input">${member_cnt}</li>
+                              <li for="purpose-tag" class="company-input">${email}</li>
+                              <li for="purpose-tag" class="company-input">${createdAt}</li>
+                          </div>
+                              <div id = button-div>
+                                  ${buttonHtml}
+                              </div>
+                          </div>
+                    </div>
+                    `;
         workshopincompleteList.insertAdjacentHTML('beforeend', tempHtml);
       }
     })
@@ -124,7 +123,6 @@ function waiting_lecture(Id, status) {
       alert(data.error);
     });
 }
-
 function workshop() {
   window.location.href = '/teacher/workshop';
 }

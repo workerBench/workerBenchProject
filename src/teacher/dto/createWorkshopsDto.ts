@@ -30,8 +30,4 @@ export class CreateWorkshopsDto {
 
   @IsNumber()
   readonly genre_id: number;
-
-  // @IsOptional()
-  @IsNumber()
-  readonly purpose_tag_id: number;
 }

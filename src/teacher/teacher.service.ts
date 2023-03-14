@@ -226,7 +226,6 @@ export class TeacherService {
         min_member,
         max_member,
         genre_id,
-        purpose_tag_id, // 수정된 부분
         total_time,
         desc,
         price,

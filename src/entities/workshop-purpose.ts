@@ -17,7 +17,7 @@ export class WorkShopPurpose {
   id: number;
 
   @Column('int', { name: 'workshop_id', nullable: true })
-  workshop_id: number | null;
+  workshop_id: number[] | number | null;
 
   @Column('int', { name: 'purpose_tag_id', nullable: true })
   purpose_tag_id: number[] | number | null;
