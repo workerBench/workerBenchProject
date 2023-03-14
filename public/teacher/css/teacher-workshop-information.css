@@ -48,7 +48,7 @@
 }
 .teacher-wrokshop-div{
     width: 600px;
-    height: 600px;
+    height: 550px;
     display: flex;
     /* margin: auto; */
     margin-top: 50px;
@@ -82,26 +82,16 @@
     margin-bottom: 20px;
     border: 2px solid #000000;
 }
-/* .test{
-    width: 100px;
+.Button{
+    width: 250px;
     height: 50px;
-    border: 2px solid #000000;
+    background-color: rgb(60, 60, 255);
+    border-radius: 5px;
+    color: white;
+    border:none ;
     margin: auto;
-    list-style: none;
+    margin-top: 100px;
 }
-.wating-workshop-div{
-     width: 300px;
-    height: 500px;
-    margin-top: 20px;
-    border: 2px solid #000000;
+.Button:hover {
+    background-color: rgb(102, 102, 249);
 }
-.wating-workshop{
-    width:250px;
-    height: 50px;
-    margin: auto;
-    margin-top: 20px;
-    font-size: 25px;
-    text-align: center;
-    list-style: none;
-    border: 2px solid #000000;
-    }  */

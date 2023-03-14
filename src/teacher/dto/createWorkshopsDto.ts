@@ -1,6 +1,6 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsOptional } from 'class-validator';
 
-export class createWorkshopsDto {
+export class CreateWorkshopsDto {
   @IsString()
   readonly title: string;
 
@@ -31,6 +31,7 @@ export class createWorkshopsDto {
   @IsNumber()
   readonly genre_id: number;
 
+  // @IsOptional()
   @IsNumber()
-  readonly purpose_tag_id: any;
+  readonly purpose_tag_id: number;
 }

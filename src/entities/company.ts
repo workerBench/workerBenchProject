@@ -62,7 +62,7 @@ export class Company {
     required: false,
   })
   @Column('int', { name: 'rrn_front', nullable: true })
-  rrn_front: number | null;
+  rrn_front: null | number;
 
   @IsNumber()
   @IsNotEmpty({ message: '주민번호 뒷자리를 입력해 주세요' })

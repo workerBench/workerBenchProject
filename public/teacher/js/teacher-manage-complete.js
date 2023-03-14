@@ -56,33 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   `;
         workshopcompleteList.insertAdjacentHTML('beforeend', tempHtml);
-        const completeButton = document.getElementById('completeButton');
-        completeButton.addEventListener('click', () => {
-          const status = data[i].workShopInstanceDetail_status;
-          if (status === 'complete') {
-            axios({
-              method: 'patch',
-              url: `/api/teacher/workshops/manage/accept/${id}`,
-              data: {
-                status,
-              },
-            })
-              .then((response) => {
-                const data = response.data;
-                alert(data.message);
-                // window.location.reload();
-                workshopincompleteList.insertAdjacentHTML(
-                  'beforeend',
-                  tempHtml,
-                );
-              })
-              .catch((response) => {
-                console.log(response);
-                const { data } = response.response;
-                alert(data.error);
-              });
-          }
-        });
       }
     })
     .catch((response) => {

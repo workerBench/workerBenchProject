@@ -4,11 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const thumb = document.getElementById('img').value;
     const category = document.getElementById('category').value;
     const title = document.getElementById('title').value;
-    const min_member = document.getElementById('min_member').value;
-    const max_member = document.getElementById('max_member').value;
-    const genre_id = document.getElementById('genre_id').value;
-    const purpose_tag_id = document.getElementById('purpose_tag_id').value;
-    const total_time = document.getElementById('total_time').value;
+    const min_member = document.getElementById('minMember').value;
+    const max_member = document.getElementById('maxMember').value;
+    const genre_id = document.getElementById('genreId').value;
+    const purpose_tag_id = document.getElementById('purposeTagId').value;
+    const total_time = document.getElementById('totalTime').value;
     const price = document.getElementById('price').value;
     const desc = document.getElementById('desc').value;
     const location = document.getElementById('location').value;
@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/teacher/workshop';
       })
       .catch((response) => {
+        console.log(response);
         const { data } = response.response;
         alert(data.message);
       });
