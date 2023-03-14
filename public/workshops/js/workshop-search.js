@@ -1,8 +1,65 @@
 window.addEventListener('DOMContentLoaded', function () {
+  getAllWorkshops();
   searchWorkshops();
 });
 
-// 전체 워크샵 조회
+// 모든 데이터 보여주기
+function getAllWorkshops() {
+  const url = `/api/workshops/search`;
+  const params = {};
+
+  axios
+    .get(url)
+    .then((res) => {
+      const workshops = res.data.data;
+      console.log(res.data.data);
+      console.log(workshops.length);
+      console.log(url, params);
+
+      // 검색 결과 건수 표시
+      document.querySelector(
+        '.workshop-search-result',
+      ).innerHTML = `검색 결과 ${workshops.length}건`;
+
+      $('.workshop-result-list').empty();
+      if (workshops.length === 0) {
+        document.querySelector(
+          '.workshop-search-result',
+        ).innerHTML = `검색 결과가 없습니다. <br> 검색 조건을 수정하거나 초기화 버튼을 눌러 재 검색해주세요.`;
+      } else {
+        document.querySelector(
+          '.workshop-search-result',
+        ).innerHTML = `검색 결과 ${workshops.length}건`;
+        workshops.forEach((element) => {
+          let temp = `<div class="col">
+        <div class="card h-100">
+        <a href="/workshops/detail?workshopId=${element.workshop_id}">  
+        <img
+            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            class="card-img-top"
+            alt="..."
+          />
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">${element.workshop_title}</h5>
+            <p class="card-text">${element.workshop_category}</p>
+            <p class="card-text">비용: ${element.workshop_price}원</p>
+            <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
+            <p class="card-text">시간: ${element.workshop_total_time}분</p>
+            <p class="card-text">#${element.genre_name} #${element.purposeTag_name}</p>
+          </div>
+        </div>
+      </div>`;
+          $('.workshop-result-list').append(temp);
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+// 워크샵 필터링 검색
 function searchWorkshops() {
   const url = `/api/workshops/search`;
   const params = {};
@@ -11,6 +68,7 @@ function searchWorkshops() {
   let locationSelect = document.querySelector('.location');
   let purposeSelect = document.querySelector('.purpose');
   let genreSelect = document.querySelector('.genre');
+  let memberSelect = document.querySelector('.member-cnt');
 
   // 카테고리 조건 검색
   categorySelect.addEventListener('change', function () {
@@ -23,6 +81,7 @@ function searchWorkshops() {
         const workshops = res.data.data;
         console.log(res.data.data);
         console.log(workshops.length);
+        console.log(url, params);
 
         // 검색 결과 건수 표시
         document.querySelector(
@@ -33,25 +92,80 @@ function searchWorkshops() {
         workshops.forEach((element) => {
           let temp = `<div class="col">
       <div class="card h-100">
-        <img
+      <a href="/workshops/detail?workshopId=${element.workshop_id}">  
+      <img
           src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
           class="card-img-top"
           alt="..."
         />
+        </a>
         <div class="card-body">
           <h5 class="card-title">${element.workshop_title}</h5>
           <p class="card-text">${element.workshop_category}</p>
           <p class="card-text">비용: ${element.workshop_price}원</p>
           <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
           <p class="card-text">시간: ${element.workshop_total_time}분</p>
-          <p class="card-text">#${element.genre_name} #${element.purposeTag_name[0]} #${element.purposeTag_name[1]}</p>
+          <p class="card-text">#${element.genre_name} #${element.purposeTag_name}</p>
         </div>
       </div>
     </div>`;
           $('.workshop-result-list').append(temp);
         });
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+
+  // 인원 조건 검색
+  memberSelect.addEventListener('input', function () {
+    const memberCnt = memberSelect.value;
+    params.memberCnt = Number(memberCnt);
+
+    axios
+      .get(url, { params })
+      .then((res) => {
+        const workshops = res.data.data;
+        console.log(res.data.data);
+        console.log(workshops.length);
+        console.log(url, params);
+
+        $('.workshop-result-list').empty();
+        if (workshops.length === 0) {
+          document.querySelector(
+            '.workshop-search-result',
+          ).innerHTML = `검색 결과가 없습니다. <br> 검색 조건을 수정하거나 초기화 버튼을 눌러 재 검색해주세요.`;
+        } else {
+          document.querySelector(
+            '.workshop-search-result',
+          ).innerHTML = `검색 결과 ${workshops.length}건`;
+          workshops.forEach((element) => {
+            let temp = `<div class="col">
+        <div class="card h-100">
+        <a href="/workshops/detail?workshopId=${element.workshop_id}">  
+        <img
+            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            class="card-img-top"
+            alt="..."
+          />
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">${element.workshop_title}</h5>
+            <p class="card-text">${element.workshop_category}</p>
+            <p class="card-text">비용: ${element.workshop_price}원</p>
+            <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
+            <p class="card-text">시간: ${element.workshop_total_time}분</p>
+            <p class="card-text">#${element.genre_name} #${element.purposeTag_name}</p>
+          </div>
+        </div>
+      </div>`;
+            $('.workshop-result-list').append(temp);
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   });
 
   // 지역 조건 검색
@@ -65,35 +179,44 @@ function searchWorkshops() {
         const workshops = res.data.data;
         console.log(res.data.data);
         console.log(workshops.length);
-
-        // 검색 결과 건수 표시
-        document.querySelector(
-          '.workshop-search-result',
-        ).innerHTML = `검색 결과 ${workshops.length}건`;
+        console.log(url, params);
 
         $('.workshop-result-list').empty();
-        workshops.forEach((element) => {
-          let temp = `<div class="col">
-      <div class="card h-100">
+        if (workshops.length === 0) {
+          document.querySelector(
+            '.workshop-search-result',
+          ).innerHTML = `검색 결과가 없습니다. <br> 검색 조건을 수정하거나 초기화 버튼을 눌러 재 검색해주세요.`;
+        } else {
+          document.querySelector(
+            '.workshop-search-result',
+          ).innerHTML = `검색 결과 ${workshops.length}건`;
+          workshops.forEach((element) => {
+            let temp = `<div class="col">
+        <div class="card h-100">
+        <a href="/workshops/detail?workshopId=${element.workshop_id}">  
         <img
-          src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
-          class="card-img-top"
-          alt="..."
-        />
-        <div class="card-body">
-          <h5 class="card-title">${element.workshop_title}</h5>
-          <p class="card-text">${element.workshop_category}</p>
-          <p class="card-text">비용: ${element.workshop_price}원</p>
-          <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
-          <p class="card-text">시간: ${element.workshop_total_time}분</p>
-          <p class="card-text">#${element.genre_name} #${element.purposeTag_name[0]} #${element.purposeTag_name[1]}</p>
+            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            class="card-img-top"
+            alt="..."
+          />
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">${element.workshop_title}</h5>
+            <p class="card-text">${element.workshop_category}</p>
+            <p class="card-text">비용: ${element.workshop_price}원</p>
+            <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
+            <p class="card-text">시간: ${element.workshop_total_time}분</p>
+            <p class="card-text">#${element.genre_name} #${element.purposeTag_name}</p>
+          </div>
         </div>
-      </div>
-    </div>`;
-          $('.workshop-result-list').append(temp);
-        });
+      </div>`;
+            $('.workshop-result-list').append(temp);
+          });
+        }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
   });
 
   // 목적 조건 검색
@@ -107,35 +230,44 @@ function searchWorkshops() {
         const workshops = res.data.data;
         console.log(res.data.data);
         console.log(workshops.length);
-
-        // 검색 결과 건수 표시
-        document.querySelector(
-          '.workshop-search-result',
-        ).innerHTML = `검색 결과 ${workshops.length}건`;
+        console.log(url, params);
 
         $('.workshop-result-list').empty();
-        workshops.forEach((element) => {
-          let temp = `<div class="col">
-      <div class="card h-100">
+        if (workshops.length === 0) {
+          document.querySelector(
+            '.workshop-search-result',
+          ).innerHTML = `검색 결과가 없습니다. <br> 검색 조건을 수정하거나 초기화 버튼을 눌러 재 검색해주세요.`;
+        } else {
+          document.querySelector(
+            '.workshop-search-result',
+          ).innerHTML = `검색 결과 ${workshops.length}건`;
+          workshops.forEach((element) => {
+            let temp = `<div class="col">
+        <div class="card h-100">
+        <a href="/workshops/detail?workshopId=${element.workshop_id}">  
         <img
-          src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
-          class="card-img-top"
-          alt="..."
-        />
-        <div class="card-body">
-          <h5 class="card-title">${element.workshop_title}</h5>
-          <p class="card-text">${element.workshop_category}</p>
-          <p class="card-text">비용: ${element.workshop_price}원</p>
-          <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
-          <p class="card-text">시간: ${element.workshop_total_time}분</p>
-          <p class="card-text">#${element.genre_name} #${element.purposeTag_name[0]} #${element.purposeTag_name[1]}</p>
+            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            class="card-img-top"
+            alt="..."
+          />
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">${element.workshop_title}</h5>
+            <p class="card-text">${element.workshop_category}</p>
+            <p class="card-text">비용: ${element.workshop_price}원</p>
+            <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
+            <p class="card-text">시간: ${element.workshop_total_time}분</p>
+            <p class="card-text">#${element.genre_name} #${element.purposeTag_name}</p>
+          </div>
         </div>
-      </div>
-    </div>`;
-          $('.workshop-result-list').append(temp);
-        });
+      </div>`;
+            $('.workshop-result-list').append(temp);
+          });
+        }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
   });
 
   // 장르 조건 검색
@@ -149,34 +281,43 @@ function searchWorkshops() {
         const workshops = res.data.data;
         console.log(res.data.data);
         console.log(workshops.length);
-
-        // 검색 결과 건수 표시
-        document.querySelector(
-          '.workshop-search-result',
-        ).innerHTML = `검색 결과 ${workshops.length}건`;
+        console.log(url, params);
 
         $('.workshop-result-list').empty();
-        workshops.forEach((element) => {
-          let temp = `<div class="col">
-      <div class="card h-100">
+        if (workshops.length === 0) {
+          document.querySelector(
+            '.workshop-search-result',
+          ).innerHTML = `검색 결과가 없습니다. <br> 검색 조건을 수정하거나 초기화 버튼을 눌러 재 검색해주세요.`;
+        } else {
+          document.querySelector(
+            '.workshop-search-result',
+          ).innerHTML = `검색 결과 ${workshops.length}건`;
+          workshops.forEach((element) => {
+            let temp = `<div class="col">
+        <div class="card h-100">
+        <a href="/workshops/detail?workshopId=${element.workshop_id}">  
         <img
-          src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
-          class="card-img-top"
-          alt="..."
-        />
-        <div class="card-body">
-          <h5 class="card-title">${element.workshop_title}</h5>
-          <p class="card-text">${element.workshop_category}</p>
-          <p class="card-text">비용: ${element.workshop_price}원</p>
-          <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
-          <p class="card-text">시간: ${element.workshop_total_time}분</p>
-          <p class="card-text">#${element.genre_name} #${element.purposeTag_name[0]} #${element.purposeTag_name[1]}</p>
+            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            class="card-img-top"
+            alt="..."
+          />
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">${element.workshop_title}</h5>
+            <p class="card-text">${element.workshop_category}</p>
+            <p class="card-text">비용: ${element.workshop_price}원</p>
+            <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
+            <p class="card-text">시간: ${element.workshop_total_time}분</p>
+            <p class="card-text">#${element.genre_name} #${element.purposeTag_name}</p>
+          </div>
         </div>
-      </div>
-    </div>`;
-          $('.workshop-result-list').append(temp);
-        });
+      </div>`;
+            $('.workshop-result-list').append(temp);
+          });
+        }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
   });
 }
