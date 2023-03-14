@@ -1,3 +1,13 @@
+// 로그인 화면으로 가기
+const login = () => {
+  location.href = '/auth/login';
+};
+
+// 회원가입 화면으로 가기
+const register = () => {
+  location.href = '/auth/signup';
+};
+
 // 마이 페이지로 가기
 const goMypage = () => {
   location.href = '/mypage/workshops';
@@ -10,7 +20,7 @@ const logout = async () => {
       method: 'GET',
       url: '/api/auth/logout/user',
     });
-    // location.reload();
     location.href = '/';
+    //location.reload();
   } catch (err) {}
 };

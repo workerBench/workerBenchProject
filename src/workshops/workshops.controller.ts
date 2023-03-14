@@ -14,6 +14,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
+import { JwtUserPageGuard } from 'src/auth/jwt/refresh-page-check/user/jwt-user-page-guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
@@ -87,13 +88,29 @@ export class WorkshopsController {
     description: '성공',
   })
   @ApiOperation({ summary: '워크샵 상세 조회 api' })
+  @UseGuards(JwtUserPageGuard)
   @Get('/:workshop_id')
   async getWorkshopDetail(
-    @CurrentUser() user: CurrentUserDto,
     @Param('workshop_id') workshop_id: number,
+    @CurrentUser() user: CurrentUserDto | boolean,
   ) {
-    const user_id = user?.id;
-    return await this.workshopsService.getWorkshopDetail(user_id, workshop_id);
+    const workshop = await this.workshopsService.getWorkshopDetail(workshop_id);
+
+    if (typeof user === 'boolean' && user === false) {
+      return { workshop, wish: false };
+    }
+
+    let isWish: boolean;
+
+    if (typeof user === 'object') {
+      isWish = await this.workshopsService.checkingWish(user.id, workshop_id);
+    }
+
+    if (isWish === false) {
+      return { workshop, wish: false };
+    }
+
+    return { workshop, wish: true };
   }
 
   // 워크샵 찜 or 취소하기 AP
