@@ -22,38 +22,44 @@
     <!-- 워크샵 검색창 -->
     <%- include ("header.ejs") %>
     <div class="workshop-search-box">
-      <div class="workshop-search-title">
+      <div class="workshop-search-title" onchange="location.href=this.value">
         우리 팀/회사에 딱 맞는 워크샵 찾아보기
       </div>
       <select class="form-select category" aria-label="Default select example">
-        <option selected>온라인 / 오프라인</option>
+        <option selected disabled>온라인 / 오프라인</option>
         <option value="online">온라인</option>
         <option value="offline">오프라인</option>
       </select>
-      <select
-        class="form-select member-cnt"
-        aria-label="Default select example"
-      >
-        <option selected disabled>인원</option>
-        <option value="1">1~10명</option>
-        <option value="2">11~30명</option>
-        <option value="2">31~50명</option>
-        <option value="2">50명 초과</option>
-      </select>
+      <input
+        class="form-control member-cnt"
+        type="number"
+        placeholder="인원"
+        aria-label="default input example"
+        style="width: 100px"
+        min="1"
+      />
+
       <select class="form-select location" aria-label="Default select example">
-        <option selected>지역</option>
+        <option selected disabled>지역</option>
         <option value="서울시 종로구">서울시 종로구</option>
         <option value="서울시 마포구">서울시 마포구</option>
       </select>
       <select class="form-select purpose" aria-label="Default select example">
-        <option selected>목적</option>
+        <option selected disabled>목적</option>
         <option value="팀웍 증진">팀웍 증진</option>
         <option value="서류 작성">서류 작성</option>
       </select>
       <select class="form-select genre" aria-label="Default select example">
-        <option selected>분야</option>
+        <option selected disabled>분야</option>
         <option value="문화 예술">문화 예술</option>
       </select>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        onclick="location.reload()"
+      >
+        초기화
+      </button>
     </div>
 
     <!-- 워크샵 검색 결과 -->
