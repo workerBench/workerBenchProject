@@ -16,6 +16,8 @@ import { JwtUserStrategy } from './jwt/access/user/jwt-user.strategy';
 import { JwtRefreshStrategy } from './jwt/refresh/user/jwt-user-refresh.strategy';
 import { JwtAdminStrategy } from './jwt/access/admin/jwt-admin.strategy';
 import { JwtAdminRefreshStrategy } from './jwt/refresh/admin/jwt-admin-refresh.strategy';
+import { Teacher } from 'src/entities/teacher';
+import { Company } from 'src/entities/company';
 
 @Module({
   imports: [
@@ -28,7 +30,7 @@ import { JwtAdminRefreshStrategy } from './jwt/refresh/admin/jwt-admin-refresh.s
       ],
       session: false,
     }),
-    TypeOrmModule.forFeature([User, AdminUser]),
+    TypeOrmModule.forFeature([User, AdminUser, Teacher, Company]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useClass: JwtConfigService,

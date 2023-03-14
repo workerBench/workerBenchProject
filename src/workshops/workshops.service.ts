@@ -184,7 +184,7 @@ export class WorkshopsService {
 
   // 워크샵 상세 조회 API
   // id에 해당하는 워크샵 정보만 가져온다.
-  async getWorkshopDetail(user_id: number, workshop_id: number) {
+  async getWorkshopDetail(workshop_id: number) {
     const queryBuilder = await this.workshopRepository
       .createQueryBuilder('workshop')
       .leftJoinAndSelect('workshop.WishList', 'wish')
@@ -258,11 +258,22 @@ export class WorkshopsService {
     });
     if (IsWish === null) {
       await this.wishRepository.insert({ user_id, workshop_id });
-      return { message: '찜하기 성공!' };
+      return { message: '찜하기 성공!', type: 'add' };
     } else {
       await this.wishRepository.delete({ user_id, workshop_id }); // 찜 해제
-      return { message: '찜하기 취소!' };
+      return { message: '찜하기 취소!', type: 'remove' };
     }
+  }
+
+  // 워크샵 상세 정보를 가져올 때 로그인 한 유저가 있다면, 해당 유저가 워크샵을 찜 했는지 안했는지 여부를 확인
+  async checkingWish(user_id: number, workshop_id: number) {
+    const wishCheck = await this.wishRepository.findOne({
+      where: { user_id, workshop_id },
+    });
+    if (!wishCheck) {
+      return false;
+    }
+    return true;
   }
 
   // 특정 워크샵 후기 불러오기 API

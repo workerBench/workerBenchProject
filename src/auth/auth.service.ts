@@ -27,6 +27,8 @@ import { AdminRegisterJoinDto } from './dtos/admin-register-join';
 import { ResetPassword } from './dtos/reset-password.dto';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { v4 as uuid } from 'uuid';
+import { Teacher } from 'src/entities/teacher';
+import { Company } from 'src/entities/company';
 
 @Injectable()
 export class AuthService {
@@ -40,6 +42,10 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(AdminUser)
     private readonly adminUserRepository: Repository<AdminUser>,
+    @InjectRepository(Teacher)
+    private readonly teacherRepository: Repository<Teacher>,
+    @InjectRepository(Company)
+    private readonly companyRepository: Repository<Company>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService,
@@ -508,6 +514,22 @@ export class AuthService {
     const newPassword = await bcrypt.hash(password, 12);
     await this.userRepository.update({ email }, { password: newPassword });
     return;
+  }
+
+  // user_id 로 teacher 테이블에서 강사 정보 찾기
+  async getTeacherById(user_id: number) {
+    const teacher = await this.teacherRepository.findOne({
+      where: { user_id },
+    });
+    return teacher;
+  }
+
+  // user_id 로 teacher 가 업체를 직접 만들어 소유중인지 찾기
+  async getTeachersCompany(user_id: number) {
+    const company = await this.companyRepository.findOne({
+      where: { user_id },
+    });
+    return company;
   }
 
   /* -------------------------------- 테스트용 API -------------------------------- */
