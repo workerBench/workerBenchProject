@@ -238,7 +238,6 @@ export class WorkshopsService {
       const halfWish = wishArray.slice(0, wishHalfIndex); // 중복 값이 나오므로 배열 길이의 반만큼 잘라줘야 함
 
       // s3 + cloud front에서 이미지 가져오기
-      const region = this.configService.get('AWS_S3_REGION');
       const thumbName = workshop.workshop_thumb;
       const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
       const thumbUrl = `${cloundFrontUrl}/${thumbName}`;
@@ -303,7 +302,14 @@ export class WorkshopsService {
       const day = String(inputDate.getDate()).padStart(2, '0');
       const outputDate = `${year}-${month}-${day}`;
 
-      return { ...review, createdAt: outputDate };
+      // s3 + cloud front에서 이미지 가져오기
+      const reviewImageArr = reviews[0].ReviewImages[0];
+      const reviewImage = reviewImageArr.img_name;
+      const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+      const thumbUrl = `${cloundFrontUrl}/${reviewImage}`;
+      // ex) images/reviews/1/eraser-class-thumb.jpg 와 같은 파일명으로 저장되어 있음
+
+      return { ...review, createdAt: outputDate, reviewImage: thumbUrl };
     });
     return result;
   }

@@ -27,7 +27,7 @@ function getWorkshopDetail() {
         <div class="col">
           <div class="workshop-summary">
             <div class="workshop-title">${workshop.workshop_title}</div>
-            <div class="workshop-star">${workshop.averageStar}점</div>
+            <div class="workshop-star">평가 ${workshop.averageStar}점</div>
             <div class="workshop-category">${workshop.workshop_category}</div>
             <div class="workshop-location">
             활동 가능 지역 ${
@@ -41,8 +41,8 @@ function getWorkshopDetail() {
             <div class="workshop-total-time">총 시간 ${
               workshop.workshop_total_time
             }분</div>
-            <div class="workshop-genre">분야${workshop.genre}</div>
-            <div class="workshop-purpose">목적${workshop.purpose}</div>
+            <div class="workshop-genre">분야 ${workshop.genre}</div>
+            <div class="workshop-purpose">목적 ${workshop.purpose}</div>
             <div class="workshop-price">${workshop.workshop_price}원</div>
             <div>*1인 기준</div>
             <div class="order-wish-buttons">
@@ -118,11 +118,12 @@ function getWorkshopReviews() {
       const reviews = res.data.data;
 
       console.log(reviews);
+      console.log(reviews[0].reviewImage);
 
       reviews.forEach((element) => {
         let TempReviews = `<div class="card mb-3" style="max-width: 700px; margin-top: 50px"><div class="row g-0">
           <div class="col-md-4">
-            <img src="/images/eraser-class-review.jpg" class="img-fluid rounded-start" alt="...">
+            <img class="img-fluid rounded-start" alt="..." id="review-img">
           </div>
           <div class="col-md-8">
             <div class="card-body">
@@ -134,6 +135,7 @@ function getWorkshopReviews() {
         </div>
         </div>`;
         $('#workshop-reviews').append(TempReviews);
+        document.getElementById('review-img').src = reviews[0].reviewImage;
       });
     })
     .catch((err) => {});

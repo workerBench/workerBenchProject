@@ -1,8 +1,8 @@
 /* 웹 폰트 임포트 */
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 
 body {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 img {
@@ -14,6 +14,7 @@ img {
 .workshop-thumb {
   object-fit: contain;
   margin-top: 20px;
+  margin-left: 200px;
 }
 
 .workshop-summary {
