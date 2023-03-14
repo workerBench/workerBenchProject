@@ -82,3 +82,10 @@ $(document).ready(function() {
       });
   });
 });
+
+// 계정 삭제 모달창
+// const btn = document.querySelector(".admin-remove-btn");
+
+// btn.onclick = function() {
+//   modal.style.display = "block";
+// }

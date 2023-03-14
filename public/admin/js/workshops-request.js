@@ -110,3 +110,43 @@ $(document).ready(() => {
     }
   });
 });
+
+    // -------------------- 워크숍 상세보기 (모달창) --------------------- //
+
+// 계정 생성 버튼 (모달창 띄우기)
+const btn = document.getElementById("modal-btn");
+
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// 취소하기 버튼 클릭시 닫힘
+const closeBtn = document.getElementById('close-btn');
+
+closeBtn.addEventListener('click', function() {
+  const modal = document.getElementById('modal');
+  modal.style.display = 'none';
+});
+
+const closeBtn2 = document.querySelector('.btn-close');
+
+closeBtn2.addEventListener('click', function() {
+  const modal = document.getElementById('modal');
+  modal.style.display = 'none';
+});
+
+
+// 모달창 외부를 클릭하면 닫힘
+const modal = document.getElementById("modal");
+
+modal.addEventListener("click", e => {
+  const evTarget = e.target
+  if(evTarget.classList.contains("modal")) {
+      modal.style.display = "none"
+  }
+});
+
+
+
+
+

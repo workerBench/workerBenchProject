@@ -75,4 +75,8 @@ export class AdminControllerRender {
   @Get('/admin-manage')
   @Render('admin/admin-manage')
   admin_manage_data() {}
+
+  @Get('/test')
+  @Render('admin/test')
+  test_data() {}
 }
