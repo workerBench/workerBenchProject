@@ -13,13 +13,14 @@ function getWorkshopDetail() {
   axios
     .get(`/api/workshops/${workshopId}`)
     .then((res) => {
+      console.log(res.data.data);
       const workshop = res.data.data.workshop[0];
       const wishCheck = res.data.data.wish; // false or true
 
       let workshopInfo = `<div class="row">
         <div class="col">
           <div class="workshop-thumb">
-            <img src="/images/eraser-class-thumb.jpg" alt="..." />
+            <img id="workshop-thumb" alt="..." />
           </div>...
         </div>
   
@@ -83,7 +84,7 @@ const getThumbImg = () => {
   axios.get('/api/auth/img-s3-url').then((res) => {
     console.log('썸네일 주소 가져오기 api 무사히 작동');
     console.log(res.data.data);
-    document.querySelector('#workshop-thumb').src = res.data.data;
+    document.getElementById('workshop-thumb').src = res.data.data;
   });
 };
 
@@ -183,6 +184,7 @@ form.addEventListener('submit', function (e) {
   const company = document.getElementById('company').value;
   const name = document.getElementById('name').value;
   const email = document.getElementById('email').value;
+
   const phone_number = document.getElementById('phone_number').value;
   const wish_date = document.getElementById('wish_date').value;
   const category = $('input[name=category]:checked').val();
@@ -246,7 +248,7 @@ const getErrorCode = async (statusCode, errorMessage, callback) => {
   if (statusCode === 401) {
     const refreshRes = await requestAccessToken();
     if (!refreshRes) {
-      alert('현재 로그인이 되어있지 않습니다. 로그인 후 이용 가능합니다.');
+      alert('로그인 후 이용 가능합니다.');
       return;
     }
     callback();
