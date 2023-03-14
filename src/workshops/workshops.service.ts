@@ -237,10 +237,12 @@ export class WorkshopsService {
       const wishHalfIndex = Math.floor(wishArray.length / 2);
       const halfWish = wishArray.slice(0, wishHalfIndex); // 중복 값이 나오므로 배열 길이의 반만큼 잘라줘야 함
 
-      // s3에서 이미지 가져오기
+      // s3 + cloud front에서 이미지 가져오기
       const region = this.configService.get('AWS_S3_REGION');
       const thumbName = workshop.workshop_thumb;
-      const thumbUrl = `https://workerbench-mj.s3.${region}.amazonaws.com/images/workshop/${workshop.workshop_id}/${thumbName}`;
+      const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+      const thumbUrl = `${cloundFrontUrl}/${thumbName}`;
+      // ex) images/workshop/1/eraser-class-thumb.jpg 와 같은 파일명으로 저장되어 있음
 
       return {
         ...workshop,
