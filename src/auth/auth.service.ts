@@ -550,7 +550,6 @@ export class AuthService {
     이런 식으로 push. 
     이렇게 만들어 진 배열을 workshop_image 에 insert 한다.
     */
-    workshopInfo.thumb = `images/workshop/1/${thumbImgName}`;
 
     // 이제 썸네일 이미지와 서브 이미지들을 S3 에 저장해야 해.
     try {
@@ -590,6 +589,7 @@ export class AuthService {
     const thumbName =
       'images/workshop/1/0dd9de79-2c49-4bb9-a462-c73b9f363e7b.jpeg';
 
+    // const thumbUrl = `https://workerbench.s3.${region}.amazonaws.com/${thumbName}`;
     const thumbUrl = `${cloundFrontUrl}${thumbName}`;
 
     return thumbUrl;
