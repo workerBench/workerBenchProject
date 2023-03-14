@@ -1,6 +1,5 @@
 window.addEventListener('DOMContentLoaded', function () {
   getWorkshopDetail();
-  getThumbImg();
   getWorkshopReviews();
 });
 
@@ -58,6 +57,7 @@ function getWorkshopDetail() {
         </div>
       </div>`;
       $('#workshop-image-info').append(workshopInfo);
+      document.getElementById('workshop-thumb').src = workshop.workshop_thumb;
 
       // 찜하기 유저에 있으면 하트 칠하기
       if (wishCheck) {
@@ -78,15 +78,6 @@ function getWorkshopDetail() {
     })
     .catch((error) => {});
 }
-
-// 썸네일 가져오기
-const getThumbImg = () => {
-  axios.get('/api/auth/img-s3-url').then((res) => {
-    console.log('썸네일 주소 가져오기 api 무사히 작동');
-    console.log(res.data.data);
-    document.getElementById('workshop-thumb').src = res.data.data;
-  });
-};
 
 // 찜하기
 function addToWish() {

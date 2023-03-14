@@ -586,9 +586,9 @@ export class AuthService {
   async workshopThumbImg() {
     const workshop_id = 1;
     const region = this.configService.get('AWS_S3_REGION');
-    const thumbName = 'eraser-class-review.jpg';
+    const thumbName = 'images/workshop/1/eraser-class-thumb.jpg';
 
-    const thumbUrl = `https://workerbench-s3-bucket.s3.${region}.amazonaws.com/${thumbName}`;
+    const thumbUrl = `https://workerbench-mj.s3.${region}.amazonaws.com/${thumbName}`;
     return thumbUrl;
   }
 
