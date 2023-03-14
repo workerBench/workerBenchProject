@@ -214,6 +214,7 @@ export class TeacherService {
       throw error;
     }
   }
+  // 업체 등록
   async createTeacherWorkshops(data: createWorkshopsDto) {
     try {
       const {
@@ -283,13 +284,12 @@ export class TeacherService {
   async getTeacherIncompleteWorkshop() {
     try {
       const id = 10; // 예시
-      const Workshop_id = 83;
       const userIdInfo = await this.workshopRepository.find({
         where: { user_id: id },
         select: ['user_id', 'id'],
       });
-      const workshopIds = userIdInfo.map((info) => info.id);
-      console.log(workshopIds);
+      const userIds = userIdInfo.map((info) => info.id);
+      console.log(userIds);
       if (!userIdInfo) {
         throw new HttpException(
           '등록되지 않은 유저 입니다.',
@@ -301,9 +301,12 @@ export class TeacherService {
           .where('workshop.user_id = :user_id ', {
             user_id: id,
           })
-          .andWhere('workShopInstanceDetail.workshop_id  = :workshop_id ', {
-            workshop_id: Workshop_id,
-          })
+          .andWhere(
+            'workShopInstanceDetail.workshop_id IN (:...workshop_ids)',
+            {
+              workshop_ids: userIds,
+            },
+          )
           .andWhere('workShopInstanceDetail.status IN (:...status)', {
             status: ['request', 'non_payment', 'waiting_lecture'],
           })
@@ -341,10 +344,9 @@ export class TeacherService {
   async getTeacherComplete() {
     try {
       const id = 10; // 예시
-      const workshop_id = 83;
       const userIdInfo = await this.workshopRepository.find({
         where: { user_id: id },
-        select: ['user_id'],
+        select: ['user_id', 'id'],
       });
       if (!userIdInfo) {
         throw new HttpException(
@@ -352,14 +354,18 @@ export class TeacherService {
           HttpStatus.BAD_REQUEST,
         );
       } else {
+        const workshopId = userIdInfo.map((info) => info.id); // id 값을 배열로 변환하여 workshopId 변수에 대입
         let result = await this.workshopRepository
           .createQueryBuilder('workshop')
           .where('workshop.user_id = :user_id ', {
             user_id: id,
           })
-          .andWhere('workShopInstanceDetail.workshop_id  = :workshop_id ', {
-            workshop_id: workshop_id,
-          })
+          .andWhere(
+            'workShopInstanceDetail.workshop_id  IN (:...workshop_ids) ',
+            {
+              workshop_ids: workshopId, // workshopId 변수를 사용하여 workshop_id 값을 대입
+            },
+          )
           .andWhere('workShopInstanceDetail.status = :status', {
             status: 'complete',
           })
@@ -376,6 +382,7 @@ export class TeacherService {
             'genreTag.name',
             'workshop.total_time',
             'workshop.price',
+            'workShopInstanceDetail.id',
             'workShopInstanceDetail.etc',
             'workShopInstanceDetail.company',
             'workShopInstanceDetail.phone_number',
@@ -438,7 +445,7 @@ export class TeacherService {
       }
     } catch (error) {
       console.log(error);
-      throw new BadRequestException('입력된 요청이 잘못되었습니다.');
+      throw error;
     }
   }
 }

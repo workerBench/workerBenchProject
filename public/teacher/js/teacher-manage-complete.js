@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
+      console.log(response);
       const data = response.data;
       for (let i = 0; i < data.length; i++) {
         const workshop_thumb = data[i].workshop_thumb;
@@ -24,12 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const createdAt = data[i].workShopInstanceDetail_createdAt;
         const status = data[i].workshop_status;
         const id = data[i].workshop_id;
-        // if (status === 'request') {
-        // }
-        // if (status === 'non_payment') {
-        // }
-        // if (status === 'waiting_lecture') {
-        // }
         let tempHtml = ``;
         tempHtml = `
         <div class="teacher-manage-div" >
@@ -53,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <li for="purpose-tag" class="company-input">${createdAt}</li>
                 </div>
                 <div id = button-div>
-                <button type="radio" class="Button" id="approvalButton">수락 하기</button>
+                <button type="radio" class="Button" id="completeButton">수강 완료</button>
                 <button type="radio" class="Button" id="rejectButton">취소 하기</button>
                 <button type="radio" class="Button" id="editButton">수정 하기</button>
             </div>
@@ -61,6 +56,33 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   `;
         workshopcompleteList.insertAdjacentHTML('beforeend', tempHtml);
+        const completeButton = document.getElementById('completeButton');
+        completeButton.addEventListener('click', () => {
+          const status = data[i].workShopInstanceDetail_status;
+          if (status === 'complete') {
+            axios({
+              method: 'patch',
+              url: `/api/teacher/workshops/manage/accept/${id}`,
+              data: {
+                status,
+              },
+            })
+              .then((response) => {
+                const data = response.data;
+                alert(data.message);
+                // window.location.reload();
+                workshopincompleteList.insertAdjacentHTML(
+                  'beforeend',
+                  tempHtml,
+                );
+              })
+              .catch((response) => {
+                console.log(response);
+                const { data } = response.response;
+                alert(data.error);
+              });
+          }
+        });
       }
     })
     .catch((response) => {
