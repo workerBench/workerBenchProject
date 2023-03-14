@@ -20,8 +20,6 @@ export class AdminControllerRender {
     @Res() res: Response,
     @RealIP() clientIp: string,
   ) {
-    console.log('랜더링 함수 ---');
-    console.log(user);
     if (typeof user === 'boolean' && user === false) {
       return res.render('admin/admin-login', { user: false });
     }
