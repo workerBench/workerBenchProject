@@ -22,13 +22,13 @@
     />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <link href="/auth/css/login.css" rel="stylesheet" />
+    <link href="/admin/css/admin-login.css" rel="stylesheet" />
     <title>로그인</title>
   </head>
   <body>
     <%- include('header.ejs') %>
     <div id="loginBox">
-      <h1>로그인</h1>
+      <h1>관리자 로그인</h1>
       <div class="wrap">
         <div class="mx-auto" style="max-width: 480px">
           <div class="card-body">
@@ -68,18 +68,6 @@
                   로그인
                 </button>
               </div>
-              <div class="col-6 pl-2">
-                <button
-                  type="button"
-                  class="signupBtn"
-                  onclick="location.href='/auth/signup'"
-                >
-                  회원가입
-                </button>
-              </div>
-              <div class="password-forget">
-                <a href="/auth/password/reset">비밀번호를 잊으셨나요?</a>
-              </div>
             </div>
           </div>
         </div>
@@ -87,36 +75,8 @@
     </div>
   </body>
 
-  <!-- script 구성 -->
+  <script src="/admin/js/admin-login.js" defer></script>
   <script>
-    // 로그인 시도
-    const login = async () => {
-      const email = document.querySelector('#inputEmail').value;
-      const password = document.querySelector('#inputPassword').value;
-
-      if (!email || !email.includes('@') || !email.includes('.')) {
-        alert('이메일을 정확히 입력해 주세요');
-        return;
-      }
-      if (!password) {
-        alert('비밀번호를 입력해 주세요');
-        return;
-      }
-
-      try {
-        const res2 = await axios({
-          method: 'POST',
-          url: '/api/auth/login/user',
-          data: { email, password },
-        });
-        // location.href = '/';
-        const beforeUrl = document.referrer; // 이전에 유입된 주소.
-        location.href = beforeUrl;
-      } catch (err) {
-        alert(
-          `에러 코드: ${err.response.data.statusCode} / message: ${err.response.data.message}`,
-        );
-      }
-    };
+    const user = '<%= user %>';
   </script>
 </html>

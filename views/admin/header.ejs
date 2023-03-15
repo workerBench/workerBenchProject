@@ -13,12 +13,16 @@
     <div class="nav-wrap">
       <nav class="nav-bar">
         <div class="logo-img-wrap">
-          <img src="/images/admin-image/header.png">
+          <img src="/images/admin-image/header.png" />
         </div>
         <div class="domain-name">Worker Bench</div>
-        <div class="login-or-mypage-div">로그인</div>
-        <!-- <div class="register-or-logout-div">회원가입</div> -->
+
+        <% if (user === false) { %> <% } else { %>
+        <div class="login-or-mypage-div" onclick="adminLogout()">로그아웃</div>
+        <% } %>
       </nav>
     </div>
+
+    <script src="/admin/js/header.js"></script>
   </body>
 </html>

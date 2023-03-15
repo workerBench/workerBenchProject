@@ -25,8 +25,14 @@ import { adminTypeNaming, userTypeNaming } from './naming/user-type';
 import { AdminUser } from 'src/entities/admin-user';
 import { AdminRegisterJoinDto } from './dtos/admin-register-join';
 import { ResetPassword } from './dtos/reset-password.dto';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { v4 as uuid } from 'uuid';
+import { Teacher } from 'src/entities/teacher';
+import { Company } from 'src/entities/company';
 
 @Injectable()
 export class AuthService {
@@ -40,6 +46,10 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(AdminUser)
     private readonly adminUserRepository: Repository<AdminUser>,
+    @InjectRepository(Teacher)
+    private readonly teacherRepository: Repository<Teacher>,
+    @InjectRepository(Company)
+    private readonly companyRepository: Repository<Company>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService,
@@ -510,6 +520,22 @@ export class AuthService {
     return;
   }
 
+  // user_id 로 teacher 테이블에서 강사 정보 찾기
+  async getTeacherById(user_id: number) {
+    const teacher = await this.teacherRepository.findOne({
+      where: { user_id },
+    });
+    return teacher;
+  }
+
+  // user_id 로 teacher 가 업체를 직접 만들어 소유중인지 찾기
+  async getTeachersCompany(user_id: number) {
+    const company = await this.companyRepository.findOne({
+      where: { user_id },
+    });
+    return company;
+  }
+
   /* -------------------------------- 테스트용 API -------------------------------- */
 
   // 유저가 업로드한 사진을 S3 에 저장
@@ -528,7 +554,6 @@ export class AuthService {
     이런 식으로 push. 
     이렇게 만들어 진 배열을 workshop_image 에 insert 한다.
     */
-    workshopInfo.thumb = `images/workshop/1/${thumbImgName}`;
 
     // 이제 썸네일 이미지와 서브 이미지들을 S3 에 저장해야 해.
     try {
@@ -536,8 +561,8 @@ export class AuthService {
         // 첫 번째 image 일 경우 해당 이미지는 썸네일 이미지로 간주한다.
         if (index === 0) {
           const s3OptionForThumbImg = {
-            Bucket: this.S3_BUCKET_NAME, // S3의 버킷 이름.
-            Key: `images/workshop/1/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
+            Bucket: 'workerbench', // S3의 버킷 이름.
+            Key: `images/workshop/2/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
             Body: image.buffer, // 업로드 하고자 하는 파일.
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForThumbImg)); // 실제로 S3 클라우드로 파일을 전송 및 업로드 하는 코드.
@@ -548,8 +573,8 @@ export class AuthService {
           );
           const subImgName = uuid() + subImgType;
           const s3OptionForSubImg = {
-            Bucket: this.S3_BUCKET_NAME,
-            Key: `images/workshop/1/${subImgName}`,
+            Bucket: 'workerbench',
+            Key: `images/workshop/2/original/${subImgName}`,
             Body: image.buffer,
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
@@ -564,10 +589,13 @@ export class AuthService {
   async workshopThumbImg() {
     const workshop_id = 1;
     const region = this.configService.get('AWS_S3_REGION');
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
     const thumbName =
-      'images/workshop/1/e1564aae-939b-4e38-81d0-81d316d30266.jpeg';
+      'images/workshop/1/0dd9de79-2c49-4bb9-a462-c73b9f363e7b.jpeg';
 
-    const thumbUrl = `https://workerbench.s3.${region}.amazonaws.com/${thumbName}`;
+    // const thumbUrl = `https://workerbench.s3.${region}.amazonaws.com/${thumbName}`;
+    const thumbUrl = `${cloundFrontUrl}${thumbName}`;
+
     return thumbUrl;
   }
 

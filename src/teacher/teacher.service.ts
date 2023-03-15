@@ -35,13 +35,10 @@ export class TeacherService {
   ) {}
   // 강사 등록 api
 
-  async createTeacherRegister(
-    data: CreateTeacherDto, //user: CurrentUserDto
-  ) {
+  async createTeacherRegister(data: CreateTeacherDto, user: CurrentUserDto) {
     const { phone_number, address, name } = data;
-    // const { id } = user;
+    const { id } = user;
     try {
-      const id = 11;
       const userIdInfo = await this.userRepository.findOne({
         where: { id },
         select: ['id'],
@@ -76,10 +73,9 @@ export class TeacherService {
     }
   }
   // 강사 전용 전체 워크샵 목록 api
-  async getTeacherWorkshops() {
-    // id:number
+  async getTeacherWorkshops(user: CurrentUserDto) {
+    const { id } = user;
     try {
-      const id = 11; // 예시
       const userIdInfo = await this.workshopRepository.find({
         where: { user_id: id },
         select: ['user_id'],
@@ -114,9 +110,8 @@ export class TeacherService {
     }
   }
   // 강사 및 업체 정보 api
-  async getTeacherMypage() {
-    //id: number
-    const id = 11;
+  async getTeacherMypage(user: CurrentUserDto) {
+    const { id } = user;
     const userIdInfo = await this.teacherRepository.findOne({
       where: { user_id: id },
       select: ['user_id'],
@@ -151,7 +146,7 @@ export class TeacherService {
     }
   }
   // 강사 업체 등록 api
-  async createTeacherCompany(data: CreateCompanyDto) {
+  async createTeacherCompany(data: CreateCompanyDto, user: CurrentUserDto) {
     const {
       company_type,
       company_name,
@@ -163,7 +158,7 @@ export class TeacherService {
       saving_name,
     } = data;
 
-    const id = 11; // user_id
+    const { id } = user;
     try {
       const userIdInfo = await this.teacherRepository.findOne({
         where: { user_id: id },
@@ -214,7 +209,7 @@ export class TeacherService {
     }
   }
   // 워크샵 등록
-  async createTeacherWorkshops(data: CreateWorkshopsDto) {
+  async createTeacherWorkshops(data: CreateWorkshopsDto, user: CurrentUserDto) {
     try {
       const {
         thumb,
@@ -227,7 +222,7 @@ export class TeacherService {
         price,
         purpose_tag_id,
       } = data;
-      const id = 11;
+      const { id } = user;
       const teacherInfo = await this.teacherRepository.findOne({
         where: { user_id: id },
       });
@@ -278,9 +273,9 @@ export class TeacherService {
     }
   }
   // 강사 미완료 워크샵 목록 api
-  async getTeacherIncompleteWorkshop() {
+  async getTeacherIncompleteWorkshop(user: CurrentUserDto) {
     try {
-      const id = 11; // 예시
+      const { id } = user;
       const userIdInfo = await this.workshopRepository.find({
         where: { user_id: id },
         select: ['user_id', 'id'],
@@ -338,9 +333,9 @@ export class TeacherService {
     }
   }
   // 강사 완료 워크샵 목록 api
-  async getTeacherComplete() {
+  async getTeacherComplete(user: CurrentUserDto) {
     try {
-      const id = 11; // 예시
+      const { id } = user;
       const userIdInfo = await this.workshopRepository.find({
         where: { user_id: id },
         select: ['user_id', 'id'],

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from 'src/auth/auth.module';
 import { Order } from 'src/entities/order';
 import { Review } from 'src/entities/review';
 import { WishList } from 'src/entities/wish-list';
@@ -18,6 +19,7 @@ import { WorkshopsService } from './workshops.service';
       Order,
       Review,
     ]),
+    AuthModule,
   ],
   controllers: [WorkshopsController, WorkshopsControllerRender],
   providers: [WorkshopsService],
