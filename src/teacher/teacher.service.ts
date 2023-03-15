@@ -16,9 +16,9 @@ import { WorkShop } from 'src/entities/workshop';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { WorkShopPurpose } from 'src/entities/workshop-purpose';
 import { In, Repository, SelectQueryBuilder } from 'typeorm';
-import { CreateCompanyDto } from './dto/CreateCompanyDto';
-import { CreateTeacherDto } from './dto/createTeacherDto';
-import { CreateWorkshopsDto } from './dto/createWorkshopsDto';
+import { CreateCompanyDto } from './dto/teacher-company.dto';
+import { CreateTeacherDto } from './dto/teacher.dto';
+import { CreateWorkshopsDto } from './dto/teacher-workshops.dto';
 
 @Injectable()
 export class TeacherService {
@@ -32,8 +32,6 @@ export class TeacherService {
     private purposeTagIdRepository: Repository<WorkShopPurpose>,
     @InjectRepository(WorkShopInstanceDetail)
     private workShopInstanceDetailRepository: Repository<WorkShopInstanceDetail>,
-    @InjectRepository(CompanyApplication)
-    private companyApplicationRepository: Repository<CompanyApplication>,
   ) {}
   // 강사 등록 api
 

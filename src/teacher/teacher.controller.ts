@@ -13,9 +13,9 @@ import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { PurposeTag } from 'src/entities/purpose-tag';
-import { CreateCompanyDto } from './dto/CreateCompanyDto';
-import { CreateTeacherDto } from './dto/createTeacherDto';
-import { CreateWorkshopsDto } from './dto/createWorkshopsDto';
+import { CreateCompanyDto } from './dto/teacher-company.dto';
+import { CreateTeacherDto } from './dto/teacher.dto';
+import { CreateWorkshopsDto } from './dto/teacher-workshops.dto';
 import { TeacherService } from './teacher.service';
 // @UseInterceptors(SuccessInterceptor)
 @Controller('/api/teacher')
