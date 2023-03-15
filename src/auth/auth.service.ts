@@ -561,8 +561,8 @@ export class AuthService {
         // 첫 번째 image 일 경우 해당 이미지는 썸네일 이미지로 간주한다.
         if (index === 0) {
           const s3OptionForThumbImg = {
-            Bucket: 'msdou', // S3의 버킷 이름.
-            Key: `images/workshop/1/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
+            Bucket: 'workerbench', // S3의 버킷 이름.
+            Key: `images/workshop/2/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
             Body: image.buffer, // 업로드 하고자 하는 파일.
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForThumbImg)); // 실제로 S3 클라우드로 파일을 전송 및 업로드 하는 코드.
@@ -573,8 +573,8 @@ export class AuthService {
           );
           const subImgName = uuid() + subImgType;
           const s3OptionForSubImg = {
-            Bucket: 'msdou',
-            Key: `images/workshop/1/original/${subImgName}`,
+            Bucket: 'workerbench',
+            Key: `images/workshop/2/original/${subImgName}`,
             Body: image.buffer,
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
