@@ -28,8 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <li for="purpose-tag" class="purpose-tag">${purposeTag}</li>
             </div>`;
           wokshopApprovalList.insertAdjacentHTML('beforeend', tempHtml);
-        }
-        if (status === 'finished') {
+        } else if (status === 'finished') {
           tempHtml = `<div class="workshop">
               <img src="/images/images.jpg" alt="" />
               <li class="title">${title}</li>
@@ -37,14 +36,28 @@ document.addEventListener('DOMContentLoaded', () => {
               <li for="purpose-tag" class="purpose-tag">${purposeTag}</li>
             </div>`;
           wokshopFinishedList.insertAdjacentHTML('beforeend', tempHtml);
-        }
-        if (status === 'rejected') {
+        } else if (status === 'request') {
           tempHtml = `<div class="workshop">
               <img src="/images/header.png" alt="" />
               <li class="title">${title}</li>
               <li for="genretag" class="genre-tag">${genreTag}</li>
               <li for="purpose-tag" class="purpose-tag">${purposeTag}</li>
             </div>`;
+          wokshopRequestList.insertAdjacentHTML('beforeend', tempHtml);
+        } else if (status === 'rejected') {
+          tempHtml = `<div class="workshop">
+                <img src="/images/header.png" alt="" />
+                <li class="title">${title}</li>
+                <div class="tag-div">
+                    <div class="test">
+                        <li for="genretag" class="genre-tag">${genreTag}</li>
+                        <li for="purpose-tag" class="purpose-tag">${purposeTag}</li>
+                    </div>
+                    <div>
+                        <li for="purpose-tag" class="reject">반려됨</li>
+                    </div>
+                </div>
+              </div>`;
           wokshopRequestList.insertAdjacentHTML('beforeend', tempHtml);
         }
       }

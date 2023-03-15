@@ -18,12 +18,11 @@
    border-radius: 10px;
    background-color: #ffffff;
 }
-#teacher-manageBox {
+#teacher-incompleteBox {
     width: 1200px;
     height: 1300px;
     margin: 0 auto;
     margin-top: 100px;
-    padding: 20px;
     /* border: 2px solid lavender; */
     border-radius: 20px;
     /* box-shadow: 3px 3px 5px lavender; */
@@ -43,6 +42,7 @@
 .workshop-information-div{
     width: 200px;
     height: 600px;
+    margin-left: 10px;
     /* border: 2px solid #000000; */
 }
 .workshop-information-div >img{
@@ -53,15 +53,18 @@
 }
 .company-information-div{
     width: 250px;
-    height: 600px;
-    margin-left: 20px;
+    height: 380px;
+    margin: 0 auto;
+    margin-left: 30px;
     margin-top: 100px;
+    justify-content: center;
     /* border: 2px solid #000000; */
 }
 .workshop-information{
     width:170px;
     height: 50px;
     margin: auto;
+    
     margin-top: 10px;
     font-size: 20px;
     text-align: center;
@@ -69,7 +72,13 @@
     border: 2px solid #000000;
 }
 .company-information{
-    width:170px;
+    width: 220px;
+    height: 370px;
+    margin: 0 auto;
+    /* border: 2px solid #000000; */
+}
+.company-input{
+    width:200px;
     height: 50px;
     margin: auto;
     margin-top: 10px;
