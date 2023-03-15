@@ -10,18 +10,20 @@ import { CurrentUser } from 'src/common/decorators/user.decorator';
 @Controller('mypage')
 export class MypageControllerRender {
   constructor(private readonly authService: AuthService) {}
-  // 마이페이지 나의 워크샵 목록 페이지 render
-  @Get('/workshops')
+
+  // 마이 페이지 첫 접속 시 과거 내가 신청했던 워크샵 수강 현황 / 결과를 보여줌
+  @Get('workshop')
   @UseGuards(JwtUserPageGuard)
-  async getMypageWorkshops(
+  async getMyPageWorkshopList(
     @CurrentUser() user: CurrentUserDto | boolean,
     @Req() req: Request,
     @Res() res: Response,
     @RealIP() clientIp: string,
   ) {
     if (typeof user === 'boolean' && user === false) {
-      return res.render('mypage/workshops', { user: false });
+      return res.render('auth/non-login', { user: false });
     }
+
     if (typeof user === 'object') {
       try {
         const refreshToken = req.cookies[TOKEN_NAME.userRefresh];
@@ -32,13 +34,76 @@ export class MypageControllerRender {
           clientIp,
           refreshToken,
         );
-        return res.render('mypage/workshops', { user: user });
+        return res.render('mypage/myPage', { user: user });
       } catch (err) {
         res.clearCookie(TOKEN_NAME.userAccess);
         res.clearCookie(TOKEN_NAME.userRefresh);
-        return res.render('/', { user: false });
+        return res.render('auth/non-login', { user: false });
       }
     }
-    return;
+  }
+
+  // 마이 페이지 - 후기 작성 페이지
+  @Get('workshop/review')
+  @UseGuards(JwtUserPageGuard)
+  async getWritingReviewPage(
+    @CurrentUser() user: CurrentUserDto | boolean,
+    @Req() req: Request,
+    @Res() res: Response,
+    @RealIP() clientIp: string,
+  ) {
+    if (typeof user === 'boolean' && user === false) {
+      return res.render('auth/non-login', { user: false });
+    }
+
+    if (typeof user === 'object') {
+      try {
+        const refreshToken = req.cookies[TOKEN_NAME.userRefresh];
+        // refresh 토큰 인증 검사
+        await this.authService.checkRefreshTokenInRedis(
+          user.id,
+          user.user_type,
+          clientIp,
+          refreshToken,
+        );
+        return res.render('mypage/review', { user: user });
+      } catch (err) {
+        res.clearCookie(TOKEN_NAME.userAccess);
+        res.clearCookie(TOKEN_NAME.userRefresh);
+        return res.render('auth/non-login', { user: false });
+      }
+    }
+  }
+
+  // 내 찜목록 리스트 페이지
+  @Get('wishlist')
+  @UseGuards(JwtUserPageGuard)
+  async getMyWishListPage(
+    @CurrentUser() user: CurrentUserDto | boolean,
+    @Req() req: Request,
+    @Res() res: Response,
+    @RealIP() clientIp: string,
+  ) {
+    if (typeof user === 'boolean' && user === false) {
+      return res.render('auth/non-login', { user: false });
+    }
+
+    if (typeof user === 'object') {
+      try {
+        const refreshToken = req.cookies[TOKEN_NAME.userRefresh];
+        // refresh 토큰 인증 검사
+        await this.authService.checkRefreshTokenInRedis(
+          user.id,
+          user.user_type,
+          clientIp,
+          refreshToken,
+        );
+        return res.render('mypage/myWishList', { user: user });
+      } catch (err) {
+        res.clearCookie(TOKEN_NAME.userAccess);
+        res.clearCookie(TOKEN_NAME.userRefresh);
+        return res.render('auth/non-login', { user: false });
+      }
+    }
   }
 }
