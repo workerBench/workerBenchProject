@@ -11,34 +11,9 @@ import { CurrentUser } from 'src/common/decorators/user.decorator';
 export class MypageControllerRender {
   constructor(private readonly authService: AuthService) {}
   // 마이페이지 나의 워크샵 목록 페이지 render
-  @Get('/workshops')
-  @UseGuards(JwtUserPageGuard)
-  async getMypageWorkshops(
-    @CurrentUser() user: CurrentUserDto | boolean,
-    @Req() req: Request,
-    @Res() res: Response,
-    @RealIP() clientIp: string,
-  ) {
-    if (typeof user === 'boolean' && user === false) {
-      return res.render('/', { user: false });
-    }
-    if (typeof user === 'object') {
-      try {
-        const refreshToken = req.cookies[TOKEN_NAME.userRefresh];
-        // refresh 토큰 인증 검사
-        await this.authService.checkRefreshTokenInRedis(
-          user.id,
-          user.user_type,
-          clientIp,
-          refreshToken,
-        );
-        return res.render('mypage/workshops', { user: user });
-      } catch (err) {
-        res.clearCookie(TOKEN_NAME.userAccess);
-        res.clearCookie(TOKEN_NAME.userRefresh);
-        return res.render('/', { user: false });
-      }
-    }
+  @Get('workshops')
+  @Render('mypage/workshops')
+  getMyPageWorkshopsResult() {
     return;
   }
 
