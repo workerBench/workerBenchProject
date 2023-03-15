@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="../../public/mypage/css/style.css" rel="stylesheet" />
-    <title>나의 워크샵 목록</title>
+    <title>내가 찜한 워크샵</title>
   </head>
   <style>
     body {
@@ -81,16 +81,6 @@
   <body>
     <%- include('header.ejs') %>
 
-    <div class="nav-wrap">
-      <nav class="nav-bar">
-        <div class="logo-img-wrap">
-          <img src="../../public/images/logo.png" />
-        </div>
-        <div class="domain-name">Worker Bench</div>
-        <div class="login-or-mypage-div">로그인</div>
-        <div class="register-or-logout-div">회원가입</div>
-      </nav>
-  </div>
     <!--헤더-->
     <div>
         <div class="text-center">
@@ -107,7 +97,6 @@
             <div class="container px-4 px-lg-5 mt-5">
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                     <div class="col mb-5">
-                        수강 예정 워크샵
                         <div class="card h-100">
                             <!-- Product image-->
                             <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
@@ -119,26 +108,17 @@
                                 </div>
                             </div>
                             <!-- Product actions-->
-                            <div>
-                                날짜
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                분야
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">힐링</a></div>
                             </div>
-                            <div>
-                                장소
-                            </div>
-                            <div>
-                                수강인원
-                            </div>
-                            <div>
-                                강사명
-                            </div>
-                            <div>
-                                강사 연락처
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                대상
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">전 직원</a></div>
                             </div>
                         </div>
-                        
                     </div>
                     <div class="col mb-5">
-                        수강 완료한 워크샵
                         <div class="card h-100">
                             <!-- Product image-->
                             <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
@@ -150,20 +130,35 @@
                                 </div>
                             </div>
                             <!-- Product actions-->
-                            <div>
-                                날짜
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                분야
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">공예</a></div>
                             </div>
-                            <div>
-                                장소
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                대상
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">전 직원</a></div>
                             </div>
-                            <div>
-                                수강인원
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">즐거운 레크리에이션</h5>
+                                </div>
                             </div>
-                            <div>
-                                강사명
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                분야
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">단합</a></div>
                             </div>
-                            <div>
-                                강사 연락처
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                대상
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">전 직원</a></div>
                             </div>
                         </div>
                     </div>
