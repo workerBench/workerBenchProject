@@ -1,8 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from 'src/auth/auth.module';
-import { Order } from 'src/entities/order';
-import { Review } from 'src/entities/review';
 import { WishList } from 'src/entities/wish-list';
 import { WorkShop } from 'src/entities/workshop';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
@@ -12,14 +9,7 @@ import { WorkshopsService } from './workshops.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      WorkShop,
-      WorkShopInstanceDetail,
-      WishList,
-      Order,
-      Review,
-    ]),
-    AuthModule,
+    TypeOrmModule.forFeature([WorkShop, WorkShopInstanceDetail, WishList]),
   ],
   controllers: [WorkshopsController, WorkshopsControllerRender],
   providers: [WorkshopsService],
