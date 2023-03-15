@@ -16,11 +16,7 @@ function getBestWorkshops() {
         let tempHtml = `<div class="col">
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${element.workshop_id}">
-        <img
-            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
-            class="card-img-top"
-            alt="..."
-          /></a>
+        <img class="card-img-top" id="best-workshop-thumb alt="..." src="${element.thumbUrl}" /></a>
           <div class="card-body">
             <h5 class="card-title">${element.workshop_title}</h5>
             <p class="card-text">${element.workshop_category}</p>
@@ -34,7 +30,9 @@ function getBestWorkshops() {
         $('#best-workshop-list').append(tempHtml);
       });
     })
-    .catch((error) => {});
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 // 신규 워크샵 불러오기
@@ -48,10 +46,8 @@ function getNewWorkshops() {
       workshops.forEach((element) => {
         let temp_html = `<div class="col">
         <div class="card h-100">
-            <a href="/workshops/detail?workshopId=${element.workshop_id}"><img
-            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
-            class="card-img-top"
-            alt="..."/></a>
+            <a href="/workshops/detail?workshopId=${element.workshop_id}">
+            <img class="card-img-top" id="new-workshop-thumb" alt="..." src="${element.thumbUrl}"/></a>
           <div class="card-body">
           <h5 class="card-title">${element.workshop_title}</h5>
           <p class="card-text">${element.workshop_category}</p>
@@ -63,7 +59,10 @@ function getNewWorkshops() {
         </div>
       </div>`;
         $('#new-workshop-list').append(temp_html);
+        console.log(element.thumbUrl);
       });
     })
-    .catch((error) => {});
+    .catch((error) => {
+      console.log(error);
+    });
 }

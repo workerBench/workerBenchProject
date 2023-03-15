@@ -19,7 +19,9 @@ function getWorkshopDetail() {
       let workshopInfo = `<div class="row">
         <div class="col">
           <div class="workshop-thumb">
-            <img id="workshop-thumb" alt="..." />
+            <img id="workshop-thumb" alt="..." src="${
+              workshop.workshop_thumb
+            }"/>
           </div>...
         </div>
   
@@ -57,7 +59,6 @@ function getWorkshopDetail() {
         </div>
       </div>`;
       $('#workshop-image-info').append(workshopInfo);
-      document.getElementById('workshop-thumb').src = workshop.workshop_thumb;
 
       // 찜하기 유저에 있으면 하트 칠하기
       if (wishCheck) {
