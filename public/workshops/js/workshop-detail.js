@@ -1,6 +1,5 @@
 window.addEventListener('DOMContentLoaded', function () {
   getWorkshopDetail();
-  getThumbImg();
   getWorkshopReviews();
 });
 
@@ -13,13 +12,14 @@ function getWorkshopDetail() {
   axios
     .get(`/api/workshops/${workshopId}`)
     .then((res) => {
+      console.log(res.data.data);
       const workshop = res.data.data.workshop[0];
       const wishCheck = res.data.data.wish; // false or true
 
       let workshopInfo = `<div class="row">
         <div class="col">
           <div class="workshop-thumb">
-            <img src="/images/eraser-class-thumb.jpg" alt="..." />
+            <img id="workshop-thumb" alt="..." />
           </div>...
         </div>
   
@@ -27,7 +27,7 @@ function getWorkshopDetail() {
         <div class="col">
           <div class="workshop-summary">
             <div class="workshop-title">${workshop.workshop_title}</div>
-            <div class="workshop-star">${workshop.averageStar}점</div>
+            <div class="workshop-star">평가 ${workshop.averageStar}점</div>
             <div class="workshop-category">${workshop.workshop_category}</div>
             <div class="workshop-location">
             활동 가능 지역 ${
@@ -41,8 +41,8 @@ function getWorkshopDetail() {
             <div class="workshop-total-time">총 시간 ${
               workshop.workshop_total_time
             }분</div>
-            <div class="workshop-genre">분야${workshop.genre}</div>
-            <div class="workshop-purpose">목적${workshop.purpose}</div>
+            <div class="workshop-genre">분야 ${workshop.genre}</div>
+            <div class="workshop-purpose">목적 ${workshop.purpose}</div>
             <div class="workshop-price">${workshop.workshop_price}원</div>
             <div>*1인 기준</div>
             <div class="order-wish-buttons">
@@ -57,6 +57,7 @@ function getWorkshopDetail() {
         </div>
       </div>`;
       $('#workshop-image-info').append(workshopInfo);
+      document.getElementById('workshop-thumb').src = workshop.workshop_thumb;
 
       // 찜하기 유저에 있으면 하트 칠하기
       if (wishCheck) {
@@ -77,15 +78,6 @@ function getWorkshopDetail() {
     })
     .catch((error) => {});
 }
-
-// 썸네일 가져오기
-const getThumbImg = () => {
-  axios.get('/api/auth/img-s3-url').then((res) => {
-    console.log('썸네일 주소 가져오기 api 무사히 작동');
-    console.log(res.data.data);
-    document.querySelector('#workshop-thumb').src = res.data.data;
-  });
-};
 
 // 찜하기
 function addToWish() {
@@ -126,11 +118,12 @@ function getWorkshopReviews() {
       const reviews = res.data.data;
 
       console.log(reviews);
+      console.log(reviews[0].reviewImage);
 
       reviews.forEach((element) => {
         let TempReviews = `<div class="card mb-3" style="max-width: 700px; margin-top: 50px"><div class="row g-0">
-          <div class="col-md-4">
-            <img src="/images/eraser-class-review.jpg" class="img-fluid rounded-start" alt="...">
+          <div class="col-md-4 review-images">
+            <img class="img-fluid rounded-start" alt="..." id="review-img-1">
           </div>
           <div class="col-md-8">
             <div class="card-body">
@@ -142,6 +135,7 @@ function getWorkshopReviews() {
         </div>
         </div>`;
         $('#workshop-reviews').append(TempReviews);
+        document.getElementById('review-img-1').src = reviews[0].reviewImage;
       });
     })
     .catch((err) => {});
@@ -183,6 +177,7 @@ form.addEventListener('submit', function (e) {
   const company = document.getElementById('company').value;
   const name = document.getElementById('name').value;
   const email = document.getElementById('email').value;
+
   const phone_number = document.getElementById('phone_number').value;
   const wish_date = document.getElementById('wish_date').value;
   const category = $('input[name=category]:checked').val();
@@ -246,7 +241,7 @@ const getErrorCode = async (statusCode, errorMessage, callback) => {
   if (statusCode === 401) {
     const refreshRes = await requestAccessToken();
     if (!refreshRes) {
-      alert('현재 로그인이 되어있지 않습니다. 로그인 후 이용 가능합니다.');
+      alert('로그인 후 이용 가능합니다.');
       return;
     }
     callback();
