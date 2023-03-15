@@ -1,7 +1,52 @@
 document.addEventListener('DOMContentLoaded', () => {
   const workshopRegisterBtn = document.getElementById('workshopRegisterBtn');
+
+  // 썸네일 미리보기
+  const thumbImg = document.querySelector('#thumb-img-file');
+  thumbImg.addEventListener('change', function (event) {
+    let files = event.target.files;
+    if (files.length >= 1) {
+      const imgShow = document.querySelector('#thumb-img-show');
+      const reader = new FileReader();
+      reader.addEventListener('load', function (event) {
+        imgShow.src = reader.result;
+      });
+      reader.readAsDataURL(files[0]);
+    }
+    if (!files.length) {
+      const imgShow = document.querySelector(`#thumb-img-show`);
+      imgShow.removeAttribute('src');
+    }
+  });
+
+  const imgSel = document.querySelectorAll('.sub-img-file');
+  for (let i = 1; i <= imgSel.length; i++) {
+    imgSel[i - 1].addEventListener('change', function (event) {
+      let files = event.target.files;
+
+      if (files.length >= 1) {
+        insertImageDate(i, files[0]);
+      }
+
+      if (!files.length) {
+        const imgShow = document.querySelector(`#sub-img-${i}`);
+        imgShow.removeAttribute('src');
+      }
+    });
+  }
+
+  async function insertImageDate(imgNum, file) {
+    const imgShow = document.querySelector(`#sub-img-${imgNum}`);
+
+    const reader = new FileReader();
+
+    reader.addEventListener('load', function (event) {
+      imgShow.src = reader.result;
+    });
+    reader.readAsDataURL(file);
+  }
+
   workshopRegisterBtn.addEventListener('click', () => {
-    const thumb = document.getElementById('img').value;
     const category = document.getElementById('category').value;
     const title = document.getElementById('title').value;
     const min_member = document.getElementById('minMember').value;
@@ -17,23 +62,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const test2 = parseInt(purpose_tag2);
     const purposeTagIds = [test1, test2];
     console.log(purposeTagIds);
-    // const purpose_tag_array = purpose_tag.split(',').map((id) => parseInt(id));
+    // 썸네일 이미지 파일
+    const thumbImg = document.querySelector('#thumb-img-file').files[0];
+    // 서브 이미지 태그 묶음 -> 파일 배열
+    const subImgsTags = document.querySelectorAll('.sub-img-file');
+    const jsonData = {
+      title: title,
+      category: category,
+      desc: desc,
+      min_member: min_member,
+      max_member: max_member,
+      total_time: total_time,
+      price: price,
+      location: location,
+      genre_id: genre_id,
+      purpose_tag_id: purposeTagIds,
+    };
+    const formData = new FormData();
+    formData.append('images', thumbImg);
+    formData.append('jsonData', JSON.stringify(jsonData));
 
+    for (let i = 1; i <= subImgsTags.length; i++) {
+      const imgFile = subImgsTags[i - 1].files;
+      if (imgFile.length >= 1) {
+        formData.append('images', imgFile[0]);
+      }
+    }
+    // const purpose_tag_array = purpose_tag.split(',').map((id) => parseInt(id));
     axios({
       method: 'post',
       url: '/api/teacher/workshops',
-      data: {
-        thumb,
-        category,
-        title,
-        min_member: parseInt(min_member),
-        max_member: parseInt(max_member),
-        genre_id: parseInt(genre_id),
-        purpose_tag_id: purposeTagIds,
-        total_time: parseInt(total_time),
-        price: parseInt(price),
-        desc,
-        location,
+      data: formData,
+      headers: {
+        'content-type': 'multipart/form-data',
       },
     })
       .then((response) => {
