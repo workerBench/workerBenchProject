@@ -529,7 +529,7 @@ export class AuthController {
   @Post('img-s3-test')
   @UseInterceptors(FilesInterceptor('images', 4))
   async uploadFileTest(
-    @UploadedFiles() images: Array<NewType>,
+    @UploadedFiles() images: Array<Express.Multer.File>,
     @Body() body: any,
   ) {
     console.log('백엔드로 진입했어.');

@@ -1,11 +1,12 @@
 /* 웹 폰트 임포트 */
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 
 body {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
-.form-select {
+.form-select,
+.form-control {
   width: 200px;
   display: inline-block;
 }
