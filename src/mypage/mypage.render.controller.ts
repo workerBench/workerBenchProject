@@ -8,5 +8,4 @@ export class MypageControllerRender {
   getMypageWorkshops() {
     return;
   }
-
 }
