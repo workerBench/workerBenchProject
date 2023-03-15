@@ -102,11 +102,6 @@ axios.get('../api/admin/workshops/request')
   }
 
 
-
-
-
-
-
 // ---------------- 워크숍 승인 / 반려하기 버튼 ---------------- //
 
 
@@ -146,7 +141,7 @@ $(document).ready(() => {
       workshopList.empty();
       data.forEach(workshop => {
         const cardHtml = `
-            <div class="card" onclick="showModal('${workshop.id}')">
+            <div class="card" onclick="showModal(${workshop.id})">
             <img src="${workshop.thumb}" alt="Image">
             <div class="card-text">
               <div class="category">
