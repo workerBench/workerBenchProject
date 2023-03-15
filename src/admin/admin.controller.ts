@@ -94,6 +94,17 @@ export class AdminController {
         return await this.adminService.getFinishedWorkshops()
     }
 
+    // 워크숍 상세
+    @ApiResponse({  
+        status: 200,
+        description: '성공',
+    })
+    @ApiOperation({ summary: '워크숍 상세 조회 API' })
+    @Get('workshops/:id')
+    async getWorkshopDetail(@Param("id") id: number) {
+        return await this.adminService.getWorkshopDetail(id)
+    }
+
     // 워크숍 승인하기 (status:"request" => "approval")
     @ApiResponse({  
         status: 200,

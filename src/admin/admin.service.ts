@@ -139,17 +139,21 @@ export class AdminService {
   //-------------------------- 검토 대기중인 워크숍 목록 불러오기 (status: "request") --------------------------//
 
   async requestWorkshops() {
-    return await this.workshopRepository.find({
-      where: { status: 'request', deletedAt: null },
-    });
-  }
+    return await this.workshopRepository
+    .createQueryBuilder('workshop')
+    .where('workshop.status = :status', { status: 'request' })
+    .innerJoinAndSelect('workshop.GenreTag', 'genre')
+    .getMany();
+  };
 
   //-------------------------- 승인된 워크숍 목록 불러오기 (status: "approval") --------------------------//
 
   async getApprovedWorkshops() {
-    return await this.workshopRepository.find({
-      where: { status: 'approval', deletedAt: null },
-    });
+    return await this.workshopRepository
+    .createQueryBuilder('workshop')
+    .where('workshop.status = :status', { status: 'approval' })
+    .innerJoinAndSelect('workshop.GenreTag', 'genre')
+    .getMany();
   }
 
   //-------------------------- 종료된 워크숍 목록 불러오기 (status: "finished") --------------------------//
@@ -159,7 +163,41 @@ export class AdminService {
       .createQueryBuilder('workshop')
       .withDeleted()
       .where('workshop.status = :status', { status: 'finished' })
+      .innerJoinAndSelect('workshop.GenreTag', 'genre')
       .getMany();
+  }
+
+  //-------------------------- 워크숍 상세 --------------------------//
+
+  async getWorkshopDetail(id: number) {
+    let query = this.workshopRepository
+    .createQueryBuilder('workshop')
+    .withDeleted()
+    .where('workshop.id = :id', { id })
+    .innerJoinAndSelect('workshop.GenreTag', 'genre')
+    .innerJoinAndSelect('workshop.PurposeList', 'purpose')
+    .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
+    .innerJoinAndSelect('workshop.User', 'user')
+    .innerJoinAndSelect('user.TeacherProfile', 'teacher')
+    .select([
+      'workshop.title',
+      'workshop.category',
+      'workshop.desc',
+      'workshop.thumb',
+      'workshop.min_member',
+      'workshop.max_member',
+      'workshop.total_time',
+      'workshop.price',
+      'genre.name',
+      'GROUP_CONCAT(purposetag.name) AS purpose_name',
+      'user.email',
+      'teacher.name'
+    ])
+    .groupBy('workshop.id')
+    
+    const workshopDetail = await query.getRawOne();
+
+    return workshopDetail
   }
 
   //-------------------------- 워크숍 승인하기 (status:"request" => "approval") --------------------------//

@@ -14,12 +14,14 @@
 
 .sidebar{
     min-width: 170px;
-    width: 15%;
+    max-width: 220px;
+    width: 16%;
     height: 100%;
     min-height: 1080px;
     background: #9F70FB;
     color: white;
     padding-top: 30px;
+    flex-shrink: 0;
     
 }
 .ul-title {
@@ -65,9 +67,9 @@
     margin:20px auto auto auto;
 }
 
-.card-wrapper {
+/* .card-wrapper {
     margin-left:30px;
-}
+} */
 
 .workshop-search{
     font-weight: bold;
@@ -114,46 +116,71 @@
 }
 
 /*워크숍 목록 구간입니다.*/
-
-.col{
-    width: 280px;
-    transition: all 0.2s linear;
-}
-.col:hover {
-    transform: scale(1.05);
-    cursor: pointer;
-}
-.card {
-    flex-direction: column;
+.card-wrapper {
+    display: flex;
     justify-content: center;
     align-items: center;
 }
-.card-body > div {
+.card-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 90%;
+    flex-shrink: 0;
+}
+  
+.card {
+    min-width: 250px;
+    width: calc(25% - 20px);
+    box-sizing: border-box;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.card img {
+    display: block;
+    width: 100%;
+}
+
+.card-text {
+    padding: 10px;
+}
+
+.card-text > div {
     margin:auto auto 10px auto;
 }
-.card-body > div > div {
+.card-text > div > div {
     margin-right: 30px;
 }
 .category{
     display: flex;
+    font-size: 14px;
 }
 .category > .online {
     box-shadow: 0 0 3px 0 gray;
-    padding: 5px 10px 5px 10px;
+    padding: 3px 8px 3px 8px;
     border-radius: 15px;
 }
 .category > .offline {
     box-shadow: 0 0 3px 0 gray;
-    padding: 5px 10px 5px 10px;
+    padding: 3px 8px 3px 8px;
     border-radius: 15px;
+}
+.workshop-price {
+    font-size: 15px;
+    font-weight: bold;
 }
 .personnel-and-time{
     display: flex;
 }
 .workshop-tag > .tag {
     box-shadow: 0 0 3px 0 gray;
-    padding: 5px 10px 5px 10px;
+    padding: 3px 8px 3px 8px;
     border-radius: 10px;
+    font-size: 13px;
 }
 
 /* 모달창 부분 */
@@ -191,10 +218,10 @@
 }
 .modal-image {
     width: 60%;
+    border-radius: 10px;
 }
 .modal-image img {
     max-width: 100%;
-    border-radius: 10px;
 }   
 .info {
     border-radius: 10px;
