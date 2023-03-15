@@ -9,6 +9,7 @@ import { ReviewRepository } from 'src/mypage/review.repository';
 import { ReviewImageRepository } from 'src/mypage/review-image.repository';
 import { MypageControllerRender } from './mypage.render.controller';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
       WishList,
       WorkShopInstanceDetail,
     ]),
+    AuthModule,
   ],
   controllers: [MypageController,MypageControllerRender],
   providers: [MypageService ,ReviewRepository, ReviewImageRepository ],
