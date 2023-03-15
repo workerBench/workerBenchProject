@@ -25,7 +25,11 @@ import { adminTypeNaming, userTypeNaming } from './naming/user-type';
 import { AdminUser } from 'src/entities/admin-user';
 import { AdminRegisterJoinDto } from './dtos/admin-register-join';
 import { ResetPassword } from './dtos/reset-password.dto';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { v4 as uuid } from 'uuid';
 import { Teacher } from 'src/entities/teacher';
 import { Company } from 'src/entities/company';
@@ -557,8 +561,8 @@ export class AuthService {
         // 첫 번째 image 일 경우 해당 이미지는 썸네일 이미지로 간주한다.
         if (index === 0) {
           const s3OptionForThumbImg = {
-            Bucket: this.S3_BUCKET_NAME, // S3의 버킷 이름.
-            Key: `images/workshop/1/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
+            Bucket: 'workerbench', // S3의 버킷 이름.
+            Key: `images/workshop/2/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
             Body: image.buffer, // 업로드 하고자 하는 파일.
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForThumbImg)); // 실제로 S3 클라우드로 파일을 전송 및 업로드 하는 코드.
@@ -569,8 +573,8 @@ export class AuthService {
           );
           const subImgName = uuid() + subImgType;
           const s3OptionForSubImg = {
-            Bucket: this.S3_BUCKET_NAME,
-            Key: `images/workshop/1/${subImgName}`,
+            Bucket: 'workerbench',
+            Key: `images/workshop/2/original/${subImgName}`,
             Body: image.buffer,
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));

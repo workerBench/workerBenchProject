@@ -1,6 +1,6 @@
-import { IsString,IsNumber } from 'class-validator';
+import { IsString, IsNumber } from 'class-validator';
 
-export class createTeacherDto {
+export class CreateTeacherDto {
   @IsString()
   readonly phone_number: string;
 
