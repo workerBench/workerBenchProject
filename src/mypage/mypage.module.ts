@@ -21,7 +21,7 @@ import { AuthModule } from 'src/auth/auth.module';
     ]),
     AuthModule
   ],
-  controllers: [MypageController,MypageControllerRender],
-  providers: [MypageService ,ReviewRepository, ReviewImageRepository ],
+  controllers: [MypageController, MypageControllerRender],
+  providers: [MypageService, ReviewRepository, ReviewImageRepository],
 })
 export class MypageModule {}
