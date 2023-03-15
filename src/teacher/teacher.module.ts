@@ -10,8 +10,8 @@ import { WorkShop } from 'src/entities/workshop';
 import { WorkShopPurpose } from 'src/entities/workshop-purpose';
 import { PurposeTag } from 'src/entities/purpose-tag';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
-import { AuthModule } from 'src/auth/auth.module';
 import { CompanyApplication } from 'src/entities/company-application';
+import { WorkShopImage } from 'src/entities/workshop-image';
 
 @Module({
   imports: [
@@ -24,8 +24,8 @@ import { CompanyApplication } from 'src/entities/company-application';
       PurposeTag,
       WorkShopInstanceDetail,
       CompanyApplication,
+      WorkShopImage,
     ]),
-    AuthModule,
   ],
   controllers: [TeacherController, TeacherControllerRender],
   providers: [TeacherService],

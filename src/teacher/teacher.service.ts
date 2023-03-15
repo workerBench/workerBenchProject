@@ -19,9 +19,16 @@ import { In, Repository, SelectQueryBuilder } from 'typeorm';
 import { CreateCompanyDto } from './dto/teacher-company.dto';
 import { CreateTeacherDto } from './dto/teacher.dto';
 import { CreateWorkshopsDto } from './dto/teacher-workshops.dto';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { ConfigService } from '@nestjs/config';
+import { v4 as uuid } from 'uuid';
+import { WorkShopImage } from 'src/entities/workshop-image';
+import { identity } from 'rxjs';
 
 @Injectable()
 export class TeacherService {
+  private readonly s3Client: S3Client;
+  public readonly S3_BUCKET_NAME: string;
   constructor(
     @InjectRepository(Teacher) private teacherRepository: Repository<Teacher>,
     @InjectRepository(User) private userRepository: Repository<User>,
@@ -32,13 +39,30 @@ export class TeacherService {
     private purposeTagIdRepository: Repository<WorkShopPurpose>,
     @InjectRepository(WorkShopInstanceDetail)
     private workShopInstanceDetailRepository: Repository<WorkShopInstanceDetail>,
-  ) {}
+    @InjectRepository(CompanyApplication)
+    private companyApplicationRepository: Repository<CompanyApplication>,
+    @InjectRepository(WorkShopImage)
+    private workshopImageRepository: Repository<WorkShopImage>,
+    private readonly configService: ConfigService,
+  ) {
+    this.s3Client = new S3Client({
+      region: this.configService.get('AWS_S3_REGION'),
+      credentials: {
+        accessKeyId: this.configService.get('AWS_ACCESS_KEY'),
+        secretAccessKey: this.configService.get('AWS_SECRET_KEY'),
+      },
+    });
+    this.S3_BUCKET_NAME = this.configService.get('AWS_S3_BUCKET_NAME');
+  }
   // 강사 등록 api
 
-  async createTeacherRegister(data: CreateTeacherDto, user: CurrentUserDto) {
+  async createTeacherRegister(
+    data: CreateTeacherDto, //user: CurrentUserDto
+  ) {
     const { phone_number, address, name } = data;
-    const { id } = user;
+    // const { id } = user;
     try {
+      const id = 11;
       const userIdInfo = await this.userRepository.findOne({
         where: { id },
         select: ['id'],
@@ -73,9 +97,10 @@ export class TeacherService {
     }
   }
   // 강사 전용 전체 워크샵 목록 api
-  async getTeacherWorkshops(user: CurrentUserDto) {
-    const { id } = user;
+  async getTeacherWorkshops() {
+    // id:number
     try {
+      const id = 11; // 예시
       const userIdInfo = await this.workshopRepository.find({
         where: { user_id: id },
         select: ['user_id'],
@@ -110,8 +135,9 @@ export class TeacherService {
     }
   }
   // 강사 및 업체 정보 api
-  async getTeacherMypage(user: CurrentUserDto) {
-    const { id } = user;
+  async getTeacherMypage() {
+    //id: number
+    const id = 11;
     const userIdInfo = await this.teacherRepository.findOne({
       where: { user_id: id },
       select: ['user_id'],
@@ -146,7 +172,7 @@ export class TeacherService {
     }
   }
   // 강사 업체 등록 api
-  async createTeacherCompany(data: CreateCompanyDto, user: CurrentUserDto) {
+  async createTeacherCompany(data: CreateCompanyDto) {
     const {
       company_type,
       company_name,
@@ -158,7 +184,7 @@ export class TeacherService {
       saving_name,
     } = data;
 
-    const { id } = user;
+    const id = 11; // user_id
     try {
       const userIdInfo = await this.teacherRepository.findOne({
         where: { user_id: id },
@@ -181,7 +207,7 @@ export class TeacherService {
           HttpStatus.BAD_REQUEST,
         );
       } else {
-        const Company = await this.companyRepository.insert({
+        const company = await this.companyRepository.create({
           company_type,
           company_name,
           business_number,
@@ -193,15 +219,11 @@ export class TeacherService {
           isBan: 0,
           user_id: id,
         });
+        const { id: newCompanyId } = await this.companyRepository.save(company);
+        await this.teacherRepository.update(id, {
+          affiliation_company_id: newCompanyId,
+        });
       }
-      const companyIds = await this.companyRepository.findOne({
-        where: { user_id: id },
-        select: ['id'],
-      });
-      await this.teacherRepository.update(id, {
-        affiliation_company_id: companyIds.id,
-      });
-
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
       console.log(error);
@@ -209,7 +231,10 @@ export class TeacherService {
     }
   }
   // 워크샵 등록
-  async createTeacherWorkshops(data: CreateWorkshopsDto, user: CurrentUserDto) {
+  async createTeacherWorkshops(
+    data: CreateWorkshopsDto,
+    images: Array<Express.Multer.File>,
+  ) {
     try {
       const {
         thumb,
@@ -222,7 +247,7 @@ export class TeacherService {
         price,
         purpose_tag_id,
       } = data;
-      const { id } = user;
+      const id = 11;
       const teacherInfo = await this.teacherRepository.findOne({
         where: { user_id: id },
       });
@@ -241,12 +266,20 @@ export class TeacherService {
           HttpStatus.BAD_REQUEST,
         );
       }
-      const workshop = this.workshopRepository.create({
+
+      // 썸네일 이미지 이름 만들기. 프론트에서는 썸네일을 가장 먼저 formData 에 저장하기에 무조건 배열의 첫 번째 사진이 썸네일.
+      const thumbImgType = images[0].originalname.substring(
+        images[0].originalname.lastIndexOf('.'),
+        images[0].originalname.length,
+      );
+      const thumbImgName = uuid() + thumbImgType;
+
+      const workshop = await this.workshopRepository.insert({
         category: 'offline' || 'online',
         genre_id,
         title,
         desc,
-        thumb,
+        thumb: thumbImgName,
         min_member,
         max_member,
         total_time,
@@ -255,13 +288,57 @@ export class TeacherService {
         location: '서울',
         user_id: id,
       });
-      await this.workshopRepository.save(workshop);
+      // purpose_tag_id를 배열로 만들어서 넣어준다.
       const purposeTagIds = purpose_tag_id.map((id) => ({
-        workshop_id: workshop.id,
+        workshop_id: workshop.identifiers[0].id,
         purpose_tag_id: id,
       }));
 
       await this.purposeTagIdRepository.insert(purposeTagIds);
+      /*
+    여기서 워크샵을 insert 해야 함. 할 때 썸네일 경로, 이름과 같이 insert. insert 결과를 insertResult 변수에 저장.
+    insert 한 후 insertResult.identifiers[0].id 로 id 를 가져와.
+    가져와서 아래의 else 문 안에서 미리 바깥에서 만들어 둔 배열에 [img_name: "ddd", workshop_id: insertResult.identifiers[0].id]
+    이런 식으로 push. 
+    이렇게 만들어 진 배열을 workshop_image 에 insert 한다.
+    */
+      // workshopInfo.thumb = `images/workshop/1/${thumbImgName}`;
+
+      // 이제 썸네일 이미지와 서브 이미지들을 S3 에 저장해야 해.
+      console.log('-------------------------');
+      console.log(workshop.identifiers[0].id);
+      const workshopImageArray: Array<any> = [];
+      images.forEach(async (image, index) => {
+        // 첫 번째 image 일 경우 해당 이미지는 썸네일 이미지로 간주한다.
+        if (index === 0) {
+          const s3OptionForThumbImg = {
+            Bucket: this.configService.get('AWS_S3_BUCKET_NAME'), // S3의 버킷 이름.
+            Key: `images/workshops/${workshop.identifiers[0].id}/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
+            Body: image.buffer, // 업로드 하고자 하는 파일.
+          };
+          await this.s3Client.send(new PutObjectCommand(s3OptionForThumbImg)); // 실제로 S3 클라우드로 파일을 전송 및 업로드 하는 코드.
+        } else {
+          const subImgType = image.originalname.substring(
+            image.originalname.lastIndexOf('.'),
+            image.originalname.length,
+          );
+          const subImgName = uuid() + subImgType;
+          workshopImageArray.push({
+            workshop_id: workshop.identifiers[0].id,
+            img_name: subImgName,
+          });
+
+          const s3OptionForSubImg = {
+            Bucket: this.configService.get('AWS_S3_BUCKET_NAME'),
+            Key: `images/workshops/${workshop.identifiers[0].id}/original/${subImgName}`,
+            Body: image.buffer,
+          };
+          await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
+        }
+        if (workshopImageArray.length > 0) {
+          await this.workshopImageRepository.insert(workshopImageArray[0]);
+        }
+      });
 
       return {
         message:
@@ -272,10 +349,11 @@ export class TeacherService {
       throw error;
     }
   }
+
   // 강사 미완료 워크샵 목록 api
-  async getTeacherIncompleteWorkshop(user: CurrentUserDto) {
+  async getTeacherIncompleteWorkshop() {
     try {
-      const { id } = user;
+      const id = 11; // 예시
       const userIdInfo = await this.workshopRepository.find({
         where: { user_id: id },
         select: ['user_id', 'id'],
@@ -333,9 +411,9 @@ export class TeacherService {
     }
   }
   // 강사 완료 워크샵 목록 api
-  async getTeacherComplete(user: CurrentUserDto) {
+  async getTeacherComplete() {
     try {
-      const { id } = user;
+      const id = 11; // 예시
       const userIdInfo = await this.workshopRepository.find({
         where: { user_id: id },
         select: ['user_id', 'id'],

@@ -7,6 +7,7 @@ import {
   Param,
   UseGuards,
   UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
@@ -17,60 +18,76 @@ import { CreateCompanyDto } from './dto/teacher-company.dto';
 import { CreateTeacherDto } from './dto/teacher.dto';
 import { CreateWorkshopsDto } from './dto/teacher-workshops.dto';
 import { TeacherService } from './teacher.service';
-@UseInterceptors(SuccessInterceptor)
+import { FilesInterceptor } from '@nestjs/platform-express';
+// @UseInterceptors(SuccessInterceptor)
 @Controller('/api/teacher')
 export class TeacherController {
   constructor(private readonly teacherService: TeacherService) {}
   // 강사 등록 api
   @Post()
-  @UseGuards(JwtUserAuthGuard)
+  // @UseGuards(JwtUserAuthGuard)
   createTeacherRegister(
     @Body() data: CreateTeacherDto,
     @CurrentUser() user: CurrentUserDto,
   ) {
-    return this.teacherService.createTeacherRegister(data, user);
+    return this.teacherService.createTeacherRegister(
+      data, //user
+    );
   }
   // 강사 전체 워크샵 목록 api
   @Get('workshops')
-  @UseGuards(JwtUserAuthGuard)
+  // @UseGuards(JwtUserAuthGuard)
   async getTeacherWorkshops(@CurrentUser() user: CurrentUserDto) {
-    return await this.teacherService.getTeacherWorkshops(user);
+    return await this.teacherService.getTeacherWorkshops();
+    // user.id
   }
   // 강사 및 업체 정보 api
   @Get('mypage')
-  @UseGuards(JwtUserAuthGuard)
+  // @UseGuards(JwtUserAuthGuard)
   async getTeacherMypage(@CurrentUser() user: CurrentUserDto) {
-    return await this.teacherService.getTeacherMypage(user);
+    return await this.teacherService
+      .getTeacherMypage //user.id
+      ();
   }
   // 강사 업체 등록 api
   @Post('company')
-  @UseGuards(JwtUserAuthGuard)
+  // @UseGuards(JwtUserAuthGuard)
   createTeacherCompany(
     @Body() data: CreateCompanyDto,
-    @CurrentUser() user: CurrentUserDto,
+    // @CurrentUser() user: CurrentUserDto,
   ) {
-    return this.teacherService.createTeacherCompany(data, user);
+    return this.teacherService.createTeacherCompany(data);
   }
   // 강사 워크샵 등록 api
   @Post('workshops')
-  @UseGuards(JwtUserAuthGuard)
+  @UseInterceptors(
+    FilesInterceptor('images', 4, { limits: { fileSize: 5 * 1024 * 1024 } }),
+  )
   createTeacherWorkshops(
-    @Body() data: CreateWorkshopsDto,
-    @CurrentUser() user: CurrentUserDto,
+    @UploadedFiles() images: Array<Express.Multer.File>,
+    @Body() data: any, // CreateWorkshopsDto
+    // @CurrentUser() user: CurrentUserDto,
   ) {
-    return this.teacherService.createTeacherWorkshops(data, user);
+    return this.teacherService.createTeacherWorkshops(
+      JSON.parse(data.jsonData),
+      images,
+    );
   }
   // 강사 미완료 목록 가져오기 api
   @Get('workshops/incomplete')
-  @UseGuards(JwtUserAuthGuard)
+  // @UseGuards(JwtUserAuthGuard)
   getTeacherIncompleteWorkshop(@CurrentUser() user: CurrentUserDto) {
-    return this.teacherService.getTeacherIncompleteWorkshop(user);
+    return this.teacherService
+      .getTeacherIncompleteWorkshop //user.id
+      ();
   }
   // 강사 완료 목록 가져오기 api
   @Get('workshops/complete')
-  @UseGuards(JwtUserAuthGuard)
+  // @UseGuards(JwtUserAuthGuard)
   getTeacherComplete(@CurrentUser() user: CurrentUserDto) {
-    return this.teacherService.getTeacherComplete(user);
+    return this.teacherService
+      .getTeacherComplete //user.id
+      ();
   }
   // 강사 수강 문의 관리 (수락하기) api
   @Patch('workshops/manage/accept/:id')

@@ -47,7 +47,7 @@ export class WorkShopImage {
   /* ------------------------ 관계 mapping --------------------------- */
 
   // 1. workshop
-  @ManyToOne(() => WorkShop, (workshop) => workshop.Orders, {
+  @ManyToOne(() => WorkShop, (workshop) => workshop.Images, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
