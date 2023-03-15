@@ -97,6 +97,11 @@
     margin: auto;
     list-style: none;
 }
+.tag-div{
+    width: 250px;
+    height: 100px;
+    display: flex;
+}
 .genre-tag{
     border: 2px solid #000000;
     width: 100px;
@@ -111,6 +116,15 @@
     margin-left: 10px;
     margin-top: 10px;
     list-style: none;
+}
+.reject{
+    border: 2px solid #000000;
+    width: 100px;
+    height: 70px;
+    list-style: none;
+    margin: auto;
+    margin-left: 30px;
+    margin-top: 10px;
 }
 .list-group-item{
     width:100px

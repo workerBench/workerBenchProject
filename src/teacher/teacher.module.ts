@@ -11,6 +11,7 @@ import { WorkShopPurpose } from 'src/entities/workshop-purpose';
 import { PurposeTag } from 'src/entities/purpose-tag';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { AuthModule } from 'src/auth/auth.module';
+import { CompanyApplication } from 'src/entities/company-application';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AuthModule } from 'src/auth/auth.module';
       WorkShopPurpose,
       PurposeTag,
       WorkShopInstanceDetail,
+      CompanyApplication,
     ]),
     AuthModule,
   ],
