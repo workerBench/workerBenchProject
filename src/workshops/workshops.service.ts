@@ -26,7 +26,7 @@ export class WorkshopsService {
   // 인기 워크샵 조회 API
   // 가장 결제 횟수가 많은 순으로 워크샵을 8개까지 가져온다.
   async getBestWorkshops() {
-    const queryBuilder = await this.workshopRepository
+    const workshops = await this.workshopRepository
       .createQueryBuilder('workshop')
       .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
       .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
@@ -53,10 +53,14 @@ export class WorkshopsService {
       .limit(8)
       .getRawMany();
 
+    // s3 + cloud front에서 이미지 가져오기
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+
     // , 기준으로 나누고 purpose_name 값 중복 제거
-    const result = queryBuilder.map((workshop) => ({
+    const result = workshops.map((workshop) => ({
       ...workshop,
       purpose_name: Array.from(new Set(workshop.purpose_name.split(','))),
+      thumbUrl: `${cloundFrontUrl}/${workshop.workshop_thumb}`,
     }));
 
     return result;
@@ -88,13 +92,17 @@ export class WorkshopsService {
       .where('workshop.deletedAt IS NULL')
       .orderBy('workshop.updatedAt', 'DESC') // 업데이트 최신순으로 정렬
       .groupBy('workshop.id')
-      .limit(8)
+      .limit(4)
       .getRawMany();
+
+    // s3 + cloud front에서 이미지 가져오기
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
     // , 기준으로 나누고 purpose_name 값 중복 제거
     const result = queryBuilder.map((workshop) => ({
       ...workshop,
       purpose_name: Array.from(new Set(workshop.purpose_name.split(','))),
+      thumbUrl: `${cloundFrontUrl}/${workshop.workshop_thumb}`,
     }));
 
     return result;
