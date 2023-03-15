@@ -527,11 +527,16 @@ export class AuthController {
 
   // S3 - cloudFront 실험 api - 데이터 받아오기
   @Post('img-s3-test')
-  @UseInterceptors(FilesInterceptor('images', 4))
+  @UseInterceptors(
+    FilesInterceptor('images', 4, { limits: { fileSize: 5 * 1024 * 1024 } }),
+  ) // 두번째 인자는 'images' 라는 이름에 담길 수 있는 총 파일 갯수. 즉 4면 4개 까지만 보낼 수 있어.
   async uploadFileTest(
     @UploadedFiles() images: Array<Express.Multer.File>,
     @Body() body: any,
   ) {
+    // 사진 용량이 예를 들어 127KB 라면, 사이즈가 127000 바이트로 나옴. 참고로 limit 의 fileSize 는 단위가 바이트
+    // FilesInterceptor('images', 4, { limits: { fileSize: 100000 } }), 이렇게면, images 이름으로 파일이 총 4개 들어올 수 있으며, 사이즈는 100,000 바이트, 즉 100KB 까지만 허락한다.
+    // FilesInterceptor('images', 4, { limits: { fileSize: 5 * 1024 * 1024 } }), 위랑 같은데 이 경우 각 파일당 용량 제한이 5MB
     console.log('백엔드로 진입했어.');
     console.log(images);
     console.log(JSON.parse(body.jsonData).title);
