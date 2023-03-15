@@ -48,7 +48,7 @@ function getNewWorkshops() {
       workshops.forEach((element) => {
         let temp_html = `<div class="col">
         <div class="card h-100">
-            <a href="/workshop/detail?workshopId=${element.workshop_id}"><img
+            <a href="/workshops/detail?workshopId=${element.workshop_id}"><img
             src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
             class="card-img-top"
             alt="..."/></a>

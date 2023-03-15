@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from 'src/entities/order';
 import { Review } from 'src/entities/review';
@@ -19,6 +20,7 @@ export class WorkshopsService {
     private readonly workshopDetailRepository: Repository<WorkShopInstanceDetail>,
     @InjectRepository(Review)
     private readonly reviewRepository: Repository<Review>,
+    private readonly configService: ConfigService,
   ) {}
 
   // 인기 워크샵 조회 API
@@ -205,6 +207,7 @@ export class WorkshopsService {
         'workshop.price',
         'workshop.location',
         'wish.workshop_id',
+        'workshop.thumb',
         'GROUP_CONCAT(wish.user_id) as wish_user_id',
         'GROUP_CONCAT(review.star) as star',
         'GROUP_CONCAT(purposeTag.name) as purpose',
@@ -214,7 +217,6 @@ export class WorkshopsService {
       ])
 
       .where('workshop.id = :id', { id: workshop_id })
-      // .orWhere('wish.user_id = :id', { id: user_id })
       .groupBy('workshop.id')
       .getRawMany();
 
@@ -235,6 +237,12 @@ export class WorkshopsService {
       const wishHalfIndex = Math.floor(wishArray.length / 2);
       const halfWish = wishArray.slice(0, wishHalfIndex); // 중복 값이 나오므로 배열 길이의 반만큼 잘라줘야 함
 
+      // s3 + cloud front에서 이미지 가져오기
+      const thumbName = workshop.workshop_thumb;
+      const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+      const thumbUrl = `${cloundFrontUrl}/${thumbName}`;
+      // ex) images/workshop/1/eraser-class-thumb.jpg 와 같은 파일명으로 저장되어 있음
+
       return {
         ...workshop,
         wish_user_id: Array.from(new Set(halfWish)).map((el) => Number(el)),
@@ -242,6 +250,7 @@ export class WorkshopsService {
         purpose: Array.from(new Set(workshop.purpose.split(','))),
         genre: Array.from(new Set(workshop.genre.split(','))),
         averageStar: averageStar.toFixed(1), // 소수점 첫째자리에서 반올림
+        workshop_thumb: thumbUrl,
       };
     });
 
@@ -279,6 +288,7 @@ export class WorkshopsService {
   // 특정 워크샵 후기 불러오기 API
   async getWorkshopReviews(workshop_id: number) {
     const reviews = await this.reviewRepository.find({
+      relations: ['ReviewImages'],
       where: { workshop_id, deletedAt: null },
     });
 
@@ -292,7 +302,14 @@ export class WorkshopsService {
       const day = String(inputDate.getDate()).padStart(2, '0');
       const outputDate = `${year}-${month}-${day}`;
 
-      return { ...review, createdAt: outputDate };
+      // s3 + cloud front에서 이미지 가져오기
+      const reviewImageArr = reviews[0].ReviewImages[0];
+      const reviewImage = reviewImageArr.img_name;
+      const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+      const thumbUrl = `${cloundFrontUrl}/${reviewImage}`;
+      // ex) images/reviews/1/eraser-class-thumb.jpg 와 같은 파일명으로 저장되어 있음
+
+      return { ...review, createdAt: outputDate, reviewImage: thumbUrl };
     });
     return result;
   }
