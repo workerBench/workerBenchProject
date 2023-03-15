@@ -20,7 +20,7 @@ export class MypageControllerRender {
     @RealIP() clientIp: string,
   ) {
     if (typeof user === 'boolean' && user === false) {
-      return res.render('mypage/workshops', { user: false });
+      return res.render('/', { user: false });
     }
     if (typeof user === 'object') {
       try {
