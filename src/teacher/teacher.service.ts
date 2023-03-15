@@ -229,6 +229,7 @@ export class TeacherService {
         total_time,
         desc,
         price,
+        purpose_tag_id,
       } = data;
       const id = 11;
       const teacherInfo = await this.teacherRepository.findOne({
@@ -264,14 +265,18 @@ export class TeacherService {
         user_id: id,
       });
       await this.workshopRepository.save(workshop);
-      const purposeTagId = await this.purposeTagRepository.findOne({
-        where: { deletedAt: null },
-        select: ['id'],
-      });
-      this.purposeTagIdRepository.insert({
+      // const purposeTagId = await this.purposeTagRepository.find({
+      //   where: { deletedAt: null },
+      //   select: ['id'],
+      // });
+      // console.log(purposeTagId);
+      const purposeTagIds = purpose_tag_id.map((id) => ({
         workshop_id: workshop.id,
-        purpose_tag_id: purposeTagId.id,
-      });
+        purpose_tag_id: id,
+      }));
+
+      await this.purposeTagIdRepository.insert(purposeTagIds);
+
       return {
         message:
           '워크샵 등록 신청이 완료되었습니다. 관리자의 수락을 기다려 주세요',
