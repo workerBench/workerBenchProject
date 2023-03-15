@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Order } from 'src/entities/order';
 import { Review } from 'src/entities/review';
 import { WishList } from 'src/entities/wish-list';
 import { WorkShop } from 'src/entities/workshop';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
+import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
 import { Repository } from 'typeorm';
-import { OrderWorkshopDto } from './dtos/order-workshop.dto';
 
 @Injectable()
 export class WorkshopsService {
@@ -23,14 +24,163 @@ export class WorkshopsService {
   ) {}
 
   // 인기 워크샵 조회 API
-  getBestWorkshops() {}
+  // 가장 결제 횟수가 많은 순으로 워크샵을 8개까지 가져온다.
+  async getBestWorkshops() {
+    const queryBuilder = await this.workshopRepository
+      .createQueryBuilder('workshop')
+      .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
+      .select([
+        'COUNT(o.workshop_id) as orderCount', // order id 개수를 세서 카운트
+        'workshop.id',
+        'workshop.title',
+        'workshop.category',
+        'workshop.desc',
+        'workshop.thumb',
+        'workshop.min_member',
+        'workshop.max_member',
+        'workshop.total_time',
+        'workshop.price',
+        'genre_tag.name',
+        'GROUP_CONCAT(purposeTag.name) AS purpose_name',
+        'workshop.deletedAt',
+      ])
+      .innerJoin(Order, 'o', 'workshop.id = o.workshop_id') // order 테이블과 join
+      .where('workshop.deletedAt IS NULL')
+      .groupBy('workshop.id') // workshop id로 결제 내역을 그룹핑
+      .orderBy('orderCount', 'DESC') // 결제 횟수로 내림차순
+      .limit(8)
+      .getRawMany();
+
+    // , 기준으로 나누고 purpose_name 값 중복 제거
+    const result = queryBuilder.map((workshop) => ({
+      ...workshop,
+      purpose_name: Array.from(new Set(workshop.purpose_name.split(','))),
+    }));
+
+    return result;
+  }
 
   // 신규 워크샵 조회 API
-  // 전체 워크샵 중에서 createdAt이 가장 최근인 순(=내림차순)으로 정렬한 후 최대 8개를 가져온다.
+  // 전체 워크샵 중에서 updatedAt이 가장 최근인 순(=내림차순)으로 정렬한 후 최대 8개를 가져온다.
   async getNewWorkshops() {
+    const queryBuilder = await this.workshopRepository
+      .createQueryBuilder('workshop')
+      .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
+      .select([
+        'workshop.id',
+        'workshop.title',
+        'workshop.category',
+        'workshop.desc',
+        'workshop.thumb',
+        'workshop.min_member',
+        'workshop.max_member',
+        'workshop.total_time',
+        'workshop.price',
+        'genre_tag.name',
+        'GROUP_CONCAT(purposeTag.name) AS purpose_name',
+        'workshop.updatedAt',
+        'workshop.deletedAt',
+      ])
+      .where('workshop.deletedAt IS NULL')
+      .orderBy('workshop.updatedAt', 'DESC') // 업데이트 최신순으로 정렬
+      .groupBy('workshop.id')
+      .limit(8)
+      .getRawMany();
+
+    // , 기준으로 나누고 purpose_name 값 중복 제거
+    const result = queryBuilder.map((workshop) => ({
+      ...workshop,
+      purpose_name: Array.from(new Set(workshop.purpose_name.split(','))),
+    }));
+
+    return result;
+  }
+
+  // 워크샵 검색 API (옵션을 선택할 때마다 검색 결과가 조회되어야 함)
+  /* workshop - GenreTag - Workshop_purpose - PurposeTag 테이블을 조인한 후
+  결과를 purposeTag로 그룹핑하고 workshop.id로 묶어줌*/
+  async searchWorkshops(
+    category: string,
+    memberCnt: number,
+    location: string,
+    purpose: string,
+    genre: string,
+  ) {
+    const queryBuilder = this.workshopRepository
+      .createQueryBuilder('workshop')
+      .innerJoinAndSelect('workshop.GenreTag', 'genre') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
+      .select([
+        'workshop.id',
+        'workshop.title',
+        'workshop.category',
+        'workshop.location',
+        'workshop.price',
+        'workshop.min_member',
+        'workshop.max_member',
+        'workshop.total_time',
+        'genre.name',
+        'purposeTag.name',
+        'GROUP_CONCAT(purposeTag.name) AS purposeTag_name',
+      ])
+      .groupBy('workshop.id');
+
+    // 각 태그(ex. category)가 query parameter로 들어온다면 andWhere로 찾기
+    if (category) {
+      queryBuilder.andWhere('workshop.category = :category', {
+        category: `${category}`,
+      });
+    }
+
+    if (location) {
+      queryBuilder.andWhere('workshop.location = :location', {
+        location: `${location}`,
+      });
+    }
+
+    if (genre) {
+      queryBuilder.andWhere('genre.name = :genre', {
+        genre: `${genre}`,
+      });
+    }
+
+    if (purpose) {
+      queryBuilder.andWhere('purposeTag.name = :purpose', {
+        purpose: `${purpose}`,
+      });
+    }
+
+    if (memberCnt) {
+      queryBuilder
+        .andWhere('workshop.min_member <= :memberCnt', {
+          memberCnt: `${memberCnt}`,
+        })
+        .andWhere('workshop.max_member >= :memberCnt', {
+          memberCnt: `${memberCnt}`,
+        });
+    }
+
+    const workshops = await queryBuilder.getRawMany();
+
+    // purposeTag_name 결과를 콤마(,) 기준으로 쪼개서 배열에 담아줌
+    return workshops.map((workshop) => ({
+      ...workshop,
+      purposeTag_name: workshop.purposeTag_name.split(','),
+    }));
+  }
+
+  // 승인된 전체 워크샵 조회 API
+  // status가 approval인 워크샵을 updatedAt이 최신 순으로 불러온다.
+  // *페이지네이션 추가 필요*
+  async getApprovedWorkshops() {
     return await this.workshopRepository.find({
-      order: { createdAt: 'DESC' },
-      take: 8,
+      where: { status: 'approval' },
+      order: { updatedAt: 'DESC' },
     });
   }
 
@@ -108,19 +258,20 @@ export class WorkshopsService {
   }
 
   // 워크샵 찜 or 취소하기 API
-  // wishList 엔티티에서 workshop_id와 user_id 찾은 후
-  // 만약 값이 있으면 찜 해제
-  // 없으면 user_id와 workshop_id insert
+  /* wishList 엔티티에서 workshop_id와 user_id 찾은 후
+  만약 값이 있으면 찜 해제
+  없으면 user_id와 workshop_id insert */
   async addToWish(user_id: number, workshop_id: number) {
     const IsWish = await this.wishRepository.findOne({
       where: { user_id, workshop_id },
     });
     if (IsWish === null) {
       await this.wishRepository.insert({ user_id, workshop_id });
-      return '찜하기 성공!';
+      return { message: '찜하기 성공!', type: 'add' };
+    } else {
+      await this.wishRepository.delete({ user_id, workshop_id }); // 찜 해제
+      return { message: '찜하기 취소!', type: 'remove' };
     }
-    await this.wishRepository.delete({ user_id, workshop_id }); // 찜 해제
-    return '찜하기 취소!';
   }
 
   // 워크샵 상세 정보를 가져올 때 로그인 한 유저가 있다면, 해당 유저가 워크샵을 찜 했는지 안했는지 여부를 확인

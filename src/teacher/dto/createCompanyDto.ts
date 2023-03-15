@@ -1,21 +1,18 @@
-import { IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsString,IsNumber } from 'class-validator';
 
-export class CreateCompanyDto {
+export class createCompanyDto {
   @IsNumber()
   readonly company_type: number;
 
   @IsString()
   readonly company_name: string;
 
-  @IsOptional()
   @IsNumber()
   readonly business_number: number;
 
-  @IsOptional()
   @IsNumber()
   readonly rrn_front: number;
 
-  @IsOptional()
   @IsNumber()
   readonly rrn_back: number;
 
@@ -27,4 +24,10 @@ export class CreateCompanyDto {
 
   @IsString()
   readonly saving_name: string;
+
+  @IsNumber()
+  readonly isBan: number;
+
+  @IsNumber()
+  readonly user_id: number;
 }
