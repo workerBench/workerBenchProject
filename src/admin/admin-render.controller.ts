@@ -55,7 +55,7 @@ export class AdminControllerRender {
     @RealIP() clientIp: string,
   ) {
     if (typeof user === 'boolean' && user === false) {
-      return res.render('auth/non-login', { user: false });
+      return res.render('auth/non-auth-or-login-admin', { user: false });
     }
 
     if (typeof user === 'object') {
@@ -86,7 +86,7 @@ export class AdminControllerRender {
     @RealIP() clientIp: string,
   ) {
     if (typeof user === 'boolean' && user === false) {
-      return res.render('auth/non-login', { user: false });
+      return res.render('auth/non-auth-or-login-admin', { user: false });
     }
 
     if (typeof user === 'object') {
@@ -117,7 +117,7 @@ export class AdminControllerRender {
     @RealIP() clientIp: string,
   ) {
     if (typeof user === 'boolean' && user === false) {
-      return res.render('auth/non-login', { user: false });
+      return res.render('auth/non-auth-or-login-admin', { user: false });
     }
 
     if (typeof user === 'object') {
@@ -150,7 +150,7 @@ export class AdminControllerRender {
     @RealIP() clientIp: string,
   ) {
     if (typeof user === 'boolean' && user === false) {
-      return res.render('auth/non-login', { user: false });
+      return res.render('auth/non-auth-or-login-admin', { user: false });
     }
 
     if (typeof user === 'object') {
@@ -181,7 +181,7 @@ export class AdminControllerRender {
     @RealIP() clientIp: string,
   ) {
     if (typeof user === 'boolean' && user === false) {
-      return res.render('auth/non-login', { user: false });
+      return res.render('auth/non-auth-or-login-admin', { user: false });
     }
 
     if (typeof user === 'object') {

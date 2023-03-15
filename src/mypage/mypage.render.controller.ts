@@ -12,7 +12,7 @@ export class MypageControllerRender {
   constructor(private readonly authService: AuthService) {}
 
   // 마이 페이지 첫 접속 시 과거 내가 신청했던 워크샵 수강 현황 / 결과를 보여줌
-  @Get('workshop')
+  @Get('workshops')
   @UseGuards(JwtUserPageGuard)
   async getMyPageWorkshopList(
     @CurrentUser() user: CurrentUserDto | boolean,
@@ -34,7 +34,7 @@ export class MypageControllerRender {
           clientIp,
           refreshToken,
         );
-        return res.render('mypage/myPage', { user: user });
+        return res.render('mypage/workshops', { user: user });
       } catch (err) {
         res.clearCookie(TOKEN_NAME.userAccess);
         res.clearCookie(TOKEN_NAME.userRefresh);
@@ -44,7 +44,7 @@ export class MypageControllerRender {
   }
 
   // 마이 페이지 - 후기 작성 페이지
-  @Get('workshop/review')
+  @Get('workshops/review')
   @UseGuards(JwtUserPageGuard)
   async getWritingReviewPage(
     @CurrentUser() user: CurrentUserDto | boolean,
@@ -66,7 +66,7 @@ export class MypageControllerRender {
           clientIp,
           refreshToken,
         );
-        return res.render('mypage/review', { user: user });
+        return res.render('mypage/reviews', { user: user });
       } catch (err) {
         res.clearCookie(TOKEN_NAME.userAccess);
         res.clearCookie(TOKEN_NAME.userRefresh);
@@ -76,7 +76,7 @@ export class MypageControllerRender {
   }
 
   // 내 찜목록 리스트 페이지
-  @Get('wishlist')
+  @Get('workshops/wishlist')
   @UseGuards(JwtUserPageGuard)
   async getMyWishListPage(
     @CurrentUser() user: CurrentUserDto | boolean,
@@ -98,7 +98,7 @@ export class MypageControllerRender {
           clientIp,
           refreshToken,
         );
-        return res.render('mypage/myWishList', { user: user });
+        return res.render('mypage/wish-list', { user: user });
       } catch (err) {
         res.clearCookie(TOKEN_NAME.userAccess);
         res.clearCookie(TOKEN_NAME.userRefresh);
