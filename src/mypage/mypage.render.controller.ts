@@ -1,20 +1,36 @@
-import { Controller, Get, Render, Req, Res, UseGuards } from '@nestjs/common';
-import { Request, Response } from 'express';
-import { RealIP } from 'nestjs-real-ip';
-import { AuthService } from 'src/auth/auth.service';
-import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
-import { JwtUserPageGuard } from 'src/auth/jwt/refresh-page-check/user/jwt-user-page-guard';
-import { TOKEN_NAME } from 'src/auth/naming/token-name';
-import { CurrentUser } from 'src/common/decorators/user.decorator';
+import { Controller, Get, Render } from '@nestjs/common';
+
 
 @Controller('mypage')
 export class MypageControllerRender {
-  constructor(private readonly authService: AuthService) {}
-  // 마이페이지 나의 워크샵 목록 페이지 render
-  @Get('workshops')
+
+  // 나의 워크샵 목록 불러오기
+  @Get('/workshops')
   @Render('mypage/workshops')
   getMyPageWorkshopsResult() {
     return;
   }
+  
+  // 후기 작성하기
+  @Get('/workshops/reviews')
+  @Render('mypage/reviews')
+  getMyPageReviewsResult() {
+    return;
+  }
+
+  // 내가 찜한 워크샵 불러오기
+  @Get('/workshops/wish-list')
+  @Render('mypage/wish-list')
+  getMyPageWishListResult() {
+    return;
+  }
+
+  // 강사 등록
+  @Get('/teacher/register')
+  @Render('teacher/teacher-register')
+  getMyPageTeacherRegisterResult() {
+    return;
+  }
+
 
 }
