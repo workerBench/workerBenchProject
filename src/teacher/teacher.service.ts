@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import _ from 'lodash';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { Company } from 'src/entities/company';
-import { PurposeTag } from 'src/entities/purpose-tag';
+import { CompanyApplication } from 'src/entities/company-application';
 import { Teacher } from 'src/entities/teacher';
 import { User } from 'src/entities/user';
 import { WorkShop } from 'src/entities/workshop';
@@ -30,13 +30,11 @@ export class TeacherService {
     @InjectRepository(Company) private companyRepository: Repository<Company>,
     @InjectRepository(WorkShopPurpose)
     private purposeTagIdRepository: Repository<WorkShopPurpose>,
-    @InjectRepository(PurposeTag)
-    private purposeTagRepository: Repository<PurposeTag>,
     @InjectRepository(WorkShopInstanceDetail)
     private workShopInstanceDetailRepository: Repository<WorkShopInstanceDetail>,
+    @InjectRepository(CompanyApplication)
+    private companyApplicationRepository: Repository<CompanyApplication>,
   ) {}
-
-  // 안되는것 : 워크샵 등록할때 purposeTag가 여러개 있을시 여러개를 동시에 등록을 못함
   // 강사 등록 api
 
   async createTeacherRegister(
@@ -106,8 +104,9 @@ export class TeacherService {
             'workshop.createdAt',
             'workshop.status',
             'genreTag.name',
-            'purposeTag.name',
+            'GROUP_CONCAT(purposeTag.name) as purposeTag_name',
           ])
+          .groupBy('workshop.id')
           .getRawMany();
         return result;
       }
@@ -189,7 +188,7 @@ export class TeacherService {
           HttpStatus.BAD_REQUEST,
         );
       } else {
-        const newCompany = await this.companyRepository.create({
+        const Company = await this.companyRepository.insert({
           company_type,
           company_name,
           business_number,
@@ -201,15 +200,14 @@ export class TeacherService {
           isBan: 0,
           user_id: id,
         });
-
-        const { id: newCompanyId } = await this.companyRepository.save(
-          newCompany,
-        );
-
-        await this.teacherRepository.update(id, {
-          affiliation_company_id: newCompanyId,
-        });
       }
+      const companyIds = await this.companyRepository.findOne({
+        where: { user_id: id },
+        select: ['id'],
+      });
+      await this.teacherRepository.update(id, {
+        affiliation_company_id: companyIds.id,
+      });
 
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
@@ -265,11 +263,6 @@ export class TeacherService {
         user_id: id,
       });
       await this.workshopRepository.save(workshop);
-      // const purposeTagId = await this.purposeTagRepository.find({
-      //   where: { deletedAt: null },
-      //   select: ['id'],
-      // });
-      // console.log(purposeTagId);
       const purposeTagIds = purpose_tag_id.map((id) => ({
         workshop_id: workshop.id,
         purpose_tag_id: id,

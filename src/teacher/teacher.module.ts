@@ -10,6 +10,7 @@ import { WorkShop } from 'src/entities/workshop';
 import { WorkShopPurpose } from 'src/entities/workshop-purpose';
 import { PurposeTag } from 'src/entities/purpose-tag';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
+import { CompanyApplication } from 'src/entities/company-application';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
       WorkShopPurpose,
       PurposeTag,
       WorkShopInstanceDetail,
+      CompanyApplication,
     ]),
   ],
   controllers: [TeacherController, TeacherControllerRender],
