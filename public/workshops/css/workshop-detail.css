@@ -11,6 +11,10 @@ img {
   border-radius: 20px;
 }
 
+.img-fluid {
+  display: inline-block;
+}
+
 .workshop-thumb {
   object-fit: contain;
   margin-top: 20px;

@@ -122,8 +122,8 @@ function getWorkshopReviews() {
 
       reviews.forEach((element) => {
         let TempReviews = `<div class="card mb-3" style="max-width: 700px; margin-top: 50px"><div class="row g-0">
-          <div class="col-md-4">
-            <img class="img-fluid rounded-start" alt="..." id="review-img">
+          <div class="col-md-4 review-images">
+            <img class="img-fluid rounded-start" alt="..." id="review-img-1">
           </div>
           <div class="col-md-8">
             <div class="card-body">
@@ -135,7 +135,7 @@ function getWorkshopReviews() {
         </div>
         </div>`;
         $('#workshop-reviews').append(TempReviews);
-        document.getElementById('review-img').src = reviews[0].reviewImage;
+        document.getElementById('review-img-1').src = reviews[0].reviewImage;
       });
     })
     .catch((err) => {});
