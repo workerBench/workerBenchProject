@@ -205,7 +205,7 @@ export class AuthService {
       { id, email, adminType },
       {
         secret: this.configService.get('JWT_SECRET_KEY_ADMIN'),
-        expiresIn: '600s',
+        expiresIn: '6000s',
         algorithm: 'HS256',
       },
     );
@@ -231,13 +231,13 @@ export class AuthService {
       { id, email, userType },
       {
         secret: this.configService.get('JWT_SECRET_KEY'),
-        expiresIn: '3000s',
+        expiresIn: '7000s',
         algorithm: 'HS256',
       },
     );
     await this.redisClient.setex(
       refreshTokenRedisKey(userTypeString, id),
-      3000,
+      7000,
       `${clientIp}_#_${refreshToekn}`,
     );
     return refreshToekn;
@@ -262,14 +262,14 @@ export class AuthService {
       { id, email, adminType },
       {
         secret: this.configService.get('JWT_SECRET_KEY_ADMIN'),
-        expiresIn: '3000s',
+        expiresIn: '7000s',
         algorithm: 'HS256',
       },
     );
 
     await this.redisClient.setex(
       refreshTokenRedisKey(adminTypeString, id),
-      3000,
+      7000,
       `${clientIp}_#_${refreshToekn}`,
     );
     return refreshToekn;

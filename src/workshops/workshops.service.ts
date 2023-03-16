@@ -102,7 +102,7 @@ export class WorkshopsService {
     const result = queryBuilder.map((workshop) => ({
       ...workshop,
       purpose_name: Array.from(new Set(workshop.purpose_name.split(','))),
-      thumbUrl: `${cloundFrontUrl}/${workshop.workshop_thumb}`,
+      thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
     }));
 
     return result;

@@ -341,7 +341,7 @@ export class TeacherService {
       });
       //
       if (workshopImageArray.length > 0) {
-        await this.workshopImageRepository.insert(workshopImageArray[0]);
+        await this.workshopImageRepository.insert(workshopImageArray);
       }
       return {
         message:
