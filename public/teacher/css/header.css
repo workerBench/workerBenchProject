@@ -38,23 +38,17 @@ body {
     width: 100px;
     height: 50px; 
     margin-left: auto;
-    background-color: rgb(60, 60, 255);
+    background-color: rgb(179, 179, 179);
     border-radius: 30px;
     color: white;
     border:none ;
-}
-#login-button:hover {
-    background-color: rgb(102, 102, 249);
 }
 #signup-button{
     width: 100px;
     height: 50px;
     margin-left: 20px;
-    background-color: rgb(60, 60, 255);
+    background-color: rgb(179, 179, 179);
     border-radius: 30px;
     color: white;
     border:none ;
-}
-#signup-button:hover {
-    background-color: rgb(102, 102, 249);
 }
