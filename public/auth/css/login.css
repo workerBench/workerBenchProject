@@ -1,75 +1,75 @@
 /* login css */
 #loginBox {
-    width: 500px;
-    margin: 0 auto;
-    margin-top: 100px;
-    padding: 20px;
+  width: 500px;
+  margin: 0 auto;
+  margin-top: 100px;
+  padding: 20px;
 
-    border: 2px solid lavender;
-    border-radius: 20px;
+  border: 2px solid lavender;
+  border-radius: 20px;
 
-    box-shadow: 3px 3px 5px lavender;
+  box-shadow: 3px 3px 5px lavender;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-.password-forget{
-    margin-left: 150px;
-    margin-top : 20px;
+.password-forget {
+  margin-left: 150px;
+  margin-top: 20px;
 }
 #loginBox > h1 {
-    margin: 0 auto;
-    margin-bottom: 25px;
+  margin: 0 auto;
+  margin-bottom: 25px;
 }
 #wrap {
-    width: 500px;
-    margin: 0 auto;
-    margin-top: 100px;
-    padding: 20px;
-    
-    border: 2px solid lavender;
-    border-radius: 20px;
-    
-    box-shadow: 3px 3px 5px lavender;
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    }
+  width: 500px;
+  margin: 0 auto;
+  margin-top: 100px;
+  padding: 20px;
 
-.loginBtn{
-    width: 150px;
-    height:35px;
-    background-color: rgb(60, 60, 255);
-    border-radius: 5px;
-    color: white;
-    border:none ;
+  border: 2px solid lavender;
+  border-radius: 20px;
+
+  box-shadow: 3px 3px 5px lavender;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.loginBtn {
+  width: 150px;
+  height: 35px;
+  background-color: #a084dc;
+  border-radius: 5px;
+  color: white;
+  border: none;
 }
 .loginBtn:hover {
-    background-color: rgb(102, 102, 249);
+  background-color: #645cbb;
 }
-.signupBtn{
-    width: 150px;
-    height:35px;
-    border-radius: 5px;
-    background-color: #ffffff ;
-    border-color: rgb(60, 60, 255);
-    color: rgb(102, 102, 249) ;
+.signupBtn {
+  width: 150px;
+  height: 35px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  border-color: rgb(60, 60, 255);
+  color: rgb(102, 102, 249);
 }
-.input-group-text{
-    width: 40px;
+.input-group-text {
+  width: 40px;
 }
 .navbar-dark .navbar-nav .nav-link {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 .navbar-dark .navbar-nav .nav-link:focus,
 .navbar-dark .navbar-nav .nav-link:hover {
-    color: #ffffff;
+  color: #ffffff;
 }
 .wrap {
-    width: 80%;
-    max-width: 600px;
-    margin: 10px auto;
+  width: 80%;
+  max-width: 600px;
+  margin: 10px auto;
 }
