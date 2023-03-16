@@ -58,9 +58,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const price = document.getElementById('price').value;
     const desc = document.getElementById('desc').value;
     const location = document.getElementById('location').value;
-    const test1 = parseInt(purpose_tag1);
-    const test2 = parseInt(purpose_tag2);
-    const purposeTagIds = [test1, test2];
+    const purpose_value1 = parseInt(purpose_tag1);
+    const purpose_value2 = parseInt(purpose_tag2);
+    if (!purpose_value1 && !purpose_value2) {
+      alert('목적태그 최소 한개는 등록해주세요');
+      return;
+    }
+    const purposeTagIds = [purpose_value1, purpose_value2];
+    if (
+      !category ||
+      !title ||
+      !min_member ||
+      !max_member ||
+      !genre_id ||
+      !total_time ||
+      !price ||
+      !desc ||
+      !location
+    ) {
+      alert('전부다 입력 해주세요!');
+      return;
+    }
     if (document.querySelector('#thumb-img-file').files.length < 1) {
       alert('썸네일 사진을 등록해 주세요!');
       return;
@@ -81,10 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
       genre_id: genre_id,
       purpose_tag_id: purposeTagIds,
     };
-    if (jsonData.length < 10) {
-      alert('전부다 입력해 주세요');
-      return;
-    }
+
     const formData = new FormData();
     formData.append('images', thumbImg);
     formData.append('jsonData', JSON.stringify(jsonData));
@@ -109,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/teacher/workshop';
       })
       .catch((response) => {
+        console.log(response);
         const { data } = response.response;
         alert(data.error);
       });
