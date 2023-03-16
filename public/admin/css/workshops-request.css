@@ -153,6 +153,9 @@
     display: block;
     width: 100%;
     transition: transform 0.2s ease-out;
+    max-height: 210px;
+    min-height: 200px;
+    
 }
 
 .card-text {
@@ -229,6 +232,7 @@
 .modal-image {
     width: 60%;
     border-radius: 10px;
+    height: 400px;
 }
 .modal-image img {
     max-width: 100%;

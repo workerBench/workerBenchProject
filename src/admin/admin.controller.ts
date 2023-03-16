@@ -18,7 +18,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: '검토 중인 워크숍 검색 API' })
     @Get('search/workshops/request')
-    // @UseGuards(JwtNormalAdminAuthGuard)
+    @UseGuards(JwtNormalAdminAuthGuard)
     async searchrequestWorkshops(
         @Query('title') title: string,
         @Query('email') email: string,
@@ -33,7 +33,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: '진행 중인 워크숍 검색 API' })
     @Get('search/workshops/approval')
-    // @UseGuards(JwtNormalAdminAuthGuard)
+    @UseGuards(JwtNormalAdminAuthGuard)
     async searchApprovalWorkshops(
         @Query('title') title: string,
         @Query('email') email: string,
@@ -49,7 +49,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: '종료된 워크숍 검색 API' })        
     @Get('search/workshops/finished')
-    // @UseGuards(JwtNormalAdminAuthGuard)
+    @UseGuards(JwtNormalAdminAuthGuard)
     async searchFinishedWorkshops(
         @Query('title') title: string,
         @Query('email') email: string,

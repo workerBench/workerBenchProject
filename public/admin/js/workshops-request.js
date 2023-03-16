@@ -1,11 +1,12 @@
 axios.get('../api/admin/workshops/request')
   .then(function(response) {
     const workshops = response.data;
+    console.log(workshops)
     let html = '';
     for (let workshop of workshops) {
       html += `
         <div class="card" onclick="showModal('${workshop.id}')">
-          <img src="${workshop.thumb}" alt="Image">
+          <img src="${workshop.ThumbUrl}" alt="Image">
           <div class="card-text">
             <div class="category">
                 ${workshop.category === 'online' ? '<div class="online">온라인</div>' : ''}
@@ -44,7 +45,7 @@ axios.get('../api/admin/workshops/request')
                 <button type="button" class="btn-close" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <img src="${workshop.workshop_thumb}" alt="Image" class="modal-image">
+                <img src="${workshop.ThumbUrl}" alt="Image" class="modal-image">
                 <div class="info">
                   <div class="info-category">${workshop.workshop_category === 'online' ? '온라인' : '오프라인'}</div>
                   <div class="info-title">${workshop.workshop_title}</div>
@@ -71,8 +72,8 @@ axios.get('../api/admin/workshops/request')
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="approve" onclick="approval(${workshop.id})">승인하기</button>
-                <button type="button" class="btn btn-secondary" id="reject" onclick="rejection(${workshop.id})">반려하기</button>
+                <button type="button" class="btn btn-primary" id="approve" onclick="approval(${workshop.workshop_id})">승인하기</button>
+                <button type="button" class="btn btn-secondary" id="reject" onclick="rejection(${workshop.workshop_id})">반려하기</button>
               </div>
             </div>
         `;
@@ -142,7 +143,7 @@ $(document).ready(() => {
       data.forEach(workshop => {
         const cardHtml = `
             <div class="card" onclick="showModal(${workshop.id})">
-            <img src="${workshop.thumb}" alt="Image">
+            <img src="${workshop.ThumbUrl}" alt="Image">
             <div class="card-text">
               <div class="category">
                   ${workshop.category === 'online' ? '<div class="online">온라인</div>' : ''}

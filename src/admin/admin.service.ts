@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AdminUser } from 'src/entities/admin-user';
 import { Company } from 'src/entities/company';
@@ -13,10 +14,13 @@ export class AdminService {
   constructor(
     @InjectRepository(WorkShop)
     private workshopRepository: Repository<WorkShop>,
-    @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Company) private companyRepository: Repository<Company>,
+    @InjectRepository(User)
+     private userRepository: Repository<User>,
+    @InjectRepository(Company)
+     private companyRepository: Repository<Company>,
     @InjectRepository(AdminUser)
     private adminUserRepository: Repository<AdminUser>,
+    private configService: ConfigService,
   ) {}
 
   //-------------------------- 워크숍 검색 기능 (유저 이메일 / 워크숍 타이틀) --------------------------//
@@ -54,9 +58,15 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    const workshops = await query.getMany();
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
-    return workshops;
+    const workshops = await query.getMany();
+    
+    const result = workshops.map((workshop) => ({
+      ...workshop,
+      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
+    }))
+    return result;
   }
 
   // approval 워크숍 검색
@@ -92,9 +102,15 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    const workshops = await query.getMany();
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
-    return workshops;
+    const workshops = await query.getMany();
+    
+    const result = workshops.map((workshop) => ({
+      ...workshop,
+      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
+    }))
+    return result;
   }
 
   // finished 워크숍 검색
@@ -131,41 +147,72 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+
     const workshops = await query.getMany();
 
-    return workshops;
+    const result = workshops.map((workshop) => ({
+      ...workshop,
+      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
+    }))
+    return result;
   }
 
   //-------------------------- 검토 대기중인 워크숍 목록 불러오기 (status: "request") --------------------------//
 
   async requestWorkshops() {
-    return await this.workshopRepository
+    const workshops = await this.workshopRepository
     .createQueryBuilder('workshop')
     .where('workshop.status = :status', { status: 'request' })
     .innerJoinAndSelect('workshop.GenreTag', 'genre')
     .getMany();
+
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    
+    const result = workshops.map((workshop) => ({
+      ...workshop,
+      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
+    }))
+    return result;
   };
+
 
   //-------------------------- 승인된 워크숍 목록 불러오기 (status: "approval") --------------------------//
 
   async getApprovedWorkshops() {
-    return await this.workshopRepository
+    const workshops = await this.workshopRepository
     .createQueryBuilder('workshop')
     .where('workshop.status = :status', { status: 'approval' })
     .innerJoinAndSelect('workshop.GenreTag', 'genre')
     .getMany();
-  }
+
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    
+    const result = workshops.map((workshop) => ({
+      ...workshop,
+      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
+    }))
+    return result;
+  };
 
   //-------------------------- 종료된 워크숍 목록 불러오기 (status: "finished") --------------------------//
 
   async getFinishedWorkshops() {
-    return await this.workshopRepository
-      .createQueryBuilder('workshop')
-      .withDeleted()
-      .where('workshop.status = :status', { status: 'finished' })
-      .innerJoinAndSelect('workshop.GenreTag', 'genre')
-      .getMany();
-  }
+    const workshops = await this.workshopRepository
+    .createQueryBuilder('workshop')
+    .withDeleted()
+    .where('workshop.status = :status', { status: 'finished' })
+    .innerJoinAndSelect('workshop.GenreTag', 'genre')
+    .getMany();
+
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    
+    const result = workshops.map((workshop) => ({
+      ...workshop,
+      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
+    }))
+    return result;
+  };
 
   //-------------------------- 워크숍 상세 --------------------------//
 
@@ -180,6 +227,7 @@ export class AdminService {
     .innerJoinAndSelect('workshop.User', 'user')
     .innerJoinAndSelect('user.TeacherProfile', 'teacher')
     .select([
+      'workshop.id',
       'workshop.title',
       'workshop.category',
       'workshop.desc',
@@ -195,9 +243,15 @@ export class AdminService {
     ])
     .groupBy('workshop.id')
     
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+
     const workshopDetail = await query.getRawOne();
 
-    return workshopDetail
+    const result = {
+      ...workshopDetail,
+      ThumbUrl: `${cloundFrontUrl}/${workshopDetail.workshop_thumb}`
+    }
+    return result;
   }
 
   //-------------------------- 워크숍 승인하기 (status:"request" => "approval") --------------------------//
