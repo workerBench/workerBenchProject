@@ -113,51 +113,45 @@
 }
 
 /*유저 검색시 나오는 목록 구역입니다.*/
-.user-list-wrap {
+.user-wrap {
     display: flex;
-    width: 500px;
-    margin-bottom: 10px;
-}
-.user-list-wrap > div {
-    border: 1px solid gray;
-    border-radius: 10px;
     padding: 5px 20px 5px 20px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
+    text-align: center;
     align-items: center;
-    margin-right: 20px;
 }
-.user-list-wrap > .user-data {
+.user-data {
     width: 380px;
+    border: 1px solid gray;
+    border-radius: 7px;
+    padding: 5px 10px 5px 10px;
+    margin-right: 10px;
 }
 
 /*업체 검색시 나오는 목록 구역입니다.*/
-.company-list-wrap {
+
+.company-wrap {
     display: flex;
-    width: 500px;
-    margin-bottom: 10px;
-}
-.company-list-wrap > div {
-    border: 1px solid gray;
-    border-radius: 10px;
     padding: 5px 20px 5px 20px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
+    text-align: center;
     align-items: center;
-    margin-right: 20px;
 }
-.company-list-wrap > .company-data {
+.company-data {
     width: 380px;
+    border: 1px solid gray;
+    border-radius: 7px;
+    padding: 5px 10px 5px 10px;
+    margin-right: 10px;
 }
 
 .ban-btn {
     width: 100px;
+    border: 1px solid gray;
     background-color: black;
     color: white;
+    border-radius: 7px;
+    padding: 5px 10px 5px 10px;
 }
 .ban-btn:hover {
-    border: 2px solid #9F70FB;
+    background-color: gray;
     cursor: pointer;
 }

@@ -35,6 +35,7 @@ export class AdminService {
       .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
       .innerJoinAndSelect('workshop.User', 'user')
       .select([
+        'workshop.id',
         'workshop.title',
         'workshop.category',
         'workshop.desc',
@@ -61,7 +62,7 @@ export class AdminService {
     const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
     const workshops = await query.getMany();
-    
+
     const result = workshops.map((workshop) => ({
       ...workshop,
       ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
@@ -79,6 +80,7 @@ export class AdminService {
       .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
       .innerJoinAndSelect('workshop.User', 'user')
       .select([
+        'workshop.id',
         'workshop.title',
         'workshop.category',
         'workshop.desc',
@@ -124,6 +126,7 @@ export class AdminService {
       .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
       .innerJoinAndSelect('workshop.User', 'user')
       .select([
+        'workshop.id',
         'workshop.title',
         'workshop.category',
         'workshop.desc',
