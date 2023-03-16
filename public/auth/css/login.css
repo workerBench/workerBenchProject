@@ -41,27 +41,22 @@
 .loginBtn {
   width: 150px;
   height: 35px;
-  background-color: #9f70fb;
+  background-color: #a084dc;
   border-radius: 5px;
   color: white;
   border: none;
 }
 .loginBtn:hover {
-  background-color: rgb(102, 102, 249);
+  background-color: #645cbb;
 }
 .signupBtn {
   width: 150px;
   height: 35px;
   border-radius: 5px;
-  background-color: #9f70fb;
-  color: white;
-  border: none;
+  background-color: #ffffff;
+  border-color: rgb(60, 60, 255);
+  color: rgb(102, 102, 249);
 }
-
-.signupBtn:hover {
-  background-color: rgb(102, 102, 249);
-}
-
 .input-group-text {
   width: 40px;
 }
