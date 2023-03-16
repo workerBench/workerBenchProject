@@ -31,21 +31,26 @@
       align-items: center;
     }
     .logo-img-wrap {
-      width: 160px;
+      width: 300px;
+      height: 50px;
+      object-fit: cover;
     }
     .logo-img-wrap img {
       display: block;
       width: 100%;
+      cursor: pointer;
     }
-    .domain-name {
+    .menu-workshop-search {
       margin-left: 30px;
-      font-size: 30px;
+      margin-bottom: 20px;
+      font-size: 20px;
       font-weight: bold;
       padding-top: 20px;
+      cursor: pointer;
     }
     .login-or-mypage-div {
       margin-left: auto;
-      background-color: rgb(60, 60, 255);
+      background-color: #9f70fb;
       width: 100px;
       height: 50px;
       border-radius: 30px;
@@ -56,20 +61,20 @@
     }
     .register-or-logout-div {
       margin-left: 20px;
-      background-color: rgb(60, 60, 255);
+      background-color: #9f70fb;
       width: 100px;
       height: 50px;
       border-radius: 30px;
       display: flex;
       justify-content: center;
       color: white;
-      cursor: pointer;
+      cursor: Pointer;
     }
     .login-or-mypage-div:hover {
-      background-color: rgb(102, 102, 249);
+      background-color: #9f70fb;
     }
     .register-or-logout-div:hover {
-      background-color: rgb(102, 102, 249);
+      background-color: #9f70fb;
     }
   </style>
 
@@ -77,9 +82,14 @@
     <div class="nav-wrap">
       <nav class="nav-bar">
         <div class="logo-img-wrap" onclick="location.href='/'">
-          <img src="/images/header.png" />
+          <img src="/images/logo.png" />
         </div>
-        <div class="domain-name">Worker Bench</div>
+        <div
+          class="menu-workshop-search"
+          onclick="location.href='/workshops/search'"
+        >
+          워크샵 검색하기
+        </div>
       </nav>
     </div>
   </body>

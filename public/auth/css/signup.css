@@ -19,15 +19,15 @@
   width: 200px;
   height: 40px;
   margin: 0 auto;
-  background-color: rgb(60, 60, 255);
+  background-color: #a084dc;
   border-radius: 10px;
   color: white;
-  border:none;
+  border: none;
 }
 #signupBtn:hover {
-  background-color: rgb(102, 102, 249);
+  background-color: #645cbb;
 }
-  /* modal css*/
+/* modal css*/
 .modal {
   position: absolute;
   top: 0;
@@ -52,22 +52,22 @@
   border-radius: 10px;
   box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
   transform: translateX(-50%) translateY(-50%);
-  }
-.m_head{
+}
+.m_head {
   height: 10%;
   padding: 20px;
   display: flex;
   justify-content: space-between;
-  background-color:#e7e5e5;
+  background-color: #e7e5e5;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
-.modal_title{
+.modal_title {
   font-size: 25px;
   color: gray;
   font-weight: 500;
 }
-.password-reset> h1{
+.password-reset > h1 {
   margin: 0 auto;
   margin-top: 50px;
 }
@@ -82,32 +82,32 @@
   display: flex;
   flex-direction: column;
 }
-.Certification-Number{
+.Certification-Number {
   display: flex;
   margin-top: 50px;
-  justify-content: center; 
+  justify-content: center;
 }
 #auth-confirm {
   width: 200px;
   height: 50px;
-  margin-left:70px;
+  margin-left: 70px;
   background-color: rgb(60, 60, 255);
   border-radius: 10px;
   color: white;
-  border:none;
+  border: none;
 }
 #auth-confirm:hover {
   background-color: rgb(102, 102, 249);
 }
-#close-btn{
+#close-btn {
   width: 100px;
   height: 40px;
   /* margin: 0 auto; */
   background-color: rgb(60, 60, 255);
   border-radius: 10px;
   color: white;
-  border:none;
-  margin-top :100px;
+  border: none;
+  margin-top: 100px;
   margin-left: 600px;
 }
 #close-btn:hover {
