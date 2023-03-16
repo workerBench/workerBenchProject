@@ -232,24 +232,6 @@ export class AuthController {
       await this.authService.checkingAdminAccount(body.email);
       // 가입
       const createdAdminUser = await this.authService.joinAdminUser(body);
-      // 토큰 발행
-      const accessToken = await this.authService.makeAccessTokenForAdmin(
-        createdAdminUser.id,
-        createdAdminUser.email,
-        createdAdminUser.admin_type,
-      );
-      const refreshToken = await this.authService.makeRefreshTokenForAdmin(
-        createdAdminUser.id,
-        createdAdminUser.email,
-        createdAdminUser.admin_type,
-        clientIp,
-      );
-      // 토큰 쿠키에 삽입
-      response.cookie(TOKEN_NAME.adminAccess, accessToken, { httpOnly: true });
-      response.cookie(TOKEN_NAME.adminRefresh, refreshToken, {
-        httpOnly: true,
-      });
-
       return true;
     } catch (err) {
       // 에러가 string. 지역 에러
