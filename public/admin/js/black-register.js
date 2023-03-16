@@ -15,8 +15,10 @@ $(document).ready(() => {
         if (searchField === 'email') {
           data.forEach(user => {
             const userHtml = `
-              <div class="user-data">${user.email}</div>
-              <div class="ban-btn" onclick="banUser('${user.id}')">Black</div>
+              <div class="user-wrap">
+                <div class="user-data">${user.email}</div>
+                <div class="ban-btn" onclick="banUser('${user.id}')">Black</div>
+              </div>
             `;
             $('.user-list-wrap').append(userHtml);
           });
@@ -24,8 +26,10 @@ $(document).ready(() => {
         if (searchField === 'company') {
           data.forEach(company => {
             const companyHtml = `
-              <div class="company-data">${company.company_name}</div>
-              <div class="ban-btn" onclick="banCompany('${company.id}')">Black</div>
+              <div class="company-wrap">
+                <div class="company-data">${company.company_name}</div>
+                <div class="ban-btn" onclick="banCompany('${company.id}')">Black</div>
+              </div>
             `;
             $('.company-list-wrap').append(companyHtml);
           });
