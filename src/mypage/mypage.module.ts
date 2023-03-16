@@ -19,7 +19,7 @@ import { AuthModule } from 'src/auth/auth.module';
       WishList,
       WorkShopInstanceDetail,
     ]),
-    AuthModule,
+    AuthModule
   ],
   controllers: [MypageController, MypageControllerRender],
   providers: [MypageService, ReviewRepository, ReviewImageRepository],
