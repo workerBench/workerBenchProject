@@ -237,7 +237,6 @@ export class TeacherService {
   ) {
     try {
       const {
-        thumb,
         title,
         min_member,
         max_member,
@@ -245,6 +244,7 @@ export class TeacherService {
         total_time,
         desc,
         price,
+        location,
         purpose_tag_id,
       } = data;
       const id = 11;
@@ -275,17 +275,17 @@ export class TeacherService {
       const thumbImgName = uuid() + thumbImgType;
 
       const workshop = await this.workshopRepository.insert({
-        category: 'offline' || 'online',
-        genre_id,
-        title,
-        desc,
         thumb: thumbImgName,
+        category: 'offline' || 'online',
+        title,
         min_member,
         max_member,
+        genre_id,
         total_time,
         price,
         status: 'request',
-        location: '서울',
+        location,
+        desc,
         user_id: id,
       });
       // purpose_tag_id를 배열로 만들어서 넣어준다.
@@ -295,18 +295,8 @@ export class TeacherService {
       }));
 
       await this.purposeTagIdRepository.insert(purposeTagIds);
-      /*
-    여기서 워크샵을 insert 해야 함. 할 때 썸네일 경로, 이름과 같이 insert. insert 결과를 insertResult 변수에 저장.
-    insert 한 후 insertResult.identifiers[0].id 로 id 를 가져와.
-    가져와서 아래의 else 문 안에서 미리 바깥에서 만들어 둔 배열에 [img_name: "ddd", workshop_id: insertResult.identifiers[0].id]
-    이런 식으로 push. 
-    이렇게 만들어 진 배열을 workshop_image 에 insert 한다.
-    */
-      // workshopInfo.thumb = `images/workshop/1/${thumbImgName}`;
 
-      // 이제 썸네일 이미지와 서브 이미지들을 S3 에 저장해야 해.
-      console.log('-------------------------');
-      console.log(workshop.identifiers[0].id);
+      // 썸네일 이미지와 서브 이미지들을 S3 에 저장한다.
       const workshopImageArray: Array<any> = [];
       images.forEach(async (image, index) => {
         // 첫 번째 image 일 경우 해당 이미지는 썸네일 이미지로 간주한다.
@@ -327,7 +317,7 @@ export class TeacherService {
             workshop_id: workshop.identifiers[0].id,
             img_name: subImgName,
           });
-
+          // 서브이미지 파일 경로
           const s3OptionForSubImg = {
             Bucket: this.configService.get('AWS_S3_BUCKET_NAME'),
             Key: `images/workshops/${workshop.identifiers[0].id}/original/${subImgName}`,
@@ -335,13 +325,10 @@ export class TeacherService {
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
         }
-        if (workshopImageArray.length > 0) {
-          console.log('이미지들도 넣어야지!');
-          console.log(workshopImageArray);
-          await this.workshopImageRepository.insert(workshopImageArray[0]);
-        }
       });
-
+      if (workshopImageArray.length > 0) {
+        await this.workshopImageRepository.insert(workshopImageArray[0]);
+      }
       return {
         message:
           '워크샵 등록 신청이 완료되었습니다. 관리자의 수락을 기다려 주세요',
