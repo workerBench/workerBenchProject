@@ -56,10 +56,7 @@ export class TeacherService {
   }
   // 강사 등록 api
 
-  async createTeacherRegister(
-    data: CreateTeacherDto, //user: CurrentUserDto
-    userId: number,
-  ) {
+  async createTeacherRegister(data: CreateTeacherDto, userId: number) {
     const { phone_number, address, name } = data;
     try {
       const userIdInfo = await this.userRepository.findOne({
@@ -81,15 +78,15 @@ export class TeacherService {
           '이미 등록된 강사입니다',
           HttpStatus.BAD_REQUEST,
         );
+      } else {
+        await this.teacherRepository.insert({
+          user_id: userId,
+          phone_number,
+          address,
+          name,
+        });
+        await this.userRepository.update(userId, { user_type: 1 });
       }
-      await this.teacherRepository.insert({
-        user_id: userId,
-        phone_number,
-        address,
-        name,
-      });
-
-      await this.userRepository.update(userId, { user_type: 1 });
 
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
@@ -295,13 +292,22 @@ export class TeacherService {
         desc,
         user_id: userId,
       });
-      // purpose_tag_id를 배열로 만들어서 넣어준다.
-      const purposeTagIds = purpose_tag_id.map((id) => ({
-        workshop_id: workshop.identifiers[0].id,
-        purpose_tag_id: id,
-      }));
 
-      await this.purposeTagIdRepository.insert(purposeTagIds);
+      // purpose_tag_id를 배열로 만들어서 넣어준다.
+      const purposeTagIds = purpose_tag_id.map((id) => {
+        if (id !== null || id !== undefined) {
+          return {
+            workshop_id: workshop.identifiers[0].id,
+            purpose_tag_id: id,
+          };
+        }
+      });
+      if (
+        purposeTagIds[0].purpose_tag_id !== null ||
+        purposeTagIds[0].purpose_tag_id !== undefined
+      ) {
+        await this.purposeTagIdRepository.insert(purposeTagIds);
+      }
 
       // 썸네일 이미지와 서브 이미지들을 S3 에 저장한다.
       const workshopImageArray: Array<any> = [];
