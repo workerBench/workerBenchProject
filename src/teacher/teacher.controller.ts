@@ -27,7 +27,6 @@ import { RealIP } from 'nestjs-real-ip';
 import { Request, Response } from 'express';
 import { TOKEN_NAME } from 'src/auth/naming/token-name';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-
 @ApiTags('teacher')
 @Controller('/api/teacher')
 export class TeacherController {

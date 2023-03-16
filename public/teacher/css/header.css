@@ -39,31 +39,21 @@ body {
   padding-top: 20px;
   cursor: pointer;
 }
-.login-or-mypage-div {
+#login-button {
+  width: 100px;
+  height: 50px;
   margin-left: auto;
-  background-color: #9f70fb;
+  background-color: rgb(179, 179, 179);
+  border-radius: 30px;
+  color: white;
+  border: none;
+}
+#signup-button {
   width: 100px;
   height: 50px;
-  border-radius: 30px;
-  display: flex;
-  justify-content: center;
-  color: white;
-  cursor: pointer;
-}
-.register-or-logout-div {
   margin-left: 20px;
-  background-color: #9f70fb;
-  width: 100px;
-  height: 50px;
+  background-color: rgb(179, 179, 179);
   border-radius: 30px;
-  display: flex;
-  justify-content: center;
   color: white;
-  cursor: Pointer;
-}
-.login-or-mypage-div:hover {
-  background-color: #9f70fb;
-}
-.register-or-logout-div:hover {
-  background-color: #9f70fb;
+  border: none;
 }

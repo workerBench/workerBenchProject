@@ -9,8 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
-      console.log(response);
-
       const data = response.data;
       for (let i = 0; i < data.length; i++) {
         const thumb = data[i].workshop_thumb;
@@ -19,8 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const purposeTag = data[i].purposeTag_name;
         const status = data[i].workshop_status;
         let tempHtml = ``;
-        console.log(status);
-        console.log(thumb);
         if (status === 'approval') {
           tempHtml = `<div class="workshop">
               <img src=${thumb} alt="" />

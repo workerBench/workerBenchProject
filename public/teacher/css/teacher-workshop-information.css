@@ -15,8 +15,14 @@
     border-radius: 10px;
     background-color: #ffffff;
 }
-.button:focus {
-    background-color: rgb(102, 102, 249);
+#button-information{
+    width: 200px;
+    margin-right: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #9f70fb;
 }
 #workshop-infomationList{
     width: 1200px;
@@ -25,12 +31,10 @@
     margin-top: 50px;
     display: flex;
     justify-content: center;
-      /* border: 2px solid #000000; */
 }
 .workshop-div{
     width: 600px;
     height: 700px;
-    /* margin: auto; */
     border: 2px solid #000000;
 }
 .teacher-li-div{
@@ -38,7 +42,6 @@
     height: 50px;
     margin: auto;
     margin-top: 50px;
-    /* border: 2px solid #000000; */
 }
 .teacher-li{
     font-size: 25px;
@@ -50,16 +53,13 @@
     width: 600px;
     height: 550px;
     display: flex;
-    /* margin: auto; */
     margin-top: 50px;
-    /* border: 2px solid #000000; */
 }
 .teacher-workshop-li-div{
     width: 200px;
     height: 400px;
     margin-left: 50px;
     margin-top: 50px;
-    /* border: 2px solid #000000; */
 }
 .teacher-workshop-li{
     font-size: 25px;
@@ -73,7 +73,6 @@
     height: 300px;
     margin-top: 50px;
     margin-left: 20px;
-    /* border: 2px solid #000000; */
 }
 .workshop-information-li{
     font-size: 25px;
@@ -85,7 +84,7 @@
 .Button{
     width: 250px;
     height: 50px;
-    background-color: rgb(60, 60, 255);
+    background-color:  #a084dc;
     border-radius: 5px;
     color: white;
     border:none ;
@@ -93,5 +92,5 @@
     margin-top: 100px;
 }
 .Button:hover {
-    background-color: rgb(102, 102, 249);
+    background-color: #645cbb;
 }

@@ -1,7 +1,4 @@
 /* workshop-register css */
-#button:focus {
-    background-color: rgb(102, 102, 249);
-}
 .button-div{
    margin: auto;
    display: flex;
@@ -17,6 +14,15 @@
    height: 50px;
    border-radius: 10px;
    background-color: #ffffff;
+}
+#button-manage{
+    width: 200px;
+    margin-right: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #9f70fb;
 }
 #teacher-completeBox {
     width: 1200px;
@@ -97,11 +103,17 @@
     height: 40px;
     margin-left: 15px;
     margin-top: 10px;
-    background-color: rgb(60, 60, 255);
+    background-color: #9f70fb;
     border-radius: 5px;
     color: white;
     border:none ;
 }
-.Button:hover {
-    background-color: rgb(102, 102, 249);
+#button-complete{
+    width: 200px;
+    margin-right: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #9f70fb;
 }
