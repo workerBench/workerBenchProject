@@ -1,7 +1,4 @@
 /* workshop-register css */
-#button:focus {
-    background-color: rgb(102, 102, 249);
-}
 .button-div{
    margin: auto;
    display: flex;
@@ -18,14 +15,21 @@
    border-radius: 10px;
    background-color: #ffffff;
 }
+#button-manage{
+    width: 200px;
+    margin-right: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #9f70fb;
+}
 #teacher-incompleteBox {
     width: 1200px;
     height: 1300px;
     margin: 0 auto;
     margin-top: 100px;
-    /* border: 2px solid lavender; */
     border-radius: 20px;
-    /* box-shadow: 3px 3px 5px lavender; */
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -43,7 +47,6 @@
     width: 200px;
     height: 600px;
     margin-left: 10px;
-    /* border: 2px solid #000000; */
 }
 .workshop-information-div >img{
     margin-top: 20px;
@@ -58,7 +61,6 @@
     margin-left: 30px;
     margin-top: 100px;
     justify-content: center;
-    /* border: 2px solid #000000; */
 }
 .workshop-information{
     width:170px;
@@ -75,7 +77,6 @@
     width: 220px;
     height: 370px;
     margin: 0 auto;
-    /* border: 2px solid #000000; */
 }
 .company-input{
     width:200px;
@@ -89,18 +90,23 @@
 }
 #button-div{
     width: 250px;
-    /* border: 2px solid #000000;  */
 }
 .Button{
     width: 100px;
     height: 40px;
     margin-left: 15px;
     margin-top: 10px;
-    background-color: rgb(60, 60, 255);
+    background-color: #9f70fb;
     border-radius: 5px;
     color: white;
     border:none ;
 }
-.Button:hover {
-    background-color: rgb(102, 102, 249);
+#button-incomplete{
+    width: 200px;
+    margin-right: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #9f70fb;
 }

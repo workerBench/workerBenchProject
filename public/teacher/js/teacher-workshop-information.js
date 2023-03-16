@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data;
       for (let i = 0; i < data.length; i++) {
         const email = data[i].User.email;
@@ -50,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <li class="teacher-workshop-li">예금주명</li>
                         </div>
                         <div class="workshop-information-div">
-                            <li class="workshop-information-li">${company_type}</li>
+                            <li class="workshop-information-li">사업자</li>
                             <li class="workshop-information-li">${company_name}</li>
                             <li class="workshop-information-li">${business_number}</li>
                             <li class="workshop-information-li">${bank_name}</li>
@@ -64,21 +63,39 @@ document.addEventListener('DOMContentLoaded', () => {
                             <li class="teacher-workshop-li">업체종류</li>
                             <li class="teacher-workshop-li">업체명</li>
                             <li class="teacher-workshop-li">주빈번호 앞자리</li>
-                            <li class="teacher-workshop-li">주빈번호 뒤자리</li>
                             <li class="teacher-workshop-li">계좌 번호</li>
                             <li class="teacher-workshop-li">예금주명</li>
                         </div>
                         <div class="workshop-information-div">       
-                            <li class="workshop-information-li">${company_type}</li>
+                            <li class="workshop-information-li">프리랜서</li>
                             <li class="workshop-information-li">${company_name}</li>
                             <li class="workshop-information-li">${rrn_front}</li>
-                            <li class="workshop-information-li">${rrn_back}</li>
                             <li class="workshop-information-li">${bank_name}</li>
                             <li class="workshop-information-li">${account}</li>
                             <li class="workshop-information-li">${saving_name}</li>
                         </div>   
           `;
+        } else if (data[i].MyCompany && company_type === 2) {
+          companyHtml += `
+                        <div class="teacher-workshop-li-div">
+                            <li class="teacher-workshop-li">업체종류</li>
+                            <li class="teacher-workshop-li">업체명</li>
+                            <li class="teacher-workshop-li">사업자 번호</li>
+                            <li class="teacher-workshop-li">지정은행</li>
+                            <li class="teacher-workshop-li">계좌 번호</li>
+                            <li class="teacher-workshop-li">예금주명</li>
+                        </div>
+                        <div class="workshop-information-div">
+                            <li class="workshop-information-li">간이 사업자</li>
+                            <li class="workshop-information-li">${company_name}</li>
+                            <li class="workshop-information-li">${business_number}</li>
+                            <li class="workshop-information-li">${bank_name}</li>
+                            <li class="workshop-information-li">${account}</li>
+                            <li class="workshop-information-li">${saving_name}</li>
+                        </div>
+          `;
         }
+
         let tempHtml = ``;
         tempHtml += `
                       <div class="workshop-div">

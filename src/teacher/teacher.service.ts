@@ -361,7 +361,6 @@ export class TeacherService {
         select: ['user_id', 'id'],
       });
       const userIds = userIdInfo.map((info) => info.id);
-      console.log(userIds);
       if (userIdInfo.length === 0) {
         throw new HttpException(
           '등록된 워크샵이 없습니다.',
