@@ -536,6 +536,15 @@ export class AuthService {
     return company;
   }
 
+  // id 로 유저 정보 가져오기
+  async getUserById(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      select: ['id', 'email', 'user_type'],
+    });
+    return user;
+  }
+
   /* -------------------------------- 테스트용 API -------------------------------- */
 
   // 유저가 업로드한 사진을 S3 에 저장

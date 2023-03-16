@@ -81,14 +81,16 @@ export class TeacherService {
           '이미 등록된 강사입니다',
           HttpStatus.BAD_REQUEST,
         );
-      } else {
-        await this.teacherRepository.insert({
-          user_id: userId,
-          phone_number,
-          address,
-          name,
-        });
       }
+      await this.teacherRepository.insert({
+        user_id: userId,
+        phone_number,
+        address,
+        name,
+      });
+
+      await this.userRepository.update(userId, { user_type: 1 });
+
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
       console.log(error);
@@ -342,9 +344,9 @@ export class TeacherService {
       });
       const userIds = userIdInfo.map((info) => info.id);
       console.log(userIds);
-      if (!userIdInfo) {
+      if (userIdInfo.length === 0) {
         throw new HttpException(
-          '등록되지 않은 유저 입니다.',
+          '등록된 워크샵이 없습니다.',
           HttpStatus.BAD_REQUEST,
         );
       } else {
@@ -399,9 +401,9 @@ export class TeacherService {
         where: { user_id: userId },
         select: ['user_id', 'id'],
       });
-      if (!userIdInfo) {
+      if (userIdInfo.length === 0) {
         throw new HttpException(
-          '등록되지 않은 유저 입니다.',
+          '등록된 워크샵이 없습니다.',
           HttpStatus.BAD_REQUEST,
         );
       } else {
@@ -447,7 +449,7 @@ export class TeacherService {
       }
     } catch (error) {
       console.log(error);
-      throw new BadRequestException('입력된 요청이 잘못되었습니다.');
+      throw error;
     }
   }
 
