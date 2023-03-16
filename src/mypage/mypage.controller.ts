@@ -8,12 +8,16 @@ import {
   Patch,
   Query,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { MypageService } from 'src/mypage/mypage.service';
 import { ReviewDto } from 'src/mypage/dtos/review.dto';
 import { ReviewImageDto } from 'src/mypage/dtos/review-image.dto';
+import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
+import { CurrentUser } from 'src/common/decorators/user.decorator';
+import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 
 @ApiTags('mypage')
 @UseInterceptors(SuccessInterceptor)
@@ -28,8 +32,9 @@ export class MypageController {
   })
   @ApiOperation({ summary: '수강 예정 워크샵 api' })
   @Get('workshops/soon')
-  async getSoonWorkshops() {
-    return await this.mypageService.getSoonWorkshops();
+  @UseGuards(JwtUserAuthGuard)
+  async getSoonWorkshops(@CurrentUser() user: CurrentUserDto) {
+    return await this.mypageService.getSoonWorkshops(user.id);
   }
 
   // 수강 완료한 워크샵 api
@@ -39,8 +44,9 @@ export class MypageController {
   })
   @ApiOperation({ summary: '수강 완료한 워크샵 api' })
   @Get('workshops/complete')
-  getCompleteWorkshops() {
-    return this.mypageService.getCompleteWorkshops();
+  @UseGuards(JwtUserAuthGuard)
+  getCompleteWorkshops(@CurrentUser() user: CurrentUserDto) {
+    return this.mypageService.getCompleteWorkshops(user.id);
   }
 
   // 워크샵 결제하기 api
@@ -50,6 +56,7 @@ export class MypageController {
   })
   @ApiOperation({ summary: '워크샵 결제하기 api' })
   @Patch('workshops/:id/order')
+  @UseGuards(JwtUserAuthGuard)
   updateWorkshopPayment(@Param('id') id: number) {
     return this.mypageService.updateWorkshopPayment(id);
   }
@@ -61,9 +68,13 @@ export class MypageController {
   })
   @ApiOperation({ summary: '리뷰 작성 페이지 api' })
   @Post('/:workshop_id/review')
-  review(@Param('workshop_id') workshop_id: number, @Body() review: ReviewDto) {
-    const user_id = 1;
-    return this.mypageService.review(workshop_id, user_id, review);
+  @UseGuards(JwtUserAuthGuard)
+  review(
+    @Param('workshop_id') workshop_id: number,
+    @Body() review: ReviewDto,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    return this.mypageService.review(workshop_id, user.id, review);
   }
 
   // 찜 목록 페이지에 찜한 워크샵 불러오기 api
@@ -73,9 +84,12 @@ export class MypageController {
   })
   @ApiOperation({ summary: '찜 목록 페이지에 찜한 워크샵 불러오기 api' })
   @Get('/workshops/wish-list')
-  getWishList(@Param('workshop_id') workshop_id: number) {
-    const user_id = 2; // 하드코딩한 데이터 (user_id를 임의로 삽입함)
-    return this.mypageService.getWishList();
+  @UseGuards(JwtUserAuthGuard)
+  getWishList(
+    @Param('workshop_id') workshop_id: number,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    return this.mypageService.getWishList(user.id);
   }
 
   // 찜 목록의 워크샵 찜 취소
@@ -85,8 +99,11 @@ export class MypageController {
   })
   @ApiOperation({ summary: '워크샵 찜하기 취소 api' })
   @Patch('/workshops/wish-list/:id')
-  updateWishListCancel(@Param('workshop_id') workshop_id: number) {
-    const user_id = 2; // 하드코딩한 데이터 (user_id를 임의로 삽입함)
-    return this.mypageService.updateWishListCancel(user_id, workshop_id);
+  @UseGuards(JwtUserAuthGuard)
+  updateWishListCancel(
+    @Param('workshop_id') workshop_id: number,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    return this.mypageService.updateWishListCancel(user.id, workshop_id);
   }
 }

@@ -220,6 +220,7 @@ export class AuthController {
   })
   @ApiOperation({ summary: '관리자 등록' })
   @Post('admin')
+  @UseGuards(JwtSuperAdminAuthGuard)
   async adminRegister(
     @Body() body: AdminRegisterJoinDto,
     @Res({ passthrough: true }) response: Response,
@@ -339,6 +340,7 @@ export class AuthController {
   })
   @ApiOperation({ summary: '관리자 삭제' })
   @Delete('admin')
+  @UseGuards(JwtSuperAdminAuthGuard)
   async removeAdminAccount(@Body() body: AdminRemoveDto) {
     return await this.authService.removeAdmin(body.email);
   }
