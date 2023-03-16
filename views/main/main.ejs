@@ -10,27 +10,32 @@
       integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
       crossorigin="anonymous"
     />
-       <!-- JQuery import -->
-       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="/main/css/main.css">
+    <!-- JQuery import -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/main/css/main.css" />
   </head>
   <body>
-    <%- include ("header.ejs") %>    
+    <%- include ("header.ejs") %>
     <!-- 메인 이미지 -->
-    <div class="main-title"><h1>동료와 나를 이어주는 즐거운 벤치, 워크샵 중개 플랫폼 워커벤치입니다.</h1></div>
-    
-    <!-- 인기 워크샵 목록 -->
-    <h2 class="best-workshop-title">현재 가장 인기 있는 워크샵</h2>
-    <div class="best-workshop-list">
-        <div class="row row-cols-1 row-cols-md-4 g-4" id="best-workshop-list"></div>
+    <div class="main-title">동료와 나를 이어주는 즐거운 벤치, 워크샵 중개 플랫폼 워커벤치입니다</div>
+
+      <!-- 인기 워크샵 목록 -->
+      <div class="best-workshop-title">현재 가장 인기 있는 워크샵</div>
+      <div class="best-workshop-list">
+        <div
+          class="row row-cols-1 row-cols-md-4 g-4"
+          id="best-workshop-list"
+        ></div>
       </div>
     </div>
 
     <!-- 신규 워크샵 목록 -->
-    <h2 class="new-workshop-title">신규 워크샵</h2>
+    <h2 class="new-workshop-title">새로 등록된 워크샵</h2>
     <div class="new-workshop-list">
-      <div class="row row-cols-1 row-cols-md-4 g-4" id="new-workshop-list">
-      </div>
+      <div
+        class="row row-cols-1 row-cols-md-4 g-4"
+        id="new-workshop-list"
+      ></div>
     </div>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"

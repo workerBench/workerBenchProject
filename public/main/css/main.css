@@ -8,16 +8,20 @@ body {
 .main-title {
   background-size: contain;
   width: 100%;
-  height: 500px;
+  height: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: antiquewhite;
+  background-color: #bface2;
+  color: rgb(255, 255, 247);
+  font-size: 30px;
 }
 
 .best-workshop-title,
 .new-workshop-title {
   margin: 50px;
+  font-size: 25px;
+  font-weight: bold;
 }
 
 .best-workshop-list,
