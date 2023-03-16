@@ -58,13 +58,12 @@ export class TeacherService {
 
   async createTeacherRegister(
     data: CreateTeacherDto, //user: CurrentUserDto
+    userId: number,
   ) {
     const { phone_number, address, name } = data;
-    // const { id } = user;
     try {
-      const id = 11;
       const userIdInfo = await this.userRepository.findOne({
-        where: { id },
+        where: { id: userId },
         select: ['id'],
       });
       if (!userIdInfo) {
@@ -74,7 +73,7 @@ export class TeacherService {
         );
       }
       const teacherid = await this.teacherRepository.findOne({
-        where: { user_id: id },
+        where: { user_id: userId },
         select: ['user_id'],
       });
       if (teacherid) {
@@ -84,7 +83,7 @@ export class TeacherService {
         );
       } else {
         await this.teacherRepository.insert({
-          user_id: id,
+          user_id: userId,
           phone_number,
           address,
           name,
@@ -97,12 +96,10 @@ export class TeacherService {
     }
   }
   // 강사 전용 전체 워크샵 목록 api
-  async getTeacherWorkshops() {
-    // id:number
+  async getTeacherWorkshops(userId: number) {
     try {
-      const id = 11; // 예시
       const userIdInfo = await this.workshopRepository.find({
-        where: { user_id: id },
+        where: { user_id: userId },
         select: ['user_id'],
       });
       if (!userIdInfo) {
@@ -113,7 +110,7 @@ export class TeacherService {
       } else {
         let result = await this.workshopRepository
           .createQueryBuilder('workshop')
-          .where('workshop.user_id = :user_id', { user_id: id })
+          .where('workshop.user_id = :user_id', { user_id: userId })
           .innerJoinAndSelect('workshop.GenreTag', 'genreTag')
           .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
           .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
@@ -135,11 +132,9 @@ export class TeacherService {
     }
   }
   // 강사 및 업체 정보 api
-  async getTeacherMypage() {
-    //id: number
-    const id = 11;
+  async getTeacherMypage(userId: number) {
     const userIdInfo = await this.teacherRepository.findOne({
-      where: { user_id: id },
+      where: { user_id: userId },
       select: ['user_id'],
     });
     if (!userIdInfo) {
@@ -152,7 +147,7 @@ export class TeacherService {
         .createQueryBuilder('teacher')
         .innerJoin('teacher.User', 'user')
         .leftJoin('teacher.MyCompany', 'company')
-        .where('teacher.user_id = :user_id', { user_id: id })
+        .where('teacher.user_id = :user_id', { user_id: userId })
         .select([
           'teacher.phone_number',
           'teacher.address',
@@ -172,7 +167,7 @@ export class TeacherService {
     }
   }
   // 강사 업체 등록 api
-  async createTeacherCompany(data: CreateCompanyDto) {
+  async createTeacherCompany(data: CreateCompanyDto, userId: number) {
     const {
       company_type,
       company_name,
@@ -184,10 +179,9 @@ export class TeacherService {
       saving_name,
     } = data;
 
-    const id = 11; // user_id
     try {
       const userIdInfo = await this.teacherRepository.findOne({
-        where: { user_id: id },
+        where: { user_id: userId },
       });
       if (!userIdInfo) {
         throw new HttpException(
@@ -197,7 +191,7 @@ export class TeacherService {
       }
 
       const companyId = await this.companyRepository.findOne({
-        where: { user_id: id },
+        where: { user_id: userId },
         select: ['id'],
       });
 
@@ -217,10 +211,10 @@ export class TeacherService {
           account,
           saving_name,
           isBan: 0,
-          user_id: id,
+          user_id: userId,
         });
         const { id: newCompanyId } = await this.companyRepository.save(company);
-        await this.teacherRepository.update(id, {
+        await this.teacherRepository.update(userId, {
           affiliation_company_id: newCompanyId,
         });
       }
@@ -234,6 +228,7 @@ export class TeacherService {
   async createTeacherWorkshops(
     data: CreateWorkshopsDto,
     images: Array<Express.Multer.File>,
+    userId: number,
   ) {
     try {
       const {
@@ -247,9 +242,8 @@ export class TeacherService {
         location,
         purpose_tag_id,
       } = data;
-      const id = 11;
       const teacherInfo = await this.teacherRepository.findOne({
-        where: { user_id: id },
+        where: { user_id: userId },
       });
       if (!teacherInfo) {
         throw new HttpException(
@@ -258,7 +252,7 @@ export class TeacherService {
         );
       }
       const workshopsInfo = await this.workshopRepository.findOne({
-        where: { user_id: id, title },
+        where: { user_id: userId, title },
       });
       if (workshopsInfo) {
         throw new HttpException(
@@ -286,7 +280,7 @@ export class TeacherService {
         status: 'request',
         location,
         desc,
-        user_id: id,
+        user_id: userId,
       });
       // purpose_tag_id를 배열로 만들어서 넣어준다.
       const purposeTagIds = purpose_tag_id.map((id) => ({
@@ -326,7 +320,6 @@ export class TeacherService {
           await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
         }
       });
-      //
       if (workshopImageArray.length > 0) {
         await this.workshopImageRepository.insert(workshopImageArray[0]);
       }
@@ -341,11 +334,10 @@ export class TeacherService {
   }
 
   // 강사 미완료 워크샵 목록 api
-  async getTeacherIncompleteWorkshop() {
+  async getTeacherIncompleteWorkshop(userId: number) {
     try {
-      const id = 11; // 예시
       const userIdInfo = await this.workshopRepository.find({
-        where: { user_id: id },
+        where: { user_id: userId },
         select: ['user_id', 'id'],
       });
       const userIds = userIdInfo.map((info) => info.id);
@@ -359,7 +351,7 @@ export class TeacherService {
         let result = await this.workshopRepository
           .createQueryBuilder('workshop')
           .where('workshop.user_id = :user_id ', {
-            user_id: id,
+            user_id: userId,
           })
           .andWhere(
             'workShopInstanceDetail.workshop_id IN (:...workshop_ids)',
@@ -401,11 +393,10 @@ export class TeacherService {
     }
   }
   // 강사 완료 워크샵 목록 api
-  async getTeacherComplete() {
+  async getTeacherComplete(userId: number) {
     try {
-      const id = 11; // 예시
       const userIdInfo = await this.workshopRepository.find({
-        where: { user_id: id },
+        where: { user_id: userId },
         select: ['user_id', 'id'],
       });
       if (!userIdInfo) {
@@ -418,7 +409,7 @@ export class TeacherService {
         let result = await this.workshopRepository
           .createQueryBuilder('workshop')
           .where('workshop.user_id = :user_id ', {
-            user_id: id,
+            user_id: userId,
           })
           .andWhere(
             'workShopInstanceDetail.workshop_id  IN (:...workshop_ids) ',
