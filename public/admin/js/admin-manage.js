@@ -102,6 +102,7 @@ $(document).ready(function () {
       })
       .catch((error) => {
         alert(error.response.data.message);
+        // getErrorCode(err.response.data.statusCode, err.response.data.message);
       });
   });
 });

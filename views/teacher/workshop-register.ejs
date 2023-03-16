@@ -29,83 +29,76 @@
     </div>
     <div id="workshop-registerBox">
         <div class="image">
-            <img src="/images/images.jpg"/>
-            <!-- <div class="mb-3">
-              <label for="formFile" class="form-label">Default file input example</label>
-              <input class="form-control" type="file" id="formFile">
-            </div>  -->
-            <!-- <div class="image-register">
-                <button id="image-registerBtn">이미지 등록</button>
-                </div> -->
-            <div class="mb-3">
-              <!-- <label for="img" class="form-label"></label> -->
-              <input class="form-control" type="file" id="img">
+          <div class="img-test-wrap">
+            <label for="businessNumber" class="form-label">썸네일</label>
+            <div id="thumb-img-wrap">
+              <img id="thumb-img-show" />
+              <input class="form-control" type="file" accept="image/*" id="thumb-img-file">
             </div>
+          </div>
         </div>
         <div class="workshop-information">
-          <select name="job" id="category">
-            <option disabled selected>유형을 선택해주세요</option>
-            <option value="online">온라인</option>
-            <option value="offline">오프라인</option>
-            
-          </select>
-            <div class="mb-3">
-              <label for="title" class="form-label">강의제목</label>
-              <input type="text" class="form-control" id="title" placeholder="강의제목">
-            </div>
-            <div class="mb-3">
-                <label for="minMember" class="form-label">최소 인원수</label>
-                <input type="text" class="form-control" id=minMember placeholder="최소 인원수">
-              </div>
-              <div class="mb-3">
-                <label for="maxMember" class="form-label">최대 인원수</label>
+            <select name="job" id="category">
+                <option disabled selected>유형을 선택해주세요</option>
+                <option value="online">온라인</option>
+                <option value="offline">오프라인</option>
+            </select>
+                <input type="text" class="form-control" id="title" placeholder="강의제목">
+                  <input type="text" class="form-control" id=minMember placeholder="최소 인원수">
                 <input type="text" class="form-control" id=maxMember placeholder="최대 인원수">
-              </div>
-              <select name="job" id="genreId">
+            <select name="job" id="genreId">
                 <option disabled selected>장르를 선택해주세요</option>
                 <option value=1>문화예술</option>
                 <option value=2>식음</option>
                 <option value=3>심리진단</option>
                 <option value=4>운동</option>
-              </select>
-              <select name="job" id="purposeTagId1" >
-                <option disabled selected>효과을 선택해주세요</option>
+            </select>
+            <select name="job" id="purposeTagId1" >
+                <option disabled selected>목적을 선택해주세요</option>
                 <option value=null>선택 안함</option>
                 <option value=1>동기부여</option>
                 <option value=2>팀워크</option>
                 <option value=3>회식</option>
                 <option value=4>힐링</option>
-              </select>
-              <select name="job" id="purposeTagId2" >
-                <option disabled selected>효과을 선택해주세요</option>
+            </select>
+            <select name="job" id="purposeTagId2" >
+                <option disabled selected>목적을 선택해주세요</option>
                 <option value=null>선택 안함</option>
                 <option value=1>동기부여</option>
                 <option value=2>팀워크</option>
                 <option value=3>회식</option>
                 <option value=4>힐링</option>
-              </select>
-              <div class="mb-3">
-                <label for="total-totalTime" class="form-label">걸리는 시간</label>
+            </select>
                 <input type="text" class="form-control" id=totalTime placeholder="걸리는 시간">
-              </div>
-              <div class="mb-3">
-                <label for="price" class="form-label">1인당 가격</label>
                 <input type="text" class="form-control" id=price placeholder="1인당 가격">
-              </div>
-              <select name="job" id="location">
+            <select name="job" id="location">
                 <option disabled selected>지역을 선택해주세요</option>
                 <option value="서울">서울</option>
                 <option value="경기도">경기도</option>
-              </select>
+            </select>
         </div>
+        <div id="more-img-wrap">
+          <div class="sub-imgs-wrap">
+              <img class="sub-img-class" id="sub-img-1"/>
+              <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
+          </div>
+          <div class="sub-imgs-wrap">
+              <img class="sub-img-class" id="sub-img-2"/>
+              <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
+          </div>
+          <div class="sub-imgs-wrap">
+              <img class="sub-img-class" id="sub-img-3"/>
+              <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
+          </div>
+      </div>
     </div>
     
-    <div class="mb-3 contents-div">
-        <label for="workshop" class="form-label workshop-description-li">워크샵 설명</label>
-        <input type="text" class="form-control" id="desc"></input>
-      </div>
-    <div class="regiseterBtn-div">
-        <button type="button" id="workshopRegisterBtn">등록하기</button>
-    </div>
+        <div class="mb-3 contents-div">
+            <label for="workshop" class="form-label workshop-description-li">워크샵 설명</label>
+            <input type="text" class="form-control" id="desc"></input>
+        </div>
+        <div class="regiseterBtn-div">
+            <button type="button" id="workshopRegisterBtn">등록하기</button>
+        </div>
   </body>
 </html>

@@ -209,9 +209,10 @@
       const user = '<%= user %>'
       const modal = document.querySelector('#exampleModal')
       modal.addEventListener('show.bs.modal', (e) => {
-        if(user === 'false')
-        alert('로그인 이후 이용 가능합니다!')
-        e.preventDefault()
+        if(user === 'false') {
+          alert('로그인 이후 이용 가능합니다!')
+          e.preventDefault()
+        }
       })
 
   </script>

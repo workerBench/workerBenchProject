@@ -48,6 +48,15 @@ class Application {
         },
       }),
     );
+    this.server.use(
+      ['/admin/*'],
+      expressBasicAuth({
+        challenge: true,
+        users: {
+          [this.ADMIN_USER]: this.ADMIN_PASSWORD,
+        },
+      }),
+    );
   }
 
   // 스웨거 api 페이지 생성. api middleware 생성

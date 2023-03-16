@@ -13,10 +13,13 @@ import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { ReviewDto } from 'src/mypage/dtos/review.dto';
 import { ReviewImageDto } from 'src/mypage/dtos/review-image.dto';
 import { Repository } from 'typeorm';
+import { WorkShop } from 'src/entities/workshop';
 
 @Injectable()
 export class MypageService {
   constructor(
+    @InjectRepository(WorkShop)
+    private readonly workshopRepository: Repository<WorkShop>,
     @InjectRepository(WishList)
     private readonly wishListRepository: Repository<WishList>,
     @InjectRepository(Review)
@@ -28,12 +31,12 @@ export class MypageService {
   ) {}
 
   // 수강 예정 워크샵 출력
-  async getSoonWorkshops() {
+  async getSoonWorkshops(id: number) {
     return await this.workShopInstanceDetailRepository.find({
       where: [
-        { status: 'request' },
-        { status: 'non_payment' },
-        { status: 'waiting_lecture' },
+        { status: 'request', user_id: id },
+        { status: 'non_payment', user_id: id },
+        { status: 'waiting_lecture', user_id: id },
       ],
       order: { updatedAt: 'DESC' },
       take: 999,
@@ -41,9 +44,9 @@ export class MypageService {
   }
 
   // 수강 완료한 워크샵 출력
-  async getCompleteWorkshops() {
+  async getCompleteWorkshops(id: number) {
     return await this.workShopInstanceDetailRepository.find({
-      where: { status: 'complete' },
+      where: { status: 'complete', user_id: id },
       order: { updatedAt: 'DESC' },
       take: 999,
     });
@@ -56,13 +59,19 @@ export class MypageService {
         where: { id },
         select: ['status'],
       });
+
       if (!status) {
-        throw new NotFoundException('해당하는 워크샵 id가 없습니다.');
-      } else {
-        await this.workShopInstanceDetailRepository.update(id, {
-          status: 'waiting_lecture',
-        });
+        throw new NotFoundException('수강 문의 기록이 존재하지 않습니다.');
       }
+
+      if (status.status !== 'non_payment') {
+        throw new BadRequestException('결제 가능한 상태가 아닙니다.');
+      }
+
+      await this.workShopInstanceDetailRepository.update(id, {
+        status: 'waiting_lecture',
+      });
+
       return { message: '결제가 완료되었습니다.' };
     } catch (error) {
       console.log(error);
@@ -72,37 +81,41 @@ export class MypageService {
 
   // 찜 목록 불러오기
 
-  async getWishList() {
-    // id:number
+  async getWishList(userId: number) {
     try {
-      const id = 10; // 예시
-      const userIdInfo = await this.wishListRepository.find({
-        where: { user_id: id },
-        select: ['user_id'],
+      const userWishList = await this.wishListRepository.find({
+        where: { user_id: userId },
+        select: ['workshop_id', 'createdAt'],
       });
-      if (!userIdInfo) {
-        throw new HttpException(
-          '등록되지 않은 유저 입니다.',
-          HttpStatus.BAD_REQUEST,
-        );
-      } else {
-        let result = await this.wishListRepository
-          .createQueryBuilder('workshop')
-          .where('workshop.user_id = :user_id', { user_id: id })
-          .innerJoinAndSelect('workshop.GenreTag', 'genreTag')
-          .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
-          .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
-          .select([
-            'workshop.thumb',
-            'workshop.title',
-            'workshop.createdAt',
-            'workshop.status',
-            'genreTag.name',
-            'purposeTag.name',
-          ])
-          .getRawMany();
-        return result;
+      if (!userWishList) {
+        throw new NotFoundException('등록하신 찜 목록이 없습니다');
       }
+
+      const workshopIdArray = userWishList.map((wishList) => {
+        return wishList.workshop_id;
+      });
+
+      const myWishWorkshops = await this.workshopRepository
+        .createQueryBuilder('workshop')
+        .where('workshop.id IN (:...wishWorkshops)', {
+          wishWorkshops: workshopIdArray,
+        })
+        .innerJoinAndSelect('workshop.GenreTag', 'genreTag')
+        .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
+        .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
+        .select([
+          'workshop.id',
+          'workshop.thumb',
+          'workshop.title',
+          'workshop.createdAt',
+          'workshop.status',
+          'workshop.price',
+          'genreTag.name',
+          'purposeTag.name',
+        ])
+        .getRawMany();
+
+      return myWishWorkshops;
     } catch (error) {
       console.log(error);
       throw new BadRequestException('입력된 요청이 잘못되었습니다.');
@@ -117,12 +130,11 @@ export class MypageService {
     const IsWish = await this.wishListRepository.findOne({
       where: { user_id, workshop_id },
     });
-    if (IsWish === null) {
-      await this.wishListRepository.insert({ user_id, workshop_id });
-      return '찜하기 성공!';
+    if (!IsWish) {
+      throw new BadRequestException('찜 등록이 된 워크샵이 아닙니다.');
     }
     await this.wishListRepository.delete({ user_id, workshop_id }); // 찜 해제
-    return '찜하기 취소!';
+    return;
   }
 
   // 리뷰작성 API

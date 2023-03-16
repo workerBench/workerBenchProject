@@ -157,6 +157,7 @@ export class WorkshopsController {
   })
   @ApiOperation({ summary: '워크샵 신청 문의하기 api' })
   @Post(':workshop_id/order')
+  @UseGuards(JwtUserAuthGuard)
   orderWorkshop(
     @Param('workshop_id') workshop_id: number,
     @Body() orderWorkshopData: OrderWorkshopDto,

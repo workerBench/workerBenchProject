@@ -8,6 +8,8 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFiles,
+  Req,
+  Res,
 } from '@nestjs/common';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
@@ -20,19 +22,53 @@ import { CreateWorkshopsDto } from './dto/teacher-workshops.dto';
 import { TeacherService } from './teacher.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { JwtTeacherAuthGuard } from 'src/auth/jwt/access/user/jwt-teacher-guard';
+import { AuthService } from 'src/auth/auth.service';
+import { RealIP } from 'nestjs-real-ip';
+import { Request, Response } from 'express';
+import { TOKEN_NAME } from 'src/auth/naming/token-name';
+
 // @UseInterceptors(SuccessInterceptor)
 @Controller('/api/teacher')
 export class TeacherController {
-  constructor(private readonly teacherService: TeacherService) {}
+  constructor(
+    private readonly teacherService: TeacherService,
+    private readonly authService: AuthService,
+  ) {}
+
   // 강사 등록 api
   @Post()
   @UseGuards(JwtUserAuthGuard)
-  createTeacherRegister(
+  async createTeacherRegister(
     @Body() data: CreateTeacherDto,
     @CurrentUser() user: CurrentUserDto,
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @RealIP() clientIp: string,
   ) {
-    return this.teacherService.createTeacherRegister(data, user.id);
+    await this.teacherService.createTeacherRegister(data, user.id);
+    const userInfo = await this.authService.getUserById(user.id);
+
+    response.clearCookie(TOKEN_NAME.userAccess);
+    response.clearCookie(TOKEN_NAME.userRefresh);
+
+    const accessToken = await this.authService.makeAccessToken(
+      userInfo.id,
+      userInfo.email,
+      userInfo.user_type,
+    );
+    const refreshToken = await this.authService.makeRefreshToken(
+      userInfo.id,
+      userInfo.email,
+      userInfo.user_type,
+      clientIp,
+    );
+
+    response.cookie(TOKEN_NAME.userAccess, accessToken, { httpOnly: true });
+    response.cookie(TOKEN_NAME.userRefresh, refreshToken, { httpOnly: true });
+
+    return;
   }
+
   // 강사 전체 워크샵 목록 api
   @Get('workshops')
   @UseGuards(JwtTeacherAuthGuard)
@@ -88,14 +124,12 @@ export class TeacherController {
 
   // 강사 수강 문의 관리 (수락하기) api
   @Patch('workshops/manage/accept/:id')
-  @UseGuards(JwtTeacherAuthGuard)
   updateTeacherAccept(@Param('id') id: number) {
     return this.teacherService.updateTeacherAccept(id);
   }
 
   // 강사 수강 문의 관리 (종료하기) api
   @Patch('workshops/manage/complete/:id')
-  @UseGuards(JwtTeacherAuthGuard)
   updateTeacherComplete(@Param('id') id: number) {
     return this.teacherService.updateTeacherComplete(id);
   }

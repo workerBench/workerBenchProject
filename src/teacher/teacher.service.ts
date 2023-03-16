@@ -81,14 +81,16 @@ export class TeacherService {
           '이미 등록된 강사입니다',
           HttpStatus.BAD_REQUEST,
         );
-      } else {
-        await this.teacherRepository.insert({
-          user_id: userId,
-          phone_number,
-          address,
-          name,
-        });
       }
+      await this.teacherRepository.insert({
+        user_id: userId,
+        phone_number,
+        address,
+        name,
+      });
+
+      await this.userRepository.update(userId, { user_type: 1 });
+
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
       console.log(error);
@@ -213,17 +215,28 @@ export class TeacherService {
           isBan: 0,
           user_id: userId,
         });
-        const { id: newCompanyId } = await this.companyRepository.save(company);
-        await this.teacherRepository.update(userId, {
-          affiliation_company_id: newCompanyId,
+        await this.companyRepository.save(company);
+      }
+      const newCompanyId = await this.companyRepository.findOne({
+        where: { user_id: userId },
+        select: ['id'],
+      });
+      if (newCompanyId) {
+        await this.companyApplicationRepository.insert({
+          teacher_id: userId,
+          company_id: newCompanyId.id,
         });
       }
+      await this.teacherRepository.update(userId, {
+        affiliation_company_id: newCompanyId.id,
+      });
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
+
   // 워크샵 등록
   async createTeacherWorkshops(
     data: CreateWorkshopsDto,
@@ -320,6 +333,7 @@ export class TeacherService {
           await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
         }
       });
+      //
       if (workshopImageArray.length > 0) {
         await this.workshopImageRepository.insert(workshopImageArray[0]);
       }
@@ -342,9 +356,9 @@ export class TeacherService {
       });
       const userIds = userIdInfo.map((info) => info.id);
       console.log(userIds);
-      if (!userIdInfo) {
+      if (userIdInfo.length === 0) {
         throw new HttpException(
-          '등록되지 않은 유저 입니다.',
+          '등록된 워크샵이 없습니다.',
           HttpStatus.BAD_REQUEST,
         );
       } else {
@@ -399,9 +413,9 @@ export class TeacherService {
         where: { user_id: userId },
         select: ['user_id', 'id'],
       });
-      if (!userIdInfo) {
+      if (userIdInfo.length === 0) {
         throw new HttpException(
-          '등록되지 않은 유저 입니다.',
+          '등록된 워크샵이 없습니다.',
           HttpStatus.BAD_REQUEST,
         );
       } else {
@@ -447,7 +461,7 @@ export class TeacherService {
       }
     } catch (error) {
       console.log(error);
-      throw new BadRequestException('입력된 요청이 잘못되었습니다.');
+      throw error;
     }
   }
 
