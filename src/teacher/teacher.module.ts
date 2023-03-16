@@ -12,6 +12,7 @@ import { PurposeTag } from 'src/entities/purpose-tag';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { CompanyApplication } from 'src/entities/company-application';
 import { WorkShopImage } from 'src/entities/workshop-image';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { WorkShopImage } from 'src/entities/workshop-image';
       CompanyApplication,
       WorkShopImage,
     ]),
+    AuthModule,
   ],
   controllers: [TeacherController, TeacherControllerRender],
   providers: [TeacherService],
