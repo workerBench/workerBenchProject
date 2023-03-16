@@ -114,6 +114,7 @@ export class TeacherService {
           .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
           .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
           .select([
+            'workshop.id',
             'workshop.thumb',
             'workshop.title',
             'workshop.createdAt',
@@ -123,6 +124,17 @@ export class TeacherService {
           ])
           .groupBy('workshop.id')
           .getRawMany();
+
+        return result.map((workshop) => {
+          return {
+            ...workshop,
+            workshop_thumb: `${this.configService.get(
+              'AWS_CLOUD_FRONT_DOMAIN',
+            )}images/workshops/${workshop.workshop_id}/800/${
+              workshop.workshop_thumb
+            }`,
+          };
+        });
         return result;
       }
     } catch (error) {

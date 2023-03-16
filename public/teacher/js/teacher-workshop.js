@@ -20,9 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const status = data[i].workshop_status;
         let tempHtml = ``;
         console.log(status);
+        console.log(thumb);
         if (status === 'approval') {
           tempHtml = `<div class="workshop">
-              <img src="/images/photo-1602498456745-e9503b30470b.jpg" alt="" />
+              <img src=${thumb} alt="" />
               <li class="title">${title}</li>
               <li for="genretag" class="genre-tag">${genreTag}</li>
               <li for="purpose-tag" class="purpose-tag">${purposeTag}</li>
@@ -30,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
           wokshopApprovalList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'finished') {
           tempHtml = `<div class="workshop">
-              <img src="/images/images.jpg" alt="" />
+              <img src=${thumb} alt="" />
               <li class="title">${title}</li>
               <li for="genretag" class="genre-tag">${genreTag}</li>
               <li for="purpose-tag" class="purpose-tag">${purposeTag}</li>
@@ -38,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
           wokshopFinishedList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'request') {
           tempHtml = `<div class="workshop">
-              <img src="/images/header.png" alt="" />
+              <img src=${thumb} alt="" />
               <li class="title">${title}</li>
               <li for="genretag" class="genre-tag">${genreTag}</li>
               <li for="purpose-tag" class="purpose-tag">${purposeTag}</li>

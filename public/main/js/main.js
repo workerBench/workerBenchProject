@@ -9,8 +9,6 @@ function getBestWorkshops() {
     .get('/api/workshops/best')
     .then((res) => {
       const workshops = res.data.data;
-      console.log(res);
-      console.log(workshops);
 
       workshops.forEach((element) => {
         let tempHtml = `<div class="col">
@@ -41,7 +39,6 @@ function getNewWorkshops() {
     .get('/api/workshops/new')
     .then((res) => {
       const workshops = res.data.data;
-      console.log(workshops);
 
       workshops.forEach((element) => {
         let temp_html = `<div class="col">
@@ -59,7 +56,6 @@ function getNewWorkshops() {
         </div>
       </div>`;
         $('#new-workshop-list').append(temp_html);
-        console.log(element.thumbUrl);
       });
     })
     .catch((error) => {
