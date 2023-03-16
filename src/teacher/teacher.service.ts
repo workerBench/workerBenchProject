@@ -336,6 +336,8 @@ export class TeacherService {
           await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
         }
         if (workshopImageArray.length > 0) {
+          console.log('이미지들도 넣어야지!');
+          console.log(workshopImageArray);
           await this.workshopImageRepository.insert(workshopImageArray[0]);
         }
       });
