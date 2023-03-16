@@ -213,7 +213,7 @@ export class AuthController {
     }
   }
 
-  // 관리자 등록 (회원가입)
+  // 관리자 등록 (최고 관리자 권한)
   @ApiResponse({
     status: 201,
     description: '성공',
