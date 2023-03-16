@@ -124,14 +124,12 @@ export class TeacherController {
 
   // 강사 수강 문의 관리 (수락하기) api
   @Patch('workshops/manage/accept/:id')
-  @UseGuards(JwtTeacherAuthGuard)
   updateTeacherAccept(@Param('id') id: number) {
     return this.teacherService.updateTeacherAccept(id);
   }
 
   // 강사 수강 문의 관리 (종료하기) api
   @Patch('workshops/manage/complete/:id')
-  @UseGuards(JwtTeacherAuthGuard)
   updateTeacherComplete(@Param('id') id: number) {
     return this.teacherService.updateTeacherComplete(id);
   }
