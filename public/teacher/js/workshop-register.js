@@ -61,7 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const test1 = parseInt(purpose_tag1);
     const test2 = parseInt(purpose_tag2);
     const purposeTagIds = [test1, test2];
-    console.log(purposeTagIds);
+    if (document.querySelector('#thumb-img-file').files.length < 1) {
+      alert('썸네일 사진을 등록해 주세요!');
+      return;
+    }
     // 썸네일 이미지 파일
     const thumbImg = document.querySelector('#thumb-img-file').files[0];
     // 서브 이미지 태그 묶음 -> 파일 배열
@@ -78,6 +81,10 @@ document.addEventListener('DOMContentLoaded', () => {
       genre_id: genre_id,
       purpose_tag_id: purposeTagIds,
     };
+    if (jsonData.length < 10) {
+      alert('전부다 입력해 주세요');
+      return;
+    }
     const formData = new FormData();
     formData.append('images', thumbImg);
     formData.append('jsonData', JSON.stringify(jsonData));
@@ -88,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('images', imgFile[0]);
       }
     }
-    // const purpose_tag_array = purpose_tag.split(',').map((id) => parseInt(id));
     axios({
       method: 'post',
       url: '/api/teacher/workshops',
@@ -100,12 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
       .then((response) => {
         const data = response.data;
         alert(data.message);
-        // window.location.href = '/teacher/workshop';
+        window.location.href = '/teacher/workshop';
       })
       .catch((response) => {
         console.log(response);
         const { data } = response.response;
-        alert(data.message);
+        alert(data.error);
       });
   });
 });
