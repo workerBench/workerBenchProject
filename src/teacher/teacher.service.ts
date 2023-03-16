@@ -215,17 +215,28 @@ export class TeacherService {
           isBan: 0,
           user_id: userId,
         });
-        const { id: newCompanyId } = await this.companyRepository.save(company);
-        await this.teacherRepository.update(userId, {
-          affiliation_company_id: newCompanyId,
+        await this.companyRepository.save(company);
+      }
+      const newCompanyId = await this.companyRepository.findOne({
+        where: { user_id: userId },
+        select: ['id'],
+      });
+      if (newCompanyId) {
+        await this.companyApplicationRepository.insert({
+          teacher_id: userId,
+          company_id: newCompanyId.id,
         });
       }
+      await this.teacherRepository.update(userId, {
+        affiliation_company_id: newCompanyId.id,
+      });
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
+
   // 워크샵 등록
   async createTeacherWorkshops(
     data: CreateWorkshopsDto,
@@ -322,6 +333,7 @@ export class TeacherService {
           await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
         }
       });
+      //
       if (workshopImageArray.length > 0) {
         await this.workshopImageRepository.insert(workshopImageArray[0]);
       }
