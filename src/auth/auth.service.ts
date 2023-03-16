@@ -536,6 +536,15 @@ export class AuthService {
     return company;
   }
 
+  // id 로 유저 정보 가져오기
+  async getUserById(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      select: ['id', 'email', 'user_type'],
+    });
+    return user;
+  }
+
   /* -------------------------------- 테스트용 API -------------------------------- */
 
   // 유저가 업로드한 사진을 S3 에 저장
@@ -560,7 +569,7 @@ export class AuthService {
         // 첫 번째 image 일 경우 해당 이미지는 썸네일 이미지로 간주한다.
         if (index === 0) {
           const s3OptionForThumbImg = {
-            Bucket: this.configService.get("AWS_S3_BUCKET_NAME"), // S3의 버킷 이름.
+            Bucket: this.configService.get('AWS_S3_BUCKET_NAME'), // S3의 버킷 이름.
             Key: `images/workshops/2/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
             Body: image.buffer, // 업로드 하고자 하는 파일.
           };
@@ -573,7 +582,7 @@ export class AuthService {
           const subImgName = uuid() + subImgType;
 
           const s3OptionForSubImg = {
-            Bucket: this.configService.get("AWS_S3_BUCKET_NAME"),
+            Bucket: this.configService.get('AWS_S3_BUCKET_NAME'),
             Key: `images/workshops/2/original/${subImgName}`,
             Body: image.buffer,
           };

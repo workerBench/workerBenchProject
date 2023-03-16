@@ -109,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/teacher/workshop';
       })
       .catch((response) => {
-        console.log(response);
         const { data } = response.response;
         alert(data.error);
       });

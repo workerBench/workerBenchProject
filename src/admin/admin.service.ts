@@ -245,11 +245,11 @@ export class AdminService {
       'teacher.name'
     ])
     .groupBy('workshop.id')
-    
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
     const workshopDetail = await query.getRawOne();
 
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    
     const result = {
       ...workshopDetail,
       ThumbUrl: `${cloundFrontUrl}/${workshopDetail.workshop_thumb}`

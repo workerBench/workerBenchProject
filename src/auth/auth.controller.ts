@@ -213,13 +213,14 @@ export class AuthController {
     }
   }
 
-  // 관리자 등록 (회원가입)
+  // 관리자 등록 (최고 관리자 권한)
   @ApiResponse({
     status: 201,
     description: '성공',
   })
   @ApiOperation({ summary: '관리자 등록' })
   @Post('admin')
+  @UseGuards(JwtSuperAdminAuthGuard)
   async adminRegister(
     @Body() body: AdminRegisterJoinDto,
     @Res({ passthrough: true }) response: Response,
@@ -232,24 +233,6 @@ export class AuthController {
       await this.authService.checkingAdminAccount(body.email);
       // 가입
       const createdAdminUser = await this.authService.joinAdminUser(body);
-      // 토큰 발행
-      const accessToken = await this.authService.makeAccessTokenForAdmin(
-        createdAdminUser.id,
-        createdAdminUser.email,
-        createdAdminUser.admin_type,
-      );
-      const refreshToken = await this.authService.makeRefreshTokenForAdmin(
-        createdAdminUser.id,
-        createdAdminUser.email,
-        createdAdminUser.admin_type,
-        clientIp,
-      );
-      // 토큰 쿠키에 삽입
-      response.cookie(TOKEN_NAME.adminAccess, accessToken, { httpOnly: true });
-      response.cookie(TOKEN_NAME.adminRefresh, refreshToken, {
-        httpOnly: true,
-      });
-
       return true;
     } catch (err) {
       // 에러가 string. 지역 에러
@@ -357,6 +340,7 @@ export class AuthController {
   })
   @ApiOperation({ summary: '관리자 삭제' })
   @Delete('admin')
+  @UseGuards(JwtSuperAdminAuthGuard)
   async removeAdminAccount(@Body() body: AdminRemoveDto) {
     return await this.authService.removeAdmin(body.email);
   }

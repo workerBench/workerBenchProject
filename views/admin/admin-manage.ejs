@@ -28,6 +28,7 @@
     />
 
     <link href="/admin/css/admin-manage.css" rel="stylesheet" />
+    <script src="/admin/js/error-handler.js" defer></script>
     <script src="/admin/js/admin-manage.js" defer></script>
 
     <title>Document</title>
@@ -112,31 +113,65 @@
                         <button class="admin-remove-btn">계정 삭제</button>
                     </td>
                 </tr> -->
-                </tbody>
-            </table>
-            <!--관리자 계정 생성 모달창-->
-                <div class="modal" id="modal" tabindex="-1">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">관리자 계정 생성</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <div class="form-wrap">
-                            <input type="text" class="input-form" id="email" placeholder="이메일을 입력해 주세요" />
-                            <input type="password" class="input-form" id="password" placeholder="비밀번호를 입력해 주세요" />
-                            <input type="text" class="input-form" id="name" placeholder="이름을 입력해 주세요" />
-                            <input type="text" class="input-form" id="phone" placeholder="전화번호를 입력해 주세요 ( '-' 제외)" />
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-btn">취소하기</button>
-                          <button type="button" class="btn btn-primary" id="create">관리자 생성하기</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+          </tbody>
+        </table>
+        <!--관리자 계정 생성 모달창-->
+        <div class="modal" id="modal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">관리자 계정 생성</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="form-wrap">
+                  <input
+                    type="text"
+                    class="input-form"
+                    id="email"
+                    placeholder="이메일을 입력해 주세요"
+                  />
+                  <input
+                    type="password"
+                    class="input-form"
+                    id="password"
+                    placeholder="비밀번호를 입력해 주세요"
+                  />
+                  <input
+                    type="text"
+                    class="input-form"
+                    id="name"
+                    placeholder="이름을 입력해 주세요"
+                  />
+                  <input
+                    type="text"
+                    class="input-form"
+                    id="phone"
+                    placeholder="전화번호를 입력해 주세요 ( '-' 제외)"
+                  />
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                  id="close-btn"
+                >
+                  취소하기
+                </button>
+                <button type="button" class="btn btn-primary" id="create">
+                  관리자 생성하기
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </body>
