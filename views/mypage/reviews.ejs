@@ -25,7 +25,8 @@
     <!--헤더-->
     <div>
       <div class="text-center">
-        <h5 class="fw-bolderandtopbottom">워크숍 활동명 자동생성 되는 곳</h5>
+        <!-- 정석대로면 여기가 워크샵 타이틀 자동으로 끌어오는 곳-->
+        <h5 class="fw-bolderandtopbottom">가죽 지갑 만들기</h5>
       </div>
       <section class="py-5">
         <div class="container px-4 px-lg-5 mt-5">
@@ -75,7 +76,7 @@
           <option value="4">⭐⭐⭐⭐</option>
           <option value="5">⭐⭐⭐⭐⭐</option>
         </select>
-        <a class="btn btn-outline-dark margin-top" href="#">후기 등록하기</a>
+        <a class="btn btn-outline-dark margin-top" onclick="showAlert()" href="/">후기 등록하기</a>
       </div>
     </div>
 
@@ -91,5 +92,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
     <script src="js/scripts.js"></script>
+    <script>
+      function showAlert() {
+        alert("리뷰가 등록되었습니다");
+      }
+      </script>
   </body>
 </html>
