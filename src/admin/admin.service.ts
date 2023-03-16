@@ -35,6 +35,7 @@ export class AdminService {
       .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
       .innerJoinAndSelect('workshop.User', 'user')
       .select([
+        'workshop.id',
         'workshop.title',
         'workshop.category',
         'workshop.desc',
@@ -61,7 +62,7 @@ export class AdminService {
     const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
     const workshops = await query.getMany();
-    
+
     const result = workshops.map((workshop) => ({
       ...workshop,
       ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
@@ -79,6 +80,7 @@ export class AdminService {
       .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
       .innerJoinAndSelect('workshop.User', 'user')
       .select([
+        'workshop.id',
         'workshop.title',
         'workshop.category',
         'workshop.desc',
@@ -124,6 +126,7 @@ export class AdminService {
       .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
       .innerJoinAndSelect('workshop.User', 'user')
       .select([
+        'workshop.id',
         'workshop.title',
         'workshop.category',
         'workshop.desc',
@@ -242,11 +245,11 @@ export class AdminService {
       'teacher.name'
     ])
     .groupBy('workshop.id')
-    
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
     const workshopDetail = await query.getRawOne();
 
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    
     const result = {
       ...workshopDetail,
       ThumbUrl: `${cloundFrontUrl}/${workshopDetail.workshop_thumb}`
