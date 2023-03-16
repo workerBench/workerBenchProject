@@ -14,12 +14,15 @@
 
 .sidebar{
     min-width: 170px;
-    width: 15%;
+    max-width: 220px;
+    width: 16%;
     height: 100%;
     min-height: 1080px;
     background: #9F70FB;
     color: white;
     padding-top: 30px;
+    flex-shrink: 0;
+    
 }
 .ul-title {
     padding-top: 10px;

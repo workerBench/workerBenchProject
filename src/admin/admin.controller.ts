@@ -65,7 +65,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: '검토 중인 워크숍 목록 API' })
     @Get('/workshops/request')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async requestWorkshops() {
         return await this.adminService.requestWorkshops()
     }
@@ -77,7 +77,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: '진행 중인 워크숍 목록 API' })
     @Get('/workshops/approval')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async getApprovedWorkshops() {
         return await this.adminService.getApprovedWorkshops()
     }
@@ -89,9 +89,20 @@ export class AdminController {
     })
     @ApiOperation({ summary: '종료된 워크숍 목록 API' })
     @Get('workshops/finished')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async getFinishedWorkshops() {
         return await this.adminService.getFinishedWorkshops()
+    }
+
+    // 워크숍 상세
+    @ApiResponse({  
+        status: 200,
+        description: '성공',
+    })
+    @ApiOperation({ summary: '워크숍 상세 조회 API' })
+    @Get('workshops/:id')
+    async getWorkshopDetail(@Param("id") id: number) {
+        return await this.adminService.getWorkshopDetail(id)
     }
 
     // 워크숍 승인하기 (status:"request" => "approval")
@@ -101,7 +112,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: '워크숍 승인하기 API' })
     @Patch('/workshop/approval/:id')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async approveWorkshop(@Param("id") id: number) {
         await this.adminService.approveWorkshop(id)
         return { message: "워크숍이 승인 되었습니다."}
@@ -114,7 +125,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: '워크숍 반려하기 API' })
     @Patch('/workshop/rejected/:id')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async rejectWorkshop(@Param("id") id: number) {
         await this.adminService.rejectWorkshop(id)
         return { message: "워크숍이 반려 되었습니다."}
@@ -127,7 +138,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: '워크숍 수정하기 API' })
     @Put('/workshop/:id')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async updateWorkshop(
         @Param("id") id: number,
         @Body() data: editWorkshopDto
@@ -146,7 +157,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: '워크숍 삭제하기 API' })
     @Delete('workshop/:id')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async removeWorkshop(@Param("id") id: number) {
         await this.adminService.removeWorkshop(id)
 
@@ -164,7 +175,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: '유저 및 업체 검색 API' })
     @Get('search/members')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async searchUserOrCompany(
         @Query('email') email: string,
         @Query('company') company: string,
@@ -181,7 +192,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: 'User 블랙리스트 조회 API' })
     @Get('ban/users')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async banList() {
         const list = await this.adminService.userBanList()
 
@@ -194,7 +205,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: 'Company 블랙리스트 조회 API' })
     @Get('ban/companies')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async companyBanList() {
         const list = await this.adminService.companyBanList()
 
@@ -209,7 +220,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: 'User 밴 처리 API' })
     @Patch('ban/user/:id')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async userBan(@Param("id") id: number) {
         await this.adminService.userBan(id)
 
@@ -222,7 +233,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: 'Company 밴 처리 API' })
     @Patch('ban/company/:id')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async companyBan(@Param("id") id: number) {
         await this.adminService.companyBan(id)
 
@@ -235,7 +246,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: 'User 밴 해제 API' })
     @Patch('unban/user/:id')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async userUnban(@Param("id") id: number) {
         await this.adminService.userUnban(id)
 
@@ -248,7 +259,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: 'Company 밴 해제 API' })
     @Patch('unban/company/:id')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async companyUnban(@Param("id") id: number) {
         await this.adminService.companyUnban(id)
 
@@ -263,7 +274,7 @@ export class AdminController {
     })
     @ApiOperation({ summary: '관리자 목록 조회 API' })
     @Get('/admin/list')
-    @UseGuards(JwtNormalAdminAuthGuard)
+    // @UseGuards(JwtNormalAdminAuthGuard)
     async getAdminList() {
         const result = await this.adminService.getAdminList()
 

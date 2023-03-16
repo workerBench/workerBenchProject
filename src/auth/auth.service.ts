@@ -192,7 +192,7 @@ export class AuthService {
       { id, email, userType },
       {
         secret: this.configService.get('JWT_SECRET_KEY'),
-        expiresIn: '600s',
+        expiresIn: '6000s',
         algorithm: 'HS256',
       },
     );
@@ -546,7 +546,6 @@ export class AuthService {
       images[0].originalname.length,
     );
     const thumbImgName = uuid() + thumbImgType;
-
     /*
     여기서 워크샵을 insert 해야 함. 할 때 썸네일 경로, 이름과 같이 insert. insert 결과를 insertResult 변수에 저장.
     insert 한 후 insertResult.identifiers[0].id 로 id 를 가져와.
@@ -561,8 +560,8 @@ export class AuthService {
         // 첫 번째 image 일 경우 해당 이미지는 썸네일 이미지로 간주한다.
         if (index === 0) {
           const s3OptionForThumbImg = {
-            Bucket: 'workerbench', // S3의 버킷 이름.
-            Key: `images/workshop/2/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
+            Bucket: this.configService.get("AWS_S3_BUCKET_NAME"), // S3의 버킷 이름.
+            Key: `images/workshops/2/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
             Body: image.buffer, // 업로드 하고자 하는 파일.
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForThumbImg)); // 실제로 S3 클라우드로 파일을 전송 및 업로드 하는 코드.
@@ -572,9 +571,10 @@ export class AuthService {
             image.originalname.length,
           );
           const subImgName = uuid() + subImgType;
+
           const s3OptionForSubImg = {
-            Bucket: 'workerbench',
-            Key: `images/workshop/2/original/${subImgName}`,
+            Bucket: this.configService.get("AWS_S3_BUCKET_NAME"),
+            Key: `images/workshops/2/original/${subImgName}`,
             Body: image.buffer,
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
