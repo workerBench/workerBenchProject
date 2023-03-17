@@ -24,14 +24,14 @@
     <div class="button-div">
       <button type="radio" id="button" onclick="workshop()">나의 워크샵 목록</button>
       <button type="radio" id="button" onclick="information()">강사 및 업체 정보</button>
-      <button type="radio" id="button" onclick="register()">워크샵 등록</button>
+      <button type="radio" id="button-register" onclick="register()">워크샵 등록</button>
       <button type="radio" id="button" onclick="manage()">수강 문의 관리</button>
     </div>
     <div id="workshop-registerBox">
         <div class="image">
           <div class="img-test-wrap">
-            <label for="businessNumber" class="form-label">썸네일</label>
             <div id="thumb-img-wrap">
+              <label for="workshop" class="form-label workshop-description-li">썸네일</label>
               <img id="thumb-img-show" />
               <input class="form-control" type="file" accept="image/*" id="thumb-img-file">
             </div>
@@ -75,18 +75,21 @@
                 <option value="경기도">경기도</option>
             </select>
         </div>
-        <div id="more-img-wrap">
-          <div class="sub-imgs-wrap">
-              <img class="sub-img-class" id="sub-img-1"/>
-              <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
-          </div>
-          <div class="sub-imgs-wrap">
-              <img class="sub-img-class" id="sub-img-2"/>
-              <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
-          </div>
-          <div class="sub-imgs-wrap">
-              <img class="sub-img-class" id="sub-img-3"/>
-              <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
+        <div id="more-img-wrap1">
+          <label for="workshop" class="form-label sub-Img-label">서브 이미지</label>
+          <div id="more-img-wrap">
+              <div class="sub-imgs-wrap">
+                  <img class="sub-img-class" id="sub-img-1"/>
+                  <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
+              </div>
+              <div class="sub-imgs-wrap">
+                  <img class="sub-img-class" id="sub-img-2"/>
+                  <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
+              </div>
+              <div class="sub-imgs-wrap">
+                  <img class="sub-img-class" id="sub-img-3"/>
+                  <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
+              </div>
           </div>
       </div>
     </div>

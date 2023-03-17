@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data;
       for (let i = 0; i < data.length; i++) {
         const workshop_thumb = data[i].workshop_thumb;
@@ -26,6 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const createdAt = data[i].workShopInstanceDetail_createdAt;
         const status = data[i].workShopInstanceDetail_status;
         const Id = data[i].workShopInstanceDetail_id;
+        const forFormat = new Date(createdAt);
+        const createdDate = `${forFormat.getFullYear()}-${forFormat.getMonth()}-${forFormat.getDate()} ${forFormat.getHours()}시 ${forFormat.getMinutes()}분`;
+
         let buttonHtml = '';
         switch (status) {
           case 'request':
@@ -54,8 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tempHtml += `
                     <div class="teacher-manage-div" >
                        <div class="workshop-information-div">
-                            <img src="/images/images.jpg" alt="" />
-                            <li for="purpose-tag" class="workshop-information">${workshop_thumb}</li>
+                            <img src=${workshop_thumb} alt="" />
                             <li for="purpose-tag" class="workshop-information">${workshop_title}</li>
                             <li for="purpose-tag" class="workshop-information">${min_member}</li>
                             <li for="purpose-tag" class="workshop-information">${max_member}</li>
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                               <li for="purpose-tag" class="company-input">${phone_number}</li>
                               <li for="purpose-tag" class="company-input">${member_cnt}</li>
                               <li for="purpose-tag" class="company-input">${email}</li>
-                              <li for="purpose-tag" class="company-input">${createdAt}</li>
+                              <li for="purpose-tag" class="company-input">${createdDate}</li>
                           </div>
                               <div id = button-div>
                                   ${buttonHtml}

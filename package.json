@@ -27,6 +27,7 @@
     "seed:dongju": "ts-node ./node_modules/typeorm-extension/dist/cli/index.js seed -d ./dataSource.ts -s DongjuSeeder",
     "seed:dongho": "ts-node ./node_modules/typeorm-extension/dist/cli/index.js seed -d ./dataSource.ts -s DonghoSeeder",
     "seed:hosung": "ts-node ./node_modules/typeorm-extension/dist/cli/index.js seed -d ./dataSource.ts -s HosungSeeder",
+    "seed:test": "ts-node ./node_modules/typeorm-extension/dist/cli/index.js seed -d ./dataSource.ts -s TestSeeder",
     "schema:drop": "ts-node ./node_modules/typeorm/cli.js schema:drop",
     "schema:sync": "ts-node ./node_modules/typeorm/cli.js schema:sync",
     "db:migrate": "npm run typeorm migration:run -- -d ./dataSource.ts",

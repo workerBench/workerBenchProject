@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
   const workshopcompleteList = document.getElementById('teacher-completeBox');
-  // document.ready(function () {
   axios({
     method: 'get',
     url: '/api/teacher/workshops/complete',

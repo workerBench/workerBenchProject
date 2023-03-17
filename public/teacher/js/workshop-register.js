@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
       !desc ||
       !location
     ) {
-      alert('전부다 입력 해주세요!');
+      alert('빈 칸을 채워 주세요!');
       return;
     }
     if (document.querySelector('#thumb-img-file').files.length < 1) {
@@ -124,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/teacher/workshop';
       })
       .catch((response) => {
-        console.log(response);
         const { data } = response.response;
         alert(data.error);
       });

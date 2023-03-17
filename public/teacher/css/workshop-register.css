@@ -1,7 +1,4 @@
 /* workshop-register css */
-.button:focus {
-    background-color: rgb(102, 102, 249);
-}
 .button-div{
    margin: auto;
    display: flex;
@@ -18,6 +15,15 @@
    border-radius: 10px;
    background-color: #ffffff;
 }
+#button-register{
+    width: 200px;
+    margin-right: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #9f70fb;
+}
 #workshop-registerBox {
     width: 1000px;
     height: 1100px;
@@ -28,7 +34,6 @@
     box-shadow: 3px 3px 5px lavender;
     display: flex;
     flex-wrap: wrap;
-    /* border: 2px solid #000000 */
 }
 .image{
     width: 400px;
@@ -50,6 +55,23 @@
     margin-top: 50px;
     display: flex;
     flex-wrap: wrap;
+}
+#more-img-wrap1{
+    width: 1000px;
+    height: 400px;
+    margin: auto;
+}
+.sub-Img-label{
+    width:150px;
+    height: 40px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    text-align: center;
+    list-style: none;
+    border: 2px solid #000000;
+    margin-left: 20px;
+    border-radius: 10px;
+    background-color: #a084dc
 }
 #more-img-wrap{
     width: 1000px;
@@ -118,16 +140,17 @@
     height: 400px;
     margin: auto;
     margin-top: 50px;
-    /* border: 2px solid lavender; */
 }
 .workshop-description-li{
     width:150px;
-    height: 50px;
+    height: 40px;
     margin-bottom: 10px;
     font-size: 25px;
     text-align: center;
     list-style: none;
+    border-radius: 10px;
     border: 2px solid #000000;
+    background-color: #a084dc;
 }
 #desc{
     width: 1000px;
@@ -137,23 +160,13 @@
 .regiseterBtn-div{
     width: 200px;
     margin-left: 1250px;
-    /* border: 2px solid #000000; */
 }
 #workshopRegisterBtn {
     width: 200px;
     height: 50px;
     margin: 0 auto;
-    background-color: rgb(60, 60, 255);
-    border-radius: 5px;
-    color: white;
-    border:none ;
-}
-#workshopRegisterBtn {
-    width: 200px;
-    height: 50px;
-    margin: 0 auto;
-    margin-left: 200px;
-    background-color: rgb(60, 60, 255);
+    margin-left: 280px;
+    background-color:#a084dc;
     border-radius: 5px;
     color: white;
     border:none ;

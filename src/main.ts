@@ -38,7 +38,7 @@ class Application {
   }
 
   // 스웨거 페이지 보안 세팅 함수. use 미들웨어 사용
-  private setUpBasicAuth() {
+  private setUpBasicAuthForSwagger() {
     this.server.use(
       ['/docs', '/docs-json'],
       expressBasicAuth({
@@ -48,8 +48,19 @@ class Application {
         },
       }),
     );
+  }
+
+  private setUpBasicAuthForAdmin() {
     this.server.use(
-      ['/admin/*'],
+      [
+        '/admin/login',
+        '/admin/workshops-request',
+        '/admin/workshops-approval',
+        '/admin/workshops-finished',
+        '/admin/black-register',
+        '/admin/black-list',
+        '/admin/admin-manage',
+      ],
       expressBasicAuth({
         challenge: true,
         users: {
@@ -82,7 +93,8 @@ class Application {
       credentials: true,
     });
     this.server.use(cookieParser());
-    this.setUpBasicAuth();
+    this.setUpBasicAuthForSwagger();
+    this.setUpBasicAuthForAdmin();
     this.setUpOpenAPIMidleware();
     this.server.useGlobalPipes(
       new ValidationPipe({
