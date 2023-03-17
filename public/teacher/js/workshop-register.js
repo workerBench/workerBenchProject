@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .then((response) => {
         const data = response.data;
         alert(data.message);
-        // window.location.href = '/teacher/workshop';
+        window.location.href = '/teacher/workshop';
       })
       .catch((response) => {
         const { data } = response.response;

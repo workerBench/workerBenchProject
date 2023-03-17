@@ -110,7 +110,7 @@ export class AdminService {
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`,
+      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
     }));
     return result;
   }

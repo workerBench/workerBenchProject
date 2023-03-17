@@ -35,7 +35,7 @@ function getAllWorkshops() {
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${element.workshop_id}">  
         <img
-            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            src=${element.thumb}
             class="card-img-top"
             alt="..."
           />
@@ -94,7 +94,7 @@ function searchWorkshops() {
       <div class="card h-100">
       <a href="/workshops/detail?workshopId=${element.workshop_id}">  
       <img
-          src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+          src=${element.thumb}
           class="card-img-top"
           alt="..."
         />
@@ -144,7 +144,7 @@ function searchWorkshops() {
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${element.workshop_id}">  
         <img
-            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            src=${element.thumb}
             class="card-img-top"
             alt="..."
           />
@@ -195,7 +195,7 @@ function searchWorkshops() {
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${element.workshop_id}">  
         <img
-            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            src=${element.thumb}
             class="card-img-top"
             alt="..."
           />
@@ -246,7 +246,7 @@ function searchWorkshops() {
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${element.workshop_id}">  
         <img
-            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            src=${element.thumb}
             class="card-img-top"
             alt="..."
           />
@@ -297,7 +297,7 @@ function searchWorkshops() {
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${element.workshop_id}">  
         <img
-            src="https://tgzzmmgvheix1905536.cdn.ntruss.com/2017/10/e48b1391e6714813a1ff65dcd254488f"
+            src=${element.thumb}
             class="card-img-top"
             alt="..."
           />

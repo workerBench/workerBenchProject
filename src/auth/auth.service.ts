@@ -300,7 +300,7 @@ export class AuthService {
   async checkLoginAdminUser(email: string, password: string) {
     const adminInfo = await this.adminUserRepository.findOne({
       where: { email },
-      select: ['id', 'email', 'password', 'admin_type'],
+      select: ['id', 'email', 'password', 'admin_type', 'deletedAt'],
     });
     if (!adminInfo) {
       const err = new Error('이메일 또는 비밀번호가 일치하지 않습니다');
@@ -310,6 +310,11 @@ export class AuthService {
     if (!(await bcrypt.compare(password, adminInfo.password))) {
       const err = new Error('이메일 또는 비밀번호가 일치하지 않습니다');
       err.name = 'DoesntExistEmailOrPasswordError';
+      throw err;
+    }
+    if (adminInfo.deletedAt !== null) {
+      const err = new Error('현재 권한이 박탈된 관리자 계정입니다');
+      err.name = 'ThisAdminUserIsUnBlock';
       throw err;
     }
 

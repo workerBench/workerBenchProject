@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
           wokshopRequestList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'rejected') {
           tempHtml = `<div class="workshop">
-                <img src="/images/header.png" alt="" />
+                <img src=${thumb} alt="" />
                 <li class="title">${title}</li>
                 <div class="tag-div">
                     <div class="test">

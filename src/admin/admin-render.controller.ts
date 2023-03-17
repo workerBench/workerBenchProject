@@ -1,4 +1,5 @@
 import { Controller, Get, Render, Req, Res, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { RealIP } from 'nestjs-real-ip';
 import { AuthService } from 'src/auth/auth.service';
@@ -8,6 +9,7 @@ import { JwtSuperAdminPageGuard } from 'src/auth/jwt/refresh-page-check/admin/jw
 import { TOKEN_NAME } from 'src/auth/naming/token-name';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 
+@ApiTags('z-page-render')
 @Controller('admin')
 export class AdminControllerRender {
   constructor(private readonly authService: AuthService) {}
