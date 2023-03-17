@@ -119,9 +119,9 @@ export class TeacherService {
             'workshop.createdAt',
             'workshop.status',
             'genreTag.name',
-            'GROUP_CONCAT(purposeTag.name) as purposeTag_name',
+            'GROUP_CONCAT(purposeTag.name) as purposeTag_name', // GROUP_CONCAT을 써서 각 그룹의 purposeTag_name을를 하나의 행에 결합한다.
           ])
-          .groupBy('workshop.id')
+          .groupBy('workshop.id') // groupBy를 써서 각각 id에 해당하는 값을 나타낸다.
           .getRawMany();
         return result;
       }
@@ -254,10 +254,17 @@ export class TeacherService {
       } = data;
       const teacherInfo = await this.teacherRepository.findOne({
         where: { user_id: userId },
+        select: ['user_id', 'affiliation_company_id'],
       });
-      if (!teacherInfo) {
+      if (!teacherInfo.user_id) {
         throw new HttpException(
           '등록된 강사가 아닙니다',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      if (teacherInfo.affiliation_company_id === 0) {
+        throw new HttpException(
+          '등록된 업체가 없습니다.',
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -356,10 +363,12 @@ export class TeacherService {
   // 강사 미완료 워크샵 목록 api
   async getTeacherIncompleteWorkshop(userId: number) {
     try {
+      // find로 찾으면 배열안에 객체형태로 [ WorkShop { id: 31, user_id: 11 }, WorkShop { id: 32, user_id: 11 } ] 나타난다.
       const userIdInfo = await this.workshopRepository.find({
         where: { user_id: userId },
         select: ['user_id', 'id'],
       });
+      // id만 map으로 새로운 배열형태를 만든다. [31,32]
       const userIds = userIdInfo.map((info) => info.id);
       if (userIdInfo.length === 0) {
         throw new HttpException(
@@ -372,6 +381,7 @@ export class TeacherService {
           .where('workshop.user_id = :user_id ', {
             user_id: userId,
           })
+          // IN : 하나라도 값이 들어가 있으면 그에 해당하는 값을 가져온다.
           .andWhere(
             'workShopInstanceDetail.workshop_id IN (:...workshop_ids)',
             {
@@ -424,7 +434,7 @@ export class TeacherService {
           HttpStatus.BAD_REQUEST,
         );
       } else {
-        const workshopId = userIdInfo.map((info) => info.id); // id 값을 배열로 변환하여 workshopId 변수에 대입
+        const workshopId = userIdInfo.map((info) => info.id); // id 값을 배열로 변환한다.
         let result = await this.workshopRepository
           .createQueryBuilder('workshop')
           .where('workshop.user_id = :user_id ', {
