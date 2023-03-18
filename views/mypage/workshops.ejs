@@ -9,6 +9,10 @@
     />
     <meta name="description" content="" />
     <meta name="author" content="" />
+    <!-- axios import -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- jquery import -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
       rel="stylesheet"
@@ -60,74 +64,9 @@
       </div> -->
 
       <section class="py-5">
-        <div classe="incomplete-list">수강 예정 워크샵</div>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-          <div class="col">
-            <div class="card h-100">
-              <img src="..." class="card-img-top" alt="..." />
-              <div class="card-body">
-                <p>
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary"
-                    disabled
-                  >
-                    진행 상태
-                  </button>
-                </p>
-                <h5 class="card-title">워크샵 제목</h5>
-                <p class="card-title">진행 예정 일자</p>
-                <p class="card-title">진행 인원</p>
-                <p
-                  class="card-title"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModal"
-                >
-                  상세 내역 보기
-                </p>
-              </div>
-              <!-- Modal -->
-              <div
-                class="modal fade"
-                id="exampleModal"
-                tabindex="-1"
-                aria-labelledby="exampleModalLabel"
-                aria-hidden="true"
-              >
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">
-                        워크샵 예약 상세 내역
-                      </h1>
-                      <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                      ></button>
-                    </div>
-                    <div class="modal-body">
-                      <p>워크샵 타이틀:</p>
-                      <p>회사명:</p>
-                      <p>신청자 이름:</p>
-                      <p>신청자 이메일:</p>
-                      <p>휴대폰 번호:</p>
-                      <p>진행 일자:</p>
-                      <p>신청 목적:</p>
-                      <p>신청 유형:</p>
-                      <p>장소:</p>
-                      <p>인원:</p>
-                      <p>기타 문의 사항:</p>
-                      <p>기타 문의 사항:</p>
-                      <p>강사 이름:</p>
-                      <p>강사 연락처:</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div>수강 예정 워크샵</div>
+        <div class="row row-cols-1 row-cols-md-3 g-4" id="incomplete-list">
+          <!-- 수강 예정 워크샵 목록 -->
         </div>
         <div classe="complete-list">수강 완료 워크샵</div>
         <div class="row row-cols-1 row-cols-md-3 g-4">

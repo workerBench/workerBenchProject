@@ -75,6 +75,7 @@ export class MypageService {
         workshop.workshopDetail_status == 'waitiong_lecture'
       );
     });
+
     return result;
   }
 
