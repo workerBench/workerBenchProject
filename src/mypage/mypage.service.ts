@@ -32,15 +32,50 @@ export class MypageService {
 
   // 수강 예정 워크샵 출력
   async getSoonWorkshops(id: number) {
-    return await this.workShopInstanceDetailRepository.find({
-      where: [
-        { status: 'request', user_id: id },
-        { status: 'non_payment', user_id: id },
-        { status: 'waiting_lecture', user_id: id },
-      ],
-      order: { updatedAt: 'DESC' },
-      take: 999,
+    const workshops = await this.workShopInstanceDetailRepository
+      .createQueryBuilder('workshopDetail')
+      .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
+      .innerJoinAndSelect('workshopDetail.Writer', 'customer')
+      .innerJoinAndSelect('workshop.User', 'teacher')
+      .where('customer.id = :id', { id: id })
+      .andWhere('workshop.deletedAt is null')
+      .select([
+        'workshopDetail.id',
+        'workshopDetail.company',
+        'workshopDetail.name',
+        'workshopDetail.email',
+        'workshopDetail.phone_number',
+        'workshopDetail.wish_date',
+        'workshopDetail.status',
+        'workshopDetail.purpose',
+        'workshopDetail.wish_location',
+        'workshopDetail.member_cnt',
+        'workshopDetail.etc',
+        'workshopDetail.category',
+        'workshopDetail.user_id',
+        'workshopDetail.workshop_id',
+        'workshop.id',
+        'workshop.title',
+        'workshop.category',
+        'workshop.thumb',
+        'workshop.price',
+        'workshop.deletedAt',
+        'customer.id',
+        'customer.email',
+        'teacher.id',
+        'teacher.email',
+      ])
+      .getRawMany();
+
+    // request, non_payment, waiting_lecture만 필터링
+    const result = workshops.filter((workshop) => {
+      return (
+        workshop.workshopDetail_status == 'request' ||
+        workshop.workshopDetail_status == 'non_payment' ||
+        workshop.workshopDetail_status == 'waitiong_lecture'
+      );
     });
+    return result;
   }
 
   // 수강 완료한 워크샵 출력
