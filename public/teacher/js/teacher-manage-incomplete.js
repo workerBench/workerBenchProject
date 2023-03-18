@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
-      const data = response.data;
+      const data = response.data.non_complete_instance_list;
       for (let i = 0; i < data.length; i++) {
         const workshop_thumb = data[i].workshop_thumb;
         const workshop_title = data[i].workshop_title;

@@ -10,6 +10,7 @@ import {
   UploadedFiles,
   Req,
   Res,
+  Query,
 } from '@nestjs/common';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
@@ -86,8 +87,11 @@ export class TeacherController {
   @Get('workshops')
   @UseGuards(JwtTeacherAuthGuard)
   async getTeacherWorkshops(@CurrentUser() user: CurrentUserDto) {
-    return await this.teacherService.getTeacherWorkshops(user.id);
+    const data = await this.teacherService.getTeacherWorkshops(user.id);
+    const result = { workshop: data };
+    return result;
   }
+
   // 강사 및 업체 정보 보기
   @ApiResponse({
     status: 200,
@@ -97,9 +101,11 @@ export class TeacherController {
   @Get('mypage')
   @UseGuards(JwtTeacherAuthGuard)
   async getTeacherMypage(@CurrentUser() user: CurrentUserDto) {
-    console.log(user);
-    return await this.teacherService.getTeacherMypage(user.id);
+    const data = await this.teacherService.getTeacherMypage(user.id);
+    const result = { teacher: data };
+    return result;
   }
+
   // 강사 업체 등록
   @ApiResponse({
     status: 200,
@@ -113,6 +119,32 @@ export class TeacherController {
     @CurrentUser() user: CurrentUserDto,
   ) {
     return this.teacherService.createTeacherCompany(data, user.id);
+  }
+
+  // 강사 업체 검색
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '강사 등록된 업체 검색 API' })
+  @Get('company/search')
+  async searchCompanys(@Query('company_name') company_name: string) {
+    return await this.teacherService.searchCompanys(company_name);
+  }
+
+  // 강사 등록된 업체에 등록 신청
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '강사 등록된 업체에 신청 API' })
+  @Post('company/apply/:id')
+  @UseGuards(JwtTeacherAuthGuard)
+  registerTeacherCompany(
+    @CurrentUser() user: CurrentUserDto,
+    @Param('id') id: number,
+  ) {
+    return this.teacherService.registerTeacherCompany(user.id, id);
   }
   // 강사 워크샵 등록
   @ApiResponse({
@@ -144,8 +176,12 @@ export class TeacherController {
   @ApiOperation({ summary: '강사 미완료 목록 보기 API' })
   @Get('workshops/incomplete')
   @UseGuards(JwtTeacherAuthGuard)
-  getTeacherIncompleteWorkshop(@CurrentUser() user: CurrentUserDto) {
-    return this.teacherService.getTeacherIncompleteWorkshop(user.id);
+  async getTeacherIncompleteWorkshop(@CurrentUser() user: CurrentUserDto) {
+    const data = await this.teacherService.getTeacherIncompleteWorkshop(
+      user.id,
+    );
+    const result = { non_complete_instance_list: data };
+    return result;
   }
 
   // 강사 완료 목록 보기
@@ -156,8 +192,10 @@ export class TeacherController {
   @ApiOperation({ summary: '강사 완료 목록 보기 API' })
   @Get('workshops/complete')
   @UseGuards(JwtTeacherAuthGuard)
-  getTeacherComplete(@CurrentUser() user: CurrentUserDto) {
-    return this.teacherService.getTeacherComplete(user.id);
+  async getTeacherComplete(@CurrentUser() user: CurrentUserDto) {
+    const data = await this.teacherService.getTeacherComplete(user.id);
+    const result = { complete_instance_list: data };
+    return result;
   }
 
   // 강사 수강 문의 수락하기

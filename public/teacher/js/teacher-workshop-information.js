@@ -2,13 +2,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const workshopInfomationList = document.getElementById(
     'workshop-infomationList',
   );
+  const companyList = document.getElementById('company-List');
+
+  const companySearch = document.getElementById('search');
   axios({
     method: 'get',
     url: '/api/teacher/mypage',
     data: {},
   })
     .then((response) => {
-      const data = response.data;
+      const data = response.data.teacher;
       for (let i = 0; i < data.length; i++) {
         const email = data[i].User.email;
         const name = data[i].name;
@@ -18,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
           company_name,
           business_number,
           rrn_front,
-          rrn_back,
           bank_name,
           account,
           saving_name;
@@ -28,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
           company_name = data[i].MyCompany.company_name;
           business_number = data[i].MyCompany.business_number;
           rrn_front = data[i].MyCompany.rrn_front;
-          rrn_back = data[i].MyCompany.rrn_back;
           bank_name = data[i].MyCompany.bank_name;
           account = data[i].MyCompany.account;
           saving_name = data[i].MyCompany.saving_name;
@@ -37,8 +38,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!data[i].MyCompany) {
           companyHtml += `
                         <button type="radio" class="Button" onclick="registerCompany()">업체 등록</button>
+                        <button type="radio" class="Button" id="applyCompany">업체 신청</button>
                         `;
-        } else if (data[i].MyCompany && company_type === 0) {
+        } else if (business_number === null) {
+          companyHtml += `
+          <div class="teacher-workshop-li-div">
+              <li class="teacher-workshop-li">업체종류</li>
+              <li class="teacher-workshop-li">업체명</li>
+          </div>
+          <div class="workshop-information-div">
+              <li class="workshop-information-li">사업자</li>
+              <li class="workshop-information-li">${company_name}</li>
+          </div>
+`;
+        } else if (
+          data[i].MyCompany &&
+          company_type === 0 &&
+          business_number !== null
+        ) {
           companyHtml += `
                         <div class="teacher-workshop-li-div">
                             <li class="teacher-workshop-li">업체종류</li>
@@ -63,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <li class="teacher-workshop-li">업체종류</li>
                             <li class="teacher-workshop-li">업체명</li>
                             <li class="teacher-workshop-li">주빈번호 앞자리</li>
+                            <li class="teacher-workshop-li">지정은행</li>
                             <li class="teacher-workshop-li">계좌 번호</li>
                             <li class="teacher-workshop-li">예금주명</li>
                         </div>
@@ -127,6 +145,35 @@ document.addEventListener('DOMContentLoaded', () => {
                       </div>`;
         workshopInfomationList.insertAdjacentHTML('beforeend', tempHtml);
       }
+      companySearch.addEventListener('click', () => {
+        const company_name = document.getElementById('company-name').value;
+        axios({
+          method: 'get',
+          url: `/api/teacher/company/search?company_name=${company_name}`,
+          data: {},
+        })
+          .then((response) => {
+            console.log(response);
+            const data = response.data;
+            for (let i = 0; i < data.length; i++) {
+              const company_name = data[i].company_name;
+              const saving_name = data[i].saving_name;
+              const id = data[i].user_id;
+
+              let tempHtml = ``;
+              tempHtml += `
+                                  <li class="company-information-li">업체 이름 : ${company_name} 이름 :${saving_name} </li>
+                                  <button type="radio" class="Button" onclick="applyCompany(${id})">업체 신청</button>
+                         `;
+              companyList.insertAdjacentHTML('beforeend', tempHtml);
+            }
+          })
+
+          .catch((response) => {
+            const { data } = response.response;
+            alert(data.error);
+          });
+      });
     })
     .catch((response) => {
       console.log(response);
@@ -134,6 +181,38 @@ document.addEventListener('DOMContentLoaded', () => {
       alert(data.message);
     });
 });
+function applyCompany(id, affiliation_company_id) {
+  console.log(id);
+  axios({
+    method: 'post',
+    url: `/api/teacher/company/apply/${id}`,
+    data: {
+      affiliation_company_id,
+    },
+  })
+    .then((response) => {
+      console.log(response);
+      const data = response.data;
+      alert(data.message);
+      location.reload();
+    })
+    .catch((response) => {
+      console.log(response);
+      const { data } = response.response;
+      alert(data.error);
+    });
+}
+$(document).on('click', '#applyCompany', function (e) {
+  console.log('click event');
+  $('#modal').addClass('show');
+});
+
+// 모달 닫기
+$(document).on('click', '#close_btn', function (e) {
+  console.log('click event');
+  $('#modal').removeClass('show');
+});
+
 function registerCompany() {
   window.location.href = '/teacher/company/register';
 }

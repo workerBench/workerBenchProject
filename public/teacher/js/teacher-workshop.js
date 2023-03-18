@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
-      const data = response.data;
+      const data = response.data.workshop;
       for (let i = 0; i < data.length; i++) {
         const thumb = data[i].workshop_thumb;
         const title = data[i].workshop_title;

@@ -15,7 +15,7 @@ import { User } from 'src/entities/user';
 import { WorkShop } from 'src/entities/workshop';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { WorkShopPurpose } from 'src/entities/workshop-purpose';
-import { In, Repository, SelectQueryBuilder } from 'typeorm';
+import { In, Like, Repository, SelectQueryBuilder } from 'typeorm';
 import { CreateCompanyDto } from './dto/teacher-company.dto';
 import { CreateTeacherDto } from './dto/teacher.dto';
 import { CreateWorkshopsDto } from './dto/teacher-workshops.dto';
@@ -218,16 +218,73 @@ export class TeacherService {
         where: { user_id: userId },
         select: ['id'],
       });
-      if (newCompanyId) {
-        await this.companyApplicationRepository.insert({
-          teacher_id: userId,
-          company_id: newCompanyId.id,
-        });
-      }
+
       await this.teacherRepository.update(userId, {
         affiliation_company_id: newCompanyId.id,
       });
       return { message: '등록이 완료되었습니다.' };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  // 등록된 업체 검색하기
+  async searchCompanys(company_name: string) {
+    try {
+      const companys = await this.companyRepository.find({
+        where: { company_name: Like(`%${company_name}%`) },
+        select: ['company_name', 'saving_name', 'user_id'],
+      });
+      return companys;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  // 등록된 업체에 신청하기
+  async registerTeacherCompany(userId: number, id: number) {
+    try {
+      const userIdInfo = await this.teacherRepository.findOne({
+        where: { user_id: userId },
+        select: ['user_id', 'affiliation_company_id'],
+      });
+      if (!userIdInfo) {
+        throw new HttpException(
+          '등록되지 않은 강사입니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const companyApplyId = await this.companyApplicationRepository.findOne({
+        where: { teacher_id: userId },
+      });
+      if (companyApplyId) {
+        throw new HttpException(
+          '이미 해당하는 업체에 등록되었습니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        const companyId = await this.companyRepository.findOne({
+          where: { user_id: id },
+          select: ['id'],
+        });
+        await this.companyApplicationRepository.insert({
+          teacher_id: userId,
+          company_id: companyId.id,
+        });
+      }
+
+      // const applyCompanyId = await this.companyRepository.findOne({
+      //   where: { user_id: userId },
+      //   select: ['id'],
+      // });
+      // await this.teacherRepository.update(userId, {
+      //   affiliation_company_id: applyCompanyId.id,
+      // });
+
+      return { message: '해딩 업체에 신청되었습니다.' };
     } catch (error) {
       console.log(error);
       throw error;
