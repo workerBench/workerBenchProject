@@ -18,6 +18,7 @@ import { ReviewImageDto } from 'src/mypage/dtos/review-image.dto';
 import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
+import { PaymentDto } from 'src/mypage/dtos/payment.dto';
 
 @ApiTags('mypage')
 @UseInterceptors(SuccessInterceptor)
@@ -55,10 +56,21 @@ export class MypageController {
     description: '성공',
   })
   @ApiOperation({ summary: '워크샵 결제하기 api' })
-  @Patch('workshops/:id/order')
+  @Post('workshops/order')
   @UseGuards(JwtUserAuthGuard)
-  updateWorkshopPayment(@Param('id') id: number) {
-    return this.mypageService.updateWorkshopPayment(id);
+  async updateWorkshopPayment(
+    @Body() paymentDto: PaymentDto,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    const check_result = await this.mypageService.checkPayment(
+      user.id,
+      paymentDto,
+    );
+
+    if (check_result === false) {
+      return { message: '결제 내역이 정상적으로 기록되지 않았습니다.' };
+    }
+    return { message: '결제 내역이 정상적으로 기록되지 않았습니다.' };
   }
 
   // 리뷰 작성 페이지 api
