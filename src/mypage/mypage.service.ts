@@ -35,14 +35,14 @@ export class MypageService {
     private readonly orderRepository: Repository<Order>,
   ) {}
 
-  // 수강 예정 워크샵 출력
-  async getSoonWorkshops(id: number) {
+  // 수강 예정 워크샵 전체 출력
+  async getSoonWorkshops(user_id: number) {
     const workshops = await this.workShopInstanceDetailRepository
       .createQueryBuilder('workshopDetail')
       .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
       .innerJoinAndSelect('workshopDetail.Writer', 'customer')
       .innerJoinAndSelect('workshop.User', 'teacher')
-      .where('customer.id = :id', { id: id })
+      .where('customer.id = :id', { id: user_id })
       .andWhere('workshop.deletedAt is null')
       .select([
         'workshopDetail.id',
@@ -77,7 +77,62 @@ export class MypageService {
       return (
         workshop.workshopDetail_status == 'request' ||
         workshop.workshopDetail_status == 'non_payment' ||
-        workshop.workshopDetail_status == 'waitiong_lecture'
+        workshop.workshopDetail_status == 'waiting_lecture'
+      );
+    });
+
+    return result;
+  }
+
+  // 수강 예정 워크샵 상세 조회
+  async getSoonWorkshopsById(id: number, user_id: number) {
+    const workshops = await this.workShopInstanceDetailRepository
+      .createQueryBuilder('workshopDetail')
+      .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
+      .innerJoinAndSelect('workshopDetail.Writer', 'customer')
+      .where('customer.id = :user_id', { user_id: user_id })
+      .innerJoinAndSelect('workshop.User', 'teacher')
+      .innerJoinAndSelect('teacher.TeacherProfile', 'teacherProfile')
+      .andWhere('workshopDetail.id = :workshopDetail_id', {
+        workshopDetail_id: id,
+      })
+      .andWhere('workshop.deletedAt is null')
+      .select([
+        'workshopDetail.id',
+        'workshopDetail.company',
+        'workshopDetail.name',
+        'workshopDetail.email',
+        'workshopDetail.phone_number',
+        'workshopDetail.wish_date',
+        'workshopDetail.status',
+        'workshopDetail.purpose',
+        'workshopDetail.wish_location',
+        'workshopDetail.member_cnt',
+        'workshopDetail.etc',
+        'workshopDetail.category',
+        'workshopDetail.user_id',
+        'workshopDetail.workshop_id',
+        'workshop.id',
+        'workshop.title',
+        'workshop.category',
+        'workshop.thumb',
+        'workshop.price',
+        'workshop.total_time',
+        'workshop.deletedAt',
+        'customer.id',
+        'customer.email',
+        'teacher.id',
+        'teacherProfile.phone_number',
+        'teacherProfile.name',
+      ])
+      .getRawMany();
+
+    // request, non_payment, waiting_lecture만 필터링
+    const result = workshops.filter((workshop) => {
+      return (
+        workshop.workshopDetail_status == 'request' ||
+        workshop.workshopDetail_status == 'non_payment' ||
+        workshop.workshopDetail_status == 'waiting_lecture'
       );
     });
 
@@ -93,24 +148,30 @@ export class MypageService {
     });
   }
 
+  // 결제하기 버튼 클릭 시 status가 부적합한 경우 예외 처리
+  async checkStatus(user_id: number, paymentDto: PaymentDto) {
+    const { workshopInstanceId, imp_uid, merchant_uid } = paymentDto;
+
+    const workshopInsctanceStatus =
+      await this.workShopInstanceDetailRepository.findOne({
+        where: { user_id, id: workshopInstanceId, workshop_id: merchant_uid },
+        select: ['status'],
+      });
+
+    if (!workshopInsctanceStatus) {
+      throw new NotFoundException('수강 문의 기록이 존재하지 않습니다.');
+    }
+
+    if (workshopInsctanceStatus.status !== 'non_payment') {
+      throw new BadRequestException('결제 가능한 상태가 아닙니다.');
+    }
+    return { message: 'success' };
+  }
+
   // 결제하기 클릭 시, 먼저 결제 정보 일치 체크
   async checkPayment(user_id: number, paymentDto: PaymentDto) {
     try {
       const { workshopInstanceId, imp_uid, merchant_uid } = paymentDto;
-      // 해당 워크샵 문의의 status를 가지고 와서 예외 처리
-      const workshopInsctanceStatus =
-        await this.workShopInstanceDetailRepository.findOne({
-          where: { user_id, id: workshopInstanceId, workshop_id: merchant_uid },
-          select: ['status'],
-        });
-
-      if (!workshopInsctanceStatus) {
-        throw new NotFoundException('수강 문의 기록이 존재하지 않습니다.');
-      }
-
-      if (workshopInsctanceStatus.status !== 'non_payment') {
-        throw new BadRequestException('결제 가능한 상태가 아닙니다.');
-      }
 
       // 액세스 토큰 발급받기
       const getToken = await axios({

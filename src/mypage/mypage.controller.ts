@@ -26,7 +26,7 @@ import { PaymentDto } from 'src/mypage/dtos/payment.dto';
 export class MypageController {
   constructor(private readonly mypageService: MypageService) {}
 
-  // 수강 예정 워크샵 api
+  // 수강 예정 워크샵 전체 조회 api
   @ApiResponse({
     status: 200,
     description: '성공',
@@ -36,6 +36,23 @@ export class MypageController {
   @UseGuards(JwtUserAuthGuard)
   async getSoonWorkshops(@CurrentUser() user: CurrentUserDto) {
     return await this.mypageService.getSoonWorkshops(user.id);
+  }
+
+  // 수강 예정 워크샵 출력 (특정 워크샵 하나만)
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '수강 예정 워크샵 api' })
+  @Get('workshops/soon/:id') // workshopInstanceDetail의 id
+  @UseGuards(JwtUserAuthGuard)
+  async getSoonWorkshopsById(
+    @Param('id') id: number,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    console.log('1111');
+    console.log(id);
+    return await this.mypageService.getSoonWorkshopsById(id, user.id);
   }
 
   // 수강 완료한 워크샵 api
@@ -50,7 +67,23 @@ export class MypageController {
     return this.mypageService.getCompleteWorkshops(user.id);
   }
 
-  // 워크샵 결제하기 api
+  // 워크샵 결제창에 정보 입력창 열기 api
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '워크샵 결제 정보 입력창 열기 api' })
+  @Post('workshops/orderInfo')
+  @UseGuards(JwtUserAuthGuard)
+  async tryWorkshopOrderInfo(
+    @Body() paymentDto: PaymentDto,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    const result = await this.mypageService.checkStatus(user.id, paymentDto);
+    return result;
+  }
+
+  // 워크샵 결제하기 api (아임포트)
   @ApiResponse({
     status: 200,
     description: '성공',
