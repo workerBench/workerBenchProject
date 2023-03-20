@@ -1,5 +1,6 @@
 window.addEventListener('DOMContentLoaded', function () {
   getSoonWorkshops();
+  getCompleteWorkshops();
 });
 
 // 수강 예정 워크샵 불러오기
@@ -306,4 +307,32 @@ function open_iamport() {
       }
     },
   );
+}
+
+// 수강 완료 워크샵 불러오기
+function getCompleteWorkshops() {
+  axios
+    .get('/api/mypage/workshops/complete')
+    .then((res) => {
+      const workshops = res.data.data;
+      console.log('workshops', workshops);
+
+      workshops.forEach((element) => {
+        let tempHtml = `<div class="col">
+        <div class="card h-100">
+        <a href="/workshops/detail?workshopId=${element.workshop_id}"><img src="${element.workshop_thumb}" class="card-img-top" alt="..." /></a>
+          <div class="card-body">
+            <h5 id="card-workshop-title">${element.workshop_title}</h5>
+            <p class="card-workshop-summary">진행 예정일: ${element.workshopDetail_wish_date}</p>
+            <p class="card-workshop-summary">인원: ${element.workshopDetail_member_cnt}명</p>
+            <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showModal(${element.workshopDetail_id})">상세 내역 보기 >> </p>
+          </div>
+        </div>
+      </div>`;
+        $('#complete-list').append(tempHtml);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }

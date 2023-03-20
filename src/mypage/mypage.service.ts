@@ -130,13 +130,32 @@ export class MypageService {
     }
   }
 
-  // 수강 완료한 워크샵 출력
-  async getCompleteWorkshops(id: number) {
-    return await this.workShopInstanceDetailRepository.find({
-      where: { status: 'complete', user_id: id },
-      order: { updatedAt: 'DESC' },
-      take: 999,
-    });
+  // 수강 완료한 워크샵 전체 조회 API
+  async getCompleteWorkshops(user_id: number) {
+    try {
+      const workshops = await this.workShopInstanceDetailRepository
+        .createQueryBuilder('workshopDetail')
+        .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
+        .innerJoinAndSelect('workshopDetail.Writer', 'customer')
+        .innerJoinAndSelect('workshop.User', 'teacher')
+        .where('customer.id = :id', { id: user_id })
+        .andWhere('workshopDetail.status = :status', { status: 'complete' })
+        .andWhere('workshop.deletedAt is null')
+        .select([
+          'workshop.id',
+          'workshop.thumb',
+          'workshop.title',
+          'workshopDetail.status',
+          'workshopDetail.wish_date',
+          'workshopDetail.member_cnt',
+          'workshopDetail.id',
+        ])
+        .getRawMany();
+
+      return workshops;
+    } catch (err) {
+      throw err;
+    }
   }
 
   // 결제하기 버튼 클릭 시 status이 '결제 대기중'인지 체크
