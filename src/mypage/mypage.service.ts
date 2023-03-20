@@ -35,108 +35,99 @@ export class MypageService {
     private readonly orderRepository: Repository<Order>,
   ) {}
 
-  // 수강 예정 워크샵 전체 출력
+  // 수강 예정 워크샵 전체 조회 API
   async getSoonWorkshops(user_id: number) {
-    const workshops = await this.workShopInstanceDetailRepository
-      .createQueryBuilder('workshopDetail')
-      .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
-      .innerJoinAndSelect('workshopDetail.Writer', 'customer')
-      .innerJoinAndSelect('workshop.User', 'teacher')
-      .where('customer.id = :id', { id: user_id })
-      .andWhere('workshop.deletedAt is null')
-      .select([
-        'workshopDetail.id',
-        'workshopDetail.company',
-        'workshopDetail.name',
-        'workshopDetail.email',
-        'workshopDetail.phone_number',
-        'workshopDetail.wish_date',
-        'workshopDetail.status',
-        'workshopDetail.purpose',
-        'workshopDetail.wish_location',
-        'workshopDetail.member_cnt',
-        'workshopDetail.etc',
-        'workshopDetail.category',
-        'workshopDetail.user_id',
-        'workshopDetail.workshop_id',
-        'workshop.id',
-        'workshop.title',
-        'workshop.category',
-        'workshop.thumb',
-        'workshop.price',
-        'workshop.deletedAt',
-        'customer.id',
-        'customer.email',
-        'teacher.id',
-        'teacher.email',
-      ])
-      .getRawMany();
+    try {
+      const workshops = await this.workShopInstanceDetailRepository
+        .createQueryBuilder('workshopDetail')
+        .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
+        .innerJoinAndSelect('workshopDetail.Writer', 'customer')
+        .innerJoinAndSelect('workshop.User', 'teacher')
+        .where('customer.id = :id', { id: user_id })
+        .andWhere('workshop.deletedAt is null')
+        .select([
+          'workshop.id',
+          'workshop.thumb',
+          'workshop.title',
+          'workshopDetail.status',
+          'workshopDetail.wish_date',
+          'workshopDetail.member_cnt',
+          'workshopDetail.id',
+        ])
+        .getRawMany();
 
-    // request, non_payment, waiting_lecture만 필터링
-    const result = workshops.filter((workshop) => {
-      return (
-        workshop.workshopDetail_status == 'request' ||
-        workshop.workshopDetail_status == 'non_payment' ||
-        workshop.workshopDetail_status == 'waiting_lecture'
-      );
-    });
+      // request, non_payment, waiting_lecture만 필터링
+      const result = workshops.filter((workshop) => {
+        return (
+          workshop.workshopDetail_status == 'request' ||
+          workshop.workshopDetail_status == 'non_payment' ||
+          workshop.workshopDetail_status == 'waiting_lecture'
+        );
+      });
 
-    return result;
+      return result;
+    } catch (err) {
+      throw err;
+    }
   }
 
-  // 수강 예정 워크샵 상세 조회
+  // 수강 예정 워크샵 상세 조회 API
   async getSoonWorkshopsById(id: number, user_id: number) {
-    const workshops = await this.workShopInstanceDetailRepository
-      .createQueryBuilder('workshopDetail')
-      .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
-      .innerJoinAndSelect('workshopDetail.Writer', 'customer')
-      .where('customer.id = :user_id', { user_id: user_id })
-      .innerJoinAndSelect('workshop.User', 'teacher')
-      .innerJoinAndSelect('teacher.TeacherProfile', 'teacherProfile')
-      .andWhere('workshopDetail.id = :workshopDetail_id', {
-        workshopDetail_id: id,
-      })
-      .andWhere('workshop.deletedAt is null')
-      .select([
-        'workshopDetail.id',
-        'workshopDetail.company',
-        'workshopDetail.name',
-        'workshopDetail.email',
-        'workshopDetail.phone_number',
-        'workshopDetail.wish_date',
-        'workshopDetail.status',
-        'workshopDetail.purpose',
-        'workshopDetail.wish_location',
-        'workshopDetail.member_cnt',
-        'workshopDetail.etc',
-        'workshopDetail.category',
-        'workshopDetail.user_id',
-        'workshopDetail.workshop_id',
-        'workshop.id',
-        'workshop.title',
-        'workshop.category',
-        'workshop.thumb',
-        'workshop.price',
-        'workshop.total_time',
-        'workshop.deletedAt',
-        'customer.id',
-        'customer.email',
-        'teacher.id',
-        'teacherProfile.phone_number',
-        'teacherProfile.name',
-      ])
-      .getRawMany();
+    try {
+      const workshops = await this.workShopInstanceDetailRepository
+        .createQueryBuilder('workshopDetail')
+        .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
+        .innerJoinAndSelect('workshopDetail.Writer', 'customer')
+        .where('customer.id = :user_id', { user_id: user_id })
+        .innerJoinAndSelect('workshop.User', 'teacher')
+        .innerJoinAndSelect('teacher.TeacherProfile', 'teacherProfile')
+        .andWhere('workshopDetail.id = :workshopDetail_id', {
+          workshopDetail_id: id,
+        })
+        .andWhere('workshop.deletedAt is null')
+        .select([
+          'workshopDetail.id',
+          'workshopDetail.company',
+          'workshopDetail.name',
+          'workshopDetail.email',
+          'workshopDetail.phone_number',
+          'workshopDetail.wish_date',
+          'workshopDetail.status',
+          'workshopDetail.purpose',
+          'workshopDetail.wish_location',
+          'workshopDetail.member_cnt',
+          'workshopDetail.etc',
+          'workshopDetail.category',
+          'workshopDetail.user_id',
+          'workshopDetail.workshop_id',
+          'workshop.id',
+          'workshop.title',
+          'workshop.category',
+          'workshop.thumb',
+          'workshop.price',
+          'workshop.total_time',
+          'workshop.deletedAt',
+          'customer.id',
+          'customer.email',
+          'teacher.id',
+          'teacherProfile.phone_number',
+          'teacherProfile.name',
+        ])
+        .getRawMany();
 
-    // request, non_payment, waiting_lecture만 필터링
-    const result = workshops.filter((workshop) => {
-      return (
-        workshop.workshopDetail_status == 'request' ||
-        workshop.workshopDetail_status == 'non_payment' ||
-        workshop.workshopDetail_status == 'waiting_lecture'
-      );
-    });
+      // request, non_payment, waiting_lecture만 필터링
+      const result = workshops.filter((workshop) => {
+        return (
+          workshop.workshopDetail_status == 'request' ||
+          workshop.workshopDetail_status == 'non_payment' ||
+          workshop.workshopDetail_status == 'waiting_lecture'
+        );
+      });
 
-    return result;
+      return result;
+    } catch (err) {
+      throw err;
+    }
   }
 
   // 수강 완료한 워크샵 출력
@@ -148,7 +139,7 @@ export class MypageService {
     });
   }
 
-  // 결제하기 버튼 클릭 시 status가 '결제 대기중'이 아닌 경우 예외 처리
+  // 결제하기 버튼 클릭 시 status이 '결제 대기중'인지 체크
   async checkStatus(user_id: number, workshopInstanceId: number) {
     const workshopDetail = await this.workShopInstanceDetailRepository
       .createQueryBuilder('workshopDetail')

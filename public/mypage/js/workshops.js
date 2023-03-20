@@ -10,7 +10,7 @@ function getSoonWorkshops() {
       const workshops = res.data.data;
       console.log('workshops', workshops);
 
-      workshops.forEach((element, index) => {
+      workshops.forEach((element) => {
         let tempHtml = `<div class="col">
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${
@@ -44,16 +44,16 @@ function getSoonWorkshops() {
               }
               </button>
              <!-- 결제창 Modal -->
-            <h5 class="card-title">${element.workshop_title}</h5>
-            <p class="card-title">진행 예정일: ${
+            <h5 id="card-workshop-title">${element.workshop_title}</h5>
+            <p class="card-workshop-summary">진행 예정일: ${
               element.workshopDetail_wish_date
             }</p>
-            <p class="card-title">인원: ${
+            <p class="card-workshop-summary">인원: ${
               element.workshopDetail_member_cnt
             }명</p>
-            <p onclick="showModal(${
+            <p id="show-workshop-detail" onclick="showModal(${
               element.workshopDetail_id
-            })">상세 내역 보기</p>
+            })">상세 내역 보기 >> </p>
           </div>
         </div>
       </div>`;

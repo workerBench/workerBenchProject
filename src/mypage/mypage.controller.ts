@@ -27,7 +27,7 @@ import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 export class MypageController {
   constructor(private readonly mypageService: MypageService) {}
 
-  // 수강 예정 워크샵 전체 조회 api
+  // 수강 예정 워크샵 전체 조회 API
   @ApiResponse({
     status: 200,
     description: '성공',
@@ -39,22 +39,25 @@ export class MypageController {
     return await this.mypageService.getSoonWorkshops(user.id);
   }
 
-  // 수강 예정 워크샵 출력 (특정 워크샵 하나만)
+  // 수강 예정 워크샵 상세 조회 API
   @ApiResponse({
     status: 200,
     description: '성공',
   })
   @ApiOperation({ summary: '수강 예정 워크샵 api' })
-  @Get('workshops/soon/:id') // workshopInstanceDetail의 id
+  @Get('workshops/soon/:workshopDetailInstance_id') // workshopDetail
   @UseGuards(JwtUserAuthGuard)
   async getSoonWorkshopsById(
-    @Param('id') id: number,
+    @Param('workshopDetailInstance_id') workshopDetailInstance_id: number,
     @CurrentUser() user: CurrentUserDto,
   ) {
-    return await this.mypageService.getSoonWorkshopsById(id, user.id);
+    return await this.mypageService.getSoonWorkshopsById(
+      workshopDetailInstance_id,
+      user.id,
+    );
   }
 
-  // 수강 완료한 워크샵 api
+  // 수강 완료 워크샵 전체 조회 API
   @ApiResponse({
     status: 200,
     description: '성공',
@@ -66,7 +69,9 @@ export class MypageController {
     return this.mypageService.getCompleteWorkshops(user.id);
   }
 
-  // 워크샵 결제창에 정보 입력창 열기 api
+  // 수강 완료 워크샵 상세 조회 API
+
+  // 워크샵 결제하기 클릭 시 status 유효성 검사
   @ApiResponse({
     status: 200,
     description: '성공',
@@ -85,7 +90,7 @@ export class MypageController {
     return result;
   }
 
-  // 워크샵 결제하기 api (아임포트)
+  // 워크샵 결제 정보 입력 창에서 결제하기 클릭 시 아임포트 호출 API
   @ApiResponse({
     status: 200,
     description: '성공',
