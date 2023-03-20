@@ -146,6 +146,33 @@ export class TeacherController {
   ) {
     return this.teacherService.registerTeacherCompany(user.id, id);
   }
+
+  // 신청한 업체 목록 보기
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '신청한 업체 목록 보기 API' })
+  @Get('company/apply')
+  @UseGuards(JwtTeacherAuthGuard)
+  getapplyCompanys(@CurrentUser() user: CurrentUserDto) {
+    return this.teacherService.getapplyCompanys(user.id);
+  }
+
+  // 신청한 업체 등록하기
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '신청한 업체 등록하기 API' })
+  @Patch('company/register/:id')
+  @UseGuards(JwtTeacherAuthGuard)
+  registerCompanys(
+    @CurrentUser() user: CurrentUserDto,
+    @Param('id') id: number,
+  ) {
+    return this.teacherService.registerCompanys(user.id, id);
+  }
   // 강사 워크샵 등록
   @ApiResponse({
     status: 200,

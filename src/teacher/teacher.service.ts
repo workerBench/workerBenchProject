@@ -303,6 +303,66 @@ export class TeacherService {
     }
   }
 
+  // 신청한 업체 목록 보기
+  async getapplyCompanys(userId: number) {
+    try {
+      const companyId = await this.companyRepository.findOne({
+        where: { user_id: userId },
+        select: ['id'],
+      });
+      const Applycompanys = await this.companyApplicationRepository.find({
+        where: { company_id: companyId.id },
+        select: ['id'],
+      });
+      return Applycompanys;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  // 신청한 업체 등록하기
+  async registerCompanys(userId: number, id: number) {
+    try {
+      const companyId = await this.companyRepository.findOne({
+        where: { user_id: userId },
+        select: ['id'],
+      });
+      if (!companyId) {
+        throw new HttpException(
+          '해당하는 업체가 없습니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const applycompanyId = await this.companyApplicationRepository.findOne({
+        where: { teacher_id: id, company_id: companyId.id },
+      });
+      if (!applycompanyId) {
+        throw new HttpException(
+          '해당하는 강사가 없습니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const teahcerInfo = await this.teacherRepository.findOne({
+        where: { user_id: id, affiliation_company_id: userId },
+      });
+      if (teahcerInfo) {
+        throw new HttpException(
+          '이미 해당하는 강사를 등록하였습니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        await this.teacherRepository.update(id, {
+          affiliation_company_id: userId,
+        });
+      }
+      return { message: '해딩 강사를 수락하였습니다.' };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   // 워크샵 등록
   async createTeacherWorkshops(
     data: CreateWorkshopsDto,
