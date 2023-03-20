@@ -148,24 +148,26 @@ export class MypageService {
     });
   }
 
-  // 결제하기 버튼 클릭 시 status가 부적합한 경우 예외 처리
-  async checkStatus(user_id: number, paymentDto: PaymentDto) {
-    const { workshopInstanceId, imp_uid, merchant_uid } = paymentDto;
+  // 결제하기 버튼 클릭 시 status가 '결제 대기중'이 아닌 경우 예외 처리
+  async checkStatus(user_id: number, workshopInstanceId: number) {
+    const workshopDetail = await this.workShopInstanceDetailRepository
+      .createQueryBuilder('workshopDetail')
+      .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
+      .where('workshopDetail.id = :id', { id: workshopInstanceId })
+      .getRawMany();
 
-    const workshopInsctanceStatus =
-      await this.workShopInstanceDetailRepository.findOne({
-        where: { user_id, id: workshopInstanceId, workshop_id: merchant_uid },
-        select: ['status'],
-      });
+    console.log('00000000');
+    console.log(workshopDetail);
 
-    if (!workshopInsctanceStatus) {
+    if (!workshopDetail) {
       throw new NotFoundException('수강 문의 기록이 존재하지 않습니다.');
     }
 
-    if (workshopInsctanceStatus.status !== 'non_payment') {
+    if (workshopDetail[0].workshopDetail_status !== 'non_payment') {
       throw new BadRequestException('결제 가능한 상태가 아닙니다.');
     }
-    return { message: 'success' };
+
+    return workshopDetail;
   }
 
   // 결제하기 클릭 시, 먼저 결제 정보 일치 체크

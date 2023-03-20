@@ -19,6 +19,7 @@ import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { PaymentDto } from 'src/mypage/dtos/payment.dto';
+import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 
 @ApiTags('mypage')
 @UseInterceptors(SuccessInterceptor)
@@ -50,8 +51,6 @@ export class MypageController {
     @Param('id') id: number,
     @CurrentUser() user: CurrentUserDto,
   ) {
-    console.log('1111');
-    console.log(id);
     return await this.mypageService.getSoonWorkshopsById(id, user.id);
   }
 
@@ -76,10 +75,13 @@ export class MypageController {
   @Post('workshops/orderInfo')
   @UseGuards(JwtUserAuthGuard)
   async tryWorkshopOrderInfo(
-    @Body() paymentDto: PaymentDto,
+    @Body() body: { workshopDetailId: number },
     @CurrentUser() user: CurrentUserDto,
   ) {
-    const result = await this.mypageService.checkStatus(user.id, paymentDto);
+    const result = await this.mypageService.checkStatus(
+      user.id,
+      body.workshopDetailId,
+    );
     return result;
   }
 

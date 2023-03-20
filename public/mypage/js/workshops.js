@@ -35,29 +35,15 @@ function getSoonWorkshops() {
                 }
               </button>
               <button id="open-order-input" onclick="tryWorkshopOrderInfo(${
-                element.workshopDetailId
-              })" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#order-input-modal">
-              결제하기
+                element.workshopDetail_id
+              })" type="button" class="btn btn-primary open-order-input" data-bs-toggle="modal" data-bs-target="#order-input-modal">
+              ${
+                element.workshopDetail_status == 'non_payment'
+                  ? '결제하기'
+                  : '결제 불가'
+              }
               </button>
-             <!-- 결제창 모달 삽입 위치였던 곳 -->
              <!-- 결제창 Modal -->
-              <div class="modal fade" id="order-input-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">결제하기</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                    <!-- modal body-->
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                      <button type="button" class="btn btn-primary" onclick="open_iamport()">결제하기</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
             <h5 class="card-title">${element.workshop_title}</h5>
             <p class="card-title">진행 예정일: ${
               element.workshopDetail_wish_date
@@ -69,38 +55,27 @@ function getSoonWorkshops() {
               element.workshopDetail_id
             })">상세 내역 보기</p>
           </div>
-          <!-- 상세 내역 아코디언 창 -->
         </div>
       </div>`;
         $('#incomplete-list').append(tempHtml);
-        showOrderBtn();
       });
+      hideButtonIfNotPayable();
     })
     .catch((error) => {
       console.log(error);
     });
 }
 
-// status가 '결제 대기중'일 때만 결제하기 버튼 보여주기
-function showOrderBtn() {
-  // iincomplete-list 요소 아래의 버튼 중 id가 open-order-input인 버튼을 선택
-  const orderBtns = document.querySelectorAll(
-    '#incomplete-list button[id="open-order-input"]',
-  );
-  // orderBtn 이전 형제 요소의 innerText 값을 status 변수에 할당
-  orderBtns.forEach((orderBtn) => {
-    const status = orderBtn.previousElementSibling.innerText;
-    console.log(status);
+// 결제 상태에 따라 버튼 숨기기
+function hideButtonIfNotPayable() {
+  const buttons = document.querySelectorAll('.open-order-input');
 
-    if (status !== '결제 대기중') {
-      orderBtn.style.display = 'none';
-    } else {
-      orderBtn.style.display = 'block';
+  buttons.forEach((button) => {
+    if (button.textContent.trim() === '결제 불가') {
+      button.style.display = 'none';
     }
   });
 }
-
-// $(document).on('shown.bs.modal', '#order-input-modal', showOrderBtn);
 
 // 특정 워크샵 상세 내역 불러오기 (모달창)
 function showModal(workshopDetailId) {
@@ -110,7 +85,7 @@ function showModal(workshopDetailId) {
       const workshop = res.data.data[0];
       console.log(workshop);
 
-      const modal = document.getElementById('modal');
+      const modal = document.getElementById('incomplete-workshopDetail-modal');
       modal.innerHTML = `<div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">워크샵 문의 상세 내역</h5>
@@ -202,54 +177,76 @@ function showModal(workshopDetailId) {
 // 결제하기 버튼 클릭 시 모달 창 불러오기
 function tryWorkshopOrderInfo(workshopDetailId) {
   axios
-    .post(`/api/mypage/workshops/soon/${workshopDetailId}`)
+    .post(`/api/mypage/workshops/orderInfo`, { workshopDetailId })
     .then((res) => {
+      console.log(res);
+      console.log(workshopDetailId, '2222');
       const workshop = res.data.data[0];
-      console.log(workshop);
+
+      const modal = document.getElementById('order-input-modal');
+      modal.innerHTML = `<div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">구매자 정보 입력하기</h5>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <form id="form">
+      <p>상품 번호: <span id="order-workshop-id">${
+        workshop.workshop_id
+      }</span></p>
+      <p>상품 명: <span id="order-workshop-title">${
+        workshop.workshop_title
+      }</span></p>
+      <p>주문 번호: <span id="order-workshopDetail-id">${
+        workshop.workshopDetail_id
+      }</span></p>
+      <p>총 결제 금액: <span id="order-workshop-price">${
+        workshop.workshop_price * workshop.workshopDetail_member_cnt
+      }원</span></p>
+      <div class="mb-3">
+        <input type="text" class="form-control" name="name" id="name" placeholder="구매자 이름" required>
+      </div>
+      <div class="mb-3">
+        <input type="email" class="form-control" name="email" id="email" placeholder="이메일" required>
+      </div>
+      <div class="mb-3">
+        <input type="text" class="form-control" name="phone_number" id="phone_number" placeholder="전화번호" required>
+        <p>* '-' 없이 입력해주세요. (ex. 01012341234)</p>
+      </div>
+      <div class="mb-3">
+        <input type="text" class="form-control" name="phone_number" id="address" placeholder="주소" required>
+      </div>
+      <div class="mb-3">
+        <input type="text" class="form-control" name="phone_number" id="zip-code" placeholder="우편번호" required>
+      </div>
+      <button type="button" class="btn btn-primary" onclick="open_iamport()">결제하기</button>
+      </div>
+    </div>`;
+
+      modal.classList.add('show');
+      modal.setAttribute('aria-modal', 'true');
+      modal.setAttribute('style', 'display: block');
+
+      const closeButton = modal.querySelector('.btn-close');
+      closeButton.addEventListener('click', function () {
+        modal.classList.remove('show');
+        modal.removeAttribute('aria-modal');
+        modal.removeAttribute('style');
+      });
+
+      modal.addEventListener('click', function (event) {
+        if (event.target === modal) {
+          modal.classList.remove('show');
+          modal.removeAttribute('aria-modal');
+          modal.removeAttribute('style');
+        }
+      });
     })
     .catch((err) => {
       console.log(err);
+      alert(err.response.data.message);
+      location.reload();
     });
-  const modal = document.getElementById('modal');
-
-  const modalBody = document.querySelector('.modal-body');
-  modalBody.innerHTML = `<form id="form">
-        <div class="mb-3">
-          <input type="text" class="form-control" name="name" id="name" placeholder="구매자 이름" required>
-        </div>
-        <div class="mb-3">
-          <input type="email" class="form-control" name="email" id="email" placeholder="이메일" required>
-        </div>
-        <div class="mb-3">
-          <input type="text" class="form-control" name="phone_number" id="phone_number" placeholder="전화번호" required>
-          <p>* '-' 없이 입력해주세요. (ex. 01012341234)</p>
-        </div>
-        <div class="mb-3">
-          <input type="text" class="form-control" name="phone_number" id="address" placeholder="주소" required>
-        </div>
-        <div class="mb-3">
-          <input type="text" class="form-control" name="phone_number" id="zip-code" placeholder="우편번호" required>
-        </div>
-        <div class="mb-3" >
-          <p>워크샵 id: <span id="order-workshop-id">${
-            element.workshop_id
-          }</span></p>
-        </div>
-        <div class="mb-3">
-          <p>워크샵 주문 번호: <span id="order-workshopDetail-id">${
-            element.workshopDetail_id
-          }</span></p>
-        </div>
-        <div class="mb-3">
-          <p>워크샵 제목: <span id="order-workshop-title">${
-            element.workshop_title
-          }</span></p>
-        </div>
-        <div class="mb-3">
-          <p>총 결제 금액 <span id="order-price">${
-            element.workshop_price * element.workshopDetail_member_cnt
-          }</span>원</p>
-        </div>`;
 }
 
 // 아임포트 창 열기
@@ -302,34 +299,8 @@ function open_iamport() {
           });
       } else {
         console.log(rsp);
-        console.log('결제 실패');
+        alert(err.response.data.message);
       }
     },
   );
 }
-
-// <div class="accordion accordion-flush" id="accordionFlushExample">
-//             <div class="accordion-item">
-//               <h2 class="accordion-header" id="flush-headingOne">
-//                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-//                   상세 내역 보기
-//                 </button>
-//               </h2>
-//               <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-//                 <div class="accordion-body-${index}">
-//                 <p>신청 번호: ${element.workshopDetail_id}</p>
-//                 <p>워크샵 제목: ${element.workshop_title}</p>
-//                 <p>회사명: ${element.workshopDetail_company}</p>
-//                 <p>신청자 이름: ${element.workshopDetail_name}</p>
-//                 <p>신청자 이메일: ${element.workshopDetail_email}</p>
-//                 <p>휴대폰 번호: ${element.workshopDetail_phone_number}</p>
-//                 <p>진행 일자: ${element.workshopDetail_wish_date}</p>
-//                 <p>신청 목적: ${element.workshopDetail_purpose}</p>
-//                 <p>신청 유형: ${element.workshop_category}</p>
-//                 <p>장소: ${element.workshopDetail_wish_location}</p>
-//                 <p>인원: ${element.workshopDetail_member_cnt}</p>
-//                 <p>기타 문의 사항: ${element.workshopDetail_etc}</p>
-//                 <p>강사 연락처: ${element.teacher_email}</p></div>
-//               </div>
-//             </div>
-//           </div>
