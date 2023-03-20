@@ -51,7 +51,7 @@ function getSoonWorkshops() {
             <p class="card-workshop-summary">인원: ${
               element.workshopDetail_member_cnt
             }명</p>
-            <p id="show-workshop-detail" onclick="showModal(${
+            <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showModal(${
               element.workshopDetail_id
             })">상세 내역 보기 >> </p>
           </div>
@@ -85,10 +85,11 @@ function showModal(workshopDetailId) {
       const workshop = res.data.data[0];
       console.log(workshop);
 
-      const modal = document.getElementById('incomplete-workshopDetail-modal');
-      modal.innerHTML = `<div class="modal-content">
+      const modal = document.getElementById('modal');
+      modal.innerHTML = `
+            <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">워크샵 문의 상세 내역</h5>
+              <h5 class="modal-title" id="exampleModalLabel">워크샵 문의 상세 내역</h5>
               <button type="button" class="btn-close" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -104,45 +105,45 @@ function showModal(workshopDetailId) {
                     : '오프라인'
                 }</div>
                 <div class="info-title">${workshop.workshop_title}</div>
-                <div class="info-title">신청자: ${
+                <div class="info-ul">신청자: <span class="info-li">${
                   workshop.workshopDetail_name
                 } (${workshop.workshopDetail_company} /
         ${workshop.workshopDetail_email} /
-        ${workshop.workshopDetail_phone_number})</div>
-                <div class="info-ul">진행 예정일 :
+        ${workshop.workshopDetail_phone_number})</span></div>
+                <div class="info-ul">진행 예정일:
                   <span class="info-li">${
                     workshop.workshopDetail_wish_date
                   }</span>
                 </div>
-                <div class="info-ul">인원 :
+                <div class="info-ul">인원:
                   <span class="info-li">${
                     workshop.workshopDetail_member_cnt
                   }명</span>
                 </div>
-                <div class="info-ul">시간 :
+                <div class="info-ul">시간:
                   <span class="info-li">${workshop.workshop_total_time}분</span>
                 </div>
-                <div class="info-ul">장소 :
+                <div class="info-ul">장소:
                   <span class="info-li">${
                     workshop.workshop_category === 'online'
                       ? '온라인'
                       : `${workshop.workshopDetail_wish_location}`
                   }</span>
                 </div>
-                <div class="info-ul">목적 :
+                <div class="info-ul">목적:
                   <span class="info-li">${
                     workshop.workshopDetail_purpose
                   }</span>
                 </div>
-                <div class="info-ul">기타 문의사항 :
+                <div class="info-ul">기타 문의사항:
                   <span class="info-li">${workshop.workshopDetail_etc}</span>
                 </div>
-                <div class="info-ul">강사 연락처 :
+                <div class="info-ul">강사 연락처:
                   <span class="info-li">${workshop.teacherProfile_name} (${
         workshop.teacherProfile_phone_number
       })</span>
                 </div>
-                <div class="info-price">총 금액: ${
+                <div class="info-price">총 결제 금액: ${
                   workshop.workshop_price * workshop.workshopDetail_member_cnt
                 }원</div>
               </div>
@@ -183,7 +184,7 @@ function tryWorkshopOrderInfo(workshopDetailId) {
       console.log(workshopDetailId, '2222');
       const workshop = res.data.data[0];
 
-      const modal = document.getElementById('order-input-modal');
+      const modal = document.getElementById('modal');
       modal.innerHTML = `<div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">구매자 정보 입력하기</h5>
