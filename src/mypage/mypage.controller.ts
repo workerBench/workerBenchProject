@@ -32,7 +32,7 @@ export class MypageController {
     status: 200,
     description: '성공',
   })
-  @ApiOperation({ summary: '수강 예정 워크샵 api' })
+  @ApiOperation({ summary: '수강 예정 워크샵 전체 조회 api' })
   @Get('workshops/soon')
   @UseGuards(JwtUserAuthGuard)
   async getSoonWorkshops(@CurrentUser() user: CurrentUserDto) {
@@ -44,7 +44,7 @@ export class MypageController {
     status: 200,
     description: '성공',
   })
-  @ApiOperation({ summary: '수강 예정 워크샵 api' })
+  @ApiOperation({ summary: '수강 예정 워크샵 상세 조회 api' })
   @Get('workshops/soon/:workshopDetailInstance_id') // workshopDetail
   @UseGuards(JwtUserAuthGuard)
   async getSoonWorkshopsById(
@@ -70,6 +70,22 @@ export class MypageController {
   }
 
   // 수강 완료 워크샵 상세 조회 API
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '수강 예정 워크샵 상세 조회 api' })
+  @Get('workshops/complete/:workshopDetailInstance_id') // workshopDetail
+  @UseGuards(JwtUserAuthGuard)
+  async getCompleteWorkshopsById(
+    @Param('workshopDetailInstance_id') workshopDetailInstance_id: number,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    return await this.mypageService.getCompleteWorkshopsById(
+      workshopDetailInstance_id,
+      user.id,
+    );
+  }
 
   // 워크샵 결제하기 클릭 시 status 유효성 검사
   @ApiResponse({

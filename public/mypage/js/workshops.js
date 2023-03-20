@@ -52,7 +52,7 @@ function getSoonWorkshops() {
             <p class="card-workshop-summary">인원: ${
               element.workshopDetail_member_cnt
             }명</p>
-            <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showModal(${
+            <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showIncompleteModal(${
               element.workshopDetail_id
             })">상세 내역 보기 >> </p>
           </div>
@@ -78,8 +78,8 @@ function hideButtonIfNotPayable() {
   });
 }
 
-// 특정 워크샵 상세 내역 불러오기 (모달창)
-function showModal(workshopDetailId) {
+// 특정 워크샵 상세 내역 불러오기 (모달창) - 수강 예정
+function showIncompleteModal(workshopDetailId) {
   axios
     .get(`/api/mypage/workshops/soon/${workshopDetailId}`)
     .then((res) => {
@@ -325,7 +325,7 @@ function getCompleteWorkshops() {
             <h5 id="card-workshop-title">${element.workshop_title}</h5>
             <p class="card-workshop-summary">진행 예정일: ${element.workshopDetail_wish_date}</p>
             <p class="card-workshop-summary">인원: ${element.workshopDetail_member_cnt}명</p>
-            <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showModal(${element.workshopDetail_id})">상세 내역 보기 >> </p>
+            <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showCompleteModal(${element.workshopDetail_id})">상세 내역 보기 >> </p>
           </div>
         </div>
       </div>`;
@@ -334,5 +334,103 @@ function getCompleteWorkshops() {
     })
     .catch((error) => {
       console.log(error);
+    });
+}
+
+// 특정 워크샵 상세 내역 불러오기 (모달창) - 수강 완료
+function showCompleteModal(workshopDetailId) {
+  axios
+    .get(`/api/mypage/workshops/complete/${workshopDetailId}`)
+    .then((res) => {
+      const workshop = res.data.data[0];
+      console.log(workshop);
+
+      const modal = document.getElementById('modal');
+      modal.innerHTML = `
+            <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">워크샵 문의 상세 내역</h5>
+              <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <a href="/workshops/detail?workshopId=${
+                workshop.workshop_id
+              }"><img src="${
+        workshop.workshop_thumb
+      }" alt="Image" class="modal-image"></a>
+              <div class="info">
+                <div class="info-category">${
+                  workshop.workshop_category === 'online'
+                    ? '온라인'
+                    : '오프라인'
+                }</div>
+                <div class="info-title">${workshop.workshop_title}</div>
+                <div class="info-ul">신청자: <span class="info-li">${
+                  workshop.workshopDetail_name
+                } (${workshop.workshopDetail_company} /
+        ${workshop.workshopDetail_email} /
+        ${workshop.workshopDetail_phone_number})</span></div>
+                <div class="info-ul">진행 예정일:
+                  <span class="info-li">${
+                    workshop.workshopDetail_wish_date
+                  }</span>
+                </div>
+                <div class="info-ul">인원:
+                  <span class="info-li">${
+                    workshop.workshopDetail_member_cnt
+                  }명</span>
+                </div>
+                <div class="info-ul">시간:
+                  <span class="info-li">${workshop.workshop_total_time}분</span>
+                </div>
+                <div class="info-ul">장소:
+                  <span class="info-li">${
+                    workshop.workshop_category === 'online'
+                      ? '온라인'
+                      : `${workshop.workshopDetail_wish_location}`
+                  }</span>
+                </div>
+                <div class="info-ul">목적:
+                  <span class="info-li">${
+                    workshop.workshopDetail_purpose
+                  }</span>
+                </div>
+                <div class="info-ul">기타 문의사항:
+                  <span class="info-li">${workshop.workshopDetail_etc}</span>
+                </div>
+                <div class="info-ul">강사 연락처:
+                  <span class="info-li">${workshop.teacherProfile_name} (${
+        workshop.teacherProfile_phone_number
+      })</span>
+                </div>
+                <div class="info-price">총 결제 금액: ${
+                  workshop.workshop_price * workshop.workshopDetail_member_cnt
+                }원</div>
+              </div>
+            </div>
+          </div>
+      `;
+
+      modal.classList.add('show');
+      modal.setAttribute('aria-modal', 'true');
+      modal.setAttribute('style', 'display: block');
+
+      const closeButton = modal.querySelector('.btn-close');
+      closeButton.addEventListener('click', function () {
+        modal.classList.remove('show');
+        modal.removeAttribute('aria-modal');
+        modal.removeAttribute('style');
+      });
+
+      modal.addEventListener('click', function (event) {
+        if (event.target === modal) {
+          modal.classList.remove('show');
+          modal.removeAttribute('aria-modal');
+          modal.removeAttribute('style');
+        }
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }

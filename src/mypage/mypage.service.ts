@@ -158,6 +158,57 @@ export class MypageService {
     }
   }
 
+  // 수강 완료 워크샵 상세 조회 API
+  async getCompleteWorkshopsById(id: number, user_id: number) {
+    try {
+      const workshops = await this.workShopInstanceDetailRepository
+        .createQueryBuilder('workshopDetail')
+        .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
+        .innerJoinAndSelect('workshopDetail.Writer', 'customer')
+        .where('customer.id = :user_id', { user_id: user_id })
+        .innerJoinAndSelect('workshop.User', 'teacher')
+        .innerJoinAndSelect('teacher.TeacherProfile', 'teacherProfile')
+        .andWhere('workshopDetail.id = :workshopDetail_id', {
+          workshopDetail_id: id,
+        })
+        .andWhere('workshopDetail.status = :status', { status: 'complete' })
+        .andWhere('workshop.deletedAt is null')
+        .select([
+          'workshopDetail.id',
+          'workshopDetail.company',
+          'workshopDetail.name',
+          'workshopDetail.email',
+          'workshopDetail.phone_number',
+          'workshopDetail.wish_date',
+          'workshopDetail.status',
+          'workshopDetail.purpose',
+          'workshopDetail.wish_location',
+          'workshopDetail.member_cnt',
+          'workshopDetail.etc',
+          'workshopDetail.category',
+          'workshopDetail.user_id',
+          'workshopDetail.workshop_id',
+          'workshop.id',
+          'workshop.title',
+          'workshop.category',
+          'workshop.thumb',
+          'workshop.price',
+          'workshop.total_time',
+          'workshop.deletedAt',
+          'customer.id',
+          'customer.email',
+          'teacher.id',
+          'teacherProfile.phone_number',
+          'teacherProfile.name',
+        ])
+        .getRawMany();
+
+      return workshops;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   // 결제하기 버튼 클릭 시 status이 '결제 대기중'인지 체크
   async checkStatus(user_id: number, workshopInstanceId: number) {
     const workshopDetail = await this.workShopInstanceDetailRepository
