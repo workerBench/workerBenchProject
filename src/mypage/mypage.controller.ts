@@ -91,15 +91,15 @@ export class MypageController {
     description: '성공',
   })
   @ApiOperation({ summary: '워크샵 결제하기 api' })
-  @Post('workshops/order')
+  @Patch('workshops/order')
   @UseGuards(JwtUserAuthGuard)
   async updateWorkshopPayment(
-    @Body() paymentDto: PaymentDto,
+    @Body() paymentInfo: PaymentDto,
     @CurrentUser() user: CurrentUserDto,
   ) {
     const check_result = await this.mypageService.checkPayment(
       user.id,
-      paymentDto,
+      paymentInfo,
     );
 
     if (check_result === false) {

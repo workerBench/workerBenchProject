@@ -254,7 +254,7 @@ function open_iamport() {
   const title = document.querySelector('#order-workshop-title').innerText;
   // const price = document.querySelector('#order-price').innerText;
   const price = 100; // 일단 임시로 100원 결제
-  const merchant_uid = document.querySelector('#order-workshop-id').innerText;
+  const workshop_id = document.querySelector('#order-workshop-id').innerText;
   const buyer_email = document.querySelector('#email').value; // 구매자 이메일
   const buyer_name = document.querySelector('#name').value; // 구매자 이름
   const buyer_tel = document.querySelector('#phone_number').value; // 구매자 전화번호
@@ -271,7 +271,7 @@ function open_iamport() {
     {
       pg: 'html5_inicis', // 하나의 아임포트 계정으로 여러 pg를 사용할 때 구분자
       pay_method: 'card', // 결제 수단
-      merchant_uid, // workshop_id
+      merchant_uid: workshopInstanceId, // workshopDetail_id
       name: title,
       amount: Number(price), // 결제할 금액
       buyer_email, // 구매자 이메일
@@ -285,17 +285,19 @@ function open_iamport() {
         console.log(rsp);
 
         axios
-          .post('/api/mypage/workshop/order', {
-            workshopInstanceId,
+          .patch('/api/mypage/workshops/order', {
+            workshop_id,
             imp_uid: rsp.imp_uid,
             merchant_uid: rsp.merchant_uid,
           })
           .then((response) => {
+            console.log(response);
             alert(response.message);
-            window.location.reload();
+            // window.location.reload();
           })
           .catch((error) => {
             console.log(error);
+            console.log(workshopInstanceId, imp_uid, merchant_uid);
           });
       } else {
         console.log(rsp);
