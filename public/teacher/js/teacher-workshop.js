@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const wokshopApprovalList = document.getElementById('wokshop-approvalList');
   const wokshopFinishedList = document.getElementById('wokshop-finishedList');
   const wokshopRequestList = document.getElementById('wokshop-requestList');
-  // document.ready(function () {
   axios({
     method: 'get',
     url: '/api/teacher/workshops',

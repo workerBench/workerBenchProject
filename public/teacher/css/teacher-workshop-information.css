@@ -121,13 +121,14 @@
     border-radius: 10px;
     background-color: #9f70fb;
 }
-#workshop-infomationList{
+#workshop-informationList{
     width: 1200px;
-    height: 700px;
+    height: 900px;
     margin: auto;
     margin-top: 50px;
     display: flex;
     justify-content: center;
+    border: 2px solid #000000;
 }
 .workshop-div{
     width: 600px;
@@ -151,6 +152,7 @@
     height: 550px;
     display: flex;
     margin-top: 50px;
+    flex-wrap: wrap;
 }
 .teacher-workshop-li-div{
     width: 200px;
@@ -178,6 +180,22 @@
     margin-bottom: 20px;
     border: 2px solid #000000;
 }
+.applyed-Companys-div{
+  width: 600px;
+  height: 200px;
+  margin-top: 100px;
+  /* border: 2px solid #000000; */
+}
+#applyedCompany{
+  margin-left: 300px;
+}
+#apply-company-List{
+  width: 760px;
+  height: 400px;
+  border: 2px solid #000000;
+  display: flex;
+  flex-wrap: wrap;
+}
 #company-List{
   width: 760px;
   height: 400px;
@@ -189,6 +207,14 @@
   text-align: center;
   list-style: none;
   margin-bottom: 20px;
+  border: 2px solid #000000;
+}
+.company-apply-li{
+  width: 400px;
+  height: 50px;
+  font-size: 15px;
+  text-align: center;
+  list-style: none;
   border: 2px solid #000000;
 }
 .Button{
@@ -203,4 +229,12 @@
 }
 .Button:hover {
     background-color: #645cbb;
+}
+.applyedCompanyButton{
+  width: 100px;
+  height: 50px;
+  background-color:  #a084dc;
+  color: white;
+  border:none ;
+  margin-left: 20px;
 }

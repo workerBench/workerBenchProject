@@ -1,16 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const workshopInfomationList = document.getElementById(
-    'workshop-infomationList',
+  const workshopInformationList = document.getElementById(
+    'workshop-informationList',
   );
   const companyList = document.getElementById('company-List');
+  const applyCompanyList = document.getElementById('apply-company-List');
 
   const companySearch = document.getElementById('search');
+  const applyedCompany = document.getElementById('applyedCompany');
   axios({
     method: 'get',
     url: '/api/teacher/mypage',
     data: {},
   })
     .then((response) => {
+      console.log(response);
       const data = response.data.teacher;
       for (let i = 0; i < data.length; i++) {
         const email = data[i].User.email;
@@ -72,6 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             <li class="workshop-information-li">${bank_name}</li>
                             <li class="workshop-information-li">${account}</li>
                             <li class="workshop-information-li">${saving_name}</li>
+                        </div>
+                        <div class="applyed-Companys-div">
+                            <button type="radio" class="Button" id="applyedCompany" onclick="getCompany()">신청한 업체보기</button>
                         </div>
           `;
         } else if (data[i].MyCompany && company_type === 1) {
@@ -143,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                               ${companyHtml}
                           </div>;
                       </div>`;
-        workshopInfomationList.insertAdjacentHTML('beforeend', tempHtml);
+        workshopInformationList.insertAdjacentHTML('beforeend', tempHtml);
       }
       companySearch.addEventListener('click', () => {
         const company_name = document.getElementById('company-name').value;
@@ -162,9 +168,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
               let tempHtml = ``;
               tempHtml += `
-                                  <li class="company-information-li">업체 이름 : ${company_name} 이름 :${saving_name} </li>
-                                  <button type="radio" class="Button" onclick="applyCompany(${id})">업체 신청</button>
-                         `;
+                          <li class="company-information-li">업체 이름 : ${company_name} 이름 :${saving_name} </li>
+                          <button type="radio" class="Button" onclick="applyCompany(${id})">업체 신청</button>
+                          `;
               companyList.insertAdjacentHTML('beforeend', tempHtml);
             }
           })
@@ -181,14 +187,56 @@ document.addEventListener('DOMContentLoaded', () => {
       alert(data.message);
     });
 });
-function applyCompany(id, affiliation_company_id) {
+function getCompany() {
+  axios({
+    method: 'get',
+    url: '/api/teacher/company/apply',
+    data: {},
+  })
+    .then((response) => {
+      console.log(response);
+      const data = response.data;
+      let html = ''; // 누적할 변수 선언
+      for (let i = 0; i < data.length; i++) {
+        const name = data[i].name;
+        const user_id = data[i].user_id;
+        html += `
+                <li class="company-apply-li"> 이름 :${name} </li>
+                <button type="radio" class="applyedCompanyButton" onclick="applyedCompany(${user_id})">업체 신청</button>
+                `; // 동적으로 HTML 코드 생성
+      }
+      document.getElementById('apply-company-List').innerHTML = html; // 생성된 HTML 코드를 apply-company-List 요소에 출력
+    })
+
+    .catch((response) => {
+      const { data } = response.response;
+      alert(data.error);
+    });
+}
+function applyedCompany(user_id) {
+  axios({
+    method: 'patch',
+    url: `/api/teacher/company/register/${user_id}`,
+    data: {},
+  })
+    .then((response) => {
+      console.log(response);
+      const data = response.data;
+      alert(data.message);
+      location.reload();
+    })
+    .catch((response) => {
+      console.log(response);
+      const { data } = response.response;
+      alert(data.error);
+    });
+}
+function applyCompany(id) {
   console.log(id);
   axios({
     method: 'post',
     url: `/api/teacher/company/apply/${id}`,
-    data: {
-      affiliation_company_id,
-    },
+    data: {},
   })
     .then((response) => {
       console.log(response);
@@ -212,7 +260,14 @@ $(document).on('click', '#close_btn', function (e) {
   console.log('click event');
   $('#modal').removeClass('show');
 });
-
+$(document).on('click', '#applyedCompany', function (e) {
+  console.log('click event');
+  $('#modal2').addClass('show');
+});
+$(document).on('click', '#close_btn', function (e) {
+  console.log('click event');
+  $('#modal2').removeClass('show');
+});
 function registerCompany() {
   window.location.href = '/teacher/company/register';
 }

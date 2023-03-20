@@ -274,7 +274,7 @@ export class TeacherService {
       });
       if (companyApplyId) {
         throw new HttpException(
-          '이미 해당하는 업체에 등록되었습니다.',
+          '이미 업체에 신청을 보냈습니다.',
           HttpStatus.BAD_REQUEST,
         );
       } else {
@@ -287,14 +287,6 @@ export class TeacherService {
           company_id: companyId.id,
         });
       }
-
-      // const applyCompanyId = await this.companyRepository.findOne({
-      //   where: { user_id: userId },
-      //   select: ['id'],
-      // });
-      // await this.teacherRepository.update(userId, {
-      //   affiliation_company_id: applyCompanyId.id,
-      // });
 
       return { message: '해딩 업체에 신청되었습니다.' };
     } catch (error) {
@@ -312,9 +304,20 @@ export class TeacherService {
       });
       const Applycompanys = await this.companyApplicationRepository.find({
         where: { company_id: companyId.id },
-        select: ['id'],
+        select: ['teacher_id'],
       });
-      return Applycompanys;
+      // Promise.all()은 병렬로 여러 개의 비동기 작업을 수행하고 모든 작업이 완료될 때까지 기다린 다음 결과를 반환하는 데 사용된다.
+      // Promise.all() 메소드를 사용하여 모든 teacherRepository.findOne() 호출의 결과를 대기한다.
+      // map을 사용하여 data라는 변수에 teacher_id
+      const teachers = await Promise.all(
+        Applycompanys.map((data) => {
+          return this.teacherRepository.findOne({
+            where: { user_id: data.teacher_id },
+            select: ['name', 'user_id'],
+          });
+        }),
+      );
+      return teachers;
     } catch (error) {
       console.log(error);
       throw error;
@@ -355,7 +358,10 @@ export class TeacherService {
         await this.teacherRepository.update(id, {
           affiliation_company_id: userId,
         });
+
+        await this.companyApplicationRepository.delete(applycompanyId.id);
       }
+
       return { message: '해딩 강사를 수락하였습니다.' };
     } catch (error) {
       console.log(error);
