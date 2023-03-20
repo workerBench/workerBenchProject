@@ -296,16 +296,28 @@ export class TeacherService {
   }
 
   // 신청한 업체 목록 보기
-  async getapplyCompanys(userId: number) {
+  async getApplyCompanys(userId: number) {
     try {
       const companyId = await this.companyRepository.findOne({
         where: { user_id: userId },
         select: ['id'],
       });
+      if (!companyId) {
+        throw new HttpException(
+          '등록된 업체가 없습니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       const Applycompanys = await this.companyApplicationRepository.find({
         where: { company_id: companyId.id },
         select: ['teacher_id'],
       });
+      if (!Applycompanys) {
+        throw new HttpException(
+          '신청한 강사가 없습니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       // Promise.all()은 병렬로 여러 개의 비동기 작업을 수행하고 모든 작업이 완료될 때까지 기다린 다음 결과를 반환하는 데 사용된다.
       // Promise.all() 메소드를 사용하여 모든 teacherRepository.findOne() 호출의 결과를 대기한다.
       // map을 사용하여 data라는 변수에 teacher_id
@@ -627,8 +639,17 @@ export class TeacherService {
   }
 
   // 강사 수강 문의 수락하기 api
-  async updateTeacherAccept(id: number) {
+  async updateTeacherAccept(userId: number, id: number) {
     try {
+      const userIdInfo = await this.workshopRepository.findOne({
+        where: { user_id: userId },
+      });
+      if (!userIdInfo) {
+        throw new HttpException(
+          '등록된 워크샵이 없습니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       const instanceStatus =
         await this.workShopInstanceDetailRepository.findOne({
           where: { id: id, status: 'request' },
@@ -651,8 +672,17 @@ export class TeacherService {
     }
   }
   // 강사 수강 문의 종료하기 api
-  async updateTeacherComplete(id: number) {
+  async updateTeacherComplete(userId: number, id: number) {
     try {
+      const userIdInfo = await this.workshopRepository.findOne({
+        where: { user_id: userId },
+      });
+      if (!userIdInfo) {
+        throw new HttpException(
+          '등록된 워크샵이 없습니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       const instanceStatus =
         await this.workShopInstanceDetailRepository.findOne({
           where: { id: id, status: 'waiting_lecture' },
@@ -669,6 +699,15 @@ export class TeacherService {
           HttpStatus.BAD_REQUEST,
         );
       }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  // 강사 워크샵 신청 취소하기
+  async cancleWorkshop(id: number) {
+    try {
     } catch (error) {
       console.log(error);
       throw error;

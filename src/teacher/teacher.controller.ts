@@ -11,6 +11,7 @@ import {
   Req,
   Res,
   Query,
+  Delete,
 } from '@nestjs/common';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
@@ -155,8 +156,8 @@ export class TeacherController {
   @ApiOperation({ summary: '신청한 업체 목록 보기 API' })
   @Get('company/apply')
   @UseGuards(JwtTeacherAuthGuard)
-  getapplyCompanys(@CurrentUser() user: CurrentUserDto) {
-    return this.teacherService.getapplyCompanys(user.id);
+  getApplyCompanys(@CurrentUser() user: CurrentUserDto) {
+    return this.teacherService.getApplyCompanys(user.id);
   }
 
   // 업체 소속을 신청한 업체 등록하기
@@ -232,8 +233,12 @@ export class TeacherController {
   })
   @ApiOperation({ summary: '강사 수강 문의 수락하기 API' })
   @Patch('workshops/manage/accept/:id')
-  updateTeacherAccept(@Param('id') id: number) {
-    return this.teacherService.updateTeacherAccept(id);
+  @UseGuards(JwtTeacherAuthGuard)
+  updateTeacherAccept(
+    @Param('id') id: number,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    return this.teacherService.updateTeacherAccept(id, user.id);
   }
 
   // 강사 수강 문의 종료하기
@@ -243,7 +248,22 @@ export class TeacherController {
   })
   @ApiOperation({ summary: '강사 수강 문의 종료하기 API' })
   @Patch('workshops/manage/complete/:id')
-  updateTeacherComplete(@Param('id') id: number) {
-    return this.teacherService.updateTeacherComplete(id);
+  @UseGuards(JwtTeacherAuthGuard)
+  updateTeacherComplete(
+    @Param('id') id: number,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    return this.teacherService.updateTeacherComplete(id, user.id);
+  }
+
+  // 강사 신청한 워크샵 취소하기
+  @ApiResponse({
+    status: 200,
+    description: 'status:"waiting_lecture" => "complete"',
+  })
+  @ApiOperation({ summary: '강사 수강 문의 종료하기 API' })
+  @Delete('workshops/manage/delete/:id')
+  cancleWorkshop(@Param('id') id: number) {
+    return this.teacherService.cancleWorkshop(id);
   }
 }
