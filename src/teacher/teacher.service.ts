@@ -132,7 +132,7 @@ export class TeacherService {
           return {
             ...workshop,
             workshop_thumb: `${this.configService.get(
-              'AWS_CLOUD_FRONT_DOMAIN',
+              'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
             )}images/workshops/${workshop.workshop_id}/800/${
               workshop.workshop_thumb
             }`,
@@ -361,10 +361,74 @@ export class TeacherService {
       return {
         message:
           '워크샵 등록 신청이 완료되었습니다. 관리자의 수락을 기다려 주세요',
+        workshop_id: workshop.identifiers[0].id,
+        title,
       };
     } catch (error) {
       console.log(error);
       throw error;
+    }
+  }
+
+  // 워크샵 등록 후 영상 등록
+  async uploadVideo(
+    workshopData: any,
+    video: Express.Multer.File,
+    userId: number,
+  ) {
+    // 비디오를 추가하려는 워크샵이 만들어져 있는지, video 는 null 상태인지 체크
+    const workshop = await this.workshopRepository.findOne({
+      where: {
+        id: workshopData.workshop_id,
+        title: workshopData.title,
+        user_id: userId,
+      },
+    });
+    if (!workshop) {
+      throw new BadRequestException(
+        '워크샵을 등록하는 과정에서 오류가 발생하였습니다.',
+      );
+    }
+    if (workshop.video !== null) {
+      throw new BadRequestException(
+        '해당 워크샵에는 동영상이 이미 등록되어 있습니다.',
+      );
+    }
+
+    // 정상적으로 비디오 업로딩이 진행되는 경우 --------------------
+    try {
+      // 랜덤한 이름 생성
+      const videoTypeName = video.originalname.substring(
+        video.originalname.lastIndexOf('.'),
+        video.originalname.length,
+      );
+      const videoName = uuid() + videoTypeName;
+
+      // s3 에 입력할 옵션
+      const s3OptionForReviewVideo = {
+        Bucket: this.configService.get('AWS_S3_BUCKET_NAME_VIDEO_INPUT'),
+        Key: `videos/workshops/${workshopData.workshop_id}/original/${videoName}`,
+        Body: video.buffer,
+      };
+
+      // 실제로 s3 버킷에 업로드
+      await this.s3Client.send(new PutObjectCommand(s3OptionForReviewVideo));
+
+      // 워크샵의 video 도 이름을 적어준다
+      await this.workshopRepository.update(
+        {
+          id: workshopData.workshop_id,
+          title: workshopData.title,
+          user_id: userId,
+        },
+        {
+          video: videoName,
+        },
+      );
+
+      return;
+    } catch (err) {
+      throw err;
     }
   }
 
@@ -425,7 +489,7 @@ export class TeacherService {
           return {
             ...workshop,
             workshop_thumb: `${this.configService.get(
-              'AWS_CLOUD_FRONT_DOMAIN',
+              'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
             )}images/workshops/${workshop.workshop_id}/800/${
               workshop.workshop_thumb
             }`,

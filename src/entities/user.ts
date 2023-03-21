@@ -110,5 +110,5 @@ export class User {
 
   // 6. order
   @OneToMany(() => Order, (order) => order.Payer)
-  MyOrders: [];
+  MyOrders: Order[];
 }

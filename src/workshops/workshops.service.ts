@@ -218,12 +218,12 @@ export class WorkshopsService {
         'workshop.title',
         'workshop.category',
         'workshop.desc',
-        'workshop.thumb',
         'workshop.min_member',
         'workshop.max_member',
         'workshop.total_time',
         'workshop.price',
         'workshop.location',
+        'workshop.video',
         'wish.workshop_id',
         'workshop.thumb',
         'GROUP_CONCAT(wish.user_id) as wish_user_id',
@@ -263,6 +263,20 @@ export class WorkshopsService {
       const thumbUrl = `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${thumbName}`;
       // ex) images/workshop/1/eraser-class-thumb.jpg 와 같은 파일명으로 저장되어 있음
 
+      // 영상이 첨부되어 있을 경우 cloud front 를 경유하는 영상 url 가져오기
+      let videoUrl: string = '';
+      const videoName = workshop.workshop_video;
+      if (videoName !== null && videoName !== undefined && videoName !== '') {
+        const videoNameWithOutType = videoName.substring(
+          0,
+          videoName.lastIndexOf('.'),
+        );
+        const cloundFrontUrlForVideo = this.configService.get(
+          'AWS_CLOUD_FRONT_DOMAIN_VIDEO',
+        );
+        videoUrl = `${cloundFrontUrlForVideo}videos/workshops/${workshop.workshop_id}/hls/${videoNameWithOutType}.m3u8`;
+      }
+
       return {
         ...workshop,
         wish_user_id: Array.from(new Set(halfWish)).map((el) => Number(el)),
@@ -271,6 +285,7 @@ export class WorkshopsService {
         genre: Array.from(new Set(workshop.genre.split(','))),
         averageStar: averageStar.toFixed(1), // 소수점 첫째자리에서 반올림
         workshop_thumb: thumbUrl,
+        workshop_video: videoUrl,
       };
     });
 
