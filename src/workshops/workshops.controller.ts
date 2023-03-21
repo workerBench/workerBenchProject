@@ -94,6 +94,7 @@ export class WorkshopsController {
     @Param('workshop_id') workshop_id: number,
     @CurrentUser() user: CurrentUserDto | boolean,
   ) {
+    // 워크샵 상세 정보 가져오기
     const workshop = await this.workshopsService.getWorkshopDetail(workshop_id);
 
     if (typeof user === 'boolean' && user === false) {

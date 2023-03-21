@@ -7,11 +7,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user';
 import { WorkShop } from './workshop';
+import { WorkShopInstanceDetail } from './workshop-instance.detail';
 
 @Entity({ schema: 'workerbench', name: 'order' })
 export class Order {
@@ -76,6 +78,9 @@ export class Order {
   @Column('int', { name: 'workshop_id', nullable: true })
   workshop_id: number | null;
 
+  @Column('int', { name: 'workshop_instance_detail_id', nullable: true })
+  workshop_instance_detail_id: number | null;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -102,4 +107,14 @@ export class Order {
   })
   @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
   Workshop: WorkShop;
+
+  // 3. workshop_instance_detail
+  @OneToOne(
+    () => WorkShopInstanceDetail,
+    (workShopInstanceDetail) => workShopInstanceDetail.OrderInfo,
+  )
+  @JoinColumn([
+    { name: 'workshop_instance_detail_id', referencedColumnName: 'id' },
+  ])
+  WorkShopInstanceDetailInfo: WorkShopInstanceDetail;
 }

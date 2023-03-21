@@ -12,6 +12,7 @@ import {
   Res,
   Query,
   Delete,
+  UploadedFile,
 } from '@nestjs/common';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
@@ -22,7 +23,7 @@ import { CreateCompanyDto } from './dto/teacher-company.dto';
 import { CreateTeacherDto } from './dto/teacher.dto';
 import { CreateWorkshopsDto } from './dto/teacher-workshops.dto';
 import { TeacherService } from './teacher.service';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { JwtTeacherAuthGuard } from 'src/auth/jwt/access/user/jwt-teacher-guard';
 import { AuthService } from 'src/auth/auth.service';
 import { RealIP } from 'nestjs-real-ip';
@@ -200,17 +201,41 @@ export class TeacherController {
   @UseInterceptors(
     FilesInterceptor('images', 4, { limits: { fileSize: 10 * 1024 * 1024 } }),
   )
-  createTeacherWorkshops(
+  async createTeacherWorkshops(
     @UploadedFiles() images: Array<Express.Multer.File>,
     @Body() data: any, // CreateWorkshopsDto
     @CurrentUser() user: CurrentUserDto,
   ) {
-    return this.teacherService.createTeacherWorkshops(
+    return await this.teacherService.createTeacherWorkshops(
       JSON.parse(data.jsonData),
       images,
       user.id,
     );
   }
+
+  // 강사 워크샵 등록 - 비디오
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '강사 워크샵 등록 API' })
+  @Post('workshops/video')
+  @UseGuards(JwtTeacherAuthGuard)
+  @UseInterceptors(
+    FileInterceptor('video', { limits: { fileSize: 350 * 1024 * 1024 } }),
+  )
+  async uploadVideoAfterCreateWorkshop(
+    @UploadedFile() video: Express.Multer.File,
+    @Body() data: any,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    return await this.teacherService.uploadVideo(
+      JSON.parse(data.jsonData),
+      video,
+      user.id,
+    );
+  }
+
   // 강사 미완료 목록 보기
   @ApiResponse({
     status: 200,
