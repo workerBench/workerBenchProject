@@ -123,7 +123,7 @@ export class TeacherController {
   @Post('workshops')
   @UseGuards(JwtTeacherAuthGuard)
   @UseInterceptors(
-    FilesInterceptor('images', 4, { limits: { fileSize: 5 * 1024 * 1024 } }),
+    FilesInterceptor('images', 4, { limits: { fileSize: 10 * 1024 * 1024 } }),
   )
   createTeacherWorkshops(
     @UploadedFiles() images: Array<Express.Multer.File>,

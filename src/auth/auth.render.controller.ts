@@ -6,7 +6,9 @@ import { JwtUserPageGuard } from './jwt/refresh-page-check/user/jwt-user-page-gu
 import { TOKEN_NAME } from './naming/token-name';
 import { RealIP } from 'nestjs-real-ip';
 import { AuthService } from './auth.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('z-page-render')
 @Controller()
 export class AuthControllerRender {
   constructor(private readonly authService: AuthService) {}

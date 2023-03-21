@@ -15,9 +15,9 @@ export class AdminService {
     @InjectRepository(WorkShop)
     private workshopRepository: Repository<WorkShop>,
     @InjectRepository(User)
-     private userRepository: Repository<User>,
+    private userRepository: Repository<User>,
     @InjectRepository(Company)
-     private companyRepository: Repository<Company>,
+    private companyRepository: Repository<Company>,
     @InjectRepository(AdminUser)
     private adminUserRepository: Repository<AdminUser>,
     private configService: ConfigService,
@@ -59,14 +59,16 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
 
     const workshops = await query.getMany();
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
-    }))
+      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+    }));
     return result;
   }
 
@@ -104,14 +106,16 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
 
     const workshops = await query.getMany();
-    
+
     const result = workshops.map((workshop) => ({
       ...workshop,
-      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
-    }))
+      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+    }));
     return result;
   }
 
@@ -150,14 +154,16 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
 
     const workshops = await query.getMany();
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
-    }))
+      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`,
+    }));
     return result;
   }
 
@@ -165,95 +171,102 @@ export class AdminService {
 
   async requestWorkshops() {
     const workshops = await this.workshopRepository
-    .createQueryBuilder('workshop')
-    .where('workshop.status = :status', { status: 'request' })
-    .innerJoinAndSelect('workshop.GenreTag', 'genre')
-    .getMany();
+      .createQueryBuilder('workshop')
+      .where('workshop.status = :status', { status: 'request' })
+      .innerJoinAndSelect('workshop.GenreTag', 'genre')
+      .getMany();
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
-    
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
+
     const result = workshops.map((workshop) => ({
       ...workshop,
-      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
-    }))
+      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+    }));
     return result;
-  };
-
+  }
 
   //-------------------------- 승인된 워크숍 목록 불러오기 (status: "approval") --------------------------//
 
   async getApprovedWorkshops() {
     const workshops = await this.workshopRepository
-    .createQueryBuilder('workshop')
-    .where('workshop.status = :status', { status: 'approval' })
-    .innerJoinAndSelect('workshop.GenreTag', 'genre')
-    .getMany();
+      .createQueryBuilder('workshop')
+      .where('workshop.status = :status', { status: 'approval' })
+      .innerJoinAndSelect('workshop.GenreTag', 'genre')
+      .getMany();
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
-    
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
+
     const result = workshops.map((workshop) => ({
       ...workshop,
-      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
-    }))
+      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+    }));
     return result;
-  };
+  }
 
   //-------------------------- 종료된 워크숍 목록 불러오기 (status: "finished") --------------------------//
 
   async getFinishedWorkshops() {
     const workshops = await this.workshopRepository
-    .createQueryBuilder('workshop')
-    .withDeleted()
-    .where('workshop.status = :status', { status: 'finished' })
-    .innerJoinAndSelect('workshop.GenreTag', 'genre')
-    .getMany();
+      .createQueryBuilder('workshop')
+      .withDeleted()
+      .where('workshop.status = :status', { status: 'finished' })
+      .innerJoinAndSelect('workshop.GenreTag', 'genre')
+      .getMany();
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
-    
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
+
     const result = workshops.map((workshop) => ({
       ...workshop,
-      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`
-    }))
+      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+    }));
     return result;
-  };
+  }
 
   //-------------------------- 워크숍 상세 --------------------------//
 
   async getWorkshopDetail(id: number) {
     let query = this.workshopRepository
-    .createQueryBuilder('workshop')
-    .withDeleted()
-    .where('workshop.id = :id', { id })
-    .innerJoinAndSelect('workshop.GenreTag', 'genre')
-    .innerJoinAndSelect('workshop.PurposeList', 'purpose')
-    .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
-    .innerJoinAndSelect('workshop.User', 'user')
-    .innerJoinAndSelect('user.TeacherProfile', 'teacher')
-    .select([
-      'workshop.id',
-      'workshop.title',
-      'workshop.category',
-      'workshop.desc',
-      'workshop.thumb',
-      'workshop.min_member',
-      'workshop.max_member',
-      'workshop.total_time',
-      'workshop.price',
-      'genre.name',
-      'GROUP_CONCAT(purposetag.name) AS purpose_name',
-      'user.email',
-      'teacher.name'
-    ])
-    .groupBy('workshop.id')
+      .createQueryBuilder('workshop')
+      .withDeleted()
+      .where('workshop.id = :id', { id })
+      .innerJoinAndSelect('workshop.GenreTag', 'genre')
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose')
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposetag')
+      .innerJoinAndSelect('workshop.User', 'user')
+      .innerJoinAndSelect('user.TeacherProfile', 'teacher')
+      .select([
+        'workshop.id',
+        'workshop.title',
+        'workshop.category',
+        'workshop.desc',
+        'workshop.thumb',
+        'workshop.min_member',
+        'workshop.max_member',
+        'workshop.total_time',
+        'workshop.price',
+        'genre.name',
+        'GROUP_CONCAT(purposetag.name) AS purpose_name',
+        'user.email',
+        'teacher.name',
+      ])
+      .groupBy('workshop.id');
 
     const workshopDetail = await query.getRawOne();
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
-    
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
+
     const result = {
       ...workshopDetail,
-      ThumbUrl: `${cloundFrontUrl}/${workshopDetail.workshop_thumb}`
-    }
+      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshopDetail.workshop_id}/800/${workshopDetail.workshop_thumb}`,
+    };
     return result;
   }
 

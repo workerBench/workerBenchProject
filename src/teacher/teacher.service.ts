@@ -28,7 +28,8 @@ import { identity } from 'rxjs';
 @Injectable()
 export class TeacherService {
   private readonly s3Client: S3Client;
-  public readonly S3_BUCKET_NAME: string;
+  public readonly AWS_S3_BUCKET_NAME_IMAGE_INPUT: string;
+
   constructor(
     @InjectRepository(Teacher) private teacherRepository: Repository<Teacher>,
     @InjectRepository(User) private userRepository: Repository<User>,
@@ -52,7 +53,9 @@ export class TeacherService {
         secretAccessKey: this.configService.get('AWS_SECRET_KEY'),
       },
     });
-    this.S3_BUCKET_NAME = this.configService.get('AWS_S3_BUCKET_NAME');
+    this.AWS_S3_BUCKET_NAME_IMAGE_INPUT = this.configService.get(
+      'AWS_S3_BUCKET_NAME_IMAGE_INPUT',
+    );
   }
   // 강사 등록 api
 
@@ -114,6 +117,7 @@ export class TeacherService {
           .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
           .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
           .select([
+            'workshop.id',
             'workshop.thumb',
             'workshop.title',
             'workshop.createdAt',
@@ -123,6 +127,17 @@ export class TeacherService {
           ])
           .groupBy('workshop.id')
           .getRawMany();
+
+        return result.map((workshop) => {
+          return {
+            ...workshop,
+            workshop_thumb: `${this.configService.get(
+              'AWS_CLOUD_FRONT_DOMAIN',
+            )}images/workshops/${workshop.workshop_id}/800/${
+              workshop.workshop_thumb
+            }`,
+          };
+        });
         return result;
       }
     } catch (error) {
@@ -315,7 +330,7 @@ export class TeacherService {
         // 첫 번째 image 일 경우 해당 이미지는 썸네일 이미지로 간주한다.
         if (index === 0) {
           const s3OptionForThumbImg = {
-            Bucket: this.configService.get('AWS_S3_BUCKET_NAME'), // S3의 버킷 이름.
+            Bucket: this.AWS_S3_BUCKET_NAME_IMAGE_INPUT, // S3의 버킷 이름.
             Key: `images/workshops/${workshop.identifiers[0].id}/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
             Body: image.buffer, // 업로드 하고자 하는 파일.
           };
@@ -332,7 +347,7 @@ export class TeacherService {
           });
           // 서브이미지 파일 경로
           const s3OptionForSubImg = {
-            Bucket: this.configService.get('AWS_S3_BUCKET_NAME'),
+            Bucket: this.AWS_S3_BUCKET_NAME_IMAGE_INPUT,
             Key: `images/workshops/${workshop.identifiers[0].id}/original/${subImgName}`,
             Body: image.buffer,
           };
@@ -341,7 +356,7 @@ export class TeacherService {
       });
       //
       if (workshopImageArray.length > 0) {
-        await this.workshopImageRepository.insert(workshopImageArray[0]);
+        await this.workshopImageRepository.insert(workshopImageArray);
       }
       return {
         message:
@@ -387,6 +402,7 @@ export class TeacherService {
             'workShopInstanceDetail',
           )
           .select([
+            'workshop.id',
             'workshop.thumb',
             'workshop.title',
             'workshop.min_member',
@@ -404,7 +420,17 @@ export class TeacherService {
             'workShopInstanceDetail.status',
           ])
           .getRawMany();
-        return result;
+
+        return result.map((workshop) => {
+          return {
+            ...workshop,
+            workshop_thumb: `${this.configService.get(
+              'AWS_CLOUD_FRONT_DOMAIN',
+            )}images/workshops/${workshop.workshop_id}/800/${
+              workshop.workshop_thumb
+            }`,
+          };
+        });
       }
     } catch (error) {
       console.log(error);

@@ -15,7 +15,6 @@ function getWorkshopDetail() {
       console.log(res.data.data);
       const workshop = res.data.data.workshop[0];
       const wishCheck = res.data.data.wish; // false or true
-
       let workshopInfo = `<div class="row">
         <div class="col">
           <div class="workshop-thumb">

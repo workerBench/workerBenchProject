@@ -54,13 +54,15 @@ export class WorkshopsService {
       .getRawMany();
 
     // s3 + cloud front에서 이미지 가져오기
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
 
     // , 기준으로 나누고 purpose_name 값 중복 제거
     const result = workshops.map((workshop) => ({
       ...workshop,
       purpose_name: Array.from(new Set(workshop.purpose_name.split(','))),
-      thumbUrl: `${cloundFrontUrl}/${workshop.workshop_thumb}`,
+      thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
     }));
 
     return result;
@@ -96,13 +98,15 @@ export class WorkshopsService {
       .getRawMany();
 
     // s3 + cloud front에서 이미지 가져오기
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
 
     // , 기준으로 나누고 purpose_name 값 중복 제거
     const result = queryBuilder.map((workshop) => ({
       ...workshop,
       purpose_name: Array.from(new Set(workshop.purpose_name.split(','))),
-      thumbUrl: `${cloundFrontUrl}/${workshop.workshop_thumb}`,
+      thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
     }));
 
     return result;
@@ -127,6 +131,7 @@ export class WorkshopsService {
         'workshop.id',
         'workshop.title',
         'workshop.category',
+        'workshop.thumb',
         'workshop.location',
         'workshop.price',
         'workshop.min_member',
@@ -179,6 +184,11 @@ export class WorkshopsService {
     return workshops.map((workshop) => ({
       ...workshop,
       purposeTag_name: workshop.purposeTag_name.split(','),
+      thumb: `${this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      )}images/workshops/${workshop.workshop_id}/800/${
+        workshop.workshop_thumb
+      }`,
     }));
   }
 
@@ -247,8 +257,10 @@ export class WorkshopsService {
 
       // s3 + cloud front에서 이미지 가져오기
       const thumbName = workshop.workshop_thumb;
-      const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
-      const thumbUrl = `${cloundFrontUrl}/${thumbName}`;
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
+      const thumbUrl = `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${thumbName}`;
       // ex) images/workshop/1/eraser-class-thumb.jpg 와 같은 파일명으로 저장되어 있음
 
       return {
@@ -313,7 +325,9 @@ export class WorkshopsService {
       // s3 + cloud front에서 이미지 가져오기
       const reviewImageArr = reviews[0].ReviewImages[0];
       const reviewImage = reviewImageArr.img_name;
-      const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
       const thumbUrl = `${cloundFrontUrl}/${reviewImage}`;
       // ex) images/reviews/1/eraser-class-thumb.jpg 와 같은 파일명으로 저장되어 있음
 
