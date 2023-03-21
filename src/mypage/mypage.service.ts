@@ -17,6 +17,7 @@ import { WorkShop } from 'src/entities/workshop';
 import axios from 'axios';
 import { PaymentDto } from 'src/mypage/dtos/payment.dto';
 import { Order } from 'src/entities/order';
+import { RefundDto } from 'src/mypage/dtos/refund.dto';
 
 @Injectable()
 export class MypageService {
@@ -209,8 +210,8 @@ export class MypageService {
     }
   }
 
-  // 결제하기 버튼 클릭 시 status이 '결제 대기중'인지 체크
-  async checkStatus(user_id: number, workshopInstanceId: number) {
+  // 결제하기 버튼 클릭 시 status가 '결제 대기중'인지 체크
+  async checkStatusIfNonPayment(user_id: number, workshopInstanceId: number) {
     const workshopDetail = await this.workShopInstanceDetailRepository
       .createQueryBuilder('workshopDetail')
       .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
@@ -319,6 +320,92 @@ export class MypageService {
     } catch (error) {
       console.log(error);
       return false;
+    }
+  }
+
+  // 환불 정보 입력창 열기 시 status가 '결제 완료'인지 체크
+  async checkStatusIfWaitingLecture(
+    user_id: number,
+    workshopInstanceId: number,
+  ) {
+    const workshopDetail = await this.workShopInstanceDetailRepository
+      .createQueryBuilder('workshopDetail')
+      .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
+      .where('workshopDetail.id = :id', { id: workshopInstanceId })
+      .innerJoinAndSelect('workshopDetail.Writer', 'customer')
+      .innerJoinAndSelect('customer.MyOrders', 'order')
+      .getRawMany();
+
+    if (!workshopDetail) {
+      throw new NotFoundException('수강 문의 기록이 존재하지 않습니다.');
+    }
+
+    if (workshopDetail[0].workshopDetail_status !== 'waiting_lecture') {
+      throw new BadRequestException('환불 가능한 상태가 아닙니다.');
+    }
+
+    return workshopDetail;
+  }
+
+  // 아임포트로 환불 요청 API
+  async refundWorkshopPayment(user_id: number, refundInfo: RefundDto) {
+    try {
+      // imp_uid, merchant_uid, amount로 결제 정보 조회
+      const { workshopInstance_id, merchant_uid, amount, reason } = refundInfo;
+      const paymentData = await this.orderRepository.findOne({
+        where: { merchant_uid },
+      });
+
+      if (!paymentData) {
+        return { message: '결제 정보가 없습니다.' };
+      }
+
+      // 조회한 결제 정보로부터 imp_uid 추출
+      const { imp_uid } = paymentData;
+
+      // 액세스 토큰 발급 받기
+      const getToken = await axios({
+        url: 'https://api.iamport.kr/users/getToken',
+        method: 'post', // POST method
+        headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
+        data: {
+          imp_key: process.env.PORTONE_API_KEY, // REST API 키
+          imp_secret: process.env.PORTONE_API_SECRET_KEY, // REST API Secret
+        },
+      });
+      const { access_token } = getToken.data.response; // 인증 토큰
+
+      /* 포트원 REST API로 결제환불 요청 */
+      const getCancelData = await axios({
+        url: 'https://api.iamport.kr/payments/cancel',
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: access_token, // 포트원 서버로부터 발급받은 엑세스 토큰
+        },
+        data: {
+          reason, // 가맹점 클라이언트로부터 받은 환불사유
+          imp_uid, // imp_uid를 환불 `unique key`로 입력
+          amount, // 가맹점 클라이언트로부터 받은 환불금액
+        },
+      });
+      const { response } = getCancelData.data;
+      // const { merchant_uid } = response; // 환불 결과에서 주문정보 추출
+
+      // order에서 softdelete로 변경
+      await this.orderRepository.softDelete({
+        merchant_uid: response.merchant_uid,
+      });
+      // workshopInstance에서 상태를 refund로 변경
+      await this.workShopInstanceDetailRepository.update(
+        { id: Number(workshopInstance_id) },
+        { status: 'refund' },
+      );
+
+      return true;
+    } catch (err) {
+      console.log(err);
+      throw false;
     }
   }
 

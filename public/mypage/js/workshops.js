@@ -44,6 +44,13 @@ function getSoonWorkshops() {
                   : '결제 불가'
               }
               </button>
+              <button id="open-refund-input" onclick="putWorkshopRefundInfo(${
+                element.workshopDetail_id
+              })" type="button" class="btn btn-secondary open-refund-input" data-bs-toggle="modal">${
+          element.workshopDetail_status == 'waiting_lecture'
+            ? '환불하기'
+            : '환불 불가'
+        }</button>
              <!-- 결제창 Modal -->
             <h5 id="card-workshop-title">${element.workshop_title}</h5>
             <p class="card-workshop-summary">진행 예정일: ${
@@ -61,18 +68,30 @@ function getSoonWorkshops() {
         $('#incomplete-list').append(tempHtml);
       });
       hideButtonIfNotPayable();
+      hideButtonIfNotRefundable();
     })
     .catch((error) => {
       console.log(error);
     });
 }
 
-// 결제 상태에 따라 버튼 숨기기
+// 결제 상태에 따라 결제하기 버튼 숨기기
 function hideButtonIfNotPayable() {
   const buttons = document.querySelectorAll('.open-order-input');
 
   buttons.forEach((button) => {
     if (button.textContent.trim() === '결제 불가') {
+      button.style.display = 'none';
+    }
+  });
+}
+
+// 환불 가능 여부에 따라 환불하기 버튼 숨기기
+function hideButtonIfNotRefundable() {
+  const buttons = document.querySelectorAll('.open-refund-input');
+
+  buttons.forEach((button) => {
+    if (button.textContent.trim() === '환불 불가') {
       button.style.display = 'none';
     }
   });
@@ -182,7 +201,7 @@ function putWorkshopOrderInfo(workshopDetailId) {
     .post(`/api/mypage/workshops/orderInfo`, { workshopDetailId })
     .then((res) => {
       console.log(res);
-      console.log(workshopDetailId, '2222');
+      console.log(workshopDetailId, '결제 입력창 열기');
       const workshop = res.data.data[0];
 
       const modal = document.getElementById('modal');
@@ -251,7 +270,7 @@ function putWorkshopOrderInfo(workshopDetailId) {
     });
 }
 
-// 아임포트 창 열기
+// 아임포트 결제 창 열기
 function open_iamport() {
   const title = document.querySelector('#order-workshop-title').innerText;
   // const price = document.querySelector('#order-price').innerText;
@@ -319,10 +338,92 @@ function open_iamport() {
           });
       } else {
         console.log(rsp);
-        alert(err.response.data.message);
+        alert(rsp.response.data.message);
       }
     },
   );
+}
+
+// 환불하기 버튼 클릭 시 모달 창 불러오기
+function putWorkshopRefundInfo(workshopDetailId) {
+  axios
+    .post(`/api/mypage/workshops/refundInfo`, { workshopDetailId })
+    .then((res) => {
+      console.log(res);
+      console.log(workshopDetailId, '환불 입력창 열기');
+      const workshop = res.data.data[0];
+
+      const modal = document.getElementById('refund-modal');
+      modal.innerHTML = `<div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">환불 정보 입력하기</h5>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <form id="form">
+      <p>상품 번호: <span id="order-workshop-id">${
+        workshop.workshop_id
+      }</span></p>
+      <p>상품 명: <span id="order-workshop-title">${
+        workshop.workshop_title
+      }</span></p>
+      <p>주문 번호: <span id="order-workshopDetail-id">${
+        workshop.workshopDetail_id
+      }</span></p>
+      <p>총 환불 금액: <span id="refund-workshop-price">${
+        workshop.workshop_price * workshop.workshopDetail_member_cnt
+      }</span>원</p>
+      <div class="mb-3">
+        <input type="text" class="form-control" name="name" id="reason" placeholder="환불 사유" required>
+      </div>
+      <button type="button" class="btn btn-primary" onclick="cancel_pay()">환불하기</button>
+      </div>
+    </div>`;
+
+      modal.classList.add('show');
+      modal.setAttribute('aria-modal', 'true');
+      modal.setAttribute('style', 'display: block');
+
+      const closeButton = modal.querySelector('.btn-close');
+      closeButton.addEventListener('click', function () {
+        modal.classList.remove('show');
+        modal.removeAttribute('aria-modal');
+        modal.removeAttribute('style');
+      });
+
+      modal.addEventListener('click', function (event) {
+        if (event.target === modal) {
+          modal.classList.remove('show');
+          modal.removeAttribute('aria-modal');
+          modal.removeAttribute('style');
+        }
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      alert(err.response.data.message);
+      location.reload();
+    });
+}
+
+// 아임포트 환불 요청하기
+function cancelPay() {
+  const merchant_uid = 44;
+  const amount = document.getElementById('refund-workshop-price').innerText;
+  const reason = document.getElementById('reason').innerText;
+
+  jQuery.ajax({
+    // 예: http://www.myservice.com/payments/cancel
+    url: '/api/workshops/order/refund',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify({
+      merchant_uid: '{결제건의 주문번호}', // 예: ORD20180131-0000011
+      cancel_request_amount: amount, // 환불금액
+      reason, // 환불사유
+    }),
+    dataType: 'json',
+  });
 }
 
 // 수강 완료 워크샵 전체 목록 불러오기

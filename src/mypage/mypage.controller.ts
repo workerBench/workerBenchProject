@@ -20,6 +20,7 @@ import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { PaymentDto } from 'src/mypage/dtos/payment.dto';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
+import { RefundDto } from 'src/mypage/dtos/refund.dto';
 
 @ApiTags('mypage')
 @UseInterceptors(SuccessInterceptor)
@@ -95,11 +96,11 @@ export class MypageController {
   @ApiOperation({ summary: '워크샵 결제 정보 입력창 열기 api' })
   @Post('workshops/orderInfo')
   @UseGuards(JwtUserAuthGuard)
-  async tryWorkshopOrderInfo(
+  async putWorkshopOrderInfo(
     @Body() body: { workshopDetailId: number },
     @CurrentUser() user: CurrentUserDto,
   ) {
-    const result = await this.mypageService.checkStatus(
+    const result = await this.mypageService.checkStatusIfNonPayment(
       user.id,
       body.workshopDetailId,
     );
@@ -127,6 +128,47 @@ export class MypageController {
       return { message: '결제 내역이 정상적으로 기록되지 않았습니다.' };
     }
     return { message: '결제 내역이 정상적으로 기록되었습니다.' };
+  }
+
+  // 환불 가능한 상태인지 status 유효성 검사
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '워크샵 환불 정보 입력창 열기 api' })
+  @Post('workshops/refundInfo')
+  @UseGuards(JwtUserAuthGuard)
+  async putWorkshopRefundInfo(
+    @Body() body: { workshopDetailId: number },
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    const result = await this.mypageService.checkStatusIfWaitingLecture(
+      user.id,
+      body.workshopDetailId,
+    );
+    return result;
+  }
+
+  // 아임포트로 환불 요청하기 API
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '환불 요청하기  api' })
+  @Patch('workshops/order/refund')
+  @UseGuards(JwtUserAuthGuard)
+  async refundWorkshopPayment(
+    @Body() refundInfo: RefundDto,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    const check_result = await this.mypageService.refundWorkshopPayment(
+      user.id,
+      refundInfo,
+    );
+    if (check_result === true) {
+      return { message: '환불 내역이 정상적으로 기록되었습니다.' };
+    }
+    return { message: '환불 내역이 정상적으로 기록되지 않았습니다.' };
   }
 
   // 리뷰 작성 페이지 api

@@ -171,5 +171,5 @@ export class WorkShopInstanceDetail {
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
-  Workshop: User;
+  Workshop: WorkShop;
 }
