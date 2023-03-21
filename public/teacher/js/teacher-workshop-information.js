@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
   })
     .then((response) => {
       const data = response.data.teacher;
-      console.log(data);
       const email = data.User.email;
       const name = data.name;
       const address = data.address;
@@ -151,7 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
           data: {},
         })
           .then((response) => {
-            console.log(response);
             const data = response.data;
             for (let i = 0; i < data.length; i++) {
               const company_name = data[i].company_name;
@@ -175,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     })
     .catch((response) => {
-      console.log(response);
       const { data } = response.response;
       alert(data.message);
     });
@@ -183,20 +180,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 등록된 업체에 등록 신청
 function applyCompany(id) {
-  console.log(id);
   axios({
     method: 'post',
     url: `/api/teacher/company/apply/${id}`,
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data;
       alert(data.message);
       location.reload();
     })
     .catch((response) => {
-      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
@@ -210,7 +204,6 @@ function acceptListCompany() {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data;
       let html = '';
       for (let i = 0; i < data.length; i++) {
@@ -239,13 +232,11 @@ function acceptCompany(user_id) {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data;
       alert(data.message);
       location.reload();
     })
     .catch((response) => {
-      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
@@ -259,37 +250,31 @@ function cancleCompany(user_id) {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data;
       alert(data.message);
       location.reload();
     })
     .catch((response) => {
-      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
 }
 // 등록된 업체에 등록신청 모달 열기
 $(document).on('click', '#applyCompany', function (e) {
-  console.log('click event');
   $('#modal').addClass('show');
 });
 
 // 모달 닫기
 $(document).on('click', '#close_btn', function (e) {
-  console.log('click event');
   $('#modal').removeClass('show');
 });
 
 // 업체 소속을 신청한 업체 목록 보기 모달 열기
 $(document).on('click', '#acceptListCompany', function (e) {
-  console.log('click event');
   $('#modal2').addClass('show');
 });
 // 모달 닫기
 $(document).on('click', '#close_btn', function (e) {
-  console.log('click event');
   $('#modal2').removeClass('show');
 });
 function registerCompany() {

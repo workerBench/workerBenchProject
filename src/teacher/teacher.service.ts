@@ -181,9 +181,8 @@ export class TeacherService {
       const results = await query.getMany();
       const teacher = results[0]; // results가 배열 형태이므로 배열을 없앤 값을 teacher에 넣어줬다.
       let company = teacher.MyCompany;
-      console.log(userIdInfo.affiliation_company_id);
       if (!company && userIdInfo.affiliation_company_id > 0) {
-        // 만약에 teacher.MyCompany가 없으면 companyRepository에서 id가
+        // 만약에 teacher.MyCompany가 없거나 userIdInfo.affiliation_company_id가 0보다 클경우 찾는다.
         company = await this.companyRepository.findOne({
           where: { id: userIdInfo.affiliation_company_id },
           select: ['company_name', 'saving_name'],
