@@ -144,6 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       companySearch.addEventListener('click', () => {
         const company_name = document.getElementById('company-name').value;
+        // if (!company_name) {
+        //   alert('입력해 주세요');
+        //   return;
+        // }
         axios({
           method: 'get',
           url: `/api/teacher/company/search?company_name=${company_name}`,
@@ -151,15 +155,17 @@ document.addEventListener('DOMContentLoaded', () => {
         })
           .then((response) => {
             const data = response.data;
+            companyList.innerHTML = '';
             for (let i = 0; i < data.length; i++) {
               const company_name = data[i].company_name;
               const saving_name = data[i].saving_name;
               const id = data[i].user_id;
 
               let tempHtml = ``;
-              tempHtml += `
+              tempHtml += `<div class="company-information-list">
                           <li class="company-information-li">업체 이름 : ${company_name} 이름 :${saving_name} </li>
-                          <button type="radio" class="Button" onclick="applyCompany(${id})">업체 신청</button>
+                          <button type="radio" class="applyCompanyButton" onclick="applyCompany(${id})">업체 신청</button>
+                          </div>
                           `;
               companyList.insertAdjacentHTML('beforeend', tempHtml);
             }

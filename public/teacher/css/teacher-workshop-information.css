@@ -71,7 +71,7 @@
     padding-top: 10px;
   }
   .input_box{
-    width: 100%;
+    width: 200px;
     border: 1px solid rgb(189, 189, 189);
     height: 30px;
   }
@@ -202,8 +202,14 @@
   height: 400px;
   border: 2px solid #000000;
 }
+.company-information-list{
+  width: 450px;
+  display: flex;
+  flex-wrap: wrap;
+}
 .company-information-li{
   width: 300px;
+  height: 50px;
   font-size: 15px;
   text-align: center;
   list-style: none;
@@ -217,6 +223,14 @@
   text-align: center;
   list-style: none;
   border: 2px solid #000000;
+}
+.applyCompanyButton{
+  width: 100px;
+  height: 50px;
+  background-color:  #a084dc;
+  color: white;
+  border:none ;
+  margin-left: 20px;
 }
 .Button{
     width: 250px;
