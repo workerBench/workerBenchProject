@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data.teacher;
       const email = data.User.email;
       const name = data.name;
@@ -211,7 +210,6 @@ function acceptListCompany() {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data;
       let html = '';
       for (let i = 0; i < data.length; i++) {
@@ -227,7 +225,6 @@ function acceptListCompany() {
     })
 
     .catch((response) => {
-      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
