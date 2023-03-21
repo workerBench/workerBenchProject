@@ -40,6 +40,14 @@ export class Review {
   @Column('decimal', { name: 'star', nullable: false })
   star: number;
 
+  @Column('varchar', {
+    name: 'video',
+    length: 200,
+    nullable: true,
+    default: null,
+  })
+  video: string | null;
+
   @Column('int', { name: 'user_id', nullable: true })
   user_id: number | null;
 
