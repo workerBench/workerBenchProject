@@ -132,6 +132,7 @@ function cancleButton(Id) {
     .then((response) => {
       const data = response.data;
       alert(data.message);
+      window.location.reload();
     })
     .catch((response) => {
       const { data } = response.response;

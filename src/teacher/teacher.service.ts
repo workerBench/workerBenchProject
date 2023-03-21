@@ -754,7 +754,6 @@ export class TeacherService {
   // 강사 워크샵 신청 취소하기
   async cancleWorkshop(userId: number, id: number) {
     try {
-      // const workshopId = 33;
       const workshopId = await this.workshopRepository.findOne({
         where: { user_id: userId },
       });
@@ -765,27 +764,12 @@ export class TeacherService {
           HttpStatus.BAD_REQUEST,
         );
       }
-      const workShopInstance = await this.workShopInstanceDetailRepository.find(
-        {
-          where: { deletedAt: null },
-        },
-      );
-      // status가 request이거나 non_payment인 요소들을 선택하여 삭제합니다.
-      const filteredWorkShopInstance = workShopInstance.filter(
-        (item) => item.status === 'request' || item.status === 'non_payment',
-      );
-
-      if (filteredWorkShopInstance) {
-        await Promise.all(
-          filteredWorkShopInstance.map((item) =>
-            this.workShopInstanceDetailRepository.softDelete({ id: item.id }),
-          ),
-        );
-      } else {
-        return {
-          message:
-            '해당 워크샵이 이미 결제 되었거나 취소 불가능한 상태입니다..',
-        };
+      const workShopInstance =
+        await this.workShopInstanceDetailRepository.findOne({
+          where: { id: id, status: 'non_payment' },
+        });
+      if (workShopInstance) {
+        this.workShopInstanceDetailRepository.softDelete({ id });
       }
       // 선택된 요소들에 대해서 softDelete() 메서드를 호출합니다.
 
