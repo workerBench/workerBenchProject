@@ -30,7 +30,8 @@ import { QueryResult } from 'typeorm/query-runner/QueryResult';
 @Injectable()
 export class TeacherService {
   private readonly s3Client: S3Client;
-  public readonly S3_BUCKET_NAME: string;
+  public readonly AWS_S3_BUCKET_NAME_IMAGE_INPUT: string;
+
   constructor(
     @InjectRepository(Teacher) private teacherRepository: Repository<Teacher>,
     @InjectRepository(User) private userRepository: Repository<User>,
@@ -54,7 +55,9 @@ export class TeacherService {
         secretAccessKey: this.configService.get('AWS_SECRET_KEY'),
       },
     });
-    this.S3_BUCKET_NAME = this.configService.get('AWS_S3_BUCKET_NAME');
+    this.AWS_S3_BUCKET_NAME_IMAGE_INPUT = this.configService.get(
+      'AWS_S3_BUCKET_NAME_IMAGE_INPUT',
+    );
   }
   // 강사 등록 api
 
@@ -513,7 +516,7 @@ export class TeacherService {
         // 첫 번째 image 일 경우 해당 이미지는 썸네일 이미지로 간주한다.
         if (index === 0) {
           const s3OptionForThumbImg = {
-            Bucket: this.configService.get('AWS_S3_BUCKET_NAME'), // S3의 버킷 이름.
+            Bucket: this.AWS_S3_BUCKET_NAME_IMAGE_INPUT, // S3의 버킷 이름.
             Key: `images/workshops/${workshop.identifiers[0].id}/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
             Body: image.buffer, // 업로드 하고자 하는 파일.
           };
@@ -530,7 +533,7 @@ export class TeacherService {
           });
           // 서브이미지 파일 경로
           const s3OptionForSubImg = {
-            Bucket: this.configService.get('AWS_S3_BUCKET_NAME'),
+            Bucket: this.AWS_S3_BUCKET_NAME_IMAGE_INPUT,
             Key: `images/workshops/${workshop.identifiers[0].id}/original/${subImgName}`,
             Body: image.buffer,
           };

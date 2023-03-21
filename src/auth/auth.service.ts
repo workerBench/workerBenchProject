@@ -37,9 +37,8 @@ import { Company } from 'src/entities/company';
 @Injectable()
 export class AuthService {
   private readonly redisClient: Redis;
-
   private readonly s3Client: S3Client;
-  public readonly S3_BUCKET_NAME: string;
+  public readonly AWS_S3_BUCKET_NAME_IMAGE_INPUT: string;
 
   constructor(
     @InjectRepository(User)
@@ -65,7 +64,9 @@ export class AuthService {
         secretAccessKey: this.configService.get('AWS_SECRET_KEY'),
       },
     });
-    this.S3_BUCKET_NAME = this.configService.get('AWS_S3_BUCKET_NAME');
+    this.AWS_S3_BUCKET_NAME_IMAGE_INPUT = this.configService.get(
+      'AWS_S3_BUCKET_NAME_IMAGE_INPUT',
+    );
   }
 
   // 유저 회원가입 시 유효성 검사
@@ -574,8 +575,8 @@ export class AuthService {
         // 첫 번째 image 일 경우 해당 이미지는 썸네일 이미지로 간주한다.
         if (index === 0) {
           const s3OptionForThumbImg = {
-            Bucket: this.configService.get('AWS_S3_BUCKET_NAME'), // S3의 버킷 이름.
-            Key: `images/workshops/2/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
+            Bucket: this.configService.get('AWS_S3_BUCKET_NAME_IMAGE_INPUT'), // S3의 버킷 이름.
+            Key: `images/workshops/3/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
             Body: image.buffer, // 업로드 하고자 하는 파일.
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForThumbImg)); // 실제로 S3 클라우드로 파일을 전송 및 업로드 하는 코드.
@@ -587,8 +588,8 @@ export class AuthService {
           const subImgName = uuid() + subImgType;
 
           const s3OptionForSubImg = {
-            Bucket: this.configService.get('AWS_S3_BUCKET_NAME'),
-            Key: `images/workshops/2/original/${subImgName}`,
+            Bucket: this.configService.get('AWS_S3_BUCKET_NAME_IMAGE_INPUT'),
+            Key: `images/workshops/3/original/${subImgName}`,
             Body: image.buffer,
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
@@ -603,9 +604,11 @@ export class AuthService {
   async workshopThumbImg() {
     const workshop_id = 1;
     const region = this.configService.get('AWS_S3_REGION');
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
     const thumbName =
-      'images/workshop/1/0dd9de79-2c49-4bb9-a462-c73b9f363e7b.jpeg';
+      'images/workshops/3/800/46c6217a-cb8e-4795-b185-8dcc5e2e61cb.jpeg';
 
     // const thumbUrl = `https://workerbench.s3.${region}.amazonaws.com/${thumbName}`;
     const thumbUrl = `${cloundFrontUrl}${thumbName}`;
@@ -626,8 +629,8 @@ export class AuthService {
 
     // s3 에 입력할 옵션
     const s3OptionForReviewVideo = {
-      Bucket: this.S3_BUCKET_NAME,
-      Key: `videos/review/1/${videoName}`,
+      Bucket: this.configService.get('AWS_S3_BUCKET_NAME_VIDEO_INPUT'),
+      Key: `videos/workshops/3/original/${videoName}`,
       Body: video.buffer,
     };
 
@@ -641,9 +644,13 @@ export class AuthService {
   async getVideoUrl() {
     const review_id = 1;
     const region = this.configService.get('AWS_S3_REGION');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_VIDEO',
+    );
     const videoName =
-      'videos/review/1/d2049ab0-1b35-4868-9b50-b37b62906eaf.mov';
-    const videoUrl = `https://workerbench.s3.${region}.amazonaws.com/${videoName}`;
+      'videos/review/1/original/38d56d07-2326-4806-8ac6-289a2054f7b2.mov';
+    // https://d3uycps0xwbcx9.cloudfront.net/videos/review/1/original/38d56d07-2326-4806-8ac6-289a2054f7b2.mov
+    const videoUrl = `${cloundFrontUrl}${videoName}`;
     return videoUrl;
   }
 
