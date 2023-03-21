@@ -59,7 +59,9 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
 
     const workshops = await query.getMany();
 
@@ -104,7 +106,9 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
 
     const workshops = await query.getMany();
 
@@ -150,7 +154,9 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
 
     const workshops = await query.getMany();
 
@@ -170,7 +176,9 @@ export class AdminService {
       .innerJoinAndSelect('workshop.GenreTag', 'genre')
       .getMany();
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
 
     const result = workshops.map((workshop) => ({
       ...workshop,
@@ -188,7 +196,9 @@ export class AdminService {
       .innerJoinAndSelect('workshop.GenreTag', 'genre')
       .getMany();
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
 
     const result = workshops.map((workshop) => ({
       ...workshop,
@@ -207,7 +217,9 @@ export class AdminService {
       .innerJoinAndSelect('workshop.GenreTag', 'genre')
       .getMany();
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
 
     const result = workshops.map((workshop) => ({
       ...workshop,
@@ -247,7 +259,9 @@ export class AdminService {
 
     const workshopDetail = await query.getRawOne();
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
 
     const result = {
       ...workshopDetail,
