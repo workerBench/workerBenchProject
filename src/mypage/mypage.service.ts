@@ -331,9 +331,8 @@ export class MypageService {
     const workshopDetail = await this.workShopInstanceDetailRepository
       .createQueryBuilder('workshopDetail')
       .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
+      .innerJoinAndSelect('workshopDetail.OrderInfo', 'order')
       .where('workshopDetail.id = :id', { id: workshopInstanceId })
-      .innerJoinAndSelect('workshopDetail.Writer', 'customer')
-      .innerJoinAndSelect('customer.MyOrders', 'order')
       .getRawMany();
 
     if (!workshopDetail) {
@@ -351,7 +350,12 @@ export class MypageService {
   async refundWorkshopPayment(user_id: number, refundInfo: RefundDto) {
     try {
       // imp_uid, merchant_uid, amount로 결제 정보 조회
-      const { workshopInstance_id, merchant_uid, amount, reason } = refundInfo;
+      const {
+        workshopInstance_id,
+        merchant_uid,
+        cancel_request_amount,
+        reason,
+      } = refundInfo;
       const paymentData = await this.orderRepository.findOne({
         where: { merchant_uid },
       });
@@ -375,6 +379,8 @@ export class MypageService {
       });
       const { access_token } = getToken.data.response; // 인증 토큰
 
+      console.log('0------', access_token);
+
       /* 포트원 REST API로 결제환불 요청 */
       const getCancelData = await axios({
         url: 'https://api.iamport.kr/payments/cancel',
@@ -386,9 +392,11 @@ export class MypageService {
         data: {
           reason, // 가맹점 클라이언트로부터 받은 환불사유
           imp_uid, // imp_uid를 환불 `unique key`로 입력
-          amount, // 가맹점 클라이언트로부터 받은 환불금액
+          amount: cancel_request_amount, // 가맹점 클라이언트로부터 받은 환불금액
         },
       });
+
+      console.log('cancelData', getCancelData);
       const { response } = getCancelData.data;
       // const { merchant_uid } = response; // 환불 결과에서 주문정보 추출
 

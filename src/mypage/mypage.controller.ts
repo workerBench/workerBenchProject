@@ -154,13 +154,14 @@ export class MypageController {
     status: 200,
     description: '성공',
   })
-  @ApiOperation({ summary: '환불 요청하기  api' })
-  @Patch('workshops/order/refund')
+  @ApiOperation({ summary: '환불 요청하기 api' })
+  @Post('workshops/order/refund')
   @UseGuards(JwtUserAuthGuard)
   async refundWorkshopPayment(
     @Body() refundInfo: RefundDto,
     @CurrentUser() user: CurrentUserDto,
   ) {
+    console.log('-----', refundInfo);
     const check_result = await this.mypageService.refundWorkshopPayment(
       user.id,
       refundInfo,

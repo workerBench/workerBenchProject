@@ -355,30 +355,33 @@ function putWorkshopRefundInfo(workshopDetailId) {
 
       const modal = document.getElementById('refund-modal');
       modal.innerHTML = `<div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">환불 정보 입력하기</h5>
-        <button type="button" class="btn-close" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      <form id="form">
-      <p>상품 번호: <span id="order-workshop-id">${
-        workshop.workshop_id
-      }</span></p>
-      <p>상품 명: <span id="order-workshop-title">${
-        workshop.workshop_title
-      }</span></p>
-      <p>주문 번호: <span id="order-workshopDetail-id">${
-        workshop.workshopDetail_id
-      }</span></p>
-      <p>총 환불 금액: <span id="refund-workshop-price">${
-        workshop.workshop_price * workshop.workshopDetail_member_cnt
-      }</span>원</p>
-      <div class="mb-3">
-        <input type="text" class="form-control" name="name" id="reason" placeholder="환불 사유" required>
-      </div>
-      <button type="button" class="btn btn-primary" onclick="cancel_pay()">환불하기</button>
-      </div>
-    </div>`;
+        <div class="modal-header">
+          <h5 class="modal-title">환불 정보 입력하기</h5>
+          <button type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <form id="form">
+        <p>상품 번호: <span id="order-workshop-id">${
+          workshop.workshop_id
+        }</span></p>
+        <p>상품 명: <span id="order-workshop-title">${
+          workshop.workshop_title
+        }</span></p>
+        <p>신청 번호: <span id="order-workshopDetail-id">${
+          workshop.workshopDetail_id
+        }</span></p>
+        <p>주문 번호: <span id="order-merchant-id">${
+          workshop.order_merchant_uid
+        }</span></p>
+        <p>총 환불 금액: <span id="refund-workshop-price">${
+          workshop.workshop_price * workshop.workshopDetail_member_cnt
+        }</span>원</p>
+        <div class="mb-3">
+          <input type="text" class="form-control" name="name" id="reason" placeholder="환불 사유" required>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="cancel_pay()">환불하기</button>
+        </div>
+      </div>`;
 
       modal.classList.add('show');
       modal.setAttribute('aria-modal', 'true');
@@ -407,22 +410,32 @@ function putWorkshopRefundInfo(workshopDetailId) {
 }
 
 // 아임포트 환불 요청하기
-function cancelPay() {
-  const merchant_uid = 44;
+function cancel_pay() {
+  const merchant_uid = document.getElementById('order-merchant-id').innerText;
   const amount = document.getElementById('refund-workshop-price').innerText;
-  const reason = document.getElementById('reason').innerText;
+  const reason = document.getElementById('reason').value;
+  const workshop_id = document.getElementById('order-workshop-id').innerText;
+  const workshopInstance_id = document.getElementById(
+    'order-workshopDetail-id',
+  ).innerText;
 
-  jQuery.ajax({
-    // 예: http://www.myservice.com/payments/cancel
-    url: '/api/workshops/order/refund',
+  $.ajax({
     type: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify({
-      merchant_uid: '{결제건의 주문번호}', // 예: ORD20180131-0000011
-      cancel_request_amount: amount, // 환불금액
-      reason, // 환불사유
-    }),
-    dataType: 'json',
+    url: '/api/mypage/workshops/order/refund',
+    // 예: http://www.myservice.com/payments/cancel
+    data: {
+      workshopInstance_id,
+      workshop_id,
+      merchant_uid: String(merchant_uid), // 예: ORD20180131-0000011
+      cancel_request_amount: 100, // 환불금액 (100원으로 고정)
+      reason: reason, // 환불사유
+    },
+    success: function (response) {
+      console.log(response);
+    },
+    error: function (error) {
+      console.log(error);
+    },
   });
 }
 
