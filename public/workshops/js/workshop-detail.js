@@ -67,13 +67,35 @@ function getWorkshopDetail() {
       }
 
       // 워크샵 상세 정보
-      let workshopDesc = `<div class="tab-pane fade show active"
+      let workshopDesc = `
+      <div class="tab-pane fade show active""
         id="home-tab-pane"
         role="tabpanel"
         aria-labelledby="home-tab"
         tabindex="0">
         ${workshop.workshop_desc}
       </div>`;
+
+      let videoPlayer = '';
+      if (workshop.workshop_video !== '' && workshop.workshop_video !== null) {
+        workshopDesc += `
+          <video id="videoPlayerTag" class="video-js" style="margin-bottom: 200px;" controls>
+            <source src="${workshop.workshop_video}" type="application/x-mpegURL">
+          </video>
+        `;
+        // videoPlayer = videojs('videoPlayerTag');
+
+        // videoPlayer = videojs('videoPlayerTag', {
+        //   sources: [
+        //     { src: workshop.workshop_video, type: 'application/x-mpegURL' },
+        //   ],
+        //   controls: true,
+        //   playsinline: true,
+        //   muted: true,
+        //   preload: 'metadata',
+        // });
+      }
+
       $('#myTabContent').append(workshopDesc);
     })
     .catch((error) => {});
