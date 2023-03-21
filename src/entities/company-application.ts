@@ -20,6 +20,14 @@ export class CompanyApplication {
   @Column('int', { name: 'company_id', nullable: true })
   company_id: number | null;
 
+  @Column('varchar', {
+    name: 'status',
+    length: 50,
+    nullable: true,
+    default: 'request',
+  })
+  status: 'request' | 'rejected';
+
   @CreateDateColumn()
   createdAt: Date;
 
