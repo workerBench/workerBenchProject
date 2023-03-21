@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
+      console.log(response);
       const data = response.data.teacher;
       const email = data.User.email;
       const name = data.name;
@@ -68,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                   <li class="workshop-information-li">${bank_name}</li>
                                   <li class="workshop-information-li">${account}</li>
                                   <li class="workshop-information-li">${saving_name}</li>
-                                  <button type="radio"  id="acceptListCompany-button" onclick="acceptListCompany()">신청한 업체보기</button>
+                                  <button type="radio"  id="acceptListCompanyButton" onclick="acceptListCompany()">신청한 업체보기</button>
                               </div>
                 `;
       } else if (data.MyCompany && company_type === 1) {
@@ -210,6 +211,7 @@ function acceptListCompany() {
     data: {},
   })
     .then((response) => {
+      console.log(response);
       const data = response.data;
       let html = '';
       for (let i = 0; i < data.length; i++) {
@@ -225,6 +227,7 @@ function acceptListCompany() {
     })
 
     .catch((response) => {
+      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
@@ -276,7 +279,7 @@ $(document).on('click', '#close_btn', function (e) {
 });
 
 // 업체 소속을 신청한 업체 목록 보기 모달 열기
-$(document).on('click', '#acceptListCompany', function (e) {
+$(document).on('click', '#acceptListCompanyButton', function (e) {
   $('#modal2').addClass('show');
 });
 // 모달 닫기
