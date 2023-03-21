@@ -29,6 +29,17 @@ export class Order {
   @Column('varchar', { name: 'imp_uid', length: 100, nullable: false })
   imp_uid: string;
 
+  @IsString({ message: '주문 고유번호를 정확히 입력해 주세요' })
+  @IsNotEmpty()
+  @ApiProperty({
+    example: '2389289-20230313',
+    description:
+      '외부 API 를 통해 결제를 하였을 경우 얻을 수 있는 주문 고유 번호',
+    required: true,
+  })
+  @Column('varchar', { name: 'merchant_uid', length: 200, nullable: false })
+  merchant_uid: string;
+
   @IsNumber()
   @IsNotEmpty({ message: '결제된 금액을 입력해 주세요' })
   @ApiProperty({
