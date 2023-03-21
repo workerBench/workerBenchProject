@@ -59,13 +59,13 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
     const workshops = await query.getMany();
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+      // ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
     }));
     return result;
   }
@@ -104,13 +104,13 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
     const workshops = await query.getMany();
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+      // ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
     }));
     return result;
   }
@@ -150,13 +150,13 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
     const workshops = await query.getMany();
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`,
+      // ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`,
     }));
     return result;
   }
@@ -170,11 +170,11 @@ export class AdminService {
       .innerJoinAndSelect('workshop.GenreTag', 'genre')
       .getMany();
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+      // ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
     }));
     return result;
   }
@@ -188,11 +188,11 @@ export class AdminService {
       .innerJoinAndSelect('workshop.GenreTag', 'genre')
       .getMany();
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+      // ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
     }));
     return result;
   }
@@ -207,11 +207,11 @@ export class AdminService {
       .innerJoinAndSelect('workshop.GenreTag', 'genre')
       .getMany();
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+      // ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
     }));
     return result;
   }
@@ -247,13 +247,13 @@ export class AdminService {
 
     const workshopDetail = await query.getRawOne();
 
-    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
 
-    const result = {
-      ...workshopDetail,
-      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshopDetail.workshop_id}/800/${workshopDetail.workshop_thumb}`,
-    };
-    return result;
+    // const result = {
+    //   ...workshopDetail,
+    //   ThumbUrl: `${cloundFrontUrl}images/workshops/${workshopDetail.workshop_id}/800/${workshopDetail.workshop_thumb}`,
+    // };
+    return workshopDetail;
   }
 
   //-------------------------- 워크숍 승인하기 (status:"request" => "approval") --------------------------//

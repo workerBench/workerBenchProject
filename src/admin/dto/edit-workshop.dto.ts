@@ -6,7 +6,6 @@ export class editWorkshopDto extends PickType (WorkShop, [
     "title",
     "category",
     "desc",
-    "thumb",
     "min_member",
     "max_member",
     "total_time",

@@ -2,12 +2,11 @@ axios
   .get('../api/admin/workshops/request')
   .then(function (response) {
     const workshops = response.data;
-    console.log(workshops);
     let html = '';
     for (let workshop of workshops) {
       html += `
         <div class="card" onclick="showModal('${workshop.id}')">
-          <img src="${workshop.ThumbUrl}" alt="Image">
+          <img src="${workshop.thumb}" alt="Image">
           <div class="card-text">
             <div class="category">
                 ${
@@ -48,7 +47,6 @@ function showModal(workshopId) {
     .then(function (response) {
       const workshop = response.data;
       const modal = document.getElementById('modal');
-      console.log(workshop);
       modal.innerHTML = `
             <div class="modal-content">
               <div class="modal-header">
@@ -56,7 +54,7 @@ function showModal(workshopId) {
                 <button type="button" class="btn-close" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <img src="${workshop.ThumbUrl}" alt="Image" class="modal-image">
+                <img src="${workshop.workshop_thumb}" alt="Image" class="modal-image">
                 <div class="info">
                   <div class="info-category">${
                     workshop.workshop_category === 'online'
@@ -170,7 +168,7 @@ $(document).ready(() => {
       data.forEach((workshop) => {
         const cardHtml = `
             <div class="card" onclick="showModal(${workshop.id})">
-            <img src="${workshop.ThumbUrl}" alt="Image">
+            <img src="${workshop.thumb}" alt="Image">
             <div class="card-text">
               <div class="category">
                   ${

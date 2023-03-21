@@ -6,7 +6,7 @@ axios
     for (let workshop of workshops) {
       html += `
                 <div class="card" onclick="showModal('${workshop.id}')">
-                  <img src="${workshop.ThumbUrl}" alt="Image">
+                  <img src="${workshop.thumb}" alt="Image">
                   <div class="card-text">
                     <div class="category">
                         ${
@@ -33,6 +33,7 @@ axios
                     <div class="workshop-tag">
                         <span class="tag">${workshop.GenreTag.name}</span>
                     </div>
+                    <button type="button" class="btn btn-primary" id="update-btn">수정하기</button>
                   </div>
                 </div>
                 `;
@@ -57,7 +58,7 @@ function showModal(workshopId) {
               <button type="button" class="btn-close" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <img src="${workshop.ThumbUrl}" alt="Image" class="modal-image">
+              <img src="${workshop.workshop_thumb}" alt="Image" class="modal-image">
               <div class="info">
                 <div class="info-category">${
                   workshop.workshop_category === 'online'
@@ -123,6 +124,10 @@ function showModal(workshopId) {
     });
 }
 
+// ---------------- 워크숍 수정하기 모달 ---------------- //
+function updateModal(WorkshopId)
+axios
+
 // ---------------- 워크숍 삭제하기 버튼 ---------------- //
 
 function finished(workshopId) {
@@ -154,7 +159,7 @@ $(document).ready(() => {
       data.forEach((workshop) => {
         const cardHtml = `
               <div class="card" onclick="showModal('${workshop.id}')">
-              <img src="${workshop.ThumbUrl}" alt="Image">
+              <img src="${workshop.thumb}" alt="Image">
               <div class="card-text">
                 <div class="category">
                     ${
