@@ -14,9 +14,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Order } from './order';
 import { User } from './user';
 import { WorkShop } from './workshop';
 
@@ -171,5 +173,9 @@ export class WorkShopInstanceDetail {
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
-  Workshop: User;
+  Workshop: WorkShop;
+
+  // 3. order
+  @OneToOne(() => Order, (order) => order.WorkShopInstanceDetailInfo)
+  OrderInfo: Order;
 }

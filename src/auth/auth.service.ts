@@ -576,7 +576,7 @@ export class AuthService {
         if (index === 0) {
           const s3OptionForThumbImg = {
             Bucket: this.configService.get('AWS_S3_BUCKET_NAME_IMAGE_INPUT'), // S3의 버킷 이름.
-            Key: `images/workshops/3/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
+            Key: `images/workshops/10/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
             Body: image.buffer, // 업로드 하고자 하는 파일.
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForThumbImg)); // 실제로 S3 클라우드로 파일을 전송 및 업로드 하는 코드.
@@ -589,7 +589,7 @@ export class AuthService {
 
           const s3OptionForSubImg = {
             Bucket: this.configService.get('AWS_S3_BUCKET_NAME_IMAGE_INPUT'),
-            Key: `images/workshops/3/original/${subImgName}`,
+            Key: `images/workshops/10/original/${subImgName}`,
             Body: image.buffer,
           };
           await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
@@ -630,7 +630,7 @@ export class AuthService {
     // s3 에 입력할 옵션
     const s3OptionForReviewVideo = {
       Bucket: this.configService.get('AWS_S3_BUCKET_NAME_VIDEO_INPUT'),
-      Key: `videos/workshops/3/original/${videoName}`,
+      Key: `videos/workshops/10/original/${videoName}`,
       Body: video.buffer,
     };
 

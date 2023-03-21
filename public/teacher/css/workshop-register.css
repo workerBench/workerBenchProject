@@ -1,173 +1,249 @@
 /* workshop-register css */
-.button-div{
-   margin: auto;
-   display: flex;
-   justify-content: center;
-   width: 800px;
-   border-bottom: 2px solid rgb(179, 179, 179);
+.button-div {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  width: 800px;
+  border-bottom: 2px solid rgb(179, 179, 179);
 }
-#button{
-   width: 200px;
-   margin-right: 10px;
-   margin-top: 30px;
-   margin-bottom: 30px;
-   height: 50px;
-   border-radius: 10px;
-   background-color: #ffffff;
+#button {
+  width: 200px;
+  margin-right: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #ffffff;
 }
-#button-register{
-    width: 200px;
-    margin-right: 10px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    height: 50px;
-    border-radius: 10px;
-    background-color: #9f70fb;
+#button-register {
+  width: 200px;
+  margin-right: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #9f70fb;
 }
 #workshop-registerBox {
-    width: 1000px;
-    height: 1100px;
-    margin: 0 auto;
-    margin-top: 100px;
-    border: 2px solid lavender;
-    border-radius: 20px;
-    box-shadow: 3px 3px 5px lavender;
-    display: flex;
-    flex-wrap: wrap;
+  width: 1000px;
+  height: 1100px;
+  margin: 0 auto;
+  margin-top: 100px;
+  border: 2px solid lavender;
+  border-radius: 20px;
+  box-shadow: 3px 3px 5px lavender;
+  display: flex;
+  flex-wrap: wrap;
 }
-.image{
-    width: 400px;
-    height: 300px;
-    margin-top: 50px;
-    margin-left: 100px;
+.image {
+  width: 400px;
+  height: 300px;
+  margin-top: 50px;
+  margin-left: 100px;
 }
 #thumb-img-show {
-    width: 400px;
-    height: 400px;
-    margin: auto;
-    margin-bottom: 5px;
-    border: none;
-    border: 2px solid lavender;
-  }
-.workshop-information{
-    width: 245px;
-    margin-left: 100px;
-    margin-top: 50px;
-    display: flex;
-    flex-wrap: wrap;
+  width: 400px;
+  height: 400px;
+  margin: auto;
+  margin-bottom: 5px;
+  border: none;
+  border: 2px solid lavender;
 }
-#more-img-wrap1{
-    width: 1000px;
-    height: 400px;
-    margin: auto;
+.workshop-information {
+  width: 245px;
+  margin-left: 100px;
+  margin-top: 50px;
+  display: flex;
+  flex-wrap: wrap;
 }
-.sub-Img-label{
-    width:150px;
-    height: 40px;
-    margin-bottom: 10px;
-    font-size: 20px;
-    text-align: center;
-    list-style: none;
-    border: 2px solid #000000;
-    margin-left: 20px;
-    border-radius: 10px;
-    background-color: #a084dc
+#more-img-wrap1 {
+  width: 1000px;
+  height: 400px;
+  margin: auto;
 }
-#more-img-wrap{
-    width: 1000px;
-    height: 400px;
-    margin: auto;
-    display: flex;
+.sub-Img-label {
+  width: 150px;
+  height: 40px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  text-align: center;
+  list-style: none;
+  border: 2px solid #000000;
+  margin-left: 20px;
+  border-radius: 10px;
+  background-color: #a084dc;
 }
-.sub-imgs-wrap{
-    margin: auto;
+#more-img-wrap {
+  width: 1000px;
+  height: 400px;
+  margin: auto;
+  display: flex;
 }
-.sub-img-class{
-    width: 280px;
-    height: 300px;
-    border: 2px solid lavender;
+.sub-imgs-wrap {
+  margin: auto;
 }
-.sub-img-file{
-    width: 200;
+.sub-img-class {
+  width: 280px;
+  height: 300px;
+  border: 2px solid lavender;
 }
-#fileWidth{
-    width: 280px;
-    margin-right: 10px;
+.sub-img-file {
+  width: 200;
 }
-#category{
-    width: 300px;
-    height: 40px; 
+#fileWidth {
+  width: 280px;
+  margin-right: 10px;
 }
-#title{
-    width: 245px;
+#category {
+  width: 300px;
+  height: 40px;
 }
-#minMember{
-    width: 110px;
+#title {
+  width: 245px;
 }
-#maxMember{
-    width: 110px;
-    margin-left: 25px;
+#minMember {
+  width: 110px;
+}
+#maxMember {
+  width: 110px;
+  margin-left: 25px;
 }
 
-#genreId{
-    width: 300px;
-    height: 40px; 
-    margin-top: 10px;
+#genreId {
+  width: 300px;
+  height: 40px;
+  margin-top: 10px;
 }
-#purposeTagId1{
-    width: 110px;
-    height: 40px; 
-    margin-top: 10px;
+#purposeTagId1 {
+  width: 110px;
+  height: 40px;
+  margin-top: 10px;
 }
-#purposeTagId2{
-    width: 110px;
-    height: 40px; 
-    margin-left: 25px;
-    margin-top: 10px;
+#purposeTagId2 {
+  width: 110px;
+  height: 40px;
+  margin-left: 25px;
+  margin-top: 10px;
 }
-#totalTime{
-    width: 245px;
+#totalTime {
+  width: 245px;
 }
-#price{
-    width: 245px;
+#price {
+  width: 245px;
 }
-#location{
-    width: 300px;
-    height: 40px;    
+#location {
+  width: 300px;
+  height: 40px;
 }
-.contents-div{
-    width: 1000px;
-    height: 400px;
-    margin: auto;
-    margin-top: 50px;
+.contents-div {
+  width: 1000px;
+  height: 400px;
+  margin: auto;
+  margin-top: 50px;
 }
-.workshop-description-li{
-    width:150px;
-    height: 40px;
-    margin-bottom: 10px;
-    font-size: 25px;
-    text-align: center;
-    list-style: none;
-    border-radius: 10px;
-    border: 2px solid #000000;
-    background-color: #a084dc;
+.video-contents-div {
+  width: 1000px;
+  height: 650px;
+  border: 2px solid lavender;
+  border-radius: 20px;
+  box-shadow: 3px 3px 5px lavender;
+  padding-top: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: auto;
+  margin-top: 50px;
 }
-#desc{
-    width: 1000px;
-    height: 300px;
-    font-size: 30px;
+.workshop-video-li {
+  width: 250px;
+  height: 40px;
+  margin-bottom: 10px;
+  font-size: 25px;
+  text-align: center;
+  list-style: none;
+  border-radius: 10px;
+  border: 2px solid #000000;
+  background-color: #a084dc;
 }
-.regiseterBtn-div{
-    width: 200px;
-    margin-left: 1250px;
+.workshop-description-li {
+  width: 150px;
+  height: 40px;
+  margin-bottom: 10px;
+  font-size: 25px;
+  text-align: center;
+  list-style: none;
+  border-radius: 10px;
+  border: 2px solid #000000;
+  background-color: #a084dc;
+}
+#desc {
+  width: 1000px;
+  height: 300px;
+  font-size: 30px;
+}
+.regiseterBtn-div {
+  width: 1000px;
+  height: 50px;
+  margin: auto;
+  margin-bottom: 150px;
+  margin-top: 20px;
 }
 #workshopRegisterBtn {
-    width: 200px;
-    height: 50px;
-    margin: 0 auto;
-    margin-left: 280px;
-    background-color:#a084dc;
-    border-radius: 5px;
-    color: white;
-    border:none ;
+  width: 200px;
+  height: 50px;
+  background-color: #a084dc;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  float: right;
+}
+.video-one-set-wrap {
+  width: 90%;
+  height: 530px;
+  margin: auto;
+  margin-top: 5px;
+}
+.video-show-tag-wrap {
+  width: 600px;
+  height: 460px;
+  margin: auto;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+#video-show-tag {
+  width: 600px;
+  max-height: 450px;
+}
+.video-input {
+  width: 500px;
+  display: block;
+  margin: auto;
+}
+.caution-video {
+  margin-left: 10px;
+  color: red;
+}
+
+#uploading-video {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none;
+}
+#waiting-upload {
+  width: 500px;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  margin-left: -250px;
+  border: 3px solid rgb(255, 255, 255);
+  border-radius: 20px;
+  text-align: center;
+  padding: 20px;
+  font-size: 28px;
+  color: rgb(255, 255, 255);
+  display: none;
 }
