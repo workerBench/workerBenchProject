@@ -35,7 +35,7 @@ function getSoonWorkshops() {
                     : 0
                 }
               </button>
-              <button id="open-order-input" onclick="tryWorkshopOrderInfo(${
+              <button id="open-order-input" onclick="putWorkshopOrderInfo(${
                 element.workshopDetail_id
               })" type="button" class="btn btn-primary open-order-input" data-bs-toggle="modal" data-bs-target="#order-input-modal">
               ${
@@ -177,7 +177,7 @@ function showIncompleteModal(workshopDetailId) {
 }
 
 // 결제하기 버튼 클릭 시 모달 창 불러오기
-function tryWorkshopOrderInfo(workshopDetailId) {
+function putWorkshopOrderInfo(workshopDetailId) {
   axios
     .post(`/api/mypage/workshops/orderInfo`, { workshopDetailId })
     .then((res) => {
@@ -262,9 +262,24 @@ function open_iamport() {
   const buyer_tel = document.querySelector('#phone_number').value; // 구매자 전화번호
   const buyer_addr = document.querySelector('#address').value; // 구매자 주소
   const buyer_postcode = document.querySelector('#zip-code').value; // 주문자 우편번호
-  const workshopInstanceId = document.querySelector(
+  const workshopInstance_id = document.querySelector(
     '#order-workshopDetail-id',
   ).innerText;
+
+  // merchant_uid 만들기
+  function make_merchant_uid() {
+    const current_time = new Date();
+    const year = current_time.getFullYear().toString();
+    const month = (current_time.getMonth() + 1).toString();
+    const day = current_time.getDate().toString();
+    const hour = current_time.getHours().toString();
+    const minute = current_time.getMinutes().toString();
+    const second = current_time.getSeconds().toString();
+
+    const auth_num = Math.floor(Math.random() * 16777215).toString(16);
+    const merchant_uid = auth_num + year + month + day + hour + minute + second;
+    return merchant_uid;
+  }
 
   // imp 객체 가져오기
   const IMP = window.IMP;
@@ -273,7 +288,7 @@ function open_iamport() {
     {
       pg: 'html5_inicis', // 하나의 아임포트 계정으로 여러 pg를 사용할 때 구분자
       pay_method: 'card', // 결제 수단
-      merchant_uid: workshopInstanceId, // workshopDetail_id
+      merchant_uid: make_merchant_uid(),
       name: title,
       amount: Number(price), // 결제할 금액
       buyer_email, // 구매자 이메일
@@ -288,18 +303,19 @@ function open_iamport() {
 
         axios
           .patch('/api/mypage/workshops/order', {
+            workshopInstance_id,
             workshop_id,
             imp_uid: rsp.imp_uid,
             merchant_uid: rsp.merchant_uid,
           })
           .then((response) => {
             console.log(response);
-            alert(response.message);
-            // window.location.reload();
+            alert(response.data.message);
+            window.location.reload();
           })
           .catch((error) => {
             console.log(error);
-            console.log(workshopInstanceId, imp_uid, merchant_uid);
+            alert(error.message / error.response.data.message);
           });
       } else {
         console.log(rsp);
@@ -309,7 +325,7 @@ function open_iamport() {
   );
 }
 
-// 수강 완료 워크샵 불러오기
+// 수강 완료 워크샵 전체 목록 불러오기
 function getCompleteWorkshops() {
   axios
     .get('/api/mypage/workshops/complete')

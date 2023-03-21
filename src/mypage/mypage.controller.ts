@@ -126,7 +126,7 @@ export class MypageController {
     if (check_result === false) {
       return { message: '결제 내역이 정상적으로 기록되지 않았습니다.' };
     }
-    return { message: '결제 내역이 정상적으로 기록되지 않았습니다.' };
+    return { message: '결제 내역이 정상적으로 기록되었습니다.' };
   }
 
   // 리뷰 작성 페이지 api

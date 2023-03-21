@@ -231,9 +231,10 @@ export class MypageService {
   // 결제하기 클릭 시, 먼저 결제 정보 일치 체크
   async checkPayment(user_id: number, paymentDto: PaymentDto) {
     try {
-      const { workshop_id, imp_uid, merchant_uid } = paymentDto;
+      const { workshopInstance_id, workshop_id, imp_uid, merchant_uid } =
+        paymentDto;
 
-      // 액세스 토큰 발급받기
+      // 액세스 토큰 발급 받기
       const getToken = await axios({
         url: 'https://api.iamport.kr/users/getToken',
         method: 'post', // POST method
@@ -244,7 +245,7 @@ export class MypageService {
         },
       });
       const { access_token } = getToken.data.response; // 인증 토큰
-      console.log('accesstoken 발급됐나', access_token);
+      console.log('accesstoken 발급', access_token);
 
       // imp_uid로 아임포트 서버에서 결제 정보 조회
       const getPaymentData = await axios({
@@ -253,7 +254,7 @@ export class MypageService {
         headers: { Authorization: access_token }, // 인증 토큰 Authorization header에 추가
       });
       const paymentData = getPaymentData.data.response; // 조회한 결제 정보
-      console.log('paymentData 조회됐나', paymentData);
+      console.log('paymentData 조회', paymentData);
 
       // 결제금액의 위변조 여부를 검증.
       // 클라이언트에서 입력받은 merchant_uid 와 토큰으로 가져온 merchant_uid 이 다르다면 에러
@@ -263,7 +264,7 @@ export class MypageService {
       // db에서 해당 상품의 금액 조회
       // workshopInstance에서 member_cnt 가져오고
       await this.workShopInstanceDetailRepository.findOne({
-        where: { id: Number(merchant_uid), user_id },
+        where: { id: Number(workshopInstance_id), user_id },
       });
 
       // workshop에서 price 가져오고
@@ -271,8 +272,8 @@ export class MypageService {
         where: { id: workshop_id },
       });
 
-      // 아래 코드가 정상적이나 맞는데, 현재는 100원으로 고정
-      // const amount_tobe_paid = workshopInstance.member_cnt * workshop.price;
+      // 아래 코드가 정상적이나, 현재는 100원으로 고정 (테스트 용이므로)
+      // const amountToBePaid = workshopInstance.member_cnt * workshop.price;
       const amountToBePaid = 100;
 
       // 결제 검증하기
@@ -286,6 +287,7 @@ export class MypageService {
         const insertOrder = await this.orderRepository.insert({
           user_id,
           imp_uid: paymentData.imp_uid,
+          merchant_uid,
           workshop_id,
           amount,
           pay_method,
@@ -294,7 +296,7 @@ export class MypageService {
 
         // waiting_lecture 상태로 변경
         await this.workShopInstanceDetailRepository.update(
-          { id: Number(merchant_uid) },
+          { id: Number(workshopInstance_id) },
           {
             status: 'waiting_lecture',
           },
