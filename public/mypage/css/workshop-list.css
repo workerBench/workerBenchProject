@@ -1,0 +1,44 @@
+/* 웹 폰트 임포트 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.incomplete-list {
+  font-size: 30px;
+  margin-left: 70px;
+  font-weight: bold;
+}
+
+#incomplete-list {
+  margin: 20px 50px;
+}
+
+#card-workshop-title {
+  margin: 20px 0 20px 0;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+#show-workshop-detail {
+  cursor: pointer;
+}
+
+.card-workshop-summary,
+#show-workshop-detail {
+  font-size: 18px;
+}
+
+#show-workshop-detail:hover {
+  color: #0d6efd;
+}
+
+.open-order-input {
+  background-color: #9f70fb;
+  border: 10px;
+}
+
+.open-order-input:hover {
+  background-color: #a084dc;
+}
