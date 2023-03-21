@@ -24,6 +24,8 @@ import { ConfigService } from '@nestjs/config';
 import { v4 as uuid } from 'uuid';
 import { WorkShopImage } from 'src/entities/workshop-image';
 import { identity } from 'rxjs';
+import { wrap } from 'module';
+import { QueryResult } from 'typeorm/query-runner/QueryResult';
 
 @Injectable()
 export class TeacherService {
@@ -146,7 +148,7 @@ export class TeacherService {
   async getTeacherMypage(userId: number) {
     const userIdInfo = await this.teacherRepository.findOne({
       where: { user_id: userId },
-      select: ['user_id'],
+      select: ['user_id', 'affiliation_company_id'],
     });
     if (!userIdInfo) {
       throw new HttpException(
@@ -173,10 +175,26 @@ export class TeacherService {
           'company.account',
           'company.saving_name',
         ]);
-      const Companys = await query.getMany();
-      return Companys;
+      const results = await query.getMany();
+      const teacher = results[0]; // results가 배열 형태이므로 배열을 없앤 값을 teacher에 넣어줬다.
+      let company = teacher.MyCompany;
+      console.log(userIdInfo.affiliation_company_id);
+      if (!company && userIdInfo.affiliation_company_id > 0) {
+        // 만약에 teacher.MyCompany가 없으면 companyRepository에서 id가
+        company = await this.companyRepository.findOne({
+          where: { id: userIdInfo.affiliation_company_id },
+          select: ['company_name', 'saving_name'],
+        });
+      } else {
+        company = null; // company가 있으면 위에 쿼리빌더로 나온 Mycompany랑 company값이 나와 총 두번 보여지므로 하나는 안보여지게 했다.
+      }
+      return {
+        ...teacher,
+        company,
+      };
     }
   }
+
   // 강사 업체 등록 api
   async createTeacherCompany(data: CreateCompanyDto, userId: number) {
     const {
@@ -295,7 +313,7 @@ export class TeacherService {
     }
   }
 
-  // 신청한 업체 목록 보기
+  // 업체 소속을 신청한 업체 목록 보기
   async getApplyCompanys(userId: number) {
     try {
       const companyId = await this.companyRepository.findOne({
@@ -319,8 +337,8 @@ export class TeacherService {
         );
       }
       // Promise.all()은 병렬로 여러 개의 비동기 작업을 수행하고 모든 작업이 완료될 때까지 기다린 다음 결과를 반환하는 데 사용된다.
+      // find로 찾은 값이 배열이기 떄문에 각 배열요소에 병렬도 비동기 작업을 실행하고, 모든작업이 완료 될때까지 기다려야 하기 때문에 사용한다.
       // Promise.all() 메소드를 사용하여 모든 teacherRepository.findOne() 호출의 결과를 대기한다.
-      // map을 사용하여 data라는 변수에 teacher_id
       const teachers = await Promise.all(
         Applycompanys.map((data) => {
           return this.teacherRepository.findOne({
@@ -336,8 +354,8 @@ export class TeacherService {
     }
   }
 
-  // 신청한 업체 등록하기
-  async registerCompanys(userId: number, id: number) {
+  // 업체 소속을 신청한 업체 등록하기
+  async registerCompany(userId: number, id: number) {
     try {
       const companyId = await this.companyRepository.findOne({
         where: { user_id: userId },
@@ -368,13 +386,45 @@ export class TeacherService {
         );
       } else {
         await this.teacherRepository.update(id, {
-          affiliation_company_id: userId,
+          affiliation_company_id: companyId.id,
         });
 
         await this.companyApplicationRepository.delete(applycompanyId.id);
       }
 
       return { message: '해딩 강사를 수락하였습니다.' };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  // 업체 소속을 신청한 업체 등록 반려하기
+  async cancleApplyCompany(userId: number, id: number) {
+    try {
+      const companyId = await this.companyRepository.findOne({
+        where: { user_id: userId },
+        select: ['id'],
+      });
+      if (!companyId) {
+        throw new HttpException(
+          '해당하는 업체가 없습니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const applycompanyId = await this.companyApplicationRepository.findOne({
+        where: { teacher_id: id, company_id: companyId.id },
+      });
+      if (!applycompanyId) {
+        throw new HttpException(
+          '해당하는 강사가 없습니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        await this.companyApplicationRepository.delete(applycompanyId.id);
+      }
+
+      return { message: '해딩 강사를 반려 하였습니다.' };
     } catch (error) {
       console.log(error);
       throw error;
@@ -401,17 +451,11 @@ export class TeacherService {
       } = data;
       const teacherInfo = await this.teacherRepository.findOne({
         where: { user_id: userId },
-        select: ['user_id', 'affiliation_company_id'],
+        select: ['user_id'],
       });
       if (!teacherInfo.user_id) {
         throw new HttpException(
           '등록된 강사가 아닙니다',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-      if (teacherInfo.affiliation_company_id === 0) {
-        throw new HttpException(
-          '등록된 업체가 없습니다.',
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -706,8 +750,46 @@ export class TeacherService {
   }
 
   // 강사 워크샵 신청 취소하기
-  async cancleWorkshop(id: number) {
+  async cancleWorkshop(userId: number, id: number) {
     try {
+      // const workshopId = 33;
+      const workshopId = await this.workshopRepository.findOne({
+        where: { user_id: userId },
+      });
+
+      if (!workshopId) {
+        throw new HttpException(
+          '등록된 워크샵이 없습니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const workShopInstance = await this.workShopInstanceDetailRepository.find(
+        {
+          where: { deletedAt: null },
+        },
+      );
+      // status가 request이거나 non_payment인 요소들을 선택하여 삭제합니다.
+      const filteredWorkShopInstance = workShopInstance.filter(
+        (item) => item.status === 'request' || item.status === 'non_payment',
+      );
+
+      if (filteredWorkShopInstance) {
+        await Promise.all(
+          filteredWorkShopInstance.map((item) =>
+            this.workShopInstanceDetailRepository.softDelete({ id: item.id }),
+          ),
+        );
+      } else {
+        return {
+          message:
+            '해당 워크샵이 이미 결제 되었거나 취소 불가능한 상태입니다..',
+        };
+      }
+      // 선택된 요소들에 대해서 softDelete() 메서드를 호출합니다.
+
+      return {
+        message: '해당 워크샵을 취소하였습니다.',
+      };
     } catch (error) {
       console.log(error);
       throw error;

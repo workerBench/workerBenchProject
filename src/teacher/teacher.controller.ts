@@ -160,19 +160,34 @@ export class TeacherController {
     return this.teacherService.getApplyCompanys(user.id);
   }
 
-  // 업체 소속을 신청한 업체 등록하기
+  // 업체 소속을 신청한 업체 수락하기
   @ApiResponse({
     status: 200,
     description: '성공',
   })
   @ApiOperation({ summary: '신청한 업체 등록하기 API' })
-  @Patch('company/register/:id')
+  @Patch('company/accept/:id')
   @UseGuards(JwtTeacherAuthGuard)
-  registerCompanys(
+  registerCompany(
     @CurrentUser() user: CurrentUserDto,
     @Param('id') id: number,
   ) {
-    return this.teacherService.registerCompanys(user.id, id);
+    return this.teacherService.registerCompany(user.id, id);
+  }
+
+  // 업체 소속을 신청한 업체 취소하기
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '신청한 업체 등록하기 API' })
+  @Delete('company/cancle/:id')
+  @UseGuards(JwtTeacherAuthGuard)
+  cancleApplyCompany(
+    @CurrentUser() user: CurrentUserDto,
+    @Param('id') id: number,
+  ) {
+    return this.teacherService.cancleApplyCompany(user.id, id);
   }
   // 강사 워크샵 등록
   @ApiResponse({
@@ -235,10 +250,10 @@ export class TeacherController {
   @Patch('workshops/manage/accept/:id')
   @UseGuards(JwtTeacherAuthGuard)
   updateTeacherAccept(
-    @Param('id') id: number,
     @CurrentUser() user: CurrentUserDto,
+    @Param('id') id: number,
   ) {
-    return this.teacherService.updateTeacherAccept(id, user.id);
+    return this.teacherService.updateTeacherAccept(user.id, id);
   }
 
   // 강사 수강 문의 종료하기
@@ -250,10 +265,10 @@ export class TeacherController {
   @Patch('workshops/manage/complete/:id')
   @UseGuards(JwtTeacherAuthGuard)
   updateTeacherComplete(
-    @Param('id') id: number,
     @CurrentUser() user: CurrentUserDto,
+    @Param('id') id: number,
   ) {
-    return this.teacherService.updateTeacherComplete(id, user.id);
+    return this.teacherService.updateTeacherComplete(user.id, id);
   }
 
   // 강사 신청한 워크샵 취소하기
@@ -263,7 +278,8 @@ export class TeacherController {
   })
   @ApiOperation({ summary: '강사 수강 문의 종료하기 API' })
   @Delete('workshops/manage/delete/:id')
-  cancleWorkshop(@Param('id') id: number) {
-    return this.teacherService.cancleWorkshop(id);
+  @UseGuards(JwtTeacherAuthGuard)
+  cancleWorkshop(@CurrentUser() user: CurrentUserDto, @Param('id') id: number) {
+    return this.teacherService.cancleWorkshop(user.id, id);
   }
 }
