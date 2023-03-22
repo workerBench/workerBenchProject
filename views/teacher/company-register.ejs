@@ -23,41 +23,41 @@
     <%- include('header.ejs')%>
     <div id="company-registerBox">
         <h1>업체등록</h1>
+        <span class="caution-video">* 빈칸없이 입력해주세요</span>
         <div class="mb-3">
           <select name="job" id="companyType">
-            <option disabled selected>직업을 선택해주세요</option>
+            <option value="" disabled selected>직업을 선택해주세요</option>
             <option value="0">사업자</option>
             <option value="1">프리랜서</option>
-            <option value="2">간이 사업자</option>
           </select>
         </div>
         <div class="mb-3">
           <label for="companyName" class="form-label">업체명</label>
-          <input type="text" class="form-control" id="companyName"></input>
+          <input type="text" class="form-control" id="companyName" placeholder="4자이상 10자리이상으로 작성해주세요" minlength="4" maxlength='10'></input>
         </div>
         <div class="mb-3">
           <label for="businessNumber" class="form-label">사업자 번호</label>
-          <input type="text" class="form-control" id="businessNumber"></input>
+          <input type="text" class="form-control" id="businessNumber" placeholder="-없이 작성해주세요" maxlength='15' onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/></input>
         </div>
         <div class="mb-3">
           <label for="businessNumber" class="form-label">주민등록번호 앞자리</label>
-          <input type="text" class="form-control" id="residentFrontNumber"></input>
+          <input type="text" class="form-control" id="residentFrontNumber" placeholder="ex) 123456" maxlength='6' onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/></input>
         </div>
         <div class="mb-3">
           <label for="businessNumber" class="form-label">주민등록번호 뒤자리</label>
-          <input type="text" class="form-control" id="residentBackNumber"></input>
+          <input type="text" class="form-control" id="residentBackNumber" placeholder="맨앞 숫자만 입력해주세요" maxlength='1' onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/></input>
         </div>
         <div class="mb-3">
             <label for="bankName" class="form-label">은행명</label>
-            <input type="text" class="form-control" id="bankName"></input>
+            <input type="text" class="form-control" id="bankName" maxlength='10'></input>
         </div>
         <div class="mb-3">
             <label for="accountNumber" class="form-label">계좌번호</label>
-            <input type="text" class="form-control" id="accountNumber"></input>
+            <input type="text" class="form-control" id="accountNumber" placeholder="-없이 작성해주세요" maxlength='15' onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/></input>
         </div>
         <div class="mb-3">
             <label for="savingName" class="form-label">예금주명</label>
-            <input type="text" class="form-control" id="savingName"></input>
+            <input type="text" class="form-control" id="savingName" maxlength='5'></input>
         </div>
         <button type="button" id="company-registerBtn">업체 등록하기</button>
     </div>

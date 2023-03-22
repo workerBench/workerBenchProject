@@ -84,15 +84,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const purposeTagIds = [purpose_value1, purpose_value2];
     if (
-      !category ||
+      category === '' ||
       !title ||
       !min_member ||
       !max_member ||
-      !genre_id ||
+      genre_id === '' ||
       !total_time ||
       !price ||
       !desc ||
-      !location
+      location === ''
     ) {
       alert('빈 칸을 채워 주세요!');
       return;
@@ -153,7 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await uploadVideo(workshop_id, title, data.message);
       })
       .catch((response) => {
-        alert(response.response.data.error);
+        const { data } = response.response;
+        alert(data.error);
       });
   });
 

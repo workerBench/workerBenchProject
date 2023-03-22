@@ -25,15 +25,15 @@
           <h1>강사 등록</h1>
           <div class="mb-3">
             <label for="phone" class="form-label">휴대폰 번호</label>
-            <input type="text" class="form-control" id="phone">
+            <input type="text" class="form-control" id="phone" placeholder="-없이 작성해주세요" maxlength='11' onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"></input>
           </div>
           <div class="mb-3">
             <label for="address" class="form-label">주소</label>
-            <input type="text" class="form-control" id="address"></input>
+            <input type="text" class="form-control" id="address" maxlength='20' onKeyup="this.value=this.value.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣]/g,'')"></input>
           </div>
           <div class="mb-3">
             <label for="name" class="form-label">실명</label>
-            <input type="text" class="form-control" id="name"></input>
+            <input type="text" class="form-control" id="name" maxlength='5' onKeyup="this.value=this.value.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣]/g,'')"></input>
           </div>
           <button type="button" id="registerBtn">등록하기</button>
       </div>

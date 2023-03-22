@@ -5,10 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <link
+    <!-- <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-    />
+    /> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link
@@ -48,38 +48,34 @@
         수강 문의 관리
       </button>
     </div>
-
     <div id="workshop-informationList"></div>
     <div class="modal" id="modal">
       <div class="modal_body">
         <div class="m_head">
-          <div class="modal_title">업체검색</div>
+          <div class="modal_title">업체 검색</div>
           <div class="close_btn" id="close_btn">X</div>
         </div>
         <div class="m_body">
           <div class="modal_label">업체 이름</div>
           <input type="text" class="input_box" id="company-name" />
-          <button type="button" class="btn btn-secondary" id="search">
+          <button
+            type="button"
+            class="btn btn-secondary serarchButton"
+            id="search"
+          >
             검색
           </button>
           <div id="company-List"></div>
-        </div>
-
-        <div class="m_footer">
-          <div class="modal_btn cancle" id="close_btn">CANCLE</div>
-          <div class="modal_btn save" id="save_btn">SAVE</div>
         </div>
       </div>
     </div>
     <div class="modal" id="modal2">
       <div class="modal_body">
-        <div class="m_body">
-          <div class="modal_label">업체 이름</div>
+          <div class="m_head">
+            <div class="modal_title">신청한 업체 목록</div>
+            <div class="close_btn" id="close_btn">X</div>
+          </div>
           <div id="apply-company-List"></div>
-        </div>
-        <div class="m_footer">
-          <div class="modal_btn cancle" id="close_btn">CANCLE</div>
-          <div class="modal_btn save" id="save_btn">SAVE</div>
         </div>
       </div>
     </div>
