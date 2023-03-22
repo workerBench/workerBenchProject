@@ -124,6 +124,14 @@ export class WorkShop {
   @Column('varchar', { name: 'location', length: 100, nullable: true })
   location: string | null;
 
+  @Column('varchar', {
+    name: 'video',
+    length: 200,
+    nullable: true,
+    default: null,
+  })
+  video: string | null;
+
   @Column('int', { name: 'user_id', nullable: true })
   user_id: number | null;
 
@@ -187,4 +195,5 @@ export class WorkShop {
     (workshopPurpose) => workshopPurpose.Workshop,
   )
   PurposeList: WorkShopPurpose[];
+  identifiers: any;
 }

@@ -5,9 +5,9 @@ axios
     let html = '';
     for (let workshop of workshops) {
       html += `
-                <div class="card" onclick="showModal('${workshop.id}')">
-                  <img src="${workshop.thumb}" alt="Image">
-                  <div class="card-text">
+                <div class="card">
+                  <img src="${workshop.thumb}" alt="Image" onclick="showModal('${workshop.id}')">
+                  <div class="card-text" onclick="showModal('${workshop.id}')">
                     <div class="category">
                         ${
                           workshop.category === 'online'
@@ -33,8 +33,9 @@ axios
                     <div class="workshop-tag">
                         <span class="tag">${workshop.GenreTag.name}</span>
                     </div>
-                    <button type="button" class="btn btn-primary" id="update-btn">수정하기</button>
+                    
                   </div>
+                  <button id="update-btn" onclick="updateModal('${workshop.id}')">수정하기</button>
                 </div>
                 `;
     }
@@ -45,6 +46,7 @@ axios
     console.log(error);
   });
 
+  // 상세 정보 모달창
 function showModal(workshopId) {
   axios
     .get(`../api/admin/workshops/${workshopId}`)
@@ -124,9 +126,111 @@ function showModal(workshopId) {
     });
 }
 
-// ---------------- 워크숍 수정하기 모달 ---------------- //
-function updateModal(WorkshopId)
-axios
+// 수정하기 모달창
+function updateModal(workshopId) {
+  axios
+    .get(`../api/admin/workshops/${workshopId}`)
+    .then(function (response) {
+      const workshop = response.data;
+      const modal = document.getElementById('modal');
+      modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">워크숍 상세내용</h5>
+          <button type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div id="thumb-img-wrap">
+              <img class="modal-image">
+              <input type="file" accept="image/*" , id="thumb-img-file" />
+            </div>
+              <div class="form-wrap">
+                  <select class="select-category" id="category">
+                    <option value="online">online</option>
+                    <option value="offline">offline</option>
+                  </select>
+                  <div>
+                    <input type="text" class="info-title" id="title" value="${workshop.workshop_title}">
+                  </div>
+                  <div>
+                    <input type="textarea" class="info-desc" id="desc" value="${workshop.workshop_desc}">
+                  </div>
+                  <div class="info-ul">인원 :
+                  <span><input type="number" class="info-members" id="min-member" value="${workshop.workshop_min_member}"> 
+                  ~ <input type="number" class="info-members" id="max-member" value="${workshop.workshop_max_member}"></span>
+                  </div>
+                  <div class="info-ul">시간 :
+                    <input type="number" class="info-time" id="time"value="${workshop.workshop_total_time}">분</input>
+                  </div>
+                  <div class="info-ul">장르 :
+                    <select class="select-genre" id="genre">
+                      <option value="0">선택</option>
+                      <option value="1">문화예술</option>
+                      <option value="2">식음</option>
+                      <option value="3">심리진단</option>
+                      <option value="4">운동</option>
+                    </select>
+                  </div>
+                  <div class="info-ul">목적 :
+                    <select class="select-perpose-1" id="purpose-1">
+                        <option value="0">선택</option>
+                        <option value="1">동기부여</option>
+                        <option value="2">팀워크</option>
+                        <option value="3">회식</option>
+                        <option value="4">힐링</option>
+                    </select> ,
+                    <select class="select-perpose-2" id="purpose-2">
+                        <option value="0">선택</option>
+                        <option value="1">동기부여</option>
+                        <option value="2">팀워크</option>
+                        <option value="3">회식</option>
+                        <option value="4">힐링</option>
+                    </select>
+                  </div>
+                  <div class="info-ul">강사 이름 :
+                  <span class="info-li">${workshop.teacher_name}</span>
+                </div>
+                <div class="info-ul">강사 이메일 :
+                  <span class="info-li">${workshop.user_email}</span>
+                </div>
+                  <div>
+                  <input type="email" class="info-price" id="price" value="${workshop.workshop_price}">
+                  </div>
+              </div>
+            </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="update" onclick="update(${
+            workshop.workshop_id
+          })">수정하기</button>
+        </div>
+      </div>
+    
+      `;
+
+      modal.classList.add('show');
+      modal.setAttribute('aria-modal', 'true');
+      modal.setAttribute('style', 'display: block');
+
+      const closeButton = modal.querySelector('.btn-close');
+      closeButton.addEventListener('click', function () {
+        modal.classList.remove('show');
+        modal.removeAttribute('aria-modal');
+        modal.removeAttribute('style');
+      });
+
+      modal.addEventListener('click', function (event) {
+        if (event.target === modal) {
+          modal.classList.remove('show');
+          modal.removeAttribute('aria-modal');
+          modal.removeAttribute('style');
+        }
+      });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
 
 // ---------------- 워크숍 삭제하기 버튼 ---------------- //
 
@@ -135,6 +239,47 @@ function finished(workshopId) {
     .delete(`../api/admin/workshop/${workshopId}`)
     .then(function (response) {
       alert('워크숍이 삭제되었습니다.');
+      location.reload();
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
+// ---------------- 워크숍 수정하기 버튼 ---------------- //
+
+function update(workshopId) {
+  const title = $('#title').val();
+  const category = $('#category').val();
+  const desc = $('#desc').val();
+  const min_member = parseInt($('#min-member').val());
+  const max_member = parseInt($('#max-member').val());
+  const total_time = parseInt($('#time').val());
+  const genre_id = parseInt($('#genre').val());
+  const price = parseInt($('#price').val());
+  const purpose_1 = parseInt($('#purpose-1').val());
+  const purpose_2 = parseInt($('#purpose-2').val()) || null;
+  const purpose_tag_id = [purpose_1, purpose_2]
+
+  if (!title || !desc || !min_member || !max_member || !total_time || !price || !purpose_1) {
+    alert('모든 항목을 입력해주세요.');
+    return;
+  }
+
+  axios
+    .put(`../api/admin/workshop/${workshopId}`, {
+      title,
+      category,
+      desc,
+      min_member,
+      max_member,
+      total_time,
+      genre_id,
+      price,
+      purpose_tag_id
+    })
+    .then(function (response) {
+      alert('워크숍이 수정되었습니다.');
       location.reload();
     })
     .catch(function (error) {

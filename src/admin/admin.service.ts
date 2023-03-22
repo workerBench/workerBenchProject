@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AdminUser } from 'src/entities/admin-user';
 import { Company } from 'src/entities/company';
 import { User } from 'src/entities/user';
+import { WorkShopPurpose } from 'src/entities/workshop-purpose';
 import { SelectQueryBuilder } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 import { WorkShop } from '../entities/workshop';
@@ -14,6 +15,8 @@ export class AdminService {
   constructor(
     @InjectRepository(WorkShop)
     private workshopRepository: Repository<WorkShop>,
+    @InjectRepository(WorkShopPurpose)
+    private workshopPurposeRepository: Repository<WorkShopPurpose>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
     @InjectRepository(Company)
@@ -59,7 +62,9 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    // const cloundFrontUrl = this.configService.get(
+    //   'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    // );
 
     const workshops = await query.getMany();
 
@@ -245,15 +250,11 @@ export class AdminService {
       ])
       .groupBy('workshop.id');
 
-    const workshopDetail = await query.getRawOne();
+      
+        const workshopDetail = await query.getRawOne();
 
-    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+        return workshopDetail;
 
-    // const result = {
-    //   ...workshopDetail,
-    //   ThumbUrl: `${cloundFrontUrl}images/workshops/${workshopDetail.workshop_id}/800/${workshopDetail.workshop_thumb}`,
-    // };
-    return workshopDetail;
   }
 
   //-------------------------- 워크숍 승인하기 (status:"request" => "approval") --------------------------//
@@ -280,41 +281,51 @@ export class AdminService {
     }
     return await this.workshopRepository.update(id, { status: 'rejected' });
   }
+//-------------------------- 워크숍 수정하기 --------------------------//
 
-  //-------------------------- 워크숍 수정하기 --------------------------//
+async updateWorkshop(data: editWorkshopDto, id: number) {
 
-  async updateWorkshop(data: editWorkshopDto, id: number) {
-    const {
-      title,
-      category,
-      desc,
-      thumb,
-      min_member,
-      max_member,
-      total_time,
-      price,
-      location,
-    } = data;
-    const workshop = await this.workshopRepository.findOne({
-      where: { id, status: 'approval', deletedAt: null },
-    });
+  const {
+    title,
+    category,
+    desc,
+    min_member,
+    max_member,
+    total_time,
+    price,
+    genre_id,
+    purpose_tag_id,
+  } = data;
 
-    if (!workshop || workshop.status !== 'approval') {
-      throw new NotFoundException('없는 워크숍입니다.');
-    }
+  const workshop = await this.workshopRepository.findOne({
+    where: { id, status: 'approval', deletedAt: null },
+  });
 
-    return await this.workshopRepository.update(id, {
-      title,
-      category,
-      desc,
-      thumb,
-      min_member,
-      max_member,
-      total_time,
-      price,
-      location,
-    });
+  if (!workshop || workshop.status !== 'approval') {
+    throw new NotFoundException('없는 워크숍입니다.');
   }
+  await this.workshopRepository.update(id, {
+    title,
+    category,
+    desc,
+    min_member,
+    max_member,
+    total_time,
+    price,
+    genre_id,
+  });
+
+  await this.workshopPurposeRepository.delete({ workshop_id: id });
+
+  const purposeTagIds = purpose_tag_id
+    .filter((tagId) => tagId !== null && tagId !== undefined)
+    .map((tagId) => ({ workshop_id: id, purpose_tag_id: tagId }));
+
+  if (purposeTagIds.length > 0) {
+
+    return await this.workshopPurposeRepository.insert(purposeTagIds);
+  }
+} 
 
   //-------------------------- 워크숍 삭제하기 (status: "approval" => "finished") --------------------------//
 

@@ -11,6 +11,7 @@ import { MypageControllerRender } from './mypage.render.controller';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { AuthModule } from 'src/auth/auth.module';
 import { WorkShop } from 'src/entities/workshop';
+import { Order } from 'src/entities/order';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { WorkShop } from 'src/entities/workshop';
       WishList,
       WorkShopInstanceDetail,
       WorkShop,
+      Order,
     ]),
     AuthModule,
   ],

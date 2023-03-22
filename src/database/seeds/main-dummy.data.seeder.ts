@@ -219,6 +219,7 @@ export default class MainSeeder implements Seeder {
         genre_id: 1,
         status: 'approval',
         location: '서울시 종로구',
+        video: null,
       },
       {
         title: '테스트용 워크샵 2',
@@ -233,6 +234,7 @@ export default class MainSeeder implements Seeder {
         genre_id: 2,
         status: 'approval',
         location: '서울시 종로구',
+        video: null,
       },
       {
         title: '테스트용 워크샵 3',
@@ -247,6 +249,7 @@ export default class MainSeeder implements Seeder {
         genre_id: 2,
         status: 'approval',
         location: '서울시 종로구',
+        video: null,
       },
       {
         title: '테스트용 워크샵 4',
@@ -261,6 +264,7 @@ export default class MainSeeder implements Seeder {
         genre_id: 1,
         status: 'approval',
         location: '서울시 종로구',
+        video: null,
       },
       {
         title: '테스트용 워크샵 5',
@@ -275,6 +279,7 @@ export default class MainSeeder implements Seeder {
         genre_id: 2,
         status: 'approval',
         location: '서울시 종로구',
+        video: null,
       },
       {
         title: '테스트용 워크샵 6',
@@ -289,6 +294,7 @@ export default class MainSeeder implements Seeder {
         genre_id: 2,
         status: 'request',
         location: '서울시 종로구',
+        video: null,
       },
     ]);
 
@@ -859,6 +865,7 @@ export default class MainSeeder implements Seeder {
     await orderRepository.insert([
       {
         imp_uid: '2487-342nhjk',
+        merchant_uid: '2014010-1234568',
         amount: 300000,
         pay_method: 'card',
         status: 'paid',
@@ -867,6 +874,7 @@ export default class MainSeeder implements Seeder {
       },
       {
         imp_uid: '2487-342nhjk',
+        merchant_uid: '2014010-1235568',
         amount: 300000,
         pay_method: 'card',
         status: 'paid',
@@ -875,6 +883,7 @@ export default class MainSeeder implements Seeder {
       },
       {
         imp_uid: '2487-342nhjk',
+        merchant_uid: '2014010-1234567',
         amount: 300000,
         pay_method: 'card',
         status: 'paid',
@@ -883,6 +892,7 @@ export default class MainSeeder implements Seeder {
       },
       {
         imp_uid: '2487-342nhjk',
+        merchant_uid: '2014010-1234128',
         amount: 300000,
         pay_method: 'card',
         status: 'paid',
@@ -891,6 +901,7 @@ export default class MainSeeder implements Seeder {
       },
       {
         imp_uid: '2487-342nhjk',
+        merchant_uid: '2014010-12341258',
         amount: 300000,
         pay_method: 'card',
         status: 'paid',
@@ -899,6 +910,7 @@ export default class MainSeeder implements Seeder {
       },
       {
         imp_uid: '2487-342nhjk',
+        merchant_uid: '2012010-1234568',
         amount: 300000,
         pay_method: 'card',
         status: 'paid',
@@ -907,6 +919,7 @@ export default class MainSeeder implements Seeder {
       },
       {
         imp_uid: '2487-342nhjk',
+        merchant_uid: '2022010-1234568',
         amount: 300000,
         pay_method: 'card',
         status: 'paid',
@@ -915,6 +928,7 @@ export default class MainSeeder implements Seeder {
       },
       {
         imp_uid: '2487-342nhjk',
+        merchant_uid: '2014110-1234568',
         amount: 300000,
         pay_method: 'card',
         status: 'paid',

@@ -1,5 +1,5 @@
 import { PickType } from "@nestjs/swagger";
-import { IsNumber, IsString } from "class-validator";
+import { IsArray, IsNumber, IsString } from "class-validator";
 import { WorkShop } from "src/entities/workshop";
 
 export class editWorkshopDto extends PickType (WorkShop, [
@@ -10,5 +10,10 @@ export class editWorkshopDto extends PickType (WorkShop, [
     "max_member",
     "total_time",
     "price",
-    "location",
-] as const) {}
+] as const) {
+    @IsNumber()
+    readonly genre_id: number;
+
+    @IsArray()
+    readonly purpose_tag_id: number[];
+}

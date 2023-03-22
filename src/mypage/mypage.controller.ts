@@ -18,6 +18,8 @@ import { ReviewImageDto } from 'src/mypage/dtos/review-image.dto';
 import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
+import { PaymentDto } from 'src/mypage/dtos/payment.dto';
+import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 
 @ApiTags('mypage')
 @UseInterceptors(SuccessInterceptor)
@@ -25,7 +27,7 @@ import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 export class MypageController {
   constructor(private readonly mypageService: MypageService) {}
 
-  // 수강 예정 워크샵 api
+  // 수강 예정 워크샵 전체 조회 API
   @ApiResponse({
     status: 200,
     description: '성공',
@@ -37,7 +39,25 @@ export class MypageController {
     return await this.mypageService.getSoonWorkshops(user.id);
   }
 
-  // 수강 완료한 워크샵 api
+  // 수강 예정 워크샵 상세 조회 API
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '수강 예정 워크샵 api' })
+  @Get('workshops/soon/:workshopDetailInstance_id') // workshopDetail
+  @UseGuards(JwtUserAuthGuard)
+  async getSoonWorkshopsById(
+    @Param('workshopDetailInstance_id') workshopDetailInstance_id: number,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    return await this.mypageService.getSoonWorkshopsById(
+      workshopDetailInstance_id,
+      user.id,
+    );
+  }
+
+  // 수강 완료 워크샵 전체 조회 API
   @ApiResponse({
     status: 200,
     description: '성공',
@@ -49,16 +69,48 @@ export class MypageController {
     return this.mypageService.getCompleteWorkshops(user.id);
   }
 
-  // 워크샵 결제하기 api
+  // 수강 완료 워크샵 상세 조회 API
+
+  // 워크샵 결제하기 클릭 시 status 유효성 검사
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '워크샵 결제 정보 입력창 열기 api' })
+  @Post('workshops/orderInfo')
+  @UseGuards(JwtUserAuthGuard)
+  async tryWorkshopOrderInfo(
+    @Body() body: { workshopDetailId: number },
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    const result = await this.mypageService.checkStatus(
+      user.id,
+      body.workshopDetailId,
+    );
+    return result;
+  }
+
+  // 워크샵 결제 정보 입력 창에서 결제하기 클릭 시 아임포트 호출 API
   @ApiResponse({
     status: 200,
     description: '성공',
   })
   @ApiOperation({ summary: '워크샵 결제하기 api' })
-  @Patch('workshops/:id/order')
+  @Patch('workshops/order')
   @UseGuards(JwtUserAuthGuard)
-  updateWorkshopPayment(@Param('id') id: number) {
-    return this.mypageService.updateWorkshopPayment(id);
+  async updateWorkshopPayment(
+    @Body() paymentInfo: PaymentDto,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    const check_result = await this.mypageService.checkPayment(
+      user.id,
+      paymentInfo,
+    );
+
+    if (check_result === false) {
+      return { message: '결제 내역이 정상적으로 기록되지 않았습니다.' };
+    }
+    return { message: '결제 내역이 정상적으로 기록되지 않았습니다.' };
   }
 
   // 리뷰 작성 페이지 api
