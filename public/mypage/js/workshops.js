@@ -4,6 +4,19 @@ window.addEventListener('DOMContentLoaded', function () {
   getRefundWorkshops();
 });
 
+function workshops() {
+  window.location.href = '/mypage/workshops';
+}
+function wishlist() {
+  window.location.href = '/mypage/workshops/wishlist';
+}
+function teacherWorkshop() {
+  window.location.href = '/teacher/workshop';
+}
+function teacherRegister() {
+  window.location.href = '/teacher/register';
+}
+
 // 수강 예정 워크샵 불러오기
 function getSoonWorkshops() {
   axios
