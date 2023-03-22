@@ -219,7 +219,7 @@ export class MypageController {
     @CurrentUser() user: CurrentUserDto,
     @UploadedFile() image: Express.Multer.File,
   ) {
-    return this.mypageService.review(
+    return this.mypageService.writingReview(
       workshop_id,
       user.id,
       JSON.parse(reviewData.jsonData),
