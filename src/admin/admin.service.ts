@@ -62,15 +62,13 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    // const cloundFrontUrl = this.configService.get(
-    //   'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
-    // );
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN_IMAGE');
 
     const workshops = await query.getMany();
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      // ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
     }));
     return result;
   }
@@ -109,13 +107,13 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN_IMAGE');
 
     const workshops = await query.getMany();
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      // ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
     }));
     return result;
   }
@@ -155,13 +153,13 @@ export class AdminService {
       query.andWhere('user.email = :email', { email: `${options.email}` });
     }
 
-    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN_IMAGE');
 
     const workshops = await query.getMany();
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      // ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`,
+      ThumbUrl: `${cloundFrontUrl}/${workshop.thumb}`,
     }));
     return result;
   }
@@ -175,11 +173,11 @@ export class AdminService {
       .innerJoinAndSelect('workshop.GenreTag', 'genre')
       .getMany();
 
-    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN_IMAGE');
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      // ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
     }));
     return result;
   }
@@ -193,11 +191,11 @@ export class AdminService {
       .innerJoinAndSelect('workshop.GenreTag', 'genre')
       .getMany();
 
-    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN_IMAGE');
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      // ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
     }));
     return result;
   }
@@ -212,11 +210,11 @@ export class AdminService {
       .innerJoinAndSelect('workshop.GenreTag', 'genre')
       .getMany();
 
-    // const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN');
+    const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN_IMAGE');
 
     const result = workshops.map((workshop) => ({
       ...workshop,
-      // ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
+      ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.id}/800/${workshop.thumb}`,
     }));
     return result;
   }
@@ -243,6 +241,7 @@ export class AdminService {
         'workshop.max_member',
         'workshop.total_time',
         'workshop.price',
+        'workshop.location',
         'genre.name',
         'GROUP_CONCAT(purposetag.name) AS purpose_name',
         'user.email',
@@ -250,10 +249,17 @@ export class AdminService {
       ])
       .groupBy('workshop.id');
 
-      
-        const workshopDetail = await query.getRawOne();
 
-        return workshopDetail;
+        const workshop = await query.getRawOne();
+
+        const cloundFrontUrl = this.configService.get('AWS_CLOUD_FRONT_DOMAIN_IMAGE');
+
+        const result = {
+          ...workshop,
+           ThumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+          }
+
+        return result;
 
   }
 

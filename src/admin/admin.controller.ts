@@ -73,7 +73,7 @@ export class AdminController {
   })
   @ApiOperation({ summary: '검토 중인 워크숍 목록 API' })
   @Get('/workshops/request')
-  // @UseGuards(JwtNormalAdminAuthGuard)
+  @UseGuards(JwtNormalAdminAuthGuard)
   async requestWorkshops() {
     return await this.adminService.requestWorkshops();
   }
@@ -85,7 +85,7 @@ export class AdminController {
   })
   @ApiOperation({ summary: '진행 중인 워크숍 목록 API' })
   @Get('/workshops/approval')
-  // @UseGuards(JwtNormalAdminAuthGuard)
+  @UseGuards(JwtNormalAdminAuthGuard)
   async getApprovedWorkshops() {
     return await this.adminService.getApprovedWorkshops();
   }
@@ -109,7 +109,7 @@ export class AdminController {
   })
   @ApiOperation({ summary: '워크숍 상세 조회 API' })
   @Get('workshops/:id')
-  // @UseGuards(JwtNormalAdminAuthGuard)
+  @UseGuards(JwtNormalAdminAuthGuard)
   async getWorkshopDetail(@Param('id') id: number) {
     return await this.adminService.getWorkshopDetail(id);
   }
@@ -147,7 +147,7 @@ export class AdminController {
   })
   @ApiOperation({ summary: '워크숍 수정하기 API' })
   @Put('/workshop/:id')
-  // @UseGuards(JwtNormalAdminAuthGuard)
+  @UseGuards(JwtNormalAdminAuthGuard)
   async updateWorkshop(@Param('id') id: number, @Body() data: editWorkshopDto) {
     const workshop = await this.adminService.updateWorkshop(data, id);
     return { message: '워크숍 수정이 완료되었습니다.' };

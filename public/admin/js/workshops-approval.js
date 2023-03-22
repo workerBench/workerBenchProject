@@ -6,7 +6,7 @@ axios
     for (let workshop of workshops) {
       html += `
                 <div class="card">
-                  <img src="${workshop.thumb}" alt="Image" onclick="showModal('${workshop.id}')">
+                  <img src="${workshop.ThumbUrl}" alt="Image" onclick="showModal('${workshop.id}')">
                   <div class="card-text" onclick="showModal('${workshop.id}')">
                     <div class="category">
                         ${
@@ -60,7 +60,7 @@ function showModal(workshopId) {
               <button type="button" class="btn-close" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <img src="${workshop.workshop_thumb}" alt="Image" class="modal-image">
+              <img src="${workshop.ThumbUrl}" alt="Image" class="modal-image">
               <div class="info">
                 <div class="info-category">${
                   workshop.workshop_category === 'online'
@@ -82,6 +82,9 @@ function showModal(workshopId) {
                 </div>
                 <div class="info-ul">목적 :
                   <span class="info-li">${workshop.purpose_name}</span>
+                </div>
+                <div class="info-ul">장소 :
+                  <span class="info-li">${workshop.workshop_location}</span>
                 </div>
                 <div class="info-ul">강사 이름 :
                   <span class="info-li">${workshop.teacher_name}</span>
@@ -134,14 +137,14 @@ function updateModal(workshopId) {
       const workshop = response.data;
       const modal = document.getElementById('modal');
       modal.innerHTML = `
-      <div class="modal-content">
+      <div class="modal-update-content">
         <div class="modal-header">
           <h5 class="modal-title">워크숍 상세내용</h5>
           <button type="button" class="btn-close" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-update-body">
             <div id="thumb-img-wrap">
-              <img class="modal-image">
+              <img src="${workshop.ThumbUrl}"class="modal-update-image">
               <input type="file" accept="image/*" , id="thumb-img-file" />
             </div>
               <div class="form-wrap">
@@ -150,21 +153,21 @@ function updateModal(workshopId) {
                     <option value="offline">offline</option>
                   </select>
                   <div>
-                    <input type="text" class="info-title" id="title" value="${workshop.workshop_title}">
+                    <input type="text" class="title" id="title" value="${workshop.workshop_title}">
                   </div>
                   <div>
-                    <input type="textarea" class="info-desc" id="desc" value="${workshop.workshop_desc}">
+                    <textarea class="desc" id="desc">${workshop.workshop_desc}</textarea>
                   </div>
-                  <div class="info-ul">인원 :
-                  <span><input type="number" class="info-members" id="min-member" value="${workshop.workshop_min_member}"> 
-                  ~ <input type="number" class="info-members" id="max-member" value="${workshop.workshop_max_member}"></span>
+                  <div class="info-ul" id="member">인원 :
+                  <span><input type="number" class="min-members" id="min-member" value="${workshop.workshop_min_member}"> 
+                  ~ <input type="number" class="max-members" id="max-member" value="${workshop.workshop_max_member}"></span>
                   </div>
                   <div class="info-ul">시간 :
                     <input type="number" class="info-time" id="time"value="${workshop.workshop_total_time}">분</input>
                   </div>
                   <div class="info-ul">장르 :
                     <select class="select-genre" id="genre">
-                      <option value="0">선택</option>
+                      <option value=disabled selected>선택</option>
                       <option value="1">문화예술</option>
                       <option value="2">식음</option>
                       <option value="3">심리진단</option>
@@ -173,19 +176,22 @@ function updateModal(workshopId) {
                   </div>
                   <div class="info-ul">목적 :
                     <select class="select-perpose-1" id="purpose-1">
-                        <option value="0">선택</option>
+                        <option value=disabled selected>선택</option>
                         <option value="1">동기부여</option>
                         <option value="2">팀워크</option>
                         <option value="3">회식</option>
                         <option value="4">힐링</option>
                     </select> ,
                     <select class="select-perpose-2" id="purpose-2">
-                        <option value="0">선택</option>
+                        <option value=disabled selected>선택</option>
                         <option value="1">동기부여</option>
                         <option value="2">팀워크</option>
                         <option value="3">회식</option>
                         <option value="4">힐링</option>
                     </select>
+                  </div>
+                  <div class="info-ul">장소 :
+                    <input type="text" class="info-location" id="location"value="${workshop.workshop_location}">
                   </div>
                   <div class="info-ul">강사 이름 :
                   <span class="info-li">${workshop.teacher_name}</span>
@@ -194,7 +200,7 @@ function updateModal(workshopId) {
                   <span class="info-li">${workshop.user_email}</span>
                 </div>
                   <div>
-                  <input type="email" class="info-price" id="price" value="${workshop.workshop_price}">
+                  <input type="email" class="info-price" id="price" value="${workshop.workshop_price}"> 원
                   </div>
               </div>
             </div>
@@ -303,9 +309,9 @@ $(document).ready(() => {
       workshopList.empty();
       data.forEach((workshop) => {
         const cardHtml = `
-              <div class="card" onclick="showModal('${workshop.id}')">
-              <img src="${workshop.thumb}" alt="Image">
-              <div class="card-text">
+              <div class="card">
+              <img src="${workshop.ThumbUrl}" alt="Image" onclick="showModal('${workshop.id}')">
+              <div class="card-text" onclick="showModal('${workshop.id}')">
                 <div class="category">
                     ${
                       workshop.category === 'online'
@@ -330,6 +336,7 @@ $(document).ready(() => {
                     <span class="tag">${workshop.GenreTag.name}</span>
                 </div>
               </div>
+              <button id="update-btn" onclick="updateModal('${workshop.id}')">수정하기</button>
             </div>
           `;
         workshopList.append(cardHtml);
@@ -339,3 +346,4 @@ $(document).ready(() => {
     }
   });
 });
+
