@@ -709,12 +709,33 @@ function getRefundWorkshops() {
       workshops.forEach((element) => {
         let tempHtml = `<div class="col">
         <div class="card h-100">
-        <a href="/workshops/detail?workshopId=${element.workshop_id}"><img src="${element.workshop_thumb}" class="card-img-top" alt="..." /></a>
+        <a href="/workshops/detail?workshopId=${
+          element.workshop_id
+        }"><img src="${
+          element.workshop_thumb
+        }" class="card-img-top" alt="..." /></a>
           <div class="card-body">
+          <button id="show-status"
+                type="button"
+                class="btn btn-outline-primary"
+                disabled
+              >
+                ${
+                  element.workshopDetail_status == 'refund'
+                    ? '환불 완료'
+                    : '문의 취소'
+                }
+              </button>
             <h5 id="card-workshop-title">${element.workshop_title}</h5>
-            <p class="card-workshop-summary">진행 예정일: ${element.workshopDetail_wish_date}</p>
-            <p class="card-workshop-summary">인원: ${element.workshopDetail_member_cnt}명</p>
-            <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showRefundModal(${element.workshopDetail_id})">상세 내역 보기 >> </p>
+            <p class="card-workshop-summary">진행 예정일: ${
+              element.workshopDetail_wish_date
+            }</p>
+            <p class="card-workshop-summary">인원: ${
+              element.workshopDetail_member_cnt
+            }명</p>
+            <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showRefundModal(${
+              element.workshopDetail_id
+            })">상세 내역 보기 >> </p>
           </div>
         </div>
       </div>`;
