@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await uploadVideo(workshop_id, title, data.message);
       })
       .catch((response) => {
-        alert(response);
+        alert(response.response.data.error);
       });
   });
 
@@ -199,7 +199,16 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch((response) => {
         loadingBack.style.display = 'none';
         loadingMessage.style.display = 'none';
-        alert('영상을 업로딩 하던 도중 오류가 발생하였습니다.');
+
+        if (
+          response.response.data.error &&
+          response.response.data.error !== '' &&
+          typeof response.response.data.error === 'string'
+        ) {
+          alert(response.response.data.error);
+        } else {
+          alert('워크샵 등록 과정에서 오류가 발생하였습니다.');
+        }
         window.location.href = '/teacher/workshop';
       });
     return true;

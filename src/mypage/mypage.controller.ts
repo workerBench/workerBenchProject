@@ -9,6 +9,7 @@ import {
   Query,
   UseInterceptors,
   UseGuards,
+  UploadedFile,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
@@ -21,6 +22,7 @@ import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { PaymentDto } from 'src/mypage/dtos/payment.dto';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { RefundDto } from 'src/mypage/dtos/refund.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('mypage')
 @UseInterceptors(SuccessInterceptor)
@@ -202,7 +204,7 @@ export class MypageController {
     );
   }
 
-  // 리뷰 작성 페이지 api
+  // 리뷰 작성 post api
   @ApiResponse({
     status: 201,
     description: '성공',
@@ -210,12 +212,19 @@ export class MypageController {
   @ApiOperation({ summary: '리뷰 작성 페이지 api' })
   @Post('/:workshop_id/review')
   @UseGuards(JwtUserAuthGuard)
+  @UseInterceptors(FileInterceptor('image'))
   review(
     @Param('workshop_id') workshop_id: number,
-    @Body() review: ReviewDto,
+    @Body() reviewData: any,
     @CurrentUser() user: CurrentUserDto,
+    @UploadedFile() image: Express.Multer.File,
   ) {
-    return this.mypageService.review(workshop_id, user.id, review);
+    return this.mypageService.writingReview(
+      workshop_id,
+      user.id,
+      JSON.parse(reviewData.jsonData),
+      image,
+    );
   }
 
   // 찜 목록 페이지에 찜한 워크샵 불러오기 api
