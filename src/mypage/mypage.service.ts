@@ -286,6 +286,7 @@ export class MypageService {
         console.log(amount, typeof amount);
         // DB에 결제 내역 저장
         const insertOrder = await this.orderRepository.insert({
+          workshop_instance_detail_id: workshopInstance_id,
           user_id,
           imp_uid: paymentData.imp_uid,
           merchant_uid,
