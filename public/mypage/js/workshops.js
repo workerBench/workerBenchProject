@@ -4,19 +4,6 @@ window.addEventListener('DOMContentLoaded', function () {
   getRefundWorkshops();
 });
 
-function workshops() {
-  window.location.href = '/mypage/workshops';
-}
-function wishlist() {
-  window.location.href = '/mypage/workshops/wishlist';
-}
-function teacherWorkshop() {
-  window.location.href = '/teacher/workshop';
-}
-function teacherRegister() {
-  window.location.href = '/teacher/register';
-}
-
 // 수강 예정 워크샵 불러오기
 function getSoonWorkshops() {
   axios
@@ -343,8 +330,8 @@ function open_iamport() {
           })
           .then((response) => {
             console.log(response);
-            alert('결제가 완료되었습니다.');
-            location.href = '/mypage/workshops';
+            alert(response.data.message);
+            window.location.reload();
           })
           .catch((error) => {
             console.log(error);
@@ -352,7 +339,7 @@ function open_iamport() {
           });
       } else {
         console.log(rsp);
-        alert('결제가 실패했습니다.');
+        alert(rsp.response.data.message);
       }
     },
   );
@@ -433,11 +420,6 @@ function cancel_pay() {
     'order-workshopDetail-id',
   ).innerText;
 
-  if (!reason) {
-    return alert('환불 사유를 입력해주세요.');
-  }
-  confirm('결제를 취소하시겠습니까?');
-
   $.ajax({
     type: 'POST',
     url: '/api/mypage/workshops/order/refund',
@@ -466,13 +448,11 @@ function getCompleteWorkshops() {
     .get('/api/mypage/workshops/complete')
     .then((res) => {
       const workshops = res.data.data;
-      console.log('1111');
       console.log('workshops', workshops);
 
       workshops.forEach((element) => {
         let tempHtml = `<div class="col">
         <div class="card h-100">
-        <div id="workshopDetail-id" style="display:none;">${element.workshopDetail_id}</div>
         <a href="/workshops/detail?workshopId=${element.workshop_id}"><img src="${element.workshop_thumb}" class="card-img-top" alt="..." /></a>
           <div class="card-body">
             <h5 id="card-workshop-title">${element.workshop_title}</h5>
