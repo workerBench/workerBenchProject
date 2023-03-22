@@ -13,7 +13,7 @@ body {
   justify-content: center;
   align-items: center;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url('../../images/medidation-class.jpg') repeat;
+    url('../../images/meditation-class.jpg') repeat;
   color: rgb(255, 255, 247);
   font-size: 40px;
 }
@@ -33,4 +33,22 @@ body {
 #bottom-margin-div {
   width: 100%;
   height: 200px;
+}
+
+.workshop-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.workshop-category {
+  border-radius: 20px;
+  border: 3px solid #a4a4a4;
+  padding: 3px 10px;
+  color: white;
+  background-color: #a4a4a4;
+}
+
+.workshop-price {
+  margin-top: 20px;
 }

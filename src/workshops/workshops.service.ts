@@ -48,6 +48,7 @@ export class WorkshopsService {
       ])
       .innerJoin(Order, 'o', 'workshop.id = o.workshop_id') // order 테이블과 join
       .where('workshop.deletedAt IS NULL')
+      .andWhere('workshop.status = :status', { status: 'approval' })
       .groupBy('workshop.id') // workshop id로 결제 내역을 그룹핑
       .orderBy('orderCount', 'DESC') // 결제 횟수로 내림차순
       .limit(8)
@@ -92,6 +93,7 @@ export class WorkshopsService {
         'workshop.deletedAt',
       ])
       .where('workshop.deletedAt IS NULL')
+      .andWhere('workshop.status = :status', { status: 'approval' })
       .orderBy('workshop.updatedAt', 'DESC') // 업데이트 최신순으로 정렬
       .groupBy('workshop.id')
       .limit(4)
