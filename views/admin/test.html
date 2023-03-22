@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<style>
+  #myform fieldset{
+    display: inline-block;
+    direction: rtl;
+    border:0;
+}
+#myform fieldset legend{
+    text-align: right;
+}
+#myform input[type=radio]{
+    display: none;
+}
+#myform label{
+    font-size: 2em;
+    color: transparent;
+    text-shadow: 0 0 0 #f0f0f0;
+}
+#myform label:hover{
+    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#myform label:hover ~ label{
+    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#myform input[type=radio]:checked ~ label{
+    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#reviewContents {
+    width: 30%;
+    height: 150px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: solid 1.5px #D3D3D3;
+    border-radius: 5px;
+    font-size: 16px;
+    resize: none;
+}
+.modal-update-image {
+  border-radius: 30px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgb(0 0 0 / 30%) 0px 3px 5px;
+  width: 320px;
+  height: 240px;
+}
+</style>
+<body>
+  <!-- <div class="modal" id="modal" tabindex="-1"> -->
+
+
+    <div class="modal-update-content">
+      <div class="modal-header">
+        <h5 class="modal-title">리뷰 작성하기</h5>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+      </div>
+      <div class="modal-update-body">
+          <div id="thumb-img-wrap">
+            <img class="modal-update-image">
+            <div>
+              <input type="file" accept="image/*" , id="thumb-img-file" />
+            </div>
+          </div>
+          <div class="rating-review">
+            <form class="mb-3" name="myform" id="myform" method="post">
+              <fieldset>
+                <span class="text-bold">별점을 선택해주세요</span>
+                <input type="radio" name="reviewStar" value="5" id="rate1"><label
+                  for="rate1">★</label>
+                <input type="radio" name="reviewStar" value="4" id="rate2"><label
+                  for="rate2">★</label>
+                <input type="radio" name="reviewStar" value="3" id="rate3"><label
+                  for="rate3">★</label>
+                <input type="radio" name="reviewStar" value="2" id="rate4"><label
+                  for="rate4">★</label>
+                <input type="radio" name="reviewStar" value="1" id="rate5"><label
+                  for="rate5">★</label>
+              </fieldset>
+              <div>
+                <textarea type="text" id="reviewContents"
+                      placeholder="리뷰를 작성해주세요!"></textarea>
+              </div>
+            </form>	
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="update" onclick="showReviewPost()">작성하기</button>
+      </div>
+    </div>
+      
+</body>
+<script>
+  // input 요소에서 파일이 선택되면 실행되는 함수
+function previewImage(event) {
+  // input 요소에서 선택된 파일 가져오기
+  const input = event.target;
+  const file = input.files[0];
+
+  // FileReader 객체를 사용하여 파일을 읽기
+  const reader = new FileReader();
+
+  // 파일이 로드되면 실행되는 함수
+  reader.onload = function() {
+    // 미리보기 이미지 요소 가져오기
+    const img = document.querySelector('.modal-update-image');
+    // 미리보기 이미지 요소에 이미지 데이터 설정
+    img.src = reader.result;
+  }
+
+  // 파일 읽기 시작
+  reader.readAsDataURL(file);
+}
+
+// input 요소에 이벤트 리스너 등록
+const input = document.querySelector('#thumb-img-file');
+input.addEventListener('change', previewImage);
+
+
+// 수강완료 워크샵 리뷰 작성 (모달창)
+function showReviewPost(WorkshopDetailId) {
+  axios
+  .post(`/api/mypage/${workshopDetailId}/${workshopId}`)
+  .then(function (response) {
+    const review = response.data;
+    const modal = document.getElementById('modal');
+    modal.innerHTML = `
+    <div class="modal-update-content">
+      <div class="modal-header">
+        <h5 class="modal-title">리뷰 작성하기</h5>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+      </div>
+      <div class="modal-update-body">
+          <div id="thumb-img-wrap">
+            <img class="modal-update-image">
+            <div>
+              <input type="file" accept="image/*" , id="thumb-img-file" />
+            </div>
+          </div>
+          <div class="rating-review">
+            <form class="mb-3" name="myform" id="myform" method="post">
+              <fieldset>
+                <span class="text-bold">별점을 선택해주세요</span>
+                <input type="radio" name="reviewStar" value="5" id="rate1"><label
+                  for="rate1">★</label>
+                <input type="radio" name="reviewStar" value="4" id="rate2"><label
+                  for="rate2">★</label>
+                <input type="radio" name="reviewStar" value="3" id="rate3"><label
+                  for="rate3">★</label>
+                <input type="radio" name="reviewStar" value="2" id="rate4"><label
+                  for="rate4">★</label>
+                <input type="radio" name="reviewStar" value="1" id="rate5"><label
+                  for="rate5">★</label>
+              </fieldset>
+              <div>
+                <textarea type="text" id="reviewContents"
+                      placeholder="리뷰를 작성해주세요!"></textarea>
+              </div>
+            </form>	
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="update">작성하기</button>
+      </div>
+    </div>
+    `;
+    modal.classList.add('show');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('style', 'display: block');
+
+    const closeButton = modal.querySelector('.btn-close');
+    closeButton.addEventListener('click', function () {
+      modal.classList.remove('show');
+      modal.removeAttribute('aria-modal');
+      modal.removeAttribute('style');
+    });
+
+    modal.addEventListener('click', function (event) {
+      if (event.target === modal) {
+        modal.classList.remove('show');
+        modal.removeAttribute('aria-modal');
+        modal.removeAttribute('style');
+      }
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+</script>
+</html>

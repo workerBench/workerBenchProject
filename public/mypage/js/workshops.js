@@ -1,3 +1,5 @@
+const { default: axios } = require("axios");
+
 window.addEventListener('DOMContentLoaded', function () {
   getSoonWorkshops();
   getCompleteWorkshops();
@@ -454,7 +456,7 @@ function getCompleteWorkshops() {
         let tempHtml = `<div class="col">
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${element.workshop_id}"><img src="${element.workshop_thumb}" class="card-img-top" alt="..." /></a>
-          <div class="card-body">
+          <div class="card-body">mplete
             <h5 id="card-workshop-title">${element.workshop_title}</h5>
             <p class="card-workshop-summary">진행 예정일: ${element.workshopDetail_wish_date}</p>
             <p class="card-workshop-summary">인원: ${element.workshopDetail_member_cnt}명</p>
@@ -469,6 +471,7 @@ function getCompleteWorkshops() {
       console.log(error);
     });
 }
+
 
 // 특정 워크샵 상세 내역 불러오기 (모달창) - 수강 완료
 function showCompleteModal(workshopDetailId) {
