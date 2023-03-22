@@ -1,24 +1,21 @@
 window.addEventListener('DOMContentLoaded', function () {
   getWishList();
-  updateWishListCancel();
 });
 
+function workshops() {
+  window.location.href = '/mypage/workshops';
+}
+function wishlist() {
+  window.location.href = '/mypage/workshops/wishlist';
+}
+function teacherWorkshop() {
+  window.location.href = '/teacher/workshop';
+}
+function teacherRegister() {
+  window.location.href = '/teacher/register';
+}
 
-  function workshops() {
-    window.location.href = '/mypage/workshops';
-  }
-  function wishlist() {
-    window.location.href = '/mypage/workshops/wishlist';
-  }
-  function teacherWorkshop() {
-    window.location.href = '/teacher/workshop';
-  }
-  function teacherRegister() {
-    window.location.href = '/teacher/register';
-  }
-  
-
-  // 찜 목록 불러오기
+// 찜 목록 불러오기
 function getWishList() {
   axios
     .get('/api/mypage/workshops/wishlist')
@@ -29,27 +26,19 @@ function getWishList() {
       workshops.forEach((element) => {
         let tempHtml = `<div class="col">
         <div class="card h-100">
-        <a href="/workshops/detail?workshopId=${
-          element.workshop_id
-        }"><img src="${
-          element.workshop_thumb
-        }" class="card-img-top" alt="..." /></a>
+        <a href="/workshops/detail?workshopId=${element.workshop_id}"><img src="${element.workshop_thumb}" class="card-img-top" alt="..." /></a>
           <div class="card-body">
             
           </div>
         </div>
       </div>`;
-        $('#incomplete-list').append(tempHtml);
+        $('#wish-list').append(tempHtml);
       });
-      hideButtonIfNotPayable();
-      hideButtonIfNotRefundable();
     })
     .catch((error) => {
       console.log(error);
     });
 }
-
-
 
 // 찜하기 해제
 function updateWishListCancel() {
@@ -77,11 +66,9 @@ function updateWishListCancel() {
     });
 }
 
-
-
-      // 찜 되어있는 워크샵 하트 칠해져있기
-      if (wishCheck) {
-        document.querySelector('.wish').textContent = '♥';
-      } else {
-        document.querySelector('.wish').textContent = '♡';
-      }
+// 찜 되어있는 워크샵 하트 칠해져있기
+if (wishCheck) {
+  document.querySelector('.wish').textContent = '♥';
+} else {
+  document.querySelector('.wish').textContent = '♡';
+}

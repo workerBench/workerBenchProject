@@ -12,12 +12,13 @@ import { WishList } from 'src/entities/wish-list';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
 import { ReviewDto } from 'src/mypage/dtos/review.dto';
 import { ReviewImageDto } from 'src/mypage/dtos/review-image.dto';
-import { Repository } from 'typeorm';
+import { LessThan, MoreThan, Repository } from 'typeorm';
 import { WorkShop } from 'src/entities/workshop';
 import axios from 'axios';
 import { PaymentDto } from 'src/mypage/dtos/payment.dto';
 import { Order } from 'src/entities/order';
 import { RefundDto } from 'src/mypage/dtos/refund.dto';
+import { Not } from 'typeorm/find-options/operator/Not';
 
 @Injectable()
 export class MypageService {
@@ -424,11 +425,9 @@ export class MypageService {
       const workshops = await this.workShopInstanceDetailRepository
         .createQueryBuilder('workshopDetail')
         .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
-        .innerJoinAndSelect('workshopDetail.Writer', 'customer')
-        .innerJoinAndSelect('workshop.User', 'teacher')
-        .where('customer.id = :id', { id: user_id })
+        .where('workshopDetail.user_id = :id', { id: user_id })
         .andWhere('workshopDetail.status = :status', { status: 'refund' })
-        .andWhere('workshop.deletedAt is null')
+        // .orWhere('workshopDetail.status = :status', { status: 'rejected' })
         .select([
           'workshop.id',
           'workshop.thumb',
@@ -460,7 +459,7 @@ export class MypageService {
           workshopDetail_id: id,
         })
         .andWhere('workshopDetail.status = :status', { status: 'refund' })
-        .andWhere('workshop.deletedAt is null')
+        .orWhere('workshopDetail.status = :status', { status: 'rejected' })
         .select([
           'workshopDetail.id',
           'workshopDetail.company',
