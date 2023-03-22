@@ -36,7 +36,6 @@ body {
 }
 
 .workshop-star,
-.workshop-category,
 .workshop-member-cnt,
 .workshop-total-time,
 .workshop-genre,
@@ -46,10 +45,30 @@ body {
   font-size: 20px;
 }
 
+.workshop-category {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.workshop-location {
+  margin-top: 20px;
+}
+
 .workshop-price {
   font-size: 30px;
   font-weight: bold;
   color: #9f70fb;
+}
+
+.workshop-star #content,
+.workshop-category #content,
+.workshop-member-cnt #content,
+.workshop-total-time #content,
+.workshop-genre #content,
+.workshop-purpose #content,
+.workshop-location #content {
+  font-weight: bold;
+  margin-left: 5px;
 }
 
 .order-wish-buttons {
@@ -85,6 +104,18 @@ body {
   margin-top: 50px;
   font-size: 20px;
   font-weight: bold;
+}
+
+.workshop-category {
+  border-radius: 20px;
+  border: 3px solid #a4a4a4;
+  padding: 3px 10px;
+  color: white;
+  background-color: #a4a4a4;
+}
+
+.workshop-price {
+  margin-top: 20px;
 }
 
 .video-set-wrap {
