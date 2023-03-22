@@ -303,7 +303,7 @@ function open_iamport() {
 
   // imp 객체 가져오기
   const IMP = window.IMP;
-  IMP.init('imp85074462');
+  IMP.init('imp31720762');
   IMP.request_pay(
     {
       pg: 'html5_inicis', // 하나의 아임포트 계정으로 여러 pg를 사용할 때 구분자

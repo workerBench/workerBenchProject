@@ -335,6 +335,10 @@ export class MypageService {
       .where('workshopDetail.id = :id', { id: workshopInstanceId })
       .getRawMany();
 
+    console.log('11111111');
+    console.log(workshopInstanceId);
+    console.log(workshopDetail);
+
     if (!workshopDetail) {
       throw new NotFoundException('수강 문의 기록이 존재하지 않습니다.');
     }

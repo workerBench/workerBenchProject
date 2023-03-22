@@ -76,6 +76,8 @@ function getWorkshopDetail() {
         ${workshop.workshop_desc}
       </div>`;
 
+      $('#myTabContent').append(workshopDesc);
+
       // 첫 번째 방법. video.js 를 사용.
       // if (workshop.workshop_video !== '' && workshop.workshop_video !== null) {
       //   workshopDesc += `
@@ -93,15 +95,14 @@ function getWorkshopDetail() {
 
       // 두 번째 방법 hjs.js 를 사용.
       if (workshop.workshop_video !== '' && workshop.workshop_video !== null) {
-        videoUrlForEveryWhere = workshop.workshop_video;
-        workshopDesc += `
+        let videoBox = `
           <div class="video-set-wrap">
             <video id="video-player" controls>
             </video>
           </div>
         `;
+        $('#home-tab-pane').append(videoBox);
       }
-      $('#myTabContent').append(workshopDesc);
 
       if (workshop.workshop_video === '' || workshop.workshop_video === null) {
         return;

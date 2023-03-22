@@ -202,7 +202,7 @@ export class MypageController {
     );
   }
 
-  // 리뷰 작성 페이지 api
+  // 리뷰 작성 post api
   @ApiResponse({
     status: 201,
     description: '성공',
