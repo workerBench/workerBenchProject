@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class PaymentDto {
+export class RefundDto {
   @IsNotEmpty()
   workshopInstance_id: number;
 
@@ -8,8 +8,11 @@ export class PaymentDto {
   workshop_id: number;
 
   @IsNotEmpty()
-  imp_uid: string;
+  merchant_uid: string;
 
   @IsNotEmpty()
-  merchant_uid: string;
+  cancel_request_amount: number;
+
+  @IsNotEmpty()
+  reason: string;
 }
