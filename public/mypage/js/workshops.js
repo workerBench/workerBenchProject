@@ -4,6 +4,19 @@ window.addEventListener('DOMContentLoaded', function () {
   getRefundWorkshops();
 });
 
+function workshops() {
+  window.location.href = '/mypage/workshops';
+}
+function wishlist() {
+  window.location.href = '/mypage/workshops/wishlist';
+}
+function teacherWorkshop() {
+  window.location.href = '/teacher/workshop';
+}
+function teacherRegister() {
+  window.location.href = '/teacher/register';
+}
+
 // 수강 예정 워크샵 불러오기
 function getSoonWorkshops() {
   axios
@@ -330,8 +343,8 @@ function open_iamport() {
           })
           .then((response) => {
             console.log(response);
-            alert(response.data.message);
-            window.location.reload();
+            alert('결제가 완료되었습니다.');
+            location.href = '/mypage/workshops';
           })
           .catch((error) => {
             console.log(error);
@@ -339,7 +352,7 @@ function open_iamport() {
           });
       } else {
         console.log(rsp);
-        alert(rsp.response.data.message);
+        alert('결제가 실패했습니다.');
       }
     },
   );
@@ -419,6 +432,11 @@ function cancel_pay() {
   const workshopInstance_id = document.getElementById(
     'order-workshopDetail-id',
   ).innerText;
+
+  if (!reason) {
+    return alert('환불 사유를 입력해주세요.');
+  }
+  confirm('결제를 취소하시겠습니까?');
 
   $.ajax({
     type: 'POST',
