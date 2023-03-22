@@ -61,6 +61,9 @@ function showModal(workshopId) {
                 <div class="info-ul">목적 :
                   <span class="info-li">${workshop.purpose_name}</span>
                 </div>
+                <div class="info-ul">장소 :
+                  <span class="info-li">${workshop.workshop_location}</span>
+                </div>
                 <div class="info-ul">강사 이름 :
                   <span class="info-li">${workshop.teacher_name}</span>
                 </div>

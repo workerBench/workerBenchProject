@@ -195,4 +195,5 @@ export class WorkShop {
     (workshopPurpose) => workshopPurpose.Workshop,
   )
   PurposeList: WorkShopPurpose[];
+  identifiers: any;
 }
