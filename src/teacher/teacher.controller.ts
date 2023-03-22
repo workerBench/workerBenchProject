@@ -190,6 +190,7 @@ export class TeacherController {
   ) {
     return this.teacherService.cancleApplyCompany(user.id, id);
   }
+
   // 강사 워크샵 등록
   @ApiResponse({
     status: 200,
