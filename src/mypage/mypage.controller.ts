@@ -20,6 +20,7 @@ import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { PaymentDto } from 'src/mypage/dtos/payment.dto';
 import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
+import { RefundDto } from 'src/mypage/dtos/refund.dto';
 
 @ApiTags('mypage')
 @UseInterceptors(SuccessInterceptor)
@@ -32,7 +33,7 @@ export class MypageController {
     status: 200,
     description: '성공',
   })
-  @ApiOperation({ summary: '수강 예정 워크샵 api' })
+  @ApiOperation({ summary: '수강 예정 워크샵 전체 조회 api' })
   @Get('workshops/soon')
   @UseGuards(JwtUserAuthGuard)
   async getSoonWorkshops(@CurrentUser() user: CurrentUserDto) {
@@ -44,7 +45,7 @@ export class MypageController {
     status: 200,
     description: '성공',
   })
-  @ApiOperation({ summary: '수강 예정 워크샵 api' })
+  @ApiOperation({ summary: '수강 예정 워크샵 상세 조회 api' })
   @Get('workshops/soon/:workshopDetailInstance_id') // workshopDetail
   @UseGuards(JwtUserAuthGuard)
   async getSoonWorkshopsById(
@@ -70,6 +71,22 @@ export class MypageController {
   }
 
   // 수강 완료 워크샵 상세 조회 API
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '수강 예정 워크샵 상세 조회 api' })
+  @Get('workshops/complete/:workshopDetailInstance_id') // workshopDetail
+  @UseGuards(JwtUserAuthGuard)
+  async getCompleteWorkshopsById(
+    @Param('workshopDetailInstance_id') workshopDetailInstance_id: number,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    return await this.mypageService.getCompleteWorkshopsById(
+      workshopDetailInstance_id,
+      user.id,
+    );
+  }
 
   // 워크샵 결제하기 클릭 시 status 유효성 검사
   @ApiResponse({
@@ -79,11 +96,11 @@ export class MypageController {
   @ApiOperation({ summary: '워크샵 결제 정보 입력창 열기 api' })
   @Post('workshops/orderInfo')
   @UseGuards(JwtUserAuthGuard)
-  async tryWorkshopOrderInfo(
+  async putWorkshopOrderInfo(
     @Body() body: { workshopDetailId: number },
     @CurrentUser() user: CurrentUserDto,
   ) {
-    const result = await this.mypageService.checkStatus(
+    const result = await this.mypageService.checkStatusIfNonPayment(
       user.id,
       body.workshopDetailId,
     );
@@ -110,7 +127,79 @@ export class MypageController {
     if (check_result === false) {
       return { message: '결제 내역이 정상적으로 기록되지 않았습니다.' };
     }
-    return { message: '결제 내역이 정상적으로 기록되지 않았습니다.' };
+    return { message: '결제 내역이 정상적으로 기록되었습니다.' };
+  }
+
+  // 환불 가능한 상태인지 status 유효성 검사
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '워크샵 환불 정보 입력창 열기 api' })
+  @Post('workshops/refundInfo')
+  @UseGuards(JwtUserAuthGuard)
+  async putWorkshopRefundInfo(
+    @Body() body: { workshopDetailId: number },
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    const result = await this.mypageService.checkStatusIfWaitingLecture(
+      user.id,
+      body.workshopDetailId,
+    );
+    return result;
+  }
+
+  // 아임포트로 환불 요청하기 API
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '환불 요청하기 api' })
+  @Post('workshops/order/refund')
+  @UseGuards(JwtUserAuthGuard)
+  async refundWorkshopPayment(
+    @Body() refundInfo: RefundDto,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    console.log('-----', refundInfo);
+    const check_result = await this.mypageService.refundWorkshopPayment(
+      user.id,
+      refundInfo,
+    );
+    if (check_result === true) {
+      return { message: '환불 내역이 정상적으로 기록되었습니다.' };
+    }
+    return { message: '환불 내역이 정상적으로 기록되지 않았습니다.' };
+  }
+
+  // 수강 취소 워크샵 전체 조회 API
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '수강 취소한 워크샵 api' })
+  @Get('workshops/refund')
+  @UseGuards(JwtUserAuthGuard)
+  getRefundWorkshops(@CurrentUser() user: CurrentUserDto) {
+    return this.mypageService.getRefundWorkshops(user.id);
+  }
+
+  // 수강 취소 워크샵 상세 조회 API
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '수강 취소 워크샵 상세 조회 api' })
+  @Get('workshops/refund/:workshopDetailInstance_id') // workshopDetail
+  @UseGuards(JwtUserAuthGuard)
+  async getRefundWorkshopsById(
+    @Param('workshopDetailInstance_id') workshopDetailInstance_id: number,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    return await this.mypageService.getRefundWorkshopsById(
+      workshopDetailInstance_id,
+      user.id,
+    );
   }
 
   // 리뷰 작성 페이지 api
