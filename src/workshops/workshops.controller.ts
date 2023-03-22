@@ -162,8 +162,9 @@ export class WorkshopsController {
   orderWorkshop(
     @Param('workshop_id') workshop_id: number,
     @Body() orderWorkshopData: OrderWorkshopDto,
+    @CurrentUser() user: CurrentUserDto,
   ) {
-    const user_id = 1;
+    const user_id = user.id;
     return this.workshopsService.orderWorkshop(
       workshop_id,
       user_id,
