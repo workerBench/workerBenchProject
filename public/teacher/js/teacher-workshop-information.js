@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                   <li class="teacher-workshop-li">이름</li>
                                   <li class="teacher-workshop-li">주소</li>
                                   <li class="teacher-workshop-li">전화번호</li>
-                          </div>
+                              </div>
                               <div class="workshop-information-div">
                                   <li class="workshop-information-li">${email}</li>
                                   <li class="workshop-information-li">${name}</li>
@@ -120,15 +120,16 @@ document.addEventListener('DOMContentLoaded', () => {
                           <div class="teacher-wrokshop-div">
                               ${companyHtml}
                           </div>;
-                      </div>`;
+                      </div>
+                      `;
       workshopInformationList.insertAdjacentHTML('beforeend', tempHtml);
 
       companySearch.addEventListener('click', () => {
         const company_name = document.getElementById('company-name').value;
-        // if (!company_name) {
-        //   alert('입력해 주세요');
-        //   return;
-        // }
+        if (!company_name) {
+          alert('업체를 입력해 주세요');
+          return;
+        }
         axios({
           method: 'get',
           url: `/api/teacher/company/search?company_name=${company_name}`,
@@ -144,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
               let tempHtml = ``;
               tempHtml += `<div class="company-information-list">
-                          <li class="company-information-li">업체 이름 : ${company_name} 이름 :${saving_name} </li>
+                          <li class="company-information-li">업체 이름 : ${company_name}, 이름 :${saving_name} </li>
                           <button type="radio" class="applyCompanyButton" onclick="applyCompany(${id})">업체 신청</button>
                           </div>
                           `;
@@ -191,15 +192,19 @@ function acceptListCompany() {
     data: {},
   })
     .then((response) => {
+      console.log(response);
       const data = response.data;
       let html = '';
       for (let i = 0; i < data.length; i++) {
         const name = data[i].name;
         const user_id = data[i].user_id;
+        const phone_number = data[i].phone_number;
         html += `
-                <li class="company-apply-li"> 이름 :${name} </li>
-                <button type="radio" class="acceptCompanyButton" onclick="acceptCompany(${user_id})">업체 수락</button>
-                <button type="radio" class="acceptCompanyButton" onclick="cancleCompany(${user_id})">업체 반려</button>
+                <div class="company-apply-div">
+                    <li class="company-apply-li"> 이름 : ${name}, 휴대폰 번호 : ${phone_number} </li>
+                    <button type="radio" class="acceptCompanyButton" onclick="acceptCompany(${user_id})">업체 수락</button>
+                    <button type="radio" class="acceptCompanyButton" onclick="cancleCompany(${user_id})">업체 반려</button>
+                </div>
                 `;
       }
       document.getElementById('apply-company-List').innerHTML = html;

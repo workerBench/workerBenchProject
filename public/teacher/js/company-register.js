@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const account = document.getElementById('accountNumber').value;
     const saving_name = document.getElementById('savingName').value;
     if (
-      company_type === '직업을 선택해주세요' ||
+      company_type === '' ||
       !company_name ||
       !business_number ||
       !rrn_front ||
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
       !account ||
       !saving_name
     ) {
-      alert('전부다 입력해 주세요');
+      alert('빈칸없이 입력해주세요');
       return;
     }
     axios({

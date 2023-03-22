@@ -58,18 +58,18 @@ document.addEventListener('DOMContentLoaded', () => {
                        <div class="workshop-information-div">
                             <img src="${workshop_thumb}" alt="" />
                             <li for="purpose-tag" class="workshop-information">타이틀 <br>${workshop_title}</li>
-                            <li for="purpose-tag" class="workshop-information">최소 인원 <br>${min_member}</li>
-                            <li for="purpose-tag" class="workshop-information">최대 인원 <br>${max_member}</li>
+                            <li for="purpose-tag" class="workshop-information">최소 인원 <br>${min_member}명</li>
+                            <li for="purpose-tag" class="workshop-information">최대 인원 <br>${max_member}명</li>
                             <li for="purpose-tag" class="workshop-information">분야 <br>${genreTag_name}</li>
-                            <li for="purpose-tag" class="workshop-information">걸리는 시간 <br>${total_time}</li>
-                            <li for="purpose-tag" class="workshop-information">가격 <br>${price}</li>
+                            <li for="purpose-tag" class="workshop-information">걸리는 시간 <br>${total_time}분</li>
+                            <li for="purpose-tag" class="workshop-information">가격 <br>${price}원</li>
                     </div>
                     <div class="company-information-div">
                           <div class="company-information">
                               <li for="purpose-tag" class="company-input">설명 <br> ${etc}</li>
                               <li for="purpose-tag" class="company-input">업체명 <br> ${company}</li>
                               <li for="purpose-tag" class="company-input">휴대폰 번호 <br> ${phone_number}</li>
-                              <li for="purpose-tag" class="company-input">인원 <br> ${member_cnt}</li>
+                              <li for="purpose-tag" class="company-input">인원 <br> ${member_cnt}명</li>
                               <li for="purpose-tag" class="company-input">이메일 <br>${email}</li>
                               <li for="purpose-tag" class="company-input">문의한 날짜 <br>${createdDate}</li>
                           </div>

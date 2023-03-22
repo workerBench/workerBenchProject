@@ -32,51 +32,54 @@
           <div class="img-test-wrap">
             <div id="thumb-img-wrap">
               <label for="workshop" class="form-label workshop-description-li">썸네일</label>
+              <span class="caution-video">* 썸네일을 등록해주세요!</span>
               <img id="thumb-img-show" />
               <input class="form-control" type="file" accept="image/*" id="thumb-img-file">
             </div>
           </div>
         </div>
         <div class="workshop-information">
+          <span class="caution-video">* 빈칸없이 입력해주세요</span>
+          <span class="caution-video">* 목적태그는 최소 한개이상 <br>선택해주세요</span>
             <select name="job" id="category">
-                <option disabled selected>유형을 선택해주세요</option>
+                <option value="" disabled selected>유형을 선택해주세요</option>
                 <option value="online">온라인</option>
                 <option value="offline">오프라인</option>
             </select>
-                <input type="text" class="form-control" id="title" placeholder="강의제목">
-                  <input type="text" class="form-control" id=minMember placeholder="최소 인원수">
-                <input type="text" class="form-control" id=maxMember placeholder="최대 인원수">
+                <input type="text" class="form-control" id="title" placeholder="강의제목" maxlength='15'>
+                  <input type="text" class="form-control" id=minMember placeholder="최소 인원수" maxlength='2'>
+                <input type="text" class="form-control" id=maxMember placeholder="최대 인원수" maxlength='2'>
             <select name="job" id="genreId">
-                <option disabled selected>장르를 선택해주세요</option>
+                <option value="" disabled selected>장르를 선택해주세요</option>
                 <option value=1>문화예술</option>
                 <option value=2>식음</option>
                 <option value=3>심리진단</option>
                 <option value=4>운동</option>
             </select>
             <select name="job" id="purposeTagId1">
-                <option disabled selected>목적을 선택해주세요</option>
+                <option value="" disabled selected>목적을 선택해주세요</option>
                 <option value=1>동기부여</option>
                 <option value=2>팀워크</option>
                 <option value=3>회식</option>
                 <option value=4>힐링</option>
             </select>
             <select name="job" id="purposeTagId2" >
-                <option disabled selected>목적을 선택해주세요</option>
+                <option value="" disabled selected>목적을 선택해주세요</option>
                 <option value=1>동기부여</option>
                 <option value=2>팀워크</option>
                 <option value=3>회식</option>
                 <option value=4>힐링</option>
             </select>
-                <input type="text" class="form-control" id=totalTime placeholder="걸리는 시간">
-                <input type="text" class="form-control" id=price placeholder="1인당 가격">
+                <input type="text" class="form-control" id=totalTime placeholder="걸리는 시간" maxlength='3'>
+                <input type="text" class="form-control" id=price placeholder="1인당 가격" maxlength='7'>
             <select name="job" id="location">
-                <option disabled selected>지역을 선택해주세요</option>
+                <option value="" disabled selected>지역을 선택해주세요</option>
                 <option value="서울">서울</option>
                 <option value="경기도">경기도</option>
             </select>
         </div>
         <div id="more-img-wrap1">
-          <label for="workshop" class="form-label sub-Img-label">서브 이미지</label>
+          <label for="workshop" class="form-label sub-Img-label">서브 이미지 (선택사항)</label>
           <div id="more-img-wrap">
               <div class="sub-imgs-wrap">
                   <img class="sub-img-class" id="sub-img-1"/>
@@ -109,6 +112,7 @@
 
     <div class="mb-3 contents-div">
       <label for="workshop" class="form-label workshop-description-li">워크샵 설명</label>
+      <span class="caution-video">* 빈칸 없이 입력해주세요.</span>
       <input type="text" class="form-control" id="desc" required></input>
     </div>
     <div class="regiseterBtn-div">

@@ -24,69 +24,66 @@
     border-radius: 10px;
     background-color: #ffffff;
 }
-
+#button:hover{
+    background-color:#a084dc;
+}
 /* teacher-workshop css*/
-.workshopBox{
-    width: 1100px;
+.workshopBox-div{
+    width: 2000px;
+    margin-top: 100px;
     margin: auto;
 }
+.workshopBox{
+    margin-left: 80px;
+}
 .today-workshop{
-    width:250px;
+    width:350px;
     height: 50px;
-    margin-top: 100px;
-    margin-left: 20px;
-    font-size: 25px;
+    margin-left: 30px;
+    font-size: 40px;
     text-align: center;
     list-style: none;
-    border: 2px solid #000000;
-    background-color: #a084dc;
 }
 .workshop-div{
-    width: 1200px;
     margin:auto;
     display: flex;
-    justify-content: flex-start;
     flex-wrap: wrap;
 }
 .workshop{
     margin-top: 20px;
     margin-left: 20px;
     border: 2px solid #000000;
-    width: 250px;
-    height: 380px;
-    text-align: center;
+    width: 400px;
+    height: 370px;
     font-size:20px;
 }
 .workshop > img{
-    margin-top: 10px;
-    width: 230px;
+    width: 400px;
     height: 220px;
 }
 .title{
-    border: 2px solid #000000;
-    width: 230px;
+    width: 400px;
+    height: 80px;
     margin: auto;
+    margin-top: 10px;
     list-style: none;
+    text-align: center;
+    font-size: 25px;
+    font-weight: bolder;
 }
 .tag-div{
     width: 250px;
     height: 100px;
     display: flex;
 }
-.genre-tag{
-    border: 2px solid #000000;
-    width: 100px;
+.tag{
+    width: 300px;
     height: 30px;
-    margin-left: 10px;
     margin-top: 10px;
+    margin-left: 20px;
     list-style: none;
-}
-.purpose-tag{
-    border: 2px solid #000000;
-    width: 100px;
-    margin-left: 10px;
-    margin-top: 10px;
-    list-style: none;
+    font-size: 20px;
+    font-weight: normal;
 }
 .reject{
     border: 2px solid #000000;
@@ -101,24 +98,18 @@
     width:100px
 }
 .last-workshop{
-    width:250px;
+    width:350px;
     height: 50px;
-    margin-top: 200px;
-    margin-left: 20px;
-    font-size: 25px;
-    text-align: center;
+    margin-top: 50px;
+    margin-left: 30px;
+    font-size: 40px;
     list-style: none;
-    border: 2px solid #000000;
-    background-color: #a084dc;
 }
 .examine-workshop{
-    width:250px;
+    width:350px;
     height: 50px;
-    margin-top: 200px;
-    margin-left: 20px;
-    font-size: 25px;
-    text-align: center;
+    margin-top: 50px;
+    margin-left: 30px;
+    font-size: 40px;
     list-style: none;
-    border: 2px solid #000000;
-    background-color: #a084dc;
 }

@@ -140,7 +140,6 @@ export class TeacherService {
             }`,
           };
         });
-        return result;
       }
     } catch (error) {
       console.log(error);
@@ -246,14 +245,6 @@ export class TeacherService {
         });
         await this.companyRepository.save(company);
       }
-      const newCompanyId = await this.companyRepository.findOne({
-        where: { user_id: userId },
-        select: ['id'],
-      });
-
-      await this.teacherRepository.update(userId, {
-        affiliation_company_id: newCompanyId.id,
-      });
       return { message: '등록이 완료되었습니다.' };
     } catch (error) {
       console.log(error);
@@ -345,7 +336,7 @@ export class TeacherService {
         Applycompanys.map((data) => {
           return this.teacherRepository.findOne({
             where: { user_id: data.teacher_id },
-            select: ['name', 'user_id'],
+            select: ['name', 'user_id', 'phone_number'],
           });
         }),
       );
@@ -453,11 +444,20 @@ export class TeacherService {
       } = data;
       const teacherInfo = await this.teacherRepository.findOne({
         where: { user_id: userId },
-        select: ['user_id'],
+        select: ['user_id', 'affiliation_company_id'],
       });
       if (!teacherInfo.user_id) {
         throw new HttpException(
           '등록된 강사가 아닙니다',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const companyInfo = await this.companyRepository.findOne({
+        where: { user_id: userId },
+      });
+      if (teacherInfo.affiliation_company_id === 0 && !companyInfo) {
+        throw new HttpException(
+          '업체를 등록하셔야 워크샵을 등록 할 수 있습니다.',
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -653,6 +653,8 @@ export class TeacherService {
             'workshop.WorkShopInstances',
             'workShopInstanceDetail',
           )
+          .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
+          .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
           .select([
             'workshop.id',
             'workshop.thumb',
@@ -669,8 +671,9 @@ export class TeacherService {
             'workShopInstanceDetail.member_cnt',
             'workShopInstanceDetail.email',
             'workShopInstanceDetail.createdAt',
-            'workShopInstanceDetail.status',
+            'GROUP_CONCAT(purposeTag.name) as purposeTag_name', // GROUP_CONCAT을 써서 각 그룹의 purposeTag_name을를 하나의 행에 결합한다.
           ])
+          .groupBy('workShopInstanceDetail.id') // groupBy를 써서 각각 id에 해당하는 값을 나타낸다.
           .getRawMany();
 
         return result.map((workshop) => {
@@ -722,6 +725,8 @@ export class TeacherService {
             'workshop.WorkShopInstances',
             'workShopInstanceDetail',
           )
+          .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
+          .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
           .select([
             'workshop.thumb',
             'workshop.title',
@@ -738,7 +743,9 @@ export class TeacherService {
             'workShopInstanceDetail.email',
             'workShopInstanceDetail.createdAt',
             'workShopInstanceDetail.status',
+            'GROUP_CONCAT(purposeTag.name) as purposeTag_name', // GROUP_CONCAT을 써서 각 그룹의 purposeTag_name을를 하나의 행에 결합한다.
           ])
+          .groupBy('workShopInstanceDetail.id') // groupBy를 써서 각각 id에 해당하는 값을 나타낸다.
           .getRawMany();
         return result;
       }
@@ -830,12 +837,11 @@ export class TeacherService {
       }
       const workShopInstance =
         await this.workShopInstanceDetailRepository.findOne({
-          where: { id: id, status: 'non_payment' },
+          where: { id: id, status: 'request' },
         });
       if (workShopInstance) {
         this.workShopInstanceDetailRepository.softDelete({ id });
       }
-      // 선택된 요소들에 대해서 softDelete() 메서드를 호출합니다.
 
       return {
         message: '해당 워크샵을 취소하였습니다.',
