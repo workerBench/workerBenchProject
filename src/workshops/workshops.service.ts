@@ -143,6 +143,7 @@ export class WorkshopsService {
         'purposeTag.name',
         'GROUP_CONCAT(purposeTag.name) AS purposeTag_name',
       ])
+      .where('workshop.status = :status', { status: 'approval' })
       .groupBy('workshop.id');
 
     // 각 태그(ex. category)가 query parameter로 들어온다면 andWhere로 찾기

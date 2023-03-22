@@ -31,3 +31,21 @@ body {
 .workshop-result-list {
   margin: 0 50px 0 50px;
 }
+
+.workshop-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.workshop-category {
+  border-radius: 20px;
+  border: 3px solid #a4a4a4;
+  padding: 3px 10px;
+  color: white;
+  background-color: #a4a4a4;
+}
+
+.workshop-price {
+  margin-top: 20px;
+}
