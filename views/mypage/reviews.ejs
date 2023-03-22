@@ -24,78 +24,74 @@
 
     <!--헤더-->
     <div>
-      <div class="text-center">
-        <!-- 정석대로면 여기가 워크샵 타이틀 자동으로 끌어오는 곳-->
-        <h5 class="fw-bolderandtopbottom">가죽 지갑 만들기</h5>
-      </div>
-      <section class="py-5">
-        <div class="container px-4 px-lg-5 mt-5">
-          <div
-            class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
-          >
-            <div class="col mb-5">
-              <div class="card h-100">
-                <!-- Product image-->
-                <img
-                  class="card-img-top"
-                  src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
-                  alt="..."
-                />
-              </div>
-            </div>
-            <div class="col mb-5">
-              <div class="card h-100">
-                <!-- Product image-->
-                <img
-                  class="card-img-top"
-                  src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
-                  alt="..."
-                />
-              </div>
-            </div>
-            <div class="col mb-5">
-              <div class="card h-100">
-                <!-- Product image-->
-                <img
-                  class="card-img-top"
-                  src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
-                  alt="..."
-                />
-              </div>
+
+
+      <div id="workshop-registerBox">
+        <div class="image">
+          <div class="img-test-wrap">
+            <div id="thumb-img-wrap">
+              <label for="workshop" class="form-label workshop-description-li">썸네일</label>
+              <img id="thumb-img-show" />
+              <input class="form-control" type="file" accept="image/*" id="thumb-img-file">
             </div>
           </div>
         </div>
-      </section>
-      <div class="center-content">
-        <p><textarea cols="100" rows="20"></textarea></p>
-        <select>
-          <option selected>별점(Select)</option>
-          <option value="1">⭐</option>
-          <option value="2">⭐⭐</option>
-          <option value="3">⭐⭐⭐</option>
-          <option value="4">⭐⭐⭐⭐</option>
-          <option value="5">⭐⭐⭐⭐⭐</option>
-        </select>
-        <a class="btn btn-outline-dark margin-top" onclick="showAlert()" href="/">후기 등록하기</a>
+        <div class="workshop-information">
+              <input type="text" class="form-control" id="title" placeholder="강의제목">
+                 
+        </div>
+        <div id="more-img-wrap1">
+          <label for="workshop" class="form-label sub-Img-label">서브 이미지</label>
+          <div id="more-img-wrap">
+              <div class="sub-imgs-wrap">
+                  <img class="sub-img-class" id="sub-img-1"/>
+                  <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
+              </div>
+              <div class="sub-imgs-wrap">
+                  <img class="sub-img-class" id="sub-img-2"/>
+                  <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
+              </div>
+              <div class="sub-imgs-wrap">
+                  <img class="sub-img-class" id="sub-img-3"/>
+                  <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
+              </div>
+          </div>
+      </div>
+    </div>
+    
+    <div class="mb-3 video-contents-div">
+      <div class="video-content-wrap">
+        <label for="workshop" class="form-label workshop-video-li">영상 첨부 (선택사항)</label>
+        <span class="caution-video">* 최대 350MB 까지 업로드 가능합니다.</span>
+        <div class="video-one-set-wrap">
+          <div class="video-show-tag-wrap">
+            <video id="video-show-tag" controls></video>
+          </div>
+          <input type="file" class="form-control video-input" id="video-file" accept="video/*"/>
+        </div>
       </div>
     </div>
 
-    <!-- Footer-->
-    <footer class="py-5 bg-dark">
-      <div class="container">
-        <p class="m-0 text-center text-white">
-          Copyright &copy; Worker Bench 2023
-        </p>
-      </div>
-    </footer>
-    <!-- Bootstrap core JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
-    <script src="js/scripts.js"></script>
-    <script>
-      function showAlert() {
-        alert("리뷰가 등록되었습니다");
-      }
-      </script>
+    <div class="mb-3 contents-div">
+      <label for="workshop" class="form-label workshop-description-li">리뷰 작성</label>
+      <input type="text" class="form-control" id="desc" required></input>
+    </div>
+    <select>
+      <option selected>별점(Select)</option>
+      <option value="1">⭐</option>
+      <option value="2">⭐⭐</option>
+      <option value="3">⭐⭐⭐</option>
+      <option value="4">⭐⭐⭐⭐</option>
+      <option value="5">⭐⭐⭐⭐⭐</option>
+    </select>
+    <div class="regiseterBtn-div">
+        <button type="button" id="workshopRegisterBtn">등록하기</button>
+    </div>
+
+    <div id="uploading-video"></div>
+    <div id="waiting-upload">입력하신 워크샵 정보를 전송 중입니다. <br />잠시만 기다려 주세요...</div>
+
+    </div>
+
   </body>
 </html>

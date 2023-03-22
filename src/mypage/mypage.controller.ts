@@ -224,7 +224,7 @@ export class MypageController {
     description: '성공',
   })
   @ApiOperation({ summary: '찜 목록 페이지에 찜한 워크샵 불러오기 api' })
-  @Get('/workshops/wish-list')
+  @Get('/workshops/wishlist')
   @UseGuards(JwtUserAuthGuard)
   getWishList(
     @Param('workshop_id') workshop_id: number,

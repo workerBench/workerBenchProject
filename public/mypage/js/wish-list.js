@@ -1,44 +1,9 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const wokshopApprovalList = document.getElementById('wokshop-approvalList');
-    const wokshopFinishedList = document.getElementById('wokshop-finishedList');
-    // document.ready(function () {
-    axios({
-      method: 'get',
-      url: '/api/mypage/workshops/wishlist',
-      data: {},
-    })
-      .then((response) => {
-        const data = response.data;
-        for (let i = 0; i < data.length; i++) {
-          const thumb = data[i].workshop_thumb;
-          const title = data[i].workshop_title;
-          const genreTag = data[i].genreTag_name;
-          const purposeTag = data[i].purposeTag_name;
-          const status = data[i].workshop_status;
-          let tempHtml = ``;
-          if (status === 'approval') {
-            tempHtml = `<div class="workshop">
-                <img src="/images/photo-1602498456745-e9503b30470b.jpg" alt="" />
-                <li class="title">${title}</li>
-                <li for="genretag" class="genre-tag">${genreTag}</li>
-                <li for="purpose-tag" class="purpose-tag">${purposeTag}</li>
-              </div>`;
-            wokshopApprovalList.insertAdjacentHTML('beforeend', tempHtml);
-          } else if (status === 'finished') {
-            tempHtml = `<div class="workshop">
-                <img src="/images/images.jpg" alt="" />
-                <li class="title">${title}</li>
-                <li for="genretag" class="genre-tag">${genreTag}</li>
-                <li for="purpose-tag" class="purpose-tag">${purposeTag}</li>
-              </div>`;
-            wokshopFinishedList.insertAdjacentHTML('beforeend', tempHtml);
-          } 
-        }
-      })
-      .catch((response) => {
-        console.log(response);
-      });
-  });
+window.addEventListener('DOMContentLoaded', function () {
+  getWishList();
+  updateWishListCancel();
+});
+
+
   function workshops() {
     window.location.href = '/mypage/workshops';
   }
@@ -52,3 +17,71 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = '/teacher/register';
   }
   
+
+  // 찜 목록 불러오기
+function getWishList() {
+  axios
+    .get('/api/mypage/workshops/wishlist')
+    .then((res) => {
+      const workshops = res.data.data;
+      console.log('workshops', workshops);
+
+      workshops.forEach((element) => {
+        let tempHtml = `<div class="col">
+        <div class="card h-100">
+        <a href="/workshops/detail?workshopId=${
+          element.workshop_id
+        }"><img src="${
+          element.workshop_thumb
+        }" class="card-img-top" alt="..." /></a>
+          <div class="card-body">
+            
+          </div>
+        </div>
+      </div>`;
+        $('#incomplete-list').append(tempHtml);
+      });
+      hideButtonIfNotPayable();
+      hideButtonIfNotRefundable();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+
+
+// 찜하기 해제
+function updateWishListCancel() {
+  let query = window.location.search;
+  let param = new URLSearchParams(query);
+  let workshopId = param.get('workshopId');
+  axios
+    .post(`/api/workshops/${workshopId}/wish`) // user_id 임시로 하드코딩
+    .then((res) => {
+      console.log(res);
+      alert(res.data.data.message);
+      if (res.data.data.type === 'add') {
+        document.querySelector('.wish').textContent = '♥';
+      }
+      if (res.data.data.type === 'remove') {
+        document.querySelector('.wish').textContent = '♡';
+      }
+    })
+    .catch((err) => {
+      getErrorCode(
+        err.response.data.statusCode,
+        err.response.data.message,
+        updateWishListCancel,
+      );
+    });
+}
+
+
+
+      // 찜 되어있는 워크샵 하트 칠해져있기
+      if (wishCheck) {
+        document.querySelector('.wish').textContent = '♥';
+      } else {
+        document.querySelector('.wish').textContent = '♡';
+      }
