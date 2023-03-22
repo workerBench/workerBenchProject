@@ -78,3 +78,4 @@ function getNewWorkshops() {
       console.log(error);
     });
 }
+
