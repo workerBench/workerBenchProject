@@ -26,9 +26,20 @@ function getWishList() {
       workshops.forEach((element) => {
         let tempHtml = `<div class="col">
         <div class="card h-100">
-        <a href="/workshops/detail?workshopId=${element.workshop_id}"><img src="${element.workshop_thumb}" class="card-img-top" alt="..." /></a>
+        <a href="/workshops/detail?workshopId=${element.workshop_id}">
+        <img class="card-img-top" id="best-workshop-thumb alt="..." src="${
+          element.thumbUrl
+        }" /></a>
           <div class="card-body">
-            
+            <p class="workshop-title">${element.workshop_title}</p>
+            <span class="workshop-category">${
+              element.workshop_category === 'online' ? '온라인' : '오프라인'
+            }</span>
+            <p class="workshop-price">비용 &nbsp;${element.workshop_price}원</p>
+            <p class="card-text">인원 &nbsp;${element.workshop_min_member}~${
+          element.workshop_max_member
+        }명</p>
+            <p class="card-text">시간 &nbsp;${element.workshop_total_time}분</p>
           </div>
         </div>
       </div>`;

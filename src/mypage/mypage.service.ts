@@ -434,8 +434,9 @@ export class MypageService {
         .createQueryBuilder('workshopDetail')
         .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
         .where('workshopDetail.user_id = :id', { id: user_id })
-        .andWhere('workshopDetail.status = :status', { status: 'refund' })
-        // .orWhere('workshopDetail.status = :status', { status: 'rejected' })
+        .andWhere('workshopDetail.status IN (:...status)', {
+          status: ['refund', 'rejected'],
+        })
         .select([
           'workshop.id',
           'workshop.thumb',
@@ -527,16 +528,19 @@ export class MypageService {
         .innerJoinAndSelect('workshop.GenreTag', 'genreTag')
         .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
         .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
-        .select([
-          'workshop.id',
-          'workshop.thumb',
-          'workshop.title',
-          'workshop.createdAt',
-          'workshop.status',
-          'workshop.price',
-          'genreTag.name',
-          'purposeTag.name',
-        ])
+        // .select([
+        //   'workshop.id',
+        //   'workshop.thumb',
+        //   'workshop.title',
+        //   'workshop.createdAt',
+        //   'workshop.status',
+        //   'workshop.price',
+        //   'genreTag.name',
+        //   'purposeTag.name',
+        //   // 'GROUP_CONCAT(purposeTag.name) AS purpose_name',
+        // ])
+        .andWhere('workshop.status = :status', { status: 'approval' })
+        .groupBy('workshop.id')
         .getRawMany();
 
       return myWishWorkshops;
