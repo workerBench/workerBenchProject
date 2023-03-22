@@ -433,6 +433,8 @@ function cancel_pay() {
     },
     success: function (response) {
       console.log(response);
+      alert('결제 취소가 완료되었습니다.');
+      location.reload();
     },
     error: function (error) {
       console.log(error);
