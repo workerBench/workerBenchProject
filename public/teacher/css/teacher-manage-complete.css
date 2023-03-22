@@ -38,7 +38,7 @@
     background-color: #9f70fb;
 }
 #teacher-completeBox {
-    width: 1050px;
+    width: 1250px;
     margin: auto;
     margin-top: 100px;
     border-radius: 20px;
@@ -46,7 +46,7 @@
     flex-wrap: wrap;
 }
 .teacher-manage-div{
-    width: 500px;
+    width: 600px;
     height: 600px;
     margin-left: 20px;
     margin-bottom: 20px;
@@ -60,23 +60,33 @@
     margin-left: 10px;
 }
 .workshop-information-div >img{
-    margin-top: 20px;
-    margin-left: 15px;
-    width: 200px;
-    height: 150px;
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 250px;
+    height: 200px;
 }
 .company-information-div{
     width: 250px;
-    margin-left: 30px;
+    margin-left: 100px;
     margin-top: 20px;
     justify-content: center;
 }
-.workshop-information{
-    width:200px;
-    height: 60px;
+.workshop-information-title{
+    width:250px;
+    height: auto;
     margin-top: 10px;
     margin-left: 10px;
-    font-size: 20px;
+    font-size: 23px;
+    text-align: center;
+    list-style: none;
+    border: 2px solid #000000;
+}
+.workshop-information{
+    width:250px;
+    height: auto;
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 25px;
     text-align: center;
     list-style: none;
     border: 2px solid #000000;
@@ -85,14 +95,14 @@
     width: 220px;
     height: 370px;
     margin: 0 auto;
-    margin-top: 100px;
+    margin-top: 50px;
 }
 .company-input{
-    width:200px;
-    height: 60px;
+    width:250px;
+    height: auto;
     margin: auto;
     margin-bottom: 10px;
-    font-size: 20px;
+    font-size: 25px;
     text-align: center;
     list-style: none;
     border: 2px solid #000000;

@@ -30,10 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="teacher-manage-div" >
             <div class="workshop-information-div">
                 <img src="${workshop_thumb}" alt="" />
-                <li for="purpose-tag" class="workshop-information">타이틀 <br>${workshop_title}</li>
+                <li for="purpose-tag" class="workshop-information-title">타이틀 <br>${workshop_title}</li>
                 <li for="purpose-tag" class="workshop-information">최소 인원 : ${min_member}명</li>
                 <li for="purpose-tag" class="workshop-information">최대 인원 : ${max_member}명</li>
-                <li for="purpose-tag" class="workshop-information">분야 <br>${genreTag_name},${purposeTag_name}</li>
+                <li for="purpose-tag" class="workshop-information">분야 : ${genreTag_name},${purposeTag_name}</li>
                 <li for="purpose-tag" class="workshop-information">걸리는 시간 : ${total_time}분</li>
                 <li for="purpose-tag" class="workshop-information">가격 : ${price}원</li>
             </div>

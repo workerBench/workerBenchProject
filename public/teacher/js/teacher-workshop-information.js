@@ -123,13 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
                       </div>
                       `;
       workshopInformationList.insertAdjacentHTML('beforeend', tempHtml);
-
+      // 등록된 업체 검색
       companySearch.addEventListener('click', () => {
         const company_name = document.getElementById('company-name').value;
-        if (!company_name) {
-          alert('업체를 입력해 주세요');
-          return;
-        }
+        // if (!company_name) {
+        //   alert('업체를 입력해 주세요');
+        //   return;
+        // }
         axios({
           method: 'get',
           url: `/api/teacher/company/search?company_name=${company_name}`,
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
               let tempHtml = ``;
               tempHtml += `<div class="company-information-list">
-                          <li class="company-information-li">업체 이름 : ${company_name}, 이름 :${saving_name} </li>
+                          <li class="company-information-li"><img src="/images/office-building.png" width="30" />${company_name}, <img src="/images/id-card.png" width="30" />${saving_name} </li>
                           <button type="radio" class="applyCompanyButton" onclick="applyCompany(${id})">업체 신청</button>
                           </div>
                           `;
