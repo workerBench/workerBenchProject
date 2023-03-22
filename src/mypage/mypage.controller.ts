@@ -172,6 +172,36 @@ export class MypageController {
     return { message: '환불 내역이 정상적으로 기록되지 않았습니다.' };
   }
 
+  // 수강 취소 워크샵 전체 조회 API
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '수강 취소한 워크샵 api' })
+  @Get('workshops/refund')
+  @UseGuards(JwtUserAuthGuard)
+  getRefundWorkshops(@CurrentUser() user: CurrentUserDto) {
+    return this.mypageService.getRefundWorkshops(user.id);
+  }
+
+  // 수강 취소 워크샵 상세 조회 API
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '수강 취소 워크샵 상세 조회 api' })
+  @Get('workshops/refund/:workshopDetailInstance_id') // workshopDetail
+  @UseGuards(JwtUserAuthGuard)
+  async getRefundWorkshopsById(
+    @Param('workshopDetailInstance_id') workshopDetailInstance_id: number,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    return await this.mypageService.getRefundWorkshopsById(
+      workshopDetailInstance_id,
+      user.id,
+    );
+  }
+
   // 리뷰 작성 페이지 api
   @ApiResponse({
     status: 201,

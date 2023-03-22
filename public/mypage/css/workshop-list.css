@@ -17,7 +17,8 @@ body {
 }
 
 #incomplete-list,
-#complete-list {
+#complete-list,
+#refund-list {
   margin: 20px 50px;
 }
 

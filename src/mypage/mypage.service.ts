@@ -400,11 +400,11 @@ export class MypageService {
       const { response } = getCancelData.data;
       // const { merchant_uid } = response; // 환불 결과에서 주문정보 추출
 
-      // order에서 softdelete로 변경
+      // order 테이블 softdelete
       await this.orderRepository.softDelete({
         merchant_uid: response.merchant_uid,
       });
-      // workshopInstance에서 상태를 refund로 변경
+      // workshopInstance 테이블에서 상태를 refund로 변경
       await this.workShopInstanceDetailRepository.update(
         { id: Number(workshopInstance_id) },
         { status: 'refund' },
@@ -414,6 +414,85 @@ export class MypageService {
     } catch (err) {
       console.log(err);
       throw false;
+    }
+  }
+
+  // 수강 취소 워크샵 전체 조회 API
+  async getRefundWorkshops(user_id: number) {
+    try {
+      const workshops = await this.workShopInstanceDetailRepository
+        .createQueryBuilder('workshopDetail')
+        .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
+        .innerJoinAndSelect('workshopDetail.Writer', 'customer')
+        .innerJoinAndSelect('workshop.User', 'teacher')
+        .where('customer.id = :id', { id: user_id })
+        .andWhere('workshopDetail.status = :status', { status: 'refund' })
+        .andWhere('workshop.deletedAt is null')
+        .select([
+          'workshop.id',
+          'workshop.thumb',
+          'workshop.title',
+          'workshopDetail.status',
+          'workshopDetail.wish_date',
+          'workshopDetail.member_cnt',
+          'workshopDetail.id',
+        ])
+        .getRawMany();
+
+      return workshops;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  // 수강 취소 워크샵 상세 조회 API
+  async getRefundWorkshopsById(id: number, user_id: number) {
+    try {
+      const workshops = await this.workShopInstanceDetailRepository
+        .createQueryBuilder('workshopDetail')
+        .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
+        .innerJoinAndSelect('workshopDetail.Writer', 'customer')
+        .where('customer.id = :user_id', { user_id: user_id })
+        .innerJoinAndSelect('workshop.User', 'teacher')
+        .innerJoinAndSelect('teacher.TeacherProfile', 'teacherProfile')
+        .andWhere('workshopDetail.id = :workshopDetail_id', {
+          workshopDetail_id: id,
+        })
+        .andWhere('workshopDetail.status = :status', { status: 'refund' })
+        .andWhere('workshop.deletedAt is null')
+        .select([
+          'workshopDetail.id',
+          'workshopDetail.company',
+          'workshopDetail.name',
+          'workshopDetail.email',
+          'workshopDetail.phone_number',
+          'workshopDetail.wish_date',
+          'workshopDetail.status',
+          'workshopDetail.purpose',
+          'workshopDetail.wish_location',
+          'workshopDetail.member_cnt',
+          'workshopDetail.etc',
+          'workshopDetail.category',
+          'workshopDetail.user_id',
+          'workshopDetail.workshop_id',
+          'workshop.id',
+          'workshop.title',
+          'workshop.category',
+          'workshop.thumb',
+          'workshop.price',
+          'workshop.total_time',
+          'workshop.deletedAt',
+          'customer.id',
+          'customer.email',
+          'teacher.id',
+          'teacherProfile.phone_number',
+          'teacherProfile.name',
+        ])
+        .getRawMany();
+
+      return workshops;
+    } catch (err) {
+      throw err;
     }
   }
 
