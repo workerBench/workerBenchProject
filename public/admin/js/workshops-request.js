@@ -2,7 +2,6 @@ axios
   .get('../api/admin/workshops/request')
   .then(function (response) {
     const workshops = response.data;
-    console.log(workshops);
     let html = '';
     for (let workshop of workshops) {
       html += `
@@ -48,7 +47,6 @@ function showModal(workshopId) {
     .then(function (response) {
       const workshop = response.data;
       const modal = document.getElementById('modal');
-      console.log(workshop);
       modal.innerHTML = `
             <div class="modal-content">
               <div class="modal-header">
@@ -81,6 +79,9 @@ function showModal(workshopId) {
                   <div class="info-ul">목적 :
                     <span class="info-li">${workshop.purpose_name}</span>
                   </div>
+                  <div class="info-ul">장소 :
+                  <span class="info-li">${workshop.workshop_location}</span>
+                </div>
                   <div class="info-ul">강사 이름 :
                     <span class="info-li">${workshop.teacher_name}</span>
                   </div>
