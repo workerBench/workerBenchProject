@@ -23,7 +23,7 @@ export class Company {
   @IsNotEmpty({ message: '업체 종류를 선택해 주세요' })
   @ApiProperty({
     example: 1,
-    description: '업체 종류. 1=business, 2=freelancer',
+    description: '업체 종류. 0=business, 1=freelancer',
     required: true,
   })
   @Column('int', {
