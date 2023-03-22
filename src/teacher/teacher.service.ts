@@ -830,10 +830,17 @@ export class TeacherService {
       }
       const workShopInstance =
         await this.workShopInstanceDetailRepository.findOne({
-          where: { id: id, status: 'non_payment' },
+          where: { id },
         });
-      if (workShopInstance) {
-        this.workShopInstanceDetailRepository.softDelete({ id });
+
+      if (
+        workShopInstance.status === 'request' ||
+        workShopInstance.status === 'non_payment'
+      ) {
+        await this.workShopInstanceDetailRepository.update(
+          { id },
+          { status: 'rejected' },
+        );
       }
       // 선택된 요소들에 대해서 softDelete() 메서드를 호출합니다.
 

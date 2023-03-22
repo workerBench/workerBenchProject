@@ -89,7 +89,13 @@ export class WorkShopInstanceDetail {
     nullable: false,
     default: 'request',
   })
-  status: 'request' | 'non_payment' | 'waiting_lecture' | 'complete' | 'refund';
+  status:
+    | 'request'
+    | 'non_payment'
+    | 'waiting_lecture'
+    | 'complete'
+    | 'refund'
+    | 'rejected';
 
   @IsString()
   @IsNotEmpty({ message: '워크샵을 희망하시는 이유를 적어주세요' })

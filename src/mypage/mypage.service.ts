@@ -18,9 +18,14 @@ import axios from 'axios';
 import { PaymentDto } from 'src/mypage/dtos/payment.dto';
 import { Order } from 'src/entities/order';
 import { RefundDto } from 'src/mypage/dtos/refund.dto';
+import { v4 as uuid } from 'uuid';
+import { ConfigService } from '@nestjs/config';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 @Injectable()
 export class MypageService {
+  private readonly s3Client: S3Client;
+
   constructor(
     @InjectRepository(WorkShop)
     private readonly workshopRepository: Repository<WorkShop>,
@@ -34,6 +39,7 @@ export class MypageService {
     private readonly workShopInstanceDetailRepository: Repository<WorkShopInstanceDetail>,
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
+    private readonly configService: ConfigService,
   ) {}
 
   // 수강 예정 워크샵 전체 조회 API
@@ -286,7 +292,6 @@ export class MypageService {
         console.log(amount, typeof amount);
         // DB에 결제 내역 저장
         const insertOrder = await this.orderRepository.insert({
-          workshop_instance_detail_id: workshopInstance_id,
           user_id,
           imp_uid: paymentData.imp_uid,
           merchant_uid,
@@ -335,6 +340,10 @@ export class MypageService {
       .innerJoinAndSelect('workshopDetail.OrderInfo', 'order')
       .where('workshopDetail.id = :id', { id: workshopInstanceId })
       .getRawMany();
+
+    console.log('11111111');
+    console.log(workshopInstanceId);
+    console.log(workshopDetail);
 
     if (!workshopDetail) {
       throw new NotFoundException('수강 문의 기록이 존재하지 않습니다.');
@@ -555,15 +564,66 @@ export class MypageService {
   }
 
   // 리뷰작성 API
-  review(workshop_id: number, user_id: number, reviewDto: ReviewDto) {
-    const { content, star } = reviewDto;
-    this.reviewRepository.insert({
+  async writingReview(
+    workshop_id: number,
+    user_id: number,
+    reviewDto: ReviewDto,
+    image: Express.Multer.File,
+  ) {
+    const { content, star, workshop_instance_detail } = reviewDto;
+
+    // 우선 해당 유저가 정말로 해당 워크샵을 수강 완료 하였는지 구분
+    const workshopInstanceDetail =
+      await this.workShopInstanceDetailRepository.findOne({
+        where: { id: Number(workshop_instance_detail), user_id, workshop_id },
+      });
+
+    if (
+      !workshopInstanceDetail ||
+      workshopInstanceDetail.status !== 'complete'
+    ) {
+      throw new BadRequestException('리뷰 작성이 가능한 워크샵이 아닙니다.');
+    }
+
+    // 해당 워크샵 인스턴스에 대해서 유저가 이미 리뷰를 남겼는지 확인한다.
+    const isReviewExist = await this.reviewRepository.findOne({
+      where: { user_id, workshop_id, workshop_instance_detail },
+    });
+
+    if (isReviewExist) {
+      throw new BadRequestException('이미 리뷰를 남기셨습니다.');
+    }
+
+    // 리뷰 작성이 가능한 상태이며, 리뷰를 남기지 않았다면, 리뷰 작성 가능. ---------------------------
+    // 우선 썸네일 이름을 만든다.
+    const thumbImgType = image.originalname.substring(
+      image.originalname.lastIndexOf('.'),
+      image.originalname.length,
+    );
+    const thumbImgName = uuid() + thumbImgType;
+
+    // 리뷰 내용을 DB에 추가.
+    const insertedReview = await this.reviewRepository.insert({
       user_id,
       workshop_id,
+      workshop_instance_detail,
       content,
       star,
     });
-    return '리뷰 등록이 완료되었습니다.';
+
+    // 리뷰글의 썸네일 이미지의 이름을 review_image 에 저장한다.
+    await this.reviewImageRepository.insert({
+      img_name: thumbImgName,
+      review_id: insertedReview.identifiers[0].id,
+    });
+
+    // 리뷰글의 썸네일 이미지를 S3 input 버켓에 저장한다.
+    const s3OptionForReviewImage = {
+      Bucket: this.configService.get('AWS_S3_BUCKET_NAME_IMAGE_INPUT'), // S3의 버킷 이름.
+      Key: `images/reviews/${insertedReview.identifiers[0].id}/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
+      Body: image.buffer, // 업로드 하고자 하는 파일.
+    };
+    await this.s3Client.send(new PutObjectCommand(s3OptionForReviewImage));
   }
 
   // 리뷰 이미지 첨부 API
