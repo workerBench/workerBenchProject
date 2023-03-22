@@ -2,14 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const wokshopApprovalList = document.getElementById('wokshop-approvalList');
   const wokshopFinishedList = document.getElementById('wokshop-finishedList');
   const wokshopRequestList = document.getElementById('wokshop-requestList');
-  // document.ready(function () {
   axios({
     method: 'get',
     url: '/api/teacher/workshops',
     data: {},
   })
     .then((response) => {
-      const data = response.data;
+      const data = response.data.workshop;
       for (let i = 0; i < data.length; i++) {
         const thumb = data[i].workshop_thumb;
         const title = data[i].workshop_title;
@@ -60,7 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
     .catch((response) => {
-      console.log(response);
+      const { data } = response.response;
+      alert(data.error);
     });
 });
 function workshop() {

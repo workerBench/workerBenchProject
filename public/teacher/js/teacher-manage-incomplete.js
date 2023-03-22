@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
-      const data = response.data;
+      const data = response.data.non_complete_instance_list;
       for (let i = 0; i < data.length; i++) {
         const workshop_thumb = data[i].workshop_thumb;
         const workshop_title = data[i].workshop_title;
@@ -33,21 +33,21 @@ document.addEventListener('DOMContentLoaded', () => {
           case 'request':
             buttonHtml = `
                         <button type="radio" class="Button" onclick="request(${Id})" id="requestButton">수락 하기</button>
-                        <button type="radio" class="Button" id="rejectButton">취소 하기</button>
+                        <button type="radio" class="Button" onclick="cancleButton(${Id})">취소 하기</button>
                         <button type="radio" class="Button" id="editButton">수정 하기</button>
                          `;
             break;
           case 'non_payment':
             buttonHtml = `
                         <button type="radio" class="Button" onclick="non_payment(${Id})" id="non_paymentButton">결제 대기</button>
-                        <button type="radio" class="Button" id="rejectButton">취소 하기</button>
+                        <button type="radio" class="Button" onclick="cancleButton(${Id})">취소 하기</button>
                         <button type="radio" class="Button" id="editButton">수정 하기</button>
                         `;
             break;
           case 'waiting_lecture':
             buttonHtml = `
                         <button type="radio" class="Button" onclick="waiting_lecture(${Id})" id="completeButton">결제 완료</button>
-                        <button type="radio" class="Button" id="rejectButton">취소 하기</button>
+                        <button type="radio" class="Button" onclick="cancleButton(${Id})">취소 하기</button>
                         <button type="radio" class="Button" id="editButton">수정 하기</button>
                         `;
             break;
@@ -56,22 +56,22 @@ document.addEventListener('DOMContentLoaded', () => {
         tempHtml += `
                     <div class="teacher-manage-div" >
                        <div class="workshop-information-div">
-                            <img src=${workshop_thumb} alt="" />
-                            <li for="purpose-tag" class="workshop-information">${workshop_title}</li>
-                            <li for="purpose-tag" class="workshop-information">${min_member}</li>
-                            <li for="purpose-tag" class="workshop-information">${max_member}</li>
-                            <li for="purpose-tag" class="workshop-information">${genreTag_name}</li>
-                            <li for="purpose-tag" class="workshop-information">${total_time}</li>
-                            <li for="purpose-tag" class="workshop-information">${price}</li>
+                            <img src="${workshop_thumb}" alt="" />
+                            <li for="purpose-tag" class="workshop-information">타이틀 <br>${workshop_title}</li>
+                            <li for="purpose-tag" class="workshop-information">최소 인원 <br>${min_member}</li>
+                            <li for="purpose-tag" class="workshop-information">최대 인원 <br>${max_member}</li>
+                            <li for="purpose-tag" class="workshop-information">분야 <br>${genreTag_name}</li>
+                            <li for="purpose-tag" class="workshop-information">걸리는 시간 <br>${total_time}</li>
+                            <li for="purpose-tag" class="workshop-information">가격 <br>${price}</li>
                     </div>
                     <div class="company-information-div">
                           <div class="company-information">
-                              <li for="purpose-tag" class="company-input">${etc}</li>
-                              <li for="purpose-tag" class="company-input">${company}</li>
-                              <li for="purpose-tag" class="company-input">${phone_number}</li>
-                              <li for="purpose-tag" class="company-input">${member_cnt}</li>
-                              <li for="purpose-tag" class="company-input">${email}</li>
-                              <li for="purpose-tag" class="company-input">${createdDate}</li>
+                              <li for="purpose-tag" class="company-input">설명 <br> ${etc}</li>
+                              <li for="purpose-tag" class="company-input">업체명 <br> ${company}</li>
+                              <li for="purpose-tag" class="company-input">휴대폰 번호 <br> ${phone_number}</li>
+                              <li for="purpose-tag" class="company-input">인원 <br> ${member_cnt}</li>
+                              <li for="purpose-tag" class="company-input">이메일 <br>${email}</li>
+                              <li for="purpose-tag" class="company-input">문의한 날짜 <br>${createdDate}</li>
                           </div>
                               <div id = button-div>
                                   ${buttonHtml}
@@ -83,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
     .catch((response) => {
-      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
@@ -113,6 +112,22 @@ function waiting_lecture(Id, status) {
     data: {
       status,
     },
+  })
+    .then((response) => {
+      const data = response.data;
+      alert(data.message);
+      window.location.reload();
+    })
+    .catch((response) => {
+      const { data } = response.response;
+      alert(data.error);
+    });
+}
+function cancleButton(Id) {
+  axios({
+    method: 'delete',
+    url: `/api/teacher/workshops/manage/delete/${Id}`,
+    data: {},
   })
     .then((response) => {
       const data = response.data;

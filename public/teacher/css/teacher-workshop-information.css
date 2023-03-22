@@ -1,3 +1,100 @@
+ /* modal */
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .modal.show {
+    display: block;
+  }
+
+  .modal_body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    width: 800px;
+    height: 600px;
+
+    /* padding: 40px; */
+
+    /* text-align: center; */
+
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+
+    transform: translateX(-50%) translateY(-50%);
+  }
+  .m_head{
+    height: 10%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    background-color:#e7e5e5;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  .m_body{
+    height: 80%;
+    padding: 20px;
+  }
+  .m_footer{
+    height: 10%;
+    padding: 15px;
+    background-color:#e7e5e5;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    display: flex;
+    justify-content: end;
+  }
+  .modal_title{
+    font-size: 18px;
+    color: gray;
+    font-weight: 500;
+  }
+  .close_btn{
+    font-size: 20px;
+    color: rgb(139, 139, 139);
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .modal_label{
+    padding-top: 10px;
+  }
+  .input_box{
+    width: 200px;
+    border: 1px solid rgb(189, 189, 189);
+    height: 30px;
+  }
+  .modal_btn{
+    width: 80px;
+    height: 30px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bolder;
+    padding-top: 5px;
+    margin-left: 5px;
+    font-family: sans-serif;
+  }
+  .cancle{
+    background-color: white;
+    color: black;
+  }
+  .save{
+    background-color: rgb(50, 77, 158);
+    color: white;
+  }
+
 /* teacher-workshop-information css */
 .button-div{
     margin: auto;
@@ -24,7 +121,7 @@
     border-radius: 10px;
     background-color: #9f70fb;
 }
-#workshop-infomationList{
+#workshop-informationList{
     width: 1200px;
     height: 700px;
     margin: auto;
@@ -54,6 +151,7 @@
     height: 550px;
     display: flex;
     margin-top: 50px;
+    flex-wrap: wrap;
 }
 .teacher-workshop-li-div{
     width: 200px;
@@ -81,6 +179,59 @@
     margin-bottom: 20px;
     border: 2px solid #000000;
 }
+#acceptListCompanyButton{
+  width: 250px;
+  height: 50px;
+  background-color:  #a084dc;
+  border-radius: 5px;
+  color: white;
+  border:none ;
+  margin: auto;
+  margin-top: 20px;
+  margin-left: 50px;
+}
+#apply-company-List{
+  width: 760px;
+  height: 400px;
+  border: 2px solid #000000;
+  display: flex;
+  flex-wrap: wrap;
+}
+#company-List{
+  width: 760px;
+  height: 400px;
+  border: 2px solid #000000;
+}
+.company-information-list{
+  width: 450px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.company-information-li{
+  width: 300px;
+  height: 50px;
+  font-size: 15px;
+  text-align: center;
+  list-style: none;
+  margin-bottom: 20px;
+  border: 2px solid #000000;
+}
+.company-apply-li{
+  width: 400px;
+  height: 50px;
+  font-size: 15px;
+  text-align: center;
+  list-style: none;
+  border: 2px solid #000000;
+}
+.applyCompanyButton{
+  width: 100px;
+  height: 50px;
+  background-color:  #a084dc;
+  color: white;
+  border:none ;
+  margin-left: 20px;
+}
 .Button{
     width: 250px;
     height: 50px;
@@ -93,4 +244,12 @@
 }
 .Button:hover {
     background-color: #645cbb;
+}
+.acceptCompanyButton{
+  width: 100px;
+  height: 50px;
+  background-color:  #a084dc;
+  color: white;
+  border:none ;
+  margin-left: 20px;
 }
