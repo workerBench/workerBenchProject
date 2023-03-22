@@ -4,6 +4,19 @@ window.addEventListener('DOMContentLoaded', function () {
   getRefundWorkshops();
 });
 
+function workshops() {
+  window.location.href = '/mypage/workshops';
+}
+function wishlist() {
+  window.location.href = '/mypage/workshops/wishlist';
+}
+function teacherWorkshop() {
+  window.location.href = '/teacher/workshop';
+}
+function teacherRegister() {
+  window.location.href = '/teacher/register';
+}
+
 // 수강 예정 워크샵 불러오기
 function getSoonWorkshops() {
   axios
@@ -330,8 +343,8 @@ function open_iamport() {
           })
           .then((response) => {
             console.log(response);
-            alert(response.data.message);
-            window.location.reload();
+            alert('결제가 완료되었습니다.');
+            location.href = '/mypage/workshops';
           })
           .catch((error) => {
             console.log(error);
@@ -339,7 +352,7 @@ function open_iamport() {
           });
       } else {
         console.log(rsp);
-        alert(rsp.response.data.message);
+        alert('결제가 실패했습니다.');
       }
     },
   );
@@ -420,6 +433,11 @@ function cancel_pay() {
     'order-workshopDetail-id',
   ).innerText;
 
+  if (!reason) {
+    return alert('환불 사유를 입력해주세요.');
+  }
+  confirm('결제를 취소하시겠습니까?');
+
   $.ajax({
     type: 'POST',
     url: '/api/mypage/workshops/order/refund',
@@ -454,11 +472,12 @@ function getCompleteWorkshops() {
         let tempHtml = `<div class="col">
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${element.workshop_id}"><img src="${element.workshop_thumb}" class="card-img-top" alt="..." /></a>
-          <div class="card-body">
+          <div class="card-body">mplete
             <h5 id="card-workshop-title">${element.workshop_title}</h5>
             <p class="card-workshop-summary">진행 예정일: ${element.workshopDetail_wish_date}</p>
             <p class="card-workshop-summary">인원: ${element.workshopDetail_member_cnt}명</p>
-            <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showCompleteModal(${element.workshopDetail_id})">상세 내역 보기 >> </p>
+            <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showCompleteModal(${element.workshopDetail_id})">상세 내역 보기</p>
+            <button class="btn btn-primary" onclick="showReviewPost()">리뷰작성</button>
           </div>
         </div>
       </div>`;
@@ -469,6 +488,8 @@ function getCompleteWorkshops() {
       console.log(error);
     });
 }
+
+
 
 // 특정 워크샵 상세 내역 불러오기 (모달창) - 수강 완료
 function showCompleteModal(workshopDetailId) {
@@ -568,6 +589,115 @@ function showCompleteModal(workshopDetailId) {
     });
 }
 
+// ------------------------------- 리뷰 작성 모달창 ------------------------------- //
+
+function showReviewPost() {
+  const modal = document.getElementById('review-modal');
+  modal.innerHTML = `
+  <div class="modal-review-content">
+    <div class="modal-header">
+      <h5 class="modal-title">리뷰 작성하기</h5>
+      <button type="button" class="btn-close" aria-label="Close"></button>
+    </div>
+    <div class="modal-review-body">
+        <div id="thumb-img-wrap">
+          <img class="modal-review-image">
+          <div>
+            <input type="file" accept="image/*" , id="thumb-img-file" />
+          </div>
+        </div>
+        <div class="rating-review">
+          <form class="mb-3" name="myform" id="myform" method="post">
+            <fieldset>
+              <span class="text-bold">별점을 선택해주세요</span>
+              <input type="radio" name="reviewStar" value="5" id="rate1"><label
+                for="rate1">★</label>
+              <input type="radio" name="reviewStar" value="4" id="rate2"><label
+                for="rate2">★</label>
+              <input type="radio" name="reviewStar" value="3" id="rate3"><label
+                for="rate3">★</label>
+              <input type="radio" name="reviewStar" value="2" id="rate4"><label
+                for="rate4">★</label>
+              <input type="radio" name="reviewStar" value="1" id="rate5"><label
+                for="rate5">★</label>
+            </fieldset>
+            <div>
+              <textarea type="text" id="reviewContents"
+                    placeholder="리뷰를 작성해주세요!"></textarea>
+            </div>
+          </form>	
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" id="post-review">작성하기</button>
+    </div>
+  </div>
+  `;
+
+  modal.classList.add('show');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('style', 'display: block');
+
+  const closeButton = modal.querySelector('.btn-close');
+  closeButton.addEventListener('click', function () {
+    modal.classList.remove('show');
+    modal.removeAttribute('aria-modal');
+    modal.removeAttribute('style');
+  });
+
+  modal.addEventListener('click', function (event) {
+    if (event.target === modal) {
+      modal.classList.remove('show');
+      modal.removeAttribute('aria-modal');
+      modal.removeAttribute('style');
+    }
+  });
+}
+
+// --------------------------------- 리뷰 수정 모달창 이미지 미리보기 --------------------------------- //
+
+
+  // input 요소에서 파일이 선택되면 실행되는 함수
+  function previewImage(event) {
+    // input 요소에서 선택된 파일 가져오기
+    const input = event.target;
+    const file = input.files[0];
+  
+    // FileReader 객체를 사용하여 파일을 읽기
+    const reader = new FileReader();
+  
+    // 파일이 로드되면 실행되는 함수
+    reader.onload = function() {
+      // 미리보기 이미지 요소 가져오기
+      const img = document.querySelector('.modal-update-image');
+      // 미리보기 이미지 요소에 이미지 데이터 설정
+      img.src = reader.result;
+    }
+  
+    // 파일 읽기 시작
+    reader.readAsDataURL(file);
+  }
+  
+  // input 요소에 이벤트 리스너 등록
+  const input = document.querySelector('#thumb-img-file');
+  input.addEventListener('change', previewImage);
+
+
+  // -------------------------------- 워크샵 리뷰 모달창 수정하기 버튼 -------------------------------- //
+
+  const starValue = parseInt($('input[name="reviewStar"]:checked').val());
+  const reviewContent = $('#reviewContents').val();
+
+  if (!starValue) {
+    alert('별점을 입력해주세요!');
+  }
+  if (!reviewContent) {
+    alert('리뷰 내용을 입력해주세요!');
+  }
+
+
+
+
 // 수강 취소 워크샵 전체 목록 불러오기
 function getRefundWorkshops() {
   axios
@@ -579,12 +709,33 @@ function getRefundWorkshops() {
       workshops.forEach((element) => {
         let tempHtml = `<div class="col">
         <div class="card h-100">
-        <a href="/workshops/detail?workshopId=${element.workshop_id}"><img src="${element.workshop_thumb}" class="card-img-top" alt="..." /></a>
+        <a href="/workshops/detail?workshopId=${
+          element.workshop_id
+        }"><img src="${
+          element.workshop_thumb
+        }" class="card-img-top" alt="..." /></a>
           <div class="card-body">
+          <button id="show-status"
+                type="button"
+                class="btn btn-outline-primary"
+                disabled
+              >
+                ${
+                  element.workshopDetail_status == 'refund'
+                    ? '환불 완료'
+                    : '문의 취소'
+                }
+              </button>
             <h5 id="card-workshop-title">${element.workshop_title}</h5>
-            <p class="card-workshop-summary">진행 예정일: ${element.workshopDetail_wish_date}</p>
-            <p class="card-workshop-summary">인원: ${element.workshopDetail_member_cnt}명</p>
-            <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showRefundModal(${element.workshopDetail_id})">상세 내역 보기 >> </p>
+            <p class="card-workshop-summary">진행 예정일: ${
+              element.workshopDetail_wish_date
+            }</p>
+            <p class="card-workshop-summary">인원: ${
+              element.workshopDetail_member_cnt
+            }명</p>
+            <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showRefundModal(${
+              element.workshopDetail_id
+            })">상세 내역 보기 >> </p>
           </div>
         </div>
       </div>`;

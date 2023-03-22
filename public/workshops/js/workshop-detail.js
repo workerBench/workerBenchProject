@@ -28,22 +28,30 @@ function getWorkshopDetail() {
         <div class="col">
           <div class="workshop-summary">
             <div class="workshop-title">${workshop.workshop_title}</div>
-            <div class="workshop-star">평가 ${workshop.averageStar}점</div>
-            <div class="workshop-category">${workshop.workshop_category}</div>
+            <div class="workshop-star">평가 <span id="content">${
+              workshop.averageStar
+            }점<span id="content"></div>
+            <span class="workshop-category">${
+              workshop.workshop_category === 'online' ? '온라인' : '오프라인'
+            }</span>
             <div class="workshop-location">
-            활동 가능 지역 ${
+            활동 가능 지역 <span id="content">${
               workshop.workshop_location === null
                 ? '(온라인만 가능)'
                 : workshop.workshop_location
-            }</div>
-            <div class="workshop-member-cnt">인원 ${
+            }</span></div>
+            <div class="workshop-member-cnt">인원 <span id="content">${
               workshop.workshop_min_member
-            }~${workshop.workshop_max_member}명</div>
-            <div class="workshop-total-time">총 시간 ${
+            }~${workshop.workshop_max_member}명<span id="content"></div>
+            <div class="workshop-total-time">총 시간 <span id="content">${
               workshop.workshop_total_time
-            }분</div>
-            <div class="workshop-genre">분야 ${workshop.genre}</div>
-            <div class="workshop-purpose">목적 ${workshop.purpose}</div>
+            }분<span id="content"></div>
+            <div class="workshop-genre">분야 <span id="content">${
+              workshop.genre
+            }<span id="content"></div>
+            <div class="workshop-purpose">목적 <span id="content">${
+              workshop.purpose
+            }<span id="content"></div>
             <div class="workshop-price">${workshop.workshop_price}원</div>
             <div>*1인 기준</div>
             <div class="order-wish-buttons">
@@ -76,6 +84,8 @@ function getWorkshopDetail() {
         ${workshop.workshop_desc}
       </div>`;
 
+      $('#myTabContent').append(workshopDesc);
+
       // 첫 번째 방법. video.js 를 사용.
       // if (workshop.workshop_video !== '' && workshop.workshop_video !== null) {
       //   workshopDesc += `
@@ -93,15 +103,14 @@ function getWorkshopDetail() {
 
       // 두 번째 방법 hjs.js 를 사용.
       if (workshop.workshop_video !== '' && workshop.workshop_video !== null) {
-        videoUrlForEveryWhere = workshop.workshop_video;
-        workshopDesc += `
+        let videoBox = `
           <div class="video-set-wrap">
             <video id="video-player" controls>
             </video>
           </div>
         `;
+        $('#home-tab-pane').append(videoBox);
       }
-      $('#myTabContent').append(workshopDesc);
 
       if (workshop.workshop_video === '' || workshop.workshop_video === null) {
         return;
