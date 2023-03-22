@@ -448,11 +448,13 @@ function getCompleteWorkshops() {
     .get('/api/mypage/workshops/complete')
     .then((res) => {
       const workshops = res.data.data;
+      console.log('1111');
       console.log('workshops', workshops);
 
       workshops.forEach((element) => {
         let tempHtml = `<div class="col">
         <div class="card h-100">
+        <div id="workshopDetail-id" style="display:none;">${element.workshopDetail_id}</div>
         <a href="/workshops/detail?workshopId=${element.workshop_id}"><img src="${element.workshop_thumb}" class="card-img-top" alt="..." /></a>
           <div class="card-body">
             <h5 id="card-workshop-title">${element.workshop_title}</h5>

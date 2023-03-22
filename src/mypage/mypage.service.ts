@@ -18,6 +18,7 @@ import axios from 'axios';
 import { PaymentDto } from 'src/mypage/dtos/payment.dto';
 import { Order } from 'src/entities/order';
 import { RefundDto } from 'src/mypage/dtos/refund.dto';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class MypageService {
@@ -143,6 +144,7 @@ export class MypageService {
         .andWhere('workshopDetail.status = :status', { status: 'complete' })
         .andWhere('workshop.deletedAt is null')
         .select([
+          'workshopDetail.id',
           'workshop.id',
           'workshop.thumb',
           'workshop.title',
@@ -558,15 +560,58 @@ export class MypageService {
   }
 
   // 리뷰작성 API
-  review(workshop_id: number, user_id: number, reviewDto: ReviewDto) {
-    const { content, star } = reviewDto;
-    this.reviewRepository.insert({
+  async review(
+    workshop_id: number,
+    user_id: number,
+    reviewDto: ReviewDto,
+    image: Express.Multer.File,
+  ) {
+    const { content, star, workshop_instance_detail } = reviewDto;
+
+    // 우선 해당 유저가 정말로 해당 워크샵을 수강 완료 하였는지 구분
+    const workshopInstanceDetail =
+      await this.workShopInstanceDetailRepository.findOne({
+        where: { user_id, workshop_id, id: workshop_instance_detail },
+      });
+
+    if (
+      !workshopInstanceDetail ||
+      workshopInstanceDetail.status !== 'complete'
+    ) {
+      throw new BadRequestException('리뷰 작성이 가능한 워크샵이 아닙니다.');
+    }
+
+    // 해당 워크샵 인스턴스에 대해서 유저가 이미 리뷰를 남겼는지 확인한다.
+    const isReviewExist = await this.reviewRepository.findOne({
+      where: { user_id, workshop_id, workshop_instance_detail },
+    });
+
+    if (isReviewExist) {
+      throw new BadRequestException('이미 리뷰를 남기셨습니다.');
+    }
+
+    // 리뷰 작성이 가능한 상태이며, 리뷰를 남기지 않았다면, 리뷰 작성 가능. ---------------------------
+    // 우선 썸네일 이름을 만든다.
+    const thumbImgType = image.originalname.substring(
+      image.originalname.lastIndexOf('.'),
+      image.originalname.length,
+    );
+    const thumbImgName = uuid() + thumbImgType;
+
+    // 리뷰 내용을 DB에 추가.
+    const insertedReview = await this.reviewRepository.insert({
       user_id,
       workshop_id,
+      workshop_instance_detail,
       content,
       star,
     });
-    return '리뷰 등록이 완료되었습니다.';
+
+    // 리뷰글의 썸네일 이미지를 review_image 와 s3 에 저장한다.
+    await this.reviewImageRepository.insert({
+      img_name: thumbImgName,
+      review_id: insertedReview.identifiers[0].id,
+    });
   }
 
   // 리뷰 이미지 첨부 API
