@@ -24,33 +24,37 @@
     border-radius: 10px;
     background-color: #9f70fb;
 }
+
+#button-complete{
+    width: 200px;
+    margin-right: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #9f70fb;
+}
 #teacher-completeBox {
-    width: 1200px;
-    height: 1300px;
-    margin: 0 auto;
+    width: 1050px;
+    margin: auto;
     margin-top: 100px;
-    /* padding: 20px; */
-    /* border: 2px solid lavender; */
     border-radius: 20px;
-    /* box-shadow: 3px 3px 5px lavender; */
     display: flex;
-    justify-content: center;
     flex-wrap: wrap;
 }
 .teacher-manage-div{
     width: 500px;
     height: 600px;
     margin-left: 20px;
+    margin-bottom: 20px;
     border: 2px solid #000000;
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+    
 }
 .workshop-information-div{
     width: 200px;
     height: 600px;
     margin-left: 10px;
-    /* border: 2px solid #000000; */
 }
 .workshop-information-div >img{
     margin-top: 20px;
@@ -60,19 +64,15 @@
 }
 .company-information-div{
     width: 250px;
-    height: 380px;
-    margin: 0 auto;
     margin-left: 30px;
-    margin-top: 100px;
+    margin-top: 20px;
     justify-content: center;
-    /* border: 2px solid #000000; */
 }
 .workshop-information{
-    width:170px;
-    height: 50px;
-    margin: auto;
-    
+    width:200px;
+    height: 60px;
     margin-top: 10px;
+    margin-left: 10px;
     font-size: 20px;
     text-align: center;
     list-style: none;
@@ -82,38 +82,15 @@
     width: 220px;
     height: 370px;
     margin: 0 auto;
-    /* border: 2px solid #000000; */
+    margin-top: 100px;
 }
 .company-input{
     width:200px;
-    height: 50px;
+    height: 60px;
     margin: auto;
-    margin-top: 10px;
+    margin-bottom: 10px;
     font-size: 20px;
     text-align: center;
     list-style: none;
     border: 2px solid #000000;
-}
-#button-div{
-    width: 250px;
-    /* border: 2px solid #000000;  */
-}
-.Button{
-    width: 100px;
-    height: 40px;
-    margin-left: 15px;
-    margin-top: 10px;
-    background-color: #9f70fb;
-    border-radius: 5px;
-    color: white;
-    border:none ;
-}
-#button-complete{
-    width: 200px;
-    margin-right: 10px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    height: 50px;
-    border-radius: 10px;
-    background-color: #9f70fb;
 }
