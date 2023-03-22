@@ -76,27 +76,81 @@ function getWorkshopDetail() {
         ${workshop.workshop_desc}
       </div>`;
 
-      let videoPlayer = '';
-      if (workshop.workshop_video !== '' && workshop.workshop_video !== null) {
-        workshopDesc += `
-          <video id="videoPlayerTag" class="video-js" style="margin-bottom: 200px;" controls>
-            <source src="${workshop.workshop_video}" type="application/x-mpegURL">
-          </video>
-        `;
-        // videoPlayer = videojs('videoPlayerTag');
+      // 첫 번째 방법. video.js 를 사용.
+      // if (workshop.workshop_video !== '' && workshop.workshop_video !== null) {
+      //   workshopDesc += `
+      //     <video id="videoPlayerTag" class="video-js"
+      //     controls preload="auto" width="640" height="480" style="margin-bottom: 200px;">
+      //       <source src=${workshop.workshop_video} type="application/x-mpegURL" >
+      //     </video>
+      //   `;
+      // }
+      // $('#myTabContent').append(workshopDesc);
+      // if (workshop.workshop_video === '' || workshop.workshop_video === null) {
+      //   return;
+      // }
+      // const player = videojs('videoPlayerTag', {});
 
-        // videoPlayer = videojs('videoPlayerTag', {
-        //   sources: [
-        //     { src: workshop.workshop_video, type: 'application/x-mpegURL' },
-        //   ],
-        //   controls: true,
-        //   playsinline: true,
-        //   muted: true,
-        //   preload: 'metadata',
-        // });
+      // 두 번째 방법 hjs.js 를 사용.
+      if (workshop.workshop_video !== '' && workshop.workshop_video !== null) {
+        videoUrlForEveryWhere = workshop.workshop_video;
+        workshopDesc += `
+          <div class="video-set-wrap">
+            <video id="video-player" controls>
+            </video>
+          </div>
+        `;
+      }
+      $('#myTabContent').append(workshopDesc);
+
+      if (workshop.workshop_video === '' || workshop.workshop_video === null) {
+        return;
       }
 
-      $('#myTabContent').append(workshopDesc);
+      const video = document.querySelector('#video-player');
+      const videoUrl = workshop.workshop_video;
+      const defaultOptions = {};
+
+      if (Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(videoUrl);
+        hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+          const availableQualities = hls.levels.map((one) => one.height);
+          defaultOptions.controls = [
+            'play-large',
+            'restart',
+            'rewind',
+            'play',
+            'fast-forward',
+            'progress',
+            'current-time',
+            'duration',
+            'mute',
+            'volume',
+            'captions',
+            'settings',
+            'pip',
+            'airplay',
+            'fullscreen',
+          ];
+          defaultOptions.quality = {
+            default: availableQualities[0],
+            options: availableQualities,
+            forced: true,
+            onChange: (e) => updateQuality(e),
+          };
+          new Plyr(video, defaultOptions);
+        });
+        hls.attachMedia(video);
+        window.hls = hls;
+      }
+      function updateQuality(newQuality) {
+        window.hls.levels.forEach((level, levelIndex) => {
+          if (level.height === newQuality) {
+            window.hls.currentLevel = levelIndex;
+          }
+        });
+      }
     })
     .catch((error) => {});
 }
