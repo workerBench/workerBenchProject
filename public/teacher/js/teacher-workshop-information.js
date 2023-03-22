@@ -90,25 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                   <li class="workshop-information-li">${saving_name}</li>
                               </div>
                 `;
-      } else if (data.MyCompany && company_type === 2) {
-        companyHtml += `
-                              <div class="teacher-workshop-li-div">
-                                  <li class="teacher-workshop-li">업체종류</li>
-                                  <li class="teacher-workshop-li">업체명</li>
-                                  <li class="teacher-workshop-li">사업자 번호</li>
-                                  <li class="teacher-workshop-li">지정은행</li>
-                                  <li class="teacher-workshop-li">계좌 번호</li>
-                                  <li class="teacher-workshop-li">예금주명</li>
-                              </div>
-                              <div class="workshop-information-div">
-                                  <li class="workshop-information-li">간이 사업자</li>
-                                  <li class="workshop-information-li">${company_name}</li>
-                                  <li class="workshop-information-li">${business_number}</li>
-                                  <li class="workshop-information-li">${bank_name}</li>
-                                  <li class="workshop-information-li">${account}</li>
-                                  <li class="workshop-information-li">${saving_name}</li>
-                              </div>
-                `;
       }
 
       let tempHtml = ``;
