@@ -93,6 +93,7 @@ function getWorkshopDetail() {
 
       // 두 번째 방법 hjs.js 를 사용.
       if (workshop.workshop_video !== '' && workshop.workshop_video !== null) {
+        console.log(workshop.workshop_video);
         videoUrlForEveryWhere = workshop.workshop_video;
         workshopDesc += `
           <div class="video-set-wrap">

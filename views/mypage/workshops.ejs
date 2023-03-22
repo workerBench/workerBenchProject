@@ -41,6 +41,12 @@
     <!-- iamport import -->
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="/mypage/css/style.css" rel="stylesheet" />
 
@@ -76,21 +82,21 @@
 
 
     
-    <div>
+    <!-- <div>
       <div class="workshopBox">
         <li class="today-workshop">수강 예정 워크샵</li>
-        <div class="row row-cols-1 row-cols-md-3 g-4" id="incomplete-list">
+        <div class="row row-cols-1 row-cols-md-3 g-4" id="incomplete-list"> -->
           <!-- 수강 예정 워크샵 목록 삽입 위치 -->
         </div>
         <!-- 수강 예정 워크샵 상세 모달 -->
-        <div
+        <!-- <div
           class="modal"
           id="incomplete-workshopDetail-modal"
           tabindex="-1"
-        ></div>
+        ></div> -->
 
         <!-- 결제 정보 입력 모달 -->
-        <div class="modal" id="order-input-modal" tabindex="-1"></div>
+        <!-- <div class="modal" id="order-input-modal" tabindex="-1"></div>
       </div>
 
 
@@ -112,7 +118,99 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
+      
+      <section class="py-5">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link active btn-warning"
+              id="pills-home-tab"
+              data-bs-toggle="pill"
+              data-bs-target="#pills-home"
+              type="button"
+              role="tab"
+              aria-controls="pills-home"
+              aria-selected="true"
+            >
+              수강 예정
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="pills-profile-tab"
+              data-bs-toggle="pill"
+              data-bs-target="#pills-profile"
+              type="button"
+              role="tab"
+              aria-controls="pills-profile"
+              aria-selected="false"
+            >
+              수강 완료
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="pills-contact-tab"
+              data-bs-toggle="pill"
+              data-bs-target="#pills-contact"
+              type="button"
+              role="tab"
+              aria-controls="pills-contact"
+              aria-selected="false"
+            >
+              수강 취소
+            </button>
+          </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div
+            class="tab-pane fade show active"
+            id="pills-home"
+            role="tabpanel"
+            aria-labelledby="pills-home-tab"
+          >
+            <!-- 수강 예정 워크샵 카드 시작 -->
+            <div class="row row-cols-1 row-cols-md-3 g-4" id="incomplete-list">
+              <!-- 수강 예정 워크샵 목록 삽입 위치 -->
+            </div>
+          </div>
+          <div
+            class="tab-pane fade"
+            id="pills-profile"
+            role="tabpanel"
+            aria-labelledby="pills-profile-tab"
+          >
+            <!-- 수강 완료 워크샵 카드 시작 -->
+            <div class="row row-cols-1 row-cols-md-3 g-4" id="complete-list">
+              <!-- 수강 완료 워크샵 목록 삽입 위치 -->
+            </div>
+          </div>
+          <div
+            class="tab-pane fade"
+            id="pills-contact"
+            role="tabpanel"
+            aria-labelledby="pills-contact-tab"
+            tabindex="0"
+          >
+            <!-- 수강 취소 워크샵 카드 시작 -->
+            <div class="row row-cols-1 row-cols-md-3 g-4" id="refund-list">
+              <!-- 수강 취소 워크샵 목록 삽입 위치 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 수강 예정 워크샵 상세 모달 -->
+        <div class="modal" id="modal" tabindex="-1"></div>
+
+        <!-- 결제 정보 입력 모달 -->
+        <div class="modal" id="modal" tabindex="-1"></div>
+
+        <!-- 환불 정보 입력 모달 -->
+        <div class="modal" id="refund-modal" tabindex="-1"></div>
+      </section>
     </div>
 
    
