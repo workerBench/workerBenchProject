@@ -26,8 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (status === 'approval' && purposeTag2 !== undefined) {
           tempHtml = `<div class="workshop">
                           <img src=${thumb} alt="">
-                          <li class="title">${title}</li>
-                          <li for="tag" class="tag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
+                          <div class="card-text">
+                            <li class="title">${title}</li>
+                            <li for="tag" class="tag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
+                          </div>
                       </div>`;
           wokshopApprovalList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'finished') {
@@ -40,13 +42,16 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (status === 'request') {
           tempHtml = `<div class="workshop">
                           <img src=${thumb} alt="">
-                          <li class="title">${title}</li>
-                          <li for="tag" class="tag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
+                          <div class="card-text">
+                            <li class="title">${title}</li>
+                            <li for="tag" class="tag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
+                          </div>
                       </div>`;
           wokshopRequestList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'rejected') {
           tempHtml = `<div class="workshop">
                           <img src=${thumb} alt="" />
+                          <div class="card-text">
                           <li class="title">${title}</li>
                               <div class="tag-div">
                                   <div class="test">
@@ -56,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                       <li for="purpose-tag" class="reject">반려됨</li>
                                   </div>
                               </div>
+                            </div>
                        </div>`;
           wokshopRequestList.insertAdjacentHTML('beforeend', tempHtml);
         }

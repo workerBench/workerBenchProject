@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!data.MyCompany && !data.company) {
         companyHtml += `
                               <button type="radio" class="Button" onclick="registerCompany()">업체 등록</button>
-                              <button type="radio" class="Button" id="applyCompany">업체 신청</button>
+                              <button type="radio" class="Button" id="applyCompany">업체 가입 신청</button>
                               `;
       } else if (!data.MyCompany && data.company) {
         company_name = data.company.company_name;
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                   <li class="workshop-information-li">${bank_name}</li>
                                   <li class="workshop-information-li">${account}</li>
                                   <li class="workshop-information-li">${saving_name}</li>
-                                  <button type="radio"  id="acceptListCompanyButton" onclick="acceptListCompany()">신청한 업체보기</button>
+                                  <button type="radio"  id="acceptListCompanyButton" onclick="acceptListCompany()">신청 목록 보기</button>
                               </div>
                 `;
       } else if (data.MyCompany && company_type === 1) {
@@ -141,19 +141,27 @@ document.addEventListener('DOMContentLoaded', () => {
         })
           .then((response) => {
             const data = response.data;
-            companyList.innerHTML = '';
+            const applyCompanyTable = document.getElementById('company');
+            applyCompanyTable.innerHTML = '';
             for (let i = 0; i < data.length; i++) {
               const company_name = data[i].company_name;
               const saving_name = data[i].saving_name;
               const id = data[i].user_id;
+              const createdAt = data[i].createdAt
 
               let tempHtml = ``;
-              tempHtml += `<div class="company-information-list">
-                          <li class="company-information-li"><img src="/images/office-building.png" width="30" />${company_name}, <img src="/images/id-card.png" width="30" />${saving_name} </li>
-                          <button type="radio" class="applyCompanyButton" onclick="applyCompany(${id})">업체 신청</button>
-                          </div>
-                          `;
-              companyList.insertAdjacentHTML('beforeend', tempHtml);
+              tempHtml += 
+              `
+              <tr>
+                <td>${company_name}</td>
+                <td>${saving_name}</td>
+                <td>${createdAt.split('T')[0]}</td>
+                <td>
+                  <button class="apply-btn" onclick="applyCompany(${  id})">가입 신청</button>
+                </td>
+              </tr>
+              `;
+              applyCompanyTable.insertAdjacentHTML('beforeend', tempHtml);
             }
             // location.reload();
           })
@@ -169,6 +177,30 @@ document.addEventListener('DOMContentLoaded', () => {
       alert(data.message);
     });
 });
+
+// 모든 업체 목록 조회
+axios
+  .get('/api/teacher/companies')
+  .then(function (response) {
+    const companies = response.data;
+    let html = '';
+    for (let company of companies) {
+      html += `
+      <tr>
+          <td>${company.company_name}</td>
+          <td>${company.saving_name}</td>
+          <td>${company.createdAt.split('T')[0]}</td>
+          <td>
+            <button class="apply-btn" onclick="applyCompany(${company.id})">가입 신청</button>
+          </td>
+        </tr>
+      `;
+    }
+    $('#company').append(html);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 
 // 등록된 업체에 등록 신청
 function applyCompany(id) {
@@ -188,7 +220,7 @@ function applyCompany(id) {
     });
 }
 
-// 업체 소속을 신청한 업체 목록 보기
+// 업체 소속을 신청한 강사 목록 보기
 function acceptListCompany() {
   axios({
     method: 'get',

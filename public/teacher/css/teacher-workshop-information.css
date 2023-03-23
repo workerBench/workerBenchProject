@@ -1,4 +1,14 @@
- /* modal */
+.fw-bolderandtopbottom {
+  font-weight: bolder !important;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+/* modal */
 .modal {
     position: absolute;
     top: 0;
@@ -74,9 +84,11 @@
     font-weight: 900;
     cursor: pointer;
   }
+
   .modal_label{
     padding-top: 10px;
-    font-size: 30px;
+    font-size: 18px;
+    font-weight: bold;
   }
   .input_box{
     width: 200px;
@@ -345,5 +357,17 @@ td {
   border: 0;
 }
 .manage-btn:hover {
+  background-color: gray;
+}
+
+.apply-btn {
+  width: 100px;
+  padding:10px;
+  background-color: black;
+  color: white;
+  border-radius: 20px;
+  border: 0;
+}
+.apply-btn:hover {
   background-color: gray;
 }
