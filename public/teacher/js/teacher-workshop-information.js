@@ -169,34 +169,36 @@ document.addEventListener('DOMContentLoaded', () => {
       const { data } = response.response;
       alert(data.message);
     });
+  // 모든 업체 목록 조회
+  axios
+    .get('/api/teacher/companies')
+    .then(function (response) {
+      const companies = response.data;
+      let html = '';
+      for (let company of companies) {
+        html += `
+    <tr>
+        <td>${company.company_name}</td>
+        <td>${company.saving_name}</td>
+        <td>${company.createdAt.split('T')[0]}</td>
+        <td>
+          <button class="apply-btn" onclick="applyCompany(${
+            company.user_id
+          })">가입 신청</button>
+        </td>
+      </tr>
+    `;
+      }
+      $('#company').append(html);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 });
-// 모든 업체 목록 조회
-axios
-  .get('/api/teacher/companies')
-  .then(function (response) {
-    const companies = response.data;
-    let html = '';
-    for (let company of companies) {
-      html += `
-      <tr>
-          <td>${company.company_name}</td>
-          <td>${company.saving_name}</td>
-          <td>${company.createdAt.split('T')[0]}</td>
-          <td>
-            <button class="apply-btn" onclick="applyCompany(${
-              company.id
-            })">가입 신청</button>
-          </td>
-        </tr>
-      `;
-    }
-    $('#company').append(html);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+
 // 등록된 업체에 등록 신청
 function applyCompany(id) {
+  console.log(id);
   axios({
     method: 'post',
     url: `/api/teacher/company/apply/${id}`,
@@ -208,6 +210,7 @@ function applyCompany(id) {
       location.reload();
     })
     .catch((response) => {
+      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
