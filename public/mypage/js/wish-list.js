@@ -24,12 +24,12 @@ function getWishList() {
       console.log('workshops', workshops);
 
       workshops.forEach((element) => {
-        let tempHtml = `<div class="col">
+        let tempHtml = `<div class="col" id="wish-card-${element.workshop_id}">
           <div class="card h-100">
             <a href="/workshops/detail?workshopId=${element.workshop_id}">
-            <img class="card-img-top" id="workshop-thumb alt="..." src="${
-              element.thumbUrl
-            }" /></a>
+            <img class="card-img-top" id="workshop-thumb alt="..." src=${
+              element.workshop_thumbUrl
+            } /></a>
             <div class="card-body">
               <p class="workshop-title">${element.workshop_title}</p>
               <span class="workshop-category">${
@@ -54,25 +54,28 @@ function getWishList() {
       });
     })
     .catch((error) => {
-      console.log(error);
+      alert(error.response.data.message);
     });
 }
 
 // 찜하기 해제
 function cancelWish(workshopId) {
-  confirm('찜 하기를 취소하시겠습니까?');
+  const check = confirm('찜 하기를 취소하시겠습니까?');
+  if (check === false) {
+    return;
+  }
+
   axios
     .post(`/api/workshops/${workshopId}/wish`)
     .then((res) => {
-      console.log(res);
+      // 삭제해야 할 카드
+      const wishCard = document.querySelector(`#wish-card-${workshopId}`);
+      wishCard.remove();
+
       alert(res.data.data.message);
-      location.reload();
     })
     .catch((err) => {
-      getErrorCode(
-        err.response.data.statusCode,
-        err.response.data.message,
-        updateWishListCancel,
-      );
+      alert(err.response.data.message);
+      location.reload();
     });
 }
