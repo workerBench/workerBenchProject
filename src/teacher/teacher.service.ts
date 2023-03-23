@@ -26,6 +26,7 @@ import { WorkShopImage } from 'src/entities/workshop-image';
 import { identity } from 'rxjs';
 import { wrap } from 'module';
 import { QueryResult } from 'typeorm/query-runner/QueryResult';
+import { TransformationType } from 'class-transformer';
 
 @Injectable()
 export class TeacherService {
@@ -257,9 +258,20 @@ export class TeacherService {
     try {
       const companys = await this.companyRepository.find({
         where: { company_name: Like(`%${company_name}%`) },
-        select: ['company_name', 'saving_name', 'user_id'],
+        select: ['company_name', 'saving_name', 'user_id', 'createdAt'],
       });
       return companys;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  // 업체 목록 불러오기 API
+  async gerAllCompanies() {
+    try {
+      const companies = await this.companyRepository.find()
+      return companies
     } catch (error) {
       console.log(error);
       throw error;

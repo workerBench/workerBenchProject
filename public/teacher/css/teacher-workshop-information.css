@@ -1,4 +1,14 @@
- /* modal */
+.fw-bolderandtopbottom {
+  font-weight: bolder !important;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+/* modal */
 .modal {
     position: absolute;
     top: 0;
@@ -14,6 +24,13 @@
 
   .modal.show {
     display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
   }
 
   .modal_body {
@@ -67,9 +84,11 @@
     font-weight: 900;
     cursor: pointer;
   }
+
   .modal_label{
     padding-top: 10px;
-    font-size: 30px;
+    font-size: 18px;
+    font-weight: bold;
   }
   .input_box{
     width: 200px;
@@ -132,29 +151,33 @@
     margin-top: 50px;
     display: flex;
     justify-content: center;
+    gap: 30px;
+    font-family: 'Gowun Dodum', sans-serif;
 }
 .workshop-div{
     width: 600px;
-    height: 700px;
-    border: 2px solid #000000;
+    height: 650px;
+    border: none;
+    box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
+    border-radius: 12px;
 }
 .teacher-li-div{
     width: 200px;
     height: 50px;
-    margin: auto;
-    margin-top: 50px;
+    margin: 30px auto 0 auto;    
 }
 .teacher-li{
-    font-size: 25px;
+    font-size: 30px;
     text-align: center;
     list-style: none;
-    border: 2px solid #000000;
+    font-weight: bold;
+    color: rgb(1, 1, 149);
 }
-.teacher-wrokshop-div{
+.teacher-workshop-div{
     width: 600px;
     height: 550px;
     display: flex;
-    margin-top: 50px;
+    /* margin-top: 50px; */
     flex-wrap: wrap;
 }
 .teacher-workshop-li-div{
@@ -162,26 +185,38 @@
     height: 400px;
     margin-left: 50px;
     margin-top: 50px;
+
 }
 .teacher-workshop-li{
-    font-size: 25px;
+    font-size: 20px;
     text-align: center;
     list-style: none;
     margin-bottom: 20px;
-    border: 2px solid #000000;
+    font-weight: bold;
+    box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
+    height: 50px;
+    padding-top: 10px;
+    border-radius: 10px;
+    color:#5129a3
+    /* border: 2px solid #000000; */
 }
 .workshop-information-div{
     width: 300px;
     height: 300px;
     margin-top: 50px;
     margin-left: 20px;
+    font-weight: bold;
+    color: rgb(42, 42, 42);
 }
 .workshop-information-li{
-    font-size: 25px;
+    font-size: 18px;
     text-align: center;
     list-style: none;
+    height: 50px;
+    padding-top: 10px;
     margin-bottom: 20px;
-    border: 2px solid #000000;
+    border-bottom: 1px solid black;
+    /* border: 2px solid #000000; */
 }
 #acceptListCompanyButton{
   width: 250px;
@@ -195,8 +230,7 @@
   margin-left: 50px;
 }
 #apply-company-List{
-  width: 800px;
-  height: auto;
+  width: 100%;
 }
 .company-apply-div{
   margin-top: 20px;
@@ -274,4 +308,66 @@
     text-align: center;
     list-style: none;
     border: 2px solid #000000;
+}
+
+/*-----------신청 목록 관리------------*/
+.modal-content {
+  width:100%;
+  font-family: 'Gowun Dodum', sans-serif;
+}
+.apply-company {
+  border: 1px #a39485 solid;
+  font-size: .8em;
+  box-shadow: 0 2px 5px rgba(0,0,0,.25);
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+thead {
+  width: 100%;
+  font-weight: bold;
+  color: #fff;
+  background: #73685d;
+}
+
+th {
+  background-color: rgb(181, 181, 181);
+
+}
+
+td, th {
+  padding: 1em 1.3em;
+  vertical-align: middle;
+  text-align: center;
+}
+
+td {
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  background: #fff;
+  font-size:18px;
+}
+.manage-btn {
+  width: 60px;
+  padding:10px;
+  background-color: black;
+  color: white;
+  border-radius: 20px;
+  border: 0;
+}
+.manage-btn:hover {
+  background-color: gray;
+}
+
+.apply-btn {
+  width: 100px;
+  padding:10px;
+  background-color: black;
+  color: white;
+  border-radius: 20px;
+  border: 0;
+}
+.apply-btn:hover {
+  background-color: gray;
 }

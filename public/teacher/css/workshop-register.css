@@ -1,3 +1,13 @@
+.fw-bolderandtopbottom {
+  font-weight: bolder !important;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
 /* workshop-register css */
 .button-div {
   margin: auto;
