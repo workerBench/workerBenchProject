@@ -139,12 +139,14 @@ export class WorkshopsService {
         'workshop.min_member',
         'workshop.max_member',
         'workshop.total_time',
+        'workshop.updatedAt',
         'genre.name',
         'purposeTag.name',
         'GROUP_CONCAT(purposeTag.name) AS purposeTag_name',
       ])
       .where('workshop.status = :status', { status: 'approval' })
-      .groupBy('workshop.id');
+      .groupBy('workshop.id')
+      .orderBy('workshop.updatedAt', 'DESC');
 
     // 각 태그(ex. category)가 query parameter로 들어온다면 andWhere로 찾기
     if (category) {
