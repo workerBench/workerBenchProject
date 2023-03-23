@@ -25,6 +25,7 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 @Injectable()
 export class MypageService {
   private readonly s3Client: S3Client;
+  public readonly AWS_S3_BUCKET_NAME_IMAGE_INPUT: string;
 
   constructor(
     @InjectRepository(WorkShop)
@@ -40,7 +41,18 @@ export class MypageService {
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
     private readonly configService: ConfigService,
-  ) {}
+  ) {
+    this.s3Client = new S3Client({
+      region: this.configService.get('AWS_S3_REGION'),
+      credentials: {
+        accessKeyId: this.configService.get('AWS_ACCESS_KEY'),
+        secretAccessKey: this.configService.get('AWS_SECRET_KEY'),
+      },
+    });
+    this.AWS_S3_BUCKET_NAME_IMAGE_INPUT = this.configService.get(
+      'AWS_S3_BUCKET_NAME_IMAGE_INPUT',
+    );
+  }
 
   // 수강 예정 워크샵 전체 조회 API
   async getSoonWorkshops(user_id: number) {
@@ -63,16 +75,26 @@ export class MypageService {
         ])
         .getRawMany();
 
-      // request, non_payment, waiting_lecture만 필터링
-      const result = workshops.filter((workshop) => {
-        return (
-          workshop.workshopDetail_status == 'request' ||
-          workshop.workshopDetail_status == 'non_payment' ||
-          workshop.workshopDetail_status == 'waiting_lecture'
-        );
-      });
+      // s3 + cloud front에서 이미지 가져오기
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
 
-      return result;
+      // request, non_payment, waiting_lecture만 필터링 + thumbUrl 가공
+      const incompleteWorkshops = workshops
+        .filter((workshop) => {
+          return (
+            workshop.workshopDetail_status == 'request' ||
+            workshop.workshopDetail_status == 'non_payment' ||
+            workshop.workshopDetail_status == 'waiting_lecture'
+          );
+        })
+        .map((workshop) => ({
+          ...workshop,
+          thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+        }));
+
+      return incompleteWorkshops;
     } catch (err) {
       throw err;
     }
@@ -562,19 +584,22 @@ export class MypageService {
     return;
   }
 
-  // 리뷰작성 API
+  // 리뷰작성 - 글 내용 입력 API
   async writingReview(
+    content: string,
+    star: number,
     workshop_id: number,
+    workshop_instance_detail_id: number,
     user_id: number,
-    reviewDto: ReviewDto,
-    image: Express.Multer.File,
   ) {
-    const { content, star, workshop_instance_detail } = reviewDto;
-
     // 우선 해당 유저가 정말로 해당 워크샵을 수강 완료 하였는지 구분
     const workshopInstanceDetail =
       await this.workShopInstanceDetailRepository.findOne({
-        where: { id: Number(workshop_instance_detail), user_id, workshop_id },
+        where: {
+          id: Number(workshop_instance_detail_id),
+          user_id,
+          workshop_id,
+        },
       });
 
     if (
@@ -586,51 +611,67 @@ export class MypageService {
 
     // 해당 워크샵 인스턴스에 대해서 유저가 이미 리뷰를 남겼는지 확인한다.
     const isReviewExist = await this.reviewRepository.findOne({
-      where: { user_id, workshop_id, workshop_instance_detail },
+      where: { user_id, workshop_id, workshop_instance_detail_id },
     });
 
     if (isReviewExist) {
       throw new BadRequestException('이미 리뷰를 남기셨습니다.');
     }
 
-    // 리뷰 작성이 가능한 상태이며, 리뷰를 남기지 않았다면, 리뷰 작성 가능. ---------------------------
-    // 우선 썸네일 이름을 만든다.
+    // 리뷰 내용을 DB에 추가.
+    const insertedReview = await this.reviewRepository.insert({
+      user_id,
+      workshop_id,
+      workshop_instance_detail_id,
+      content,
+      star,
+    });
+
+    return insertedReview.identifiers[0].id;
+  }
+
+  // 리뷰작성 - 이미지 입력 API
+  async reviewImage(
+    reviewId: number,
+    userId: number,
+    image: Express.Multer.File,
+  ) {
+    // 로그인 유저 본인이 작성한 리뷰인지 확인한다.
+    const isReviewExist = await this.reviewRepository.findOne({
+      where: { id: reviewId, user_id: userId },
+    });
+    if (!isReviewExist) {
+      throw new BadRequestException('존재하지 않는 리뷰입니다.');
+    }
+    // 해당 리뷰로 이미 이미지가 등록되어 있는 것은 아닌지 검사한다.
+    const isReviewImageExist = await this.reviewImageRepository.findOne({
+      where: { review_id: reviewId },
+    });
+    if (isReviewImageExist) {
+      throw new BadRequestException(
+        '이미 해당 리뷰에는 이미지가 등록되어 있습니다.',
+      );
+    }
+
+    // 로그인 유저 본인이 작성한 리뷰가 맞으며, 이제 막 리뷰가 작성되었기에 이미지는 등록되지 않은 상태라면, 이미지를 등록
     const thumbImgType = image.originalname.substring(
       image.originalname.lastIndexOf('.'),
       image.originalname.length,
     );
     const thumbImgName = uuid() + thumbImgType;
 
-    // 리뷰 내용을 DB에 추가.
-    const insertedReview = await this.reviewRepository.insert({
-      user_id,
-      workshop_id,
-      workshop_instance_detail,
-      content,
-      star,
-    });
-
     // 리뷰글의 썸네일 이미지의 이름을 review_image 에 저장한다.
     await this.reviewImageRepository.insert({
       img_name: thumbImgName,
-      review_id: insertedReview.identifiers[0].id,
+      review_id: reviewId,
     });
 
     // 리뷰글의 썸네일 이미지를 S3 input 버켓에 저장한다.
     const s3OptionForReviewImage = {
-      Bucket: this.configService.get('AWS_S3_BUCKET_NAME_IMAGE_INPUT'), // S3의 버킷 이름.
-      Key: `images/reviews/${insertedReview.identifiers[0].id}/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
+      Bucket: this.AWS_S3_BUCKET_NAME_IMAGE_INPUT, // S3의 버킷 이름.
+      Key: `images/reviews/${reviewId}/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
       Body: image.buffer, // 업로드 하고자 하는 파일.
     };
     await this.s3Client.send(new PutObjectCommand(s3OptionForReviewImage));
-  }
-
-  // 리뷰 이미지 첨부 API
-  reviewImage(reviewImageDto: ReviewImageDto) {
-    const { img_name } = reviewImageDto;
-    this.reviewImageRepository.insert({
-      img_name,
-    });
-    return '리뷰 사진 등록이 완료되었습니다.';
   }
 }

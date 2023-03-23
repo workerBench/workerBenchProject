@@ -30,9 +30,7 @@ function getSoonWorkshops() {
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${
           element.workshop_id
-        }"><img src="${
-          element.workshop_thumb
-        }" class="card-img-top" alt="..." /></a>
+        }"><img src="${element.thumbUrl}" class="card-img-top" alt="..." /></a>
           <div class="card-body">
             <button id="show-status"
                 type="button"
@@ -470,17 +468,17 @@ function getCompleteWorkshops() {
 
       workshops.forEach((element) => {
         let tempHtml = `<div class="col">
-        <div class="card h-100">
-        <a href="/workshops/detail?workshopId=${element.workshop_id}"><img src="${element.workshop_thumb}" class="card-img-top" alt="..." /></a>
-          <div class="card-body">mplete
-            <h5 id="card-workshop-title">${element.workshop_title}</h5>
-            <p class="card-workshop-summary">진행 예정일: ${element.workshopDetail_wish_date}</p>
-            <p class="card-workshop-summary">인원: ${element.workshopDetail_member_cnt}명</p>
-            <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showCompleteModal(${element.workshopDetail_id})">상세 내역 보기</p>
-            <button class="btn btn-primary" onclick="showReviewPost()">리뷰작성</button>
-          </div>
-        </div>
-      </div>`;
+          <div class="card h-100">
+            <a href="/workshops/detail?workshopId=${element.workshop_id}"><img src="${element.workshop_thumb}" class="card-img-top" alt="..." /></a>
+              <div class="card-body">mplete
+                <h5 id="card-workshop-title">${element.workshop_title}</h5>
+                <p class="card-workshop-summary">진행 예정일: ${element.workshopDetail_wish_date}</p>
+                <p class="card-workshop-summary">인원: ${element.workshopDetail_member_cnt}명</p>
+                <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showCompleteModal(${element.workshopDetail_id})">상세 내역 보기</p>
+                <button class="btn btn-primary" onclick="showReviewPost(${element.workshop_id}, ${element.workshopDetail_id})">리뷰작성</button>
+              </div>
+            </div>
+          </div>`;
         $('#complete-list').append(tempHtml);
       });
     })
@@ -488,8 +486,6 @@ function getCompleteWorkshops() {
       console.log(error);
     });
 }
-
-
 
 // 특정 워크샵 상세 내역 불러오기 (모달창) - 수강 완료
 function showCompleteModal(workshopDetailId) {
@@ -591,7 +587,7 @@ function showCompleteModal(workshopDetailId) {
 
 // ------------------------------- 리뷰 작성 모달창 ------------------------------- //
 
-function showReviewPost() {
+function showReviewPost(workshop_id, workshopInstanceDetail_id) {
   const modal = document.getElementById('review-modal');
   modal.innerHTML = `
   <div class="modal-review-content">
@@ -601,7 +597,7 @@ function showReviewPost() {
     </div>
     <div class="modal-review-body">
         <div id="thumb-img-wrap">
-          <img class="modal-review-image">
+          <img class="modal-review-image" id="thumb-img-show" >
           <div>
             <input type="file" accept="image/*" , id="thumb-img-file" />
           </div>
@@ -629,7 +625,7 @@ function showReviewPost() {
         </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-primary" id="post-review">작성하기</button>
+      <button type="button" class="btn btn-primary" id="post-review" onclick="submitReview(${workshop_id}, ${workshopInstanceDetail_id})">작성하기</button>
     </div>
   </div>
   `;
@@ -652,51 +648,122 @@ function showReviewPost() {
       modal.removeAttribute('style');
     }
   });
+
+  // -------------------------- 리뷰 수정 모달창 이미지 미리보기 (2) -------------------------- //
+  const thumbImg = document.querySelector('#thumb-img-file');
+  thumbImg.addEventListener('change', function (event) {
+    let files = event.target.files;
+    if (files.length >= 1) {
+      const imgShow = document.querySelector('#thumb-img-show');
+      const reader = new FileReader();
+      reader.addEventListener('load', function (event) {
+        imgShow.src = reader.result;
+      });
+      reader.readAsDataURL(files[0]);
+    }
+    if (!files.length) {
+      const imgShow = document.querySelector(`#thumb-img-show`);
+      imgShow.removeAttribute('src');
+    }
+  });
 }
 
 // --------------------------------- 리뷰 수정 모달창 이미지 미리보기 --------------------------------- //
 
+// input 요소에서 파일이 선택되면 실행되는 함수
+// function previewImage(event) {
+//   // input 요소에서 선택된 파일 가져오기
+//   const input = event.target;
+//   const file = input.files[0];
 
-  // input 요소에서 파일이 선택되면 실행되는 함수
-  function previewImage(event) {
-    // input 요소에서 선택된 파일 가져오기
-    const input = event.target;
-    const file = input.files[0];
-  
-    // FileReader 객체를 사용하여 파일을 읽기
-    const reader = new FileReader();
-  
-    // 파일이 로드되면 실행되는 함수
-    reader.onload = function() {
-      // 미리보기 이미지 요소 가져오기
-      const img = document.querySelector('.modal-update-image');
-      // 미리보기 이미지 요소에 이미지 데이터 설정
-      img.src = reader.result;
-    }
-  
-    // 파일 읽기 시작
-    reader.readAsDataURL(file);
-  }
-  
-  // input 요소에 이벤트 리스너 등록
-  const input = document.querySelector('#thumb-img-file');
-  input.addEventListener('change', previewImage);
+//   // FileReader 객체를 사용하여 파일을 읽기
+//   const reader = new FileReader();
 
+//   // 파일이 로드되면 실행되는 함수
+//   reader.onload = function () {
+//     // 미리보기 이미지 요소 가져오기
+//     const img = document.querySelector('.modal-update-image');
+//     // 미리보기 이미지 요소에 이미지 데이터 설정
+//     img.src = reader.result;
+//   };
 
-  // -------------------------------- 워크샵 리뷰 모달창 수정하기 버튼 -------------------------------- //
+//   // 파일 읽기 시작
+//   reader.readAsDataURL(file);
+// }
 
+// // input 요소에 이벤트 리스너 등록
+// const input = document.querySelector('#thumb-img-file');
+// input.addEventListener('change', previewImage);
+
+// -------------------------------- 워크샵 리뷰 모달창 수정하기 버튼 -------------------------------- //
+
+const submitReview = async (workshop_id, workshopInstanceDetail_id) => {
   const starValue = parseInt($('input[name="reviewStar"]:checked').val());
   const reviewContent = $('#reviewContents').val();
 
   if (!starValue) {
     alert('별점을 입력해주세요!');
+    return;
   }
   if (!reviewContent) {
     alert('리뷰 내용을 입력해주세요!');
+    return;
   }
 
+  try {
+    const res = await axios({
+      method: 'POST',
+      url: '/api/mypage/workshops/review',
+      data: {
+        content: reviewContent,
+        star: starValue,
+        workshop_id: workshop_id,
+        workshop_instance_detail_id: workshopInstanceDetail_id,
+      },
+    });
+    checkAndSendingImage(res.data.data);
+  } catch (err) {
+    alert(err.response.data.message);
+    location.reload();
+  }
+};
 
+// 리뷰 작성 시 이미지(썸네일)가 있다면 이미지 또한 업로드
+const checkAndSendingImage = (reviewId) => {
+  // 우선 리뷰 썸네일이 등록되어 있는지 확인.
+  const thumbImg = document.querySelector('#thumb-img-file').files;
+  if (thumbImg.length < 1) {
+    return;
+  }
 
+  // 사진 용량이 5MB 를 넘을 경우 과용량이라며 리턴
+  if (thumbImg.size > 10 * 1024 * 1024) {
+    alert('사진의 용량이 너무 큽니다. 최다 10MB 이하의 사진을 사용해 주세요');
+    return;
+  }
+
+  // 썸네일도 등록되어 있고, 사진 용량도 문제 없다면 업로드
+  const formData = new FormData();
+  formData.append('image', thumbImg[0]);
+  formData.append('reviewId', reviewId);
+
+  axios({
+    method: 'post',
+    url: '/api/mypage/workshops/review/image',
+    data: formData,
+    headers: {
+      'content-type': 'multipart/form-data',
+    },
+  })
+    .then((res) => {
+      alert('리뷰 작성이 완료되었습니다.');
+      location.reload();
+    })
+    .catch((err) => {
+      alert(err.response.data.message);
+      location.reload();
+    });
+};
 
 // 수강 취소 워크샵 전체 목록 불러오기
 function getRefundWorkshops() {

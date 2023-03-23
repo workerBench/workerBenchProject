@@ -14,51 +14,55 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = data[i].workshop_title;
         const genreTag = data[i].genreTag_name;
         const purposeTag = data[i].purposeTag_name;
+        const splitPurposeTag = purposeTag.split(',');
+        let purposeTag1 = splitPurposeTag[0];
+        let purposeTag2 = '';
+        if (splitPurposeTag.length > 1) {
+          purposeTag2 = '#' + splitPurposeTag[1];
+        }
+
         const status = data[i].workshop_status;
         let tempHtml = ``;
-        if (status === 'approval') {
+        if (status === 'approval' && purposeTag2 !== undefined) {
           tempHtml = `<div class="workshop">
-              <img src=${thumb} alt="" />
-              <li class="title">${title}</li>
-              <li for="genretag" class="genre-tag">${genreTag}</li>
-              <li for="purpose-tag" class="purpose-tag">${purposeTag}</li>
-            </div>`;
+                          <img src=${thumb} alt="">
+                          <li class="title">${title}</li>
+                          <li for="tag" class="tag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
+                      </div>`;
           wokshopApprovalList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'finished') {
           tempHtml = `<div class="workshop">
-              <img src=${thumb} alt="" />
-              <li class="title">${title}</li>
-              <li for="genretag" class="genre-tag">${genreTag}</li>
-              <li for="purpose-tag" class="purpose-tag">${purposeTag}</li>
-            </div>`;
+                          <img src=${thumb} alt="">
+                          <li class="title">${title}</li>
+                          <li for="tag" class="tag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
+                      </div>`;
           wokshopFinishedList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'request') {
           tempHtml = `<div class="workshop">
-              <img src=${thumb} alt="" />
-              <li class="title">${title}</li>
-              <li for="genretag" class="genre-tag">${genreTag}</li>
-              <li for="purpose-tag" class="purpose-tag">${purposeTag}</li>
-            </div>`;
+                          <img src=${thumb} alt="">
+                          <li class="title">${title}</li>
+                          <li for="tag" class="tag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
+                      </div>`;
           wokshopRequestList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'rejected') {
           tempHtml = `<div class="workshop">
-                <img src=${thumb} alt="" />
-                <li class="title">${title}</li>
-                <div class="tag-div">
-                    <div class="test">
-                        <li for="genretag" class="genre-tag">${genreTag}</li>
-                        <li for="purpose-tag" class="purpose-tag">${purposeTag}</li>
-                    </div>
-                    <div>
-                        <li for="purpose-tag" class="reject">반려됨</li>
-                    </div>
-                </div>
-              </div>`;
+                          <img src=${thumb} alt="" />
+                          <li class="title">${title}</li>
+                              <div class="tag-div">
+                                  <div class="test">
+                                      <li for="tag" class="tag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
+                                  </div>
+                                  <div>
+                                      <li for="purpose-tag" class="reject">반려됨</li>
+                                  </div>
+                              </div>
+                       </div>`;
           wokshopRequestList.insertAdjacentHTML('beforeend', tempHtml);
         }
       }
     })
     .catch((response) => {
+      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });

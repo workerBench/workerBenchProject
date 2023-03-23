@@ -54,8 +54,8 @@ export class Review {
   @Column('int', { name: 'workshop_id', nullable: true })
   workshop_id: number | null;
 
-  @Column('int', { name: 'workshop_instance_detail', nullable: true })
-  workshop_instance_detail: number | null;
+  @Column('int', { name: 'workshop_instance_detail_id', nullable: true })
+  workshop_instance_detail_id: number | null;
 
   @CreateDateColumn()
   createdAt: Date;
