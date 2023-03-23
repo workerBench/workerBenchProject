@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
+      console.log(response);
       const data = response.data.teacher;
       const email = data.User.email;
       const name = data.name;
@@ -37,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
                               <button type="radio" class="Button" onclick="registerCompany()">업체 등록</button>
                               <button type="radio" class="Button" id="applyCompany">업체 가입 신청</button>
                               `;
-      } else if (!data.MyCompany && data.company) {
+      }
+      if (!data.MyCompany && data.company) {
         company_name = data.company.company_name;
         saving_name = data.company.saving_name;
         companyHtml += `
@@ -126,10 +128,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // 등록된 업체 검색
       companySearch.addEventListener('click', () => {
         const company_name = document.getElementById('company-name').value;
-        // if (!company_name) {
-        //   alert('업체를 입력해 주세요');
-        //   return;
-        // }
+        if (!company_name) {
+          alert('검색하려는 업체를 입력해 주세요');
+          return;
+        }
         axios({
           method: 'get',
           url: `/api/teacher/company/search?company_name=${company_name}`,
@@ -192,13 +194,13 @@ document.addEventListener('DOMContentLoaded', () => {
       $('#company').append(html);
     })
     .catch(function (error) {
-      console.log(error);
+      const { data } = response.response;
+      alert(data.error);
     });
 });
 
 // 등록된 업체에 등록 신청
 function applyCompany(id) {
-  console.log(id);
   axios({
     method: 'post',
     url: `/api/teacher/company/apply/${id}`,
@@ -210,7 +212,6 @@ function applyCompany(id) {
       location.reload();
     })
     .catch((response) => {
-      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
