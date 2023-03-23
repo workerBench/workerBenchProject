@@ -82,7 +82,7 @@ body {
   border-bottom: 1px solid #ccc;
 }
 .modal-image {
-  width: 60%;
+  width: 100%;
   border-radius: 10px;
   height: 400px;
 }
