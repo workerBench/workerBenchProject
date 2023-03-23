@@ -506,49 +506,29 @@ export default class MainSeeder implements Seeder {
         content: '재밌었어요 1',
         star: 4,
         user_id: 1,
-        workshop_id: 1,
+        workshop_id: 4,
+        workshop_instance_detail_id: 4,
       },
       {
         content: '재밌었어요 2',
         star: 5,
         user_id: 2,
-        workshop_id: 1,
+        workshop_id: 4,
+        workshop_instance_detail_id: 8,
       },
       {
         content: '재밌었어요 3',
         star: 4,
         user_id: 11,
-        workshop_id: 1,
+        workshop_id: 4,
+        workshop_instance_detail_id: 12,
       },
       {
         content: '재밌었어요 4',
         star: 3,
         user_id: 12,
-        workshop_id: 1,
-      },
-      {
-        content: '재밌었어요 1',
-        star: 4,
-        user_id: 1,
-        workshop_id: 2,
-      },
-      {
-        content: '재밌었어요 2',
-        star: 5,
-        user_id: 2,
-        workshop_id: 2,
-      },
-      {
-        content: '재밌었어요 3',
-        star: 4,
-        user_id: 11,
-        workshop_id: 2,
-      },
-      {
-        content: '재밌었어요 4',
-        star: 5,
-        user_id: 12,
-        workshop_id: 2,
+        workshop_id: 4,
+        workshop_instance_detail_id: 16,
       },
     ]);
 
@@ -558,15 +538,7 @@ export default class MainSeeder implements Seeder {
         review_id: 1,
       },
       {
-        img_name: '이미지2.jpeg',
-        review_id: 1,
-      },
-      {
         img_name: '이미지1.jpeg',
-        review_id: 2,
-      },
-      {
-        img_name: '이미지2.jpeg',
         review_id: 2,
       },
       {
@@ -574,48 +546,8 @@ export default class MainSeeder implements Seeder {
         review_id: 3,
       },
       {
-        img_name: '이미지2.jpeg',
-        review_id: 3,
-      },
-      {
         img_name: '이미지1.jpeg',
         review_id: 4,
-      },
-      {
-        img_name: '이미지2.jpeg',
-        review_id: 4,
-      },
-      {
-        img_name: '이미지1.jpeg',
-        review_id: 5,
-      },
-      {
-        img_name: '이미지2.jpeg',
-        review_id: 5,
-      },
-      {
-        img_name: '이미지1.jpeg',
-        review_id: 6,
-      },
-      {
-        img_name: '이미지2.jpeg',
-        review_id: 6,
-      },
-      {
-        img_name: '이미지1.jpeg',
-        review_id: 7,
-      },
-      {
-        img_name: '이미지2.jpeg',
-        review_id: 7,
-      },
-      {
-        img_name: '이미지1.jpeg',
-        review_id: 8,
-      },
-      {
-        img_name: '이미지2.jpeg',
-        review_id: 8,
       },
     ]);
 

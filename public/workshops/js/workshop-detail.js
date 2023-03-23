@@ -202,25 +202,33 @@ function getWorkshopReviews() {
       console.log(res);
       const reviews = res.data.data;
 
-      console.log(reviews);
-      console.log(reviews[0].reviewImage);
-
-      reviews.forEach((element) => {
+      reviews.forEach((element, index) => {
         let TempReviews = `<div class="card mb-3" style="max-width: 700px; margin-top: 50px"><div class="row g-0">
           <div class="col-md-4 review-images">
-            <img class="img-fluid rounded-start" alt="..." id="review-img-1">
+            <img class="img-fluid rounded-start" alt="..." id="review-img-${
+              index + 1
+            }">
           </div>
           <div class="col-md-8">
             <div class="card-body">
               <p class="card-text">${element.content}</p>
               <p class="card-text">${element.star}점</p>
-              <p class="card-text"><small class="text-muted">작성일: ${element.createdAt}</small></p>
+              <p class="card-text"><small class="text-muted">작성일: ${
+                element.createdAt
+              }</small></p>
             </div>
           </div>
         </div>
         </div>`;
         $('#workshop-reviews').append(TempReviews);
-        document.getElementById('review-img-1').src = reviews[0].reviewImage;
+
+        if (element.reviewImage === null || element.reviewImage === '') {
+          document.getElementById(`review-img-${index + 1}`).style.display =
+            'none';
+          return;
+        }
+        document.getElementById(`review-img-${index + 1}`).src =
+          element.reviewImage;
       });
     })
     .catch((err) => {});
