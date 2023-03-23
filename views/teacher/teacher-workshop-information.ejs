@@ -31,6 +31,12 @@
       href="/teacher/css/teacher-workshop-information.css"
       rel="stylesheet"
     />
+
+    <!----------- Font ----------->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Ubuntu&display=swap" rel="stylesheet">
+
     <script src="/teacher/js/teacher-workshop-information.js"></script>
     <title>강사 및 업체 정보</title>
   </head>
@@ -75,9 +81,30 @@
             <div class="modal_title">신청한 업체 목록</div>
             <div class="close_btn" id="close_btn">X</div>
           </div>
-          <div id="apply-company-List"></div>
+          <div class="modal-content">
+            <table class="apply-company-List">
+              <thead>
+                <tr>
+                  <th>강사명</th>
+                  <th>전화번호</th>
+                  <th>비고</th>
+                </tr>
+              </thead>
+              <tbody id="apply-company">
+              </tbody>
+            </table>
+          </div>
+          </div>
         </div>
       </div>
+
+
+      <!-- <div class="company-apply-div">
+        <li class="company-apply-li"> 이름 : ${name}, 휴대폰 번호 : ${phone_number} </li>
+        <button type="radio" class="acceptCompanyButton" onclick="acceptCompany(${user_id})">업체 수락</button>
+        <button type="radio" class="acceptCompanyButton" onclick="cancleCompany(${user_id})">업체 반려</button>
+    </div> -->
+      
     </div>
   </body>
 </html>

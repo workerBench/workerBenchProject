@@ -47,7 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <li class="teacher-workshop-li">업체명</li>
                 </div>
                 <div class="workshop-information-div">
-                    <li class="workshop-information-li">사업자</li>
+                    <li class="workshop-information-li">${
+                      company_type === 0
+                      ? '사업자'
+                      : '프리랜서'
+                    }</li>
                     <li class="workshop-information-li">${company_name}</li>
                 </div>
       `;
@@ -62,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                   <li class="teacher-workshop-li">예금주명</li>
                               </div>
                               <div class="workshop-information-div">
-                                  <li class="workshop-information-li">사업자</li>
+                                  <li class="workshop-information-li">'사업자'</li>
                                   <li class="workshop-information-li">${company_name}</li>
                                   <li class="workshop-information-li">${business_number}</li>
                                   <li class="workshop-information-li">${bank_name}</li>
@@ -98,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           <div class="teacher-li-div">
                               <li class="teacher-li">강사 정보</li>
                           </div>
-                          <div class="teacher-wrokshop-div">
+                          <div class="teacher-workshop-div">
                               <div class="teacher-workshop-li-div">
                                   <li class="teacher-workshop-li">email</li>
                                   <li class="teacher-workshop-li">이름</li>
@@ -117,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           <div class="teacher-li-div">
                               <li class="teacher-li">업체 정보</li>  
                           </div>
-                          <div class="teacher-wrokshop-div">
+                          <div class="teacher-workshop-div">
                               ${companyHtml}
                           </div>;
                       </div>
@@ -194,20 +198,25 @@ function acceptListCompany() {
     .then((response) => {
       console.log(response);
       const data = response.data;
+      console.log(data)
       let html = '';
       for (let i = 0; i < data.length; i++) {
         const name = data[i].name;
         const user_id = data[i].user_id;
         const phone_number = data[i].phone_number;
         html += `
-                <div class="company-apply-div">
-                    <li class="company-apply-li"> 이름 : ${name}, 휴대폰 번호 : ${phone_number} </li>
-                    <button type="radio" class="acceptCompanyButton" onclick="acceptCompany(${user_id})">업체 수락</button>
-                    <button type="radio" class="acceptCompanyButton" onclick="cancleCompany(${user_id})">업체 반려</button>
-                </div>
-                `;
+                
+        <tr>
+          <td>${name}</td>
+          <td>${phone_number}</td>
+          <td>
+            <button class="manage-btn" onclick="acceptCompany(${user_id})">수락</button>
+            <button class="manage-btn" onclick="cancleCompany(${user_id})">반려</button>
+          </td>
+        </tr> 
+     `;
       }
-      document.getElementById('apply-company-List').innerHTML = html;
+      document.getElementById('apply-company').innerHTML = html;
     })
 
     .catch((response) => {
