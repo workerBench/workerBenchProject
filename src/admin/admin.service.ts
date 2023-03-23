@@ -344,9 +344,7 @@ async updateWorkshop(data: editWorkshopDto, id: number) {
       throw new NotFoundException('없는 워크숍입니다.');
     }
 
-    await this.workshopRepository.update(id, { status: 'finished' });
-
-    return await this.workshopRepository.softDelete(id);
+    return await this.workshopRepository.update(id, { status: 'finished' });
   }
 
   //-------------------------- 업체 및 강사 검색 기능 (유저 이메일 / 업체 명) --------------------------//

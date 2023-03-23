@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${saving_name}</td>
                 <td>${createdAt.split('T')[0]}</td>
                 <td>
-                  <button class="apply-btn" onclick="applyCompany(${  id})">가입 신청</button>
+                  <button class="apply-btn" onclick="applyCompany(${id})">가입 신청</button>
                 </td>
               </tr>
               `;
