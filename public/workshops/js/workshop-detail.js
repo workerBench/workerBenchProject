@@ -274,6 +274,12 @@ form.addEventListener('submit', function (e) {
   const purpose = document.getElementById('purpose').value;
   const etc = document.getElementById('etc').value;
 
+  // 전화번호 정규식 검사
+  const regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+  if (regPhone.test(phone_number) === false) {
+    alert('전화번호를 정확하게 입력해주세요.');
+  }
+
   let orderForm = new FormData();
   orderForm.append('company', company);
   orderForm.append('name', name);
@@ -313,7 +319,6 @@ form.addEventListener('submit', function (e) {
     })
     .catch((err) => {
       console.log(err);
-      alert('로그인 후 이용 가능합니다!');
     });
 });
 
