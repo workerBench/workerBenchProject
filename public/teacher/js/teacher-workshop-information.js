@@ -22,14 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
         bank_name,
         account,
         saving_name;
-      if (data.MyCompany) {
-        company_type = data.MyCompany.company_type;
-        company_name = data.MyCompany.company_name;
-        business_number = data.MyCompany.business_number;
-        rrn_front = data.MyCompany.rrn_front;
-        bank_name = data.MyCompany.bank_name;
-        account = data.MyCompany.account;
-        saving_name = data.MyCompany.saving_name;
+      if (data.company) {
+        company_type = data.company.company_type;
+        company_name = data.company.company_name;
+        business_number = data.company.business_number;
+        rrn_front = data.company.rrn_front;
+        bank_name = data.company.bank_name;
+        account = data.company.account;
+        saving_name = data.company.saving_name;
       }
       let companyHtml = ``;
       if (!data.MyCompany && !data.company) {

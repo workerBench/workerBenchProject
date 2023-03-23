@@ -314,7 +314,7 @@ function open_iamport() {
 
   // imp 객체 가져오기
   const IMP = window.IMP;
-  IMP.init('imp85074462');
+  IMP.init('imp31720762');
   IMP.request_pay(
     {
       pg: 'html5_inicis', // 하나의 아임포트 계정으로 여러 pg를 사용할 때 구분자
@@ -701,6 +701,9 @@ const submitReview = async (workshop_id, workshopInstanceDetail_id) => {
   const starValue = parseInt($('input[name="reviewStar"]:checked').val());
   const reviewContent = $('#reviewContents').val();
 
+  console.log('검사용~~');
+  console.log(workshop_id, workshopInstanceDetail_id);
+
   if (!starValue) {
     alert('별점을 입력해주세요!');
     return;
@@ -733,6 +736,8 @@ const checkAndSendingImage = (reviewId) => {
   // 우선 리뷰 썸네일이 등록되어 있는지 확인.
   const thumbImg = document.querySelector('#thumb-img-file').files;
   if (thumbImg.length < 1) {
+    alert('리뷰 작성이 완료되었습니다.');
+    location.reload();
     return;
   }
 
@@ -778,9 +783,7 @@ function getRefundWorkshops() {
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${
           element.workshop_id
-        }"><img src="${
-          element.thumbUrl
-        }" class="card-img-top" alt="..." /></a>
+        }"><img src="${element.thumbUrl}" class="card-img-top" alt="..." /></a>
           <div class="card-body">
           <button id="show-status"
                 type="button"
