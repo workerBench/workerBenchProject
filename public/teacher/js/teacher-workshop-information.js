@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
         bank_name,
         account,
         saving_name;
-
       if (data.MyCompany) {
         company_type = data.MyCompany.company_type;
         company_name = data.MyCompany.company_name;
@@ -48,9 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="workshop-information-div">
                     <li class="workshop-information-li">${
-                      company_type === 0
-                      ? '사업자'
-                      : '프리랜서'
+                      company_type === 0 ? '사업자' : '프리랜서'
                     }</li>
                     <li class="workshop-information-li">${company_name}</li>
                 </div>
@@ -95,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
                               </div>
                 `;
       }
-
       let tempHtml = ``;
       tempHtml += `
                       <div class="workshop-div">
@@ -147,17 +143,15 @@ document.addEventListener('DOMContentLoaded', () => {
               const company_name = data[i].company_name;
               const saving_name = data[i].saving_name;
               const id = data[i].user_id;
-              const createdAt = data[i].createdAt
-
+              const createdAt = data[i].createdAt;
               let tempHtml = ``;
-              tempHtml += 
-              `
+              tempHtml += `
               <tr>
                 <td>${company_name}</td>
                 <td>${saving_name}</td>
                 <td>${createdAt.split('T')[0]}</td>
                 <td>
-                  <button class="apply-btn" onclick="applyCompany(${  id})">가입 신청</button>
+                <button class="apply-btn" onclick="applyCompany(${id})">가입 신청</button>
                 </td>
               </tr>
               `;
@@ -165,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             // location.reload();
           })
-
           .catch((response) => {
             const { data } = response.response;
             alert(data.error);
@@ -177,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
       alert(data.message);
     });
 });
-
 // 모든 업체 목록 조회
 axios
   .get('/api/teacher/companies')
@@ -191,7 +183,9 @@ axios
           <td>${company.saving_name}</td>
           <td>${company.createdAt.split('T')[0]}</td>
           <td>
-            <button class="apply-btn" onclick="applyCompany(${company.id})">가입 신청</button>
+            <button class="apply-btn" onclick="applyCompany(${
+              company.id
+            })">가입 신청</button>
           </td>
         </tr>
       `;
@@ -201,7 +195,6 @@ axios
   .catch(function (error) {
     console.log(error);
   });
-
 // 등록된 업체에 등록 신청
 function applyCompany(id) {
   axios({
@@ -219,7 +212,6 @@ function applyCompany(id) {
       alert(data.error);
     });
 }
-
 // 업체 소속을 신청한 강사 목록 보기
 function acceptListCompany() {
   axios({
@@ -230,7 +222,7 @@ function acceptListCompany() {
     .then((response) => {
       console.log(response);
       const data = response.data;
-      console.log(data)
+      console.log(data);
       let html = '';
       for (let i = 0; i < data.length; i++) {
         const name = data[i].name;
@@ -250,13 +242,11 @@ function acceptListCompany() {
       }
       document.getElementById('apply-company').innerHTML = html;
     })
-
     .catch((response) => {
       const { data } = response.response;
       alert(data.error);
     });
 }
-
 // 업체 소속을 신청한 업체 수락하기
 function acceptCompany(user_id) {
   axios({
@@ -274,7 +264,6 @@ function acceptCompany(user_id) {
       alert(data.error);
     });
 }
-
 // 업체 소속을 신청한 업체 반려하기
 function cancleCompany(user_id) {
   axios({
@@ -296,12 +285,10 @@ function cancleCompany(user_id) {
 $(document).on('click', '#applyCompany', function (e) {
   $('#modal').addClass('show');
 });
-
 // 모달 닫기
 $(document).on('click', '#close_btn', function (e) {
   $('#modal').removeClass('show');
 });
-
 // 업체 소속을 신청한 업체 목록 보기 모달 열기
 $(document).on('click', '#acceptListCompanyButton', function (e) {
   $('#modal2').addClass('show');

@@ -80,7 +80,7 @@ export class TeacherController {
     return result;
   }
 
-  // 강사 등록한 전체 워크샵 보기
+  // 강사 등록한 전체 워크샵 목록
   @ApiResponse({
     status: 200,
     description: '성공',
@@ -140,7 +140,7 @@ export class TeacherController {
     status: 200,
     description: '성공',
   })
-  @ApiOperation({ summary: '모든 업체 목록 조회 API'})
+  @ApiOperation({ summary: 'company_type : 0인 업체 목록 조회 API' })
   @Get('companies')
   @UseGuards(JwtTeacherAuthGuard)
   async gerAllCompanies() {
@@ -310,13 +310,13 @@ export class TeacherController {
     return this.teacherService.updateTeacherComplete(user.id, id);
   }
 
-  // 강사 신청한 워크샵 취소하기
+  // 강사 신청한 워크샵 반려하기
   @ApiResponse({
     status: 200,
     description: 'status:"waiting_lecture" => "complete"',
   })
   @ApiOperation({ summary: '강사 수강 문의 종료하기 API' })
-  @Delete('workshops/manage/delete/:id')
+  @Patch('workshops/manage/reject/:id')
   @UseGuards(JwtTeacherAuthGuard)
   cancleWorkshop(@CurrentUser() user: CurrentUserDto, @Param('id') id: number) {
     return this.teacherService.cancleWorkshop(user.id, id);
