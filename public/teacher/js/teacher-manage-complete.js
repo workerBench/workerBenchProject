@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log(response);
       const data = response.data.complete_instance_list;
       for (let i = 0; i < data.length; i++) {
-        const workshop_thumb = data[i].workshop_thumb;
+        const workshop_thumb = data[i].workshopThumbUrl;
         const workshop_title = data[i].workshop_title;
         const min_member = data[i].workshop_min_member;
         const max_member = data[i].workshop_max_member;
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tempHtml = `
                   <div class="teacher-manage-div" >
                       <div class="workshop-information-div">
-                          <img src="${workshop_thumb}" alt="" />
+                          <img src=${workshop_thumb} alt="" />
                           <li for="purpose-tag" class="workshop-information-title"><img src="/images/title1.png" width="40" />${workshop_title}</li>
                           <li for="purpose-tag" class="workshop-information">최소 인원 : ${min_member}명</li>
                           <li for="purpose-tag" class="workshop-information">최대 인원 : ${max_member}명</li>
