@@ -185,7 +185,7 @@ export class TeacherService {
         // 만약에 teacher.MyCompany가 없거나 userIdInfo.affiliation_company_id가 0보다 클경우 찾는다.
         company = await this.companyRepository.findOne({
           where: { id: userIdInfo.affiliation_company_id },
-          select: ['company_name', 'saving_name'],
+          select: ['company_name', 'saving_name', 'company_type'],
         });
       } else {
         company = null; // company가 있으면 위에 쿼리빌더로 나온 Mycompany랑 company값이 나와 총 두번 보여지므로 하나는 안보여지게 했다.
@@ -794,6 +794,7 @@ export class TeacherService {
           .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
           .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
           .select([
+            'workshop.id',
             'workshop.thumb',
             'workshop.title',
             'workshop.min_member',
@@ -813,7 +814,18 @@ export class TeacherService {
           ])
           .groupBy('workShopInstanceDetail.id') // groupBy를 써서 각각 id에 해당하는 값을 나타낸다.
           .getRawMany();
-        return result;
+
+        const sendingResult = result.map((myWorkShopAndDetail) => {
+          return {
+            ...myWorkShopAndDetail,
+            workshopThumbUrl: `${this.configService.get(
+              'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+            )}images/workshops/${myWorkShopAndDetail.workshop_id}/800/${
+              myWorkShopAndDetail.workshop_thumb
+            }`,
+          };
+        });
+        return sendingResult;
       }
     } catch (error) {
       console.log(error);
