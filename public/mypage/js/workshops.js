@@ -23,7 +23,6 @@ function getSoonWorkshops() {
     .get('/api/mypage/workshops/soon')
     .then((res) => {
       const workshops = res.data.data;
-      console.log('workshops', workshops);
 
       workshops.forEach((element) => {
         let tempHtml = `<div class="col">
@@ -115,8 +114,6 @@ function showIncompleteModal(workshopDetailId) {
     .get(`/api/mypage/workshops/soon/${workshopDetailId}`)
     .then((res) => {
       const workshop = res.data.data[0];
-      console.log(workshop);
-
       const modal = document.getElementById('modal');
       modal.innerHTML = `
             <div class="modal-content">
@@ -212,8 +209,6 @@ function putWorkshopOrderInfo(workshopDetailId) {
   axios
     .post(`/api/mypage/workshops/orderInfo`, { workshopDetailId })
     .then((res) => {
-      console.log(res);
-      console.log(workshopDetailId, '결제 입력창 열기');
       const workshop = res.data.data[0];
 
       const modal = document.getElementById('modal');
@@ -330,8 +325,6 @@ function open_iamport() {
     },
     function (rsp) {
       if (rsp.success) {
-        console.log(rsp);
-
         axios
           .patch('/api/mypage/workshops/order', {
             workshopInstance_id,
@@ -340,7 +333,6 @@ function open_iamport() {
             merchant_uid: rsp.merchant_uid,
           })
           .then((response) => {
-            console.log(response);
             alert('결제가 완료되었습니다.');
             location.href = '/mypage/workshops';
           })
@@ -349,7 +341,6 @@ function open_iamport() {
             alert(error.message / error.response.data.message);
           });
       } else {
-        console.log(rsp);
         alert('결제가 실패했습니다.');
       }
     },
@@ -361,8 +352,6 @@ function putWorkshopRefundInfo(workshopDetailId) {
   axios
     .post(`/api/mypage/workshops/refundInfo`, { workshopDetailId })
     .then((res) => {
-      console.log(res);
-      console.log(workshopDetailId, '환불 입력창 열기');
       const workshop = res.data.data[0];
 
       const modal = document.getElementById('refund-modal');
@@ -448,7 +437,6 @@ function cancel_pay() {
       reason: reason, // 환불사유
     },
     success: function (response) {
-      console.log(response);
       alert('결제 취소가 완료되었습니다.');
       location.reload();
     },
@@ -464,7 +452,6 @@ function getCompleteWorkshops() {
     .get('/api/mypage/workshops/complete')
     .then((res) => {
       const workshops = res.data.data;
-      console.log('workshops', workshops);
 
       workshops.forEach((element) => {
         let tempHtml = `<div class="col">
@@ -493,7 +480,6 @@ function showCompleteModal(workshopDetailId) {
     .get(`/api/mypage/workshops/complete/${workshopDetailId}`)
     .then((res) => {
       const workshop = res.data.data[0];
-      console.log(workshop);
 
       const modal = document.getElementById('modal');
       modal.innerHTML = `
@@ -701,9 +687,6 @@ const submitReview = async (workshop_id, workshopInstanceDetail_id) => {
   const starValue = parseInt($('input[name="reviewStar"]:checked').val());
   const reviewContent = $('#reviewContents').val();
 
-  console.log('검사용~~');
-  console.log(workshop_id, workshopInstanceDetail_id);
-
   if (!starValue) {
     alert('별점을 입력해주세요!');
     return;
@@ -776,7 +759,6 @@ function getRefundWorkshops() {
     .get('/api/mypage/workshops/refund')
     .then((res) => {
       const workshops = res.data.data;
-      console.log('workshops', workshops);
 
       workshops.forEach((element) => {
         let tempHtml = `<div class="col">
@@ -823,7 +805,6 @@ function showRefundModal(workshopDetailId) {
     .get(`/api/mypage/workshops/refund/${workshopDetailId}`)
     .then((res) => {
       const workshop = res.data.data[0];
-      console.log(res);
 
       const modal = document.getElementById('modal');
       modal.innerHTML = `

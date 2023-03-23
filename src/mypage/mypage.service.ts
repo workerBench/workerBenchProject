@@ -306,7 +306,6 @@ export class MypageService {
         },
       });
       const { access_token } = getToken.data.response; // 인증 토큰
-      console.log('accesstoken 발급', access_token);
 
       // imp_uid로 아임포트 서버에서 결제 정보 조회
       const getPaymentData = await axios({
@@ -315,7 +314,6 @@ export class MypageService {
         headers: { Authorization: access_token }, // 인증 토큰 Authorization header에 추가
       });
       const paymentData = getPaymentData.data.response; // 조회한 결제 정보
-      console.log('paymentData 조회', paymentData);
 
       // 결제금액의 위변조 여부를 검증.
       // 클라이언트에서 입력받은 merchant_uid 와 토큰으로 가져온 merchant_uid 이 다르다면 에러
@@ -339,11 +337,7 @@ export class MypageService {
 
       // 결제 검증하기
       const { amount, status, pay_method } = paymentData;
-      console.log('api 로 가져온 결제 내역');
-      console.log(paymentData);
       if (amount === amountToBePaid) {
-        console.log('문제 없으니 db에 오더 추가');
-        console.log(amount, typeof amount);
         // DB에 결제 내역 저장
         const insertOrder = await this.orderRepository.insert({
           user_id,
@@ -365,7 +359,7 @@ export class MypageService {
 
         switch (status) {
           case 'ready':
-            console.log('가상 계좌가 발급되었음.');
+            // console.log('가상 계좌가 발급되었음.');
             return true;
           case 'paid':
             return true;
@@ -394,10 +388,6 @@ export class MypageService {
       .innerJoinAndSelect('workshopDetail.OrderInfo', 'order')
       .where('workshopDetail.id = :id', { id: workshopInstanceId })
       .getRawMany();
-
-    console.log('11111111');
-    console.log(workshopInstanceId);
-    console.log(workshopDetail);
 
     if (!workshopDetail) {
       throw new NotFoundException('수강 문의 기록이 존재하지 않습니다.');
@@ -443,8 +433,6 @@ export class MypageService {
       });
       const { access_token } = getToken.data.response; // 인증 토큰
 
-      console.log('0------', access_token);
-
       /* 포트원 REST API로 결제환불 요청 */
       const getCancelData = await axios({
         url: 'https://api.iamport.kr/payments/cancel',
@@ -460,7 +448,6 @@ export class MypageService {
         },
       });
 
-      console.log('cancelData', getCancelData);
       const { response } = getCancelData.data;
       // const { merchant_uid } = response; // 환불 결과에서 주문정보 추출
 

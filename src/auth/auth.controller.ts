@@ -466,95 +466,46 @@ export class AuthController {
 
   /* -------------------------------- 테스트용 API -------------------------------- */
 
-  // 유저 테스트
-  @Get('test')
-  @UseGuards(JwtUserAuthGuard)
-  async test22(@CurrentUser() user: CurrentUserDto) {
-    console.log('---- 테스트 잘 작동함!');
-    console.log(user);
-    return;
-  }
+  // // 유저 테스트
+  // @Get('test')
+  // @UseGuards(JwtUserAuthGuard)
+  // async test22(@CurrentUser() user: CurrentUserDto) {
+  //   return;
+  // }
 
-  // 강사 테스트
-  @Get('test2')
-  @UseGuards(JwtTeacherAuthGuard)
-  async test233(@CurrentUser() user: CurrentUserDto) {
-    console.log('---- 테스트 잘 작동함!');
-    console.log(user.id);
-    return;
-  }
+  // // 강사 테스트
+  // @Get('test2')
+  // @UseGuards(JwtTeacherAuthGuard)
+  // async test233(@CurrentUser() user: CurrentUserDto) {
+  //   return;
+  // }
 
-  // 부 관리자 테스트
-  @Get('admintest')
-  @UseGuards(JwtNormalAdminAuthGuard)
-  async test66(@CurrentUser() admin: CurrentAdminDto) {
-    console.log('부 관리자 테스트!');
-    console.log(admin);
-  }
+  // // 부 관리자 테스트
+  // @Get('admintest')
+  // @UseGuards(JwtNormalAdminAuthGuard)
+  // async test66(@CurrentUser() admin: CurrentAdminDto) {}
 
-  // 최고 관리자 테스트
-  @Get('superadmintest')
-  @UseGuards(JwtSuperAdminAuthGuard)
-  async test77(@CurrentUser() admin: CurrentAdminDto) {
-    console.log('최고 관리자 테스트!');
-    console.log(admin);
-  }
+  // // 최고 관리자 테스트
+  // @Get('superadmintest')
+  // @UseGuards(JwtSuperAdminAuthGuard)
+  // async test77(@CurrentUser() admin: CurrentAdminDto) {}
 
   /* -------------------------------- S3 업로드 테스트용  API -------------------------------- */
 
-  // S3 - cloudFront 실험 api - ejs 랜더링
-  @Get('img-test')
-  @Render('test-minsoo/index')
-  test333() {
-    return;
-  }
-
   // S3 - cloudFront 실험 api - 데이터 받아오기
-  @Post('img-s3-test')
-  @UseInterceptors(
-    FilesInterceptor('images', 4, { limits: { fileSize: 5 * 1024 * 1024 } }),
-  ) // 두번째 인자는 'images' 라는 이름에 담길 수 있는 총 파일 갯수. 즉 4면 4개 까지만 보낼 수 있어.
-  async uploadFileTest(
-    @UploadedFiles() images: Array<Express.Multer.File>,
-    @Body() body: any,
-  ) {
-    // 사진 용량이 예를 들어 127KB 라면, 사이즈가 127000 바이트로 나옴. 참고로 limit 의 fileSize 는 단위가 바이트
-    // FilesInterceptor('images', 4, { limits: { fileSize: 100000 } }), 이렇게면, images 이름으로 파일이 총 4개 들어올 수 있으며, 사이즈는 100,000 바이트, 즉 100KB 까지만 허락한다.
-    // FilesInterceptor('images', 4, { limits: { fileSize: 5 * 1024 * 1024 } }), 위랑 같은데 이 경우 각 파일당 용량 제한이 5MB
-    console.log('백엔드로 진입했어.');
-    console.log(images);
-    console.log(JSON.parse(body.jsonData).title);
+  // @Post('img-s3-test')
+  // @UseInterceptors(
+  //   FilesInterceptor('images', 4, { limits: { fileSize: 5 * 1024 * 1024 } }),
+  // ) // 두번째 인자는 'images' 라는 이름에 담길 수 있는 총 파일 갯수. 즉 4면 4개 까지만 보낼 수 있어.
+  // async uploadFileTest(
+  //   @UploadedFiles() images: Array<Express.Multer.File>,
+  //   @Body() body: any,
+  // ) {
+  //   // 사진 용량이 예를 들어 127KB 라면, 사이즈가 127000 바이트로 나옴. 참고로 limit 의 fileSize 는 단위가 바이트
+  //   // FilesInterceptor('images', 4, { limits: { fileSize: 100000 } }), 이렇게면, images 이름으로 파일이 총 4개 들어올 수 있으며, 사이즈는 100,000 바이트, 즉 100KB 까지만 허락한다.
+  //   // FilesInterceptor('images', 4, { limits: { fileSize: 5 * 1024 * 1024 } }), 위랑 같은데 이 경우 각 파일당 용량 제한이 5MB
 
-    await this.authService.uploadFileToS3(images, JSON.parse(body.jsonData));
-    return true;
-  }
-
-  // S3 - 썸네일 url 받아오기
-  @Get('img-s3-url')
-  async test222222() {
-    const thumbImgUrl = await this.authService.workshopThumbImg();
-    return thumbImgUrl;
-  }
-
-  // S3 - 리뷰 작성 시 동영상 받아오기.
-  @Post('video-s3-test')
-  @UseInterceptors(FileInterceptor('video'))
-  async uploadVideoFileTest(@UploadedFile() video: Express.Multer.File) {
-    console.log('동영상 보내기 api 메소드에 진입');
-    console.log(video);
-    await this.authService.uploadVideoToS3(video);
-    return;
-  }
-
-  // S3 - 리뷰 동영상 url 받아오기
-  @Get('video-s3-url')
-  async rwjioenw() {
-    const videoUrl = await this.authService.getVideoUrl();
-    return videoUrl;
-  }
-
-  // @Get('pleace')
-  // async ttttttt() {
-  //   await this.authService.userUptest();
+  //   await this.authService.uploadFileToS3(images, JSON.parse(body.jsonData));
+  //   return true;
   // }
 }

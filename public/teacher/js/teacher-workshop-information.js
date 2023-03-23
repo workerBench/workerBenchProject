@@ -198,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 등록된 업체에 등록 신청
 function applyCompany(id) {
-  console.log(id);
   axios({
     method: 'post',
     url: `/api/teacher/company/apply/${id}`,
@@ -210,7 +209,6 @@ function applyCompany(id) {
       location.reload();
     })
     .catch((response) => {
-      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
@@ -223,9 +221,7 @@ function acceptListCompany() {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data;
-      console.log(data);
       let html = '';
       for (let i = 0; i < data.length; i++) {
         const name = data[i].name;
