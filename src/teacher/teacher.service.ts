@@ -185,7 +185,7 @@ export class TeacherService {
         // 만약에 teacher.MyCompany가 없거나 userIdInfo.affiliation_company_id가 0보다 클경우 찾는다.
         company = await this.companyRepository.findOne({
           where: { id: userIdInfo.affiliation_company_id },
-          select: ['company_name', 'saving_name'],
+          select: ['company_name', 'saving_name', 'company_type'],
         });
       } else {
         company = null; // company가 있으면 위에 쿼리빌더로 나온 Mycompany랑 company값이 나와 총 두번 보여지므로 하나는 안보여지게 했다.
@@ -301,16 +301,16 @@ export class TeacherService {
           '이미 업체에 신청을 보냈습니다.',
           HttpStatus.BAD_REQUEST,
         );
-      } else {
-        const companyId = await this.companyRepository.findOne({
-          where: { user_id: id },
-          select: ['id'],
-        });
-        await this.companyApplicationRepository.insert({
-          teacher_id: userId,
-          company_id: companyId.id,
-        });
       }
+
+      const companyId = await this.companyRepository.findOne({
+        where: { user_id: id },
+        select: ['id'],
+      });
+      await this.companyApplicationRepository.insert({
+        teacher_id: userId,
+        company_id: companyId.id,
+      });
 
       return { message: '해딩 업체에 신청되었습니다.' };
     } catch (error) {
@@ -627,7 +627,61 @@ export class TeacherService {
       throw err;
     }
   }
+  // 워크샵 상세 보기 api
+  async detailWorkshop(userId: number, id: number) {
+    try {
+      const userIdInfo = await this.workshopRepository.find({
+        where: { user_id: userId },
+        select: ['user_id'],
+      });
+      if (!userIdInfo) {
+        throw new HttpException(
+          '등록되지 않은 유저 입니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        let result = await this.workshopRepository
+          .createQueryBuilder('workshop')
+          .where('workshop.user_id = :user_id', { user_id: userId })
+          .innerJoinAndSelect('workshop.GenreTag', 'genreTag')
+          .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
+          .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
+          .select([
+            'workshop.id',
+            'workshop.title',
+            'workshop.category',
+            'workshop.desc',
+            'workshop.thumb',
+            'workshop.min_member',
+            'workshop.max_member',
+            'workshop.total_time',
+            'workshop.price',
+            'workshop.status',
+            'workshop.location',
+            'workshop.video',
+            'workshop.createdAt',
+            'genreTag.name',
+            'GROUP_CONCAT(purposeTag.name) as purposeTag_name', // GROUP_CONCAT을 써서 각 그룹의 purposeTag_name을를 하나의 행에 결합한다.
+          ])
+          .groupBy('workshop.id') // groupBy를 써서 각각 id에 해당하는 값을 나타낸다.
+          .getRawMany();
 
+        return result.map((workshop) => {
+          return {
+            ...workshop,
+            workshop_thumb: `${this.configService.get(
+              'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+            )}images/workshops/${workshop.workshop_id}/800/${
+              workshop.workshop_thumb
+            }`,
+          };
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
   // 강사 미완료 워크샵 목록 api
   async getTeacherIncompleteWorkshop(userId: number) {
     try {
@@ -740,6 +794,7 @@ export class TeacherService {
           .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
           .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
           .select([
+            'workshop.id',
             'workshop.thumb',
             'workshop.title',
             'workshop.min_member',
@@ -759,7 +814,18 @@ export class TeacherService {
           ])
           .groupBy('workShopInstanceDetail.id') // groupBy를 써서 각각 id에 해당하는 값을 나타낸다.
           .getRawMany();
-        return result;
+
+        const sendingResult = result.map((myWorkShopAndDetail) => {
+          return {
+            ...myWorkShopAndDetail,
+            workshopThumbUrl: `${this.configService.get(
+              'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+            )}images/workshops/${myWorkShopAndDetail.workshop_id}/800/${
+              myWorkShopAndDetail.workshop_thumb
+            }`,
+          };
+        });
+        return sendingResult;
       }
     } catch (error) {
       console.log(error);

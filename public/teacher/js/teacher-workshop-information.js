@@ -22,14 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
         bank_name,
         account,
         saving_name;
-      if (data.MyCompany) {
-        company_type = data.MyCompany.company_type;
-        company_name = data.MyCompany.company_name;
-        business_number = data.MyCompany.business_number;
-        rrn_front = data.MyCompany.rrn_front;
-        bank_name = data.MyCompany.bank_name;
-        account = data.MyCompany.account;
-        saving_name = data.MyCompany.saving_name;
+      if (data.company) {
+        company_type = data.company.company_type;
+        company_name = data.company.company_name;
+        business_number = data.company.business_number;
+        rrn_front = data.company.rrn_front;
+        bank_name = data.company.bank_name;
+        account = data.company.account;
+        saving_name = data.company.saving_name;
       }
       let companyHtml = ``;
       if (!data.MyCompany && !data.company) {
@@ -169,34 +169,36 @@ document.addEventListener('DOMContentLoaded', () => {
       const { data } = response.response;
       alert(data.message);
     });
+  // 모든 업체 목록 조회
+  axios
+    .get('/api/teacher/companies')
+    .then(function (response) {
+      const companies = response.data;
+      let html = '';
+      for (let company of companies) {
+        html += `
+    <tr>
+        <td>${company.company_name}</td>
+        <td>${company.saving_name}</td>
+        <td>${company.createdAt.split('T')[0]}</td>
+        <td>
+          <button class="apply-btn" onclick="applyCompany(${
+            company.user_id
+          })">가입 신청</button>
+        </td>
+      </tr>
+    `;
+      }
+      $('#company').append(html);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 });
-// 모든 업체 목록 조회
-axios
-  .get('/api/teacher/companies')
-  .then(function (response) {
-    const companies = response.data;
-    let html = '';
-    for (let company of companies) {
-      html += `
-      <tr>
-          <td>${company.company_name}</td>
-          <td>${company.saving_name}</td>
-          <td>${company.createdAt.split('T')[0]}</td>
-          <td>
-            <button class="apply-btn" onclick="applyCompany(${
-              company.id
-            })">가입 신청</button>
-          </td>
-        </tr>
-      `;
-    }
-    $('#company').append(html);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+
 // 등록된 업체에 등록 신청
 function applyCompany(id) {
+  console.log(id);
   axios({
     method: 'post',
     url: `/api/teacher/company/apply/${id}`,
@@ -208,6 +210,7 @@ function applyCompany(id) {
       location.reload();
     })
     .catch((response) => {
+      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
