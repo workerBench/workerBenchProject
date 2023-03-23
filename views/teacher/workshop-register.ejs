@@ -5,17 +5,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
-    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
-    crossorigin="anonymous"/>
-  <link
-    href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    rel="stylesheet" />
-    <link href="/teacher/css/workshop-register.css" rel="stylesheet"/>
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+      integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+      crossorigin="anonymous"
+    />
+    <link
+      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link href="/teacher/css/workshop-register.css" rel="stylesheet" />
     <script src="/teacher/js/workshop-register.js"></script>
     <title>워크샵 등록</title>
   </head>
@@ -25,104 +31,185 @@
       <h5 class="fw-bolderandtopbottom">강사 관리 페이지</h5>
     </div>
     <div class="button-div">
-      <button type="radio" id="button" onclick="workshop()">나의 워크샵 목록</button>
-      <button type="radio" id="button" onclick="information()">강사 및 업체 정보</button>
-      <button type="radio" id="button-register" onclick="register()">워크샵 등록</button>
-      <button type="radio" id="button" onclick="manage()">수강 문의 관리</button>
+      <button type="radio" id="button" onclick="workshop()">
+        나의 워크샵 목록
+      </button>
+      <button type="radio" id="button" onclick="information()">
+        강사 및 업체 정보
+      </button>
+      <button type="radio" id="button-register" onclick="register()">
+        워크샵 등록
+      </button>
+      <button type="radio" id="button" onclick="manage()">
+        수강 문의 관리
+      </button>
     </div>
     <div id="workshop-registerBox">
-        <div class="image">
-          <div class="img-test-wrap">
-            <div id="thumb-img-wrap">
-              <label for="workshop" class="form-label workshop-description-li">썸네일</label>
-              <span class="caution-video">* 썸네일을 등록해주세요!</span>
-              <img id="thumb-img-show" />
-              <input class="form-control" type="file" accept="image/*" id="thumb-img-file">
-            </div>
+      <div class="image">
+        <div class="img-test-wrap">
+          <div id="thumb-img-wrap">
+            <label for="workshop" class="form-label workshop-description-li"
+              >썸네일</label
+            >
+            <span class="caution-video">* 썸네일을 등록해주세요!</span>
+            <img id="thumb-img-show" />
+            <input
+              class="form-control"
+              type="file"
+              accept="image/*"
+              id="thumb-img-file"
+            />
           </div>
         </div>
-        <div class="workshop-information">
-          <span class="caution-video">* 빈칸없이 입력해주세요</span>
-          <span class="caution-video">* 목적태그는 최소 한개이상 <br>선택해주세요</span>
-            <select name="job" id="category">
-                <option value="" disabled selected>유형을 선택해주세요</option>
-                <option value="online">온라인</option>
-                <option value="offline">오프라인</option>
-            </select>
-                <input type="text" class="form-control" id="title" placeholder="강의제목" maxlength='15'>
-                  <input type="text" class="form-control" id=minMember placeholder="최소 인원수" maxlength='2'>
-                <input type="text" class="form-control" id=maxMember placeholder="최대 인원수" maxlength='2'>
-            <select name="job" id="genreId">
-                <option value="" disabled selected>장르를 선택해주세요</option>
-                <option value=1>문화예술</option>
-                <option value=2>식음</option>
-                <option value=3>심리진단</option>
-                <option value=4>운동</option>
-            </select>
-            <select name="job" id="purposeTagId1">
-                <option value="" disabled selected>목적을 선택해주세요</option>
-                <option value=1>동기부여</option>
-                <option value=2>팀워크</option>
-                <option value=3>회식</option>
-                <option value=4>힐링</option>
-            </select>
-            <select name="job" id="purposeTagId2" >
-                <option value="" disabled selected>목적을 선택해주세요</option>
-                <option value=1>동기부여</option>
-                <option value=2>팀워크</option>
-                <option value=3>회식</option>
-                <option value=4>힐링</option>
-            </select>
-                <input type="text" class="form-control" id=totalTime placeholder="걸리는 시간" maxlength='3'>
-                <input type="text" class="form-control" id=price placeholder="1인당 가격" maxlength='7'>
-            <select name="job" id="location">
-                <option value="" disabled selected>지역을 선택해주세요</option>
-                <option value="서울">서울</option>
-                <option value="경기도">경기도</option>
-            </select>
-        </div>
-        <div id="more-img-wrap1">
-          <label for="workshop" class="form-label sub-Img-label">서브 이미지 (선택사항)</label>
-          <div id="more-img-wrap">
-              <div class="sub-imgs-wrap">
-                  <img class="sub-img-class" id="sub-img-1"/>
-                  <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
-              </div>
-              <div class="sub-imgs-wrap">
-                  <img class="sub-img-class" id="sub-img-2"/>
-                  <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
-              </div>
-              <div class="sub-imgs-wrap">
-                  <img class="sub-img-class" id="sub-img-3"/>
-                  <input class="form-control sub-img-file" type="file" accept="image/*" id="fileWidth">
-              </div>
+      </div>
+      <div class="workshop-information">
+        <span class="caution-video">* 빈칸없이 입력해주세요</span>
+        <span class="caution-video"
+          >* 목적태그는 최소 한개이상 <br />선택해주세요</span
+        >
+        <select name="job" id="category">
+          <option value="" disabled selected>유형을 선택해주세요</option>
+          <option value="online">온라인</option>
+          <option value="offline">오프라인</option>
+        </select>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          placeholder="강의제목"
+          maxlength="15"
+        />
+        <input
+          type="text"
+          class="form-control"
+          id="minMember"
+          placeholder="최소 인원수"
+          maxlength="2"
+        />
+        <input
+          type="text"
+          class="form-control"
+          id="maxMember"
+          placeholder="최대 인원수"
+          maxlength="2"
+        />
+        <select name="job" id="genreId">
+          <option value="" disabled selected>장르를 선택해주세요</option>
+          <option value="1">문화예술</option>
+          <option value="2">식음</option>
+          <option value="3">심리진단</option>
+          <option value="4">운동</option>
+        </select>
+        <select name="job" id="purposeTagId1">
+          <option value="" disabled selected>목적을 선택해주세요</option>
+          <option value="1">동기부여</option>
+          <option value="2">팀워크</option>
+          <option value="3">회식</option>
+          <option value="4">힐링</option>
+        </select>
+        <select name="job" id="purposeTagId2">
+          <option value="" disabled selected>목적을 선택해주세요</option>
+          <option value="1">동기부여</option>
+          <option value="2">팀워크</option>
+          <option value="3">회식</option>
+          <option value="4">힐링</option>
+        </select>
+        <input
+          type="text"
+          class="form-control"
+          id="totalTime"
+          placeholder="걸리는시간(분단위)"
+          maxlength="3"
+        />
+        <input
+          type="text"
+          class="form-control"
+          id="price"
+          placeholder="1인당 가격"
+          maxlength="7"
+        />
+        <select name="job" id="location">
+          <option value="" disabled selected>지역을 선택해주세요</option>
+          <option value="서울">서울</option>
+          <option value="경기도">경기도</option>
+        </select>
+      </div>
+      <div id="more-img-wrap1">
+        <label for="workshop" class="form-label sub-Img-label"
+          >서브 이미지 (선택사항)</label
+        >
+        <div id="more-img-wrap">
+          <div class="sub-imgs-wrap">
+            <img class="sub-img-class" id="sub-img-1" />
+            <input
+              class="form-control sub-img-file"
+              type="file"
+              accept="image/*"
+              id="fileWidth"
+            />
           </div>
+          <div class="sub-imgs-wrap">
+            <img class="sub-img-class" id="sub-img-2" />
+            <input
+              class="form-control sub-img-file"
+              type="file"
+              accept="image/*"
+              id="fileWidth"
+            />
+          </div>
+          <div class="sub-imgs-wrap">
+            <img class="sub-img-class" id="sub-img-3" />
+            <input
+              class="form-control sub-img-file"
+              type="file"
+              accept="image/*"
+              id="fileWidth"
+            />
+          </div>
+        </div>
       </div>
     </div>
-    
+
     <div class="mb-3 video-contents-div">
       <div class="video-content-wrap">
-        <label for="workshop" class="form-label workshop-video-li">영상 첨부 (선택사항)</label>
+        <label for="workshop" class="form-label workshop-video-li"
+          >영상 첨부 (선택사항)</label
+        >
         <span class="caution-video">* 최대 350MB 까지 업로드 가능합니다.</span>
         <div class="video-one-set-wrap">
           <div class="video-show-tag-wrap">
             <video id="video-show-tag" controls></video>
           </div>
-          <input type="file" class="form-control video-input" id="video-file" accept="video/*"/>
+          <input
+            type="file"
+            class="form-control video-input"
+            id="video-file"
+            accept="video/*"
+          />
         </div>
       </div>
     </div>
 
-    <div class="mb-3 contents-div">
-      <label for="workshop" class="form-label workshop-description-li">워크샵 설명</label>
+    <!-- <div class="mb-3 contents-div">
+      <label for="workshop" class="form-label workshop-description-li"></label>
       <span class="caution-video">* 빈칸 없이 입력해주세요.</span>
       <input type="text" class="form-control" id="desc" required></input>
+    </div> -->
+    <div class="mb-3 contents-div">
+      <label
+        for="exampleFormControlTextarea1"
+        class="form-label workshop-description-li"
+        >워크샵 설명</label
+      >
+      <textarea class="form-control" id="desc" rows="3"></textarea>
     </div>
     <div class="regiseterBtn-div">
-        <button type="button" id="workshopRegisterBtn">등록하기</button>
+      <button type="button" id="workshopRegisterBtn">등록하기</button>
     </div>
 
     <div id="uploading-video"></div>
-    <div id="waiting-upload">입력하신 워크샵 정보를 전송 중입니다. <br />잠시만 기다려 주세요...</div>
+    <div id="waiting-upload">
+      입력하신 워크샵 정보를 전송 중입니다. <br />잠시만 기다려 주세요...
+    </div>
   </body>
 </html>

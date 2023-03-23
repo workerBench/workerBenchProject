@@ -13,12 +13,9 @@
     position: absolute;
     top: 0;
     left: 0;
-
     width: 100%;
     height: 100%;
-
     display: none;
-
     background-color: rgba(0, 0, 0, 0.4);
   }
 
@@ -37,18 +34,14 @@
     position: absolute;
     top: 50%;
     left: 50%;
-
     width: 800px;
     height: 600px;
-
+    overflow: scroll;
     /* padding: 40px; */
-
     /* text-align: center; */
-
     background-color: rgb(255, 255, 255);
     border-radius: 10px;
     box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
-
     transform: translateX(-50%) translateY(-50%);
   }
   .m_head{
@@ -61,7 +54,6 @@
     border-top-right-radius: 10px;
   }
   .m_body{
-    height: 80%;
     padding: 20px;
   }
   .m_footer{
@@ -114,7 +106,6 @@
     background-color: rgb(50, 77, 158);
     color: white;
   }
-
 /* teacher-workshop-information css */
 .button-div{
   margin: auto;
@@ -165,8 +156,8 @@
     width: 200px;
     height: 50px;
     margin: 30px auto 0 auto;    
-}
-.teacher-li{
+  }
+  .teacher-li{
     font-size: 30px;
     text-align: center;
     list-style: none;
@@ -174,20 +165,20 @@
     color: rgb(1, 1, 149);
 }
 .teacher-workshop-div{
-    width: 600px;
-    height: 550px;
-    display: flex;
-    /* margin-top: 50px; */
-    flex-wrap: wrap;
-}
-.teacher-workshop-li-div{
-    width: 200px;
-    height: 400px;
-    margin-left: 50px;
-    margin-top: 50px;
-
-}
-.teacher-workshop-li{
+  width: 600px;
+  height: 550px;
+  display: flex;
+   /* margin-top: 50px; */
+   flex-wrap: wrap;
+  }
+  .teacher-workshop-li-div{
+      width: 200px;
+      height: 400px;
+      margin-left: 50px;
+      margin-top: 50px;
+  
+  }
+  .teacher-workshop-li{
     font-size: 20px;
     text-align: center;
     list-style: none;
@@ -209,25 +200,25 @@
     color: rgb(42, 42, 42);
 }
 .workshop-information-li{
-    font-size: 18px;
-    text-align: center;
-    list-style: none;
-    height: 50px;
-    padding-top: 10px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid black;
-    /* border: 2px solid #000000; */
+  font-size: 18px;
+  text-align: center;
+  list-style: none;
+  height: 50px;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid black;
+  /* border: 2px solid #000000; */
 }
 #acceptListCompanyButton{
-  width: 250px;
-  height: 50px;
-  background-color:  #a084dc;
-  border-radius: 5px;
-  color: white;
-  border:none ;
-  margin: auto;
-  margin-top: 20px;
-  margin-left: 50px;
+width: 250px;
+height: 50px;
+background-color:  #a084dc;
+border-radius: 5px;
+color: white;
+border:none ;
+margin: auto;
+margin-top: 20px;
+margin-left: 50px;
 }
 #apply-company-List{
   width: 100%;
@@ -308,66 +299,66 @@
     text-align: center;
     list-style: none;
     border: 2px solid #000000;
-}
+  }
 
-/*-----------신청 목록 관리------------*/
-.modal-content {
-  width:100%;
-  font-family: 'Gowun Dodum', sans-serif;
-}
-.apply-company {
-  border: 1px #a39485 solid;
-  font-size: .8em;
-  box-shadow: 0 2px 5px rgba(0,0,0,.25);
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-thead {
-  width: 100%;
-  font-weight: bold;
-  color: #fff;
-  background: #73685d;
-}
-
-th {
-  background-color: rgb(181, 181, 181);
-
-}
-
-td, th {
-  padding: 1em 1.3em;
-  vertical-align: middle;
-  text-align: center;
-}
-
-td {
-  border-bottom: 1px solid rgba(0,0,0,.1);
-  background: #fff;
-  font-size:18px;
-}
-.manage-btn {
-  width: 60px;
-  padding:10px;
-  background-color: black;
-  color: white;
-  border-radius: 20px;
-  border: 0;
-}
-.manage-btn:hover {
-  background-color: gray;
-}
-
-.apply-btn {
-  width: 100px;
-  padding:10px;
-  background-color: black;
-  color: white;
-  border-radius: 20px;
-  border: 0;
-}
-.apply-btn:hover {
-  background-color: gray;
-}
+  /*-----------신청 목록 관리------------*/
+  .modal-content {
+    width:100%;
+    font-family: 'Gowun Dodum', sans-serif;
+  }
+  .apply-company {
+    border: 1px #a39485 solid;
+    font-size: .8em;
+    box-shadow: 0 2px 5px rgba(0,0,0,.25);
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  thead {
+    width: 100%;
+    font-weight: bold;
+    color: #fff;
+    background: #73685d;
+  }
+  
+  th {
+    background-color: rgb(181, 181, 181);
+  
+  }
+  
+  td, th {
+    padding: 1em 1.3em;
+    vertical-align: middle;
+    text-align: center;
+  }
+  
+  td {
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    background: #fff;
+    font-size:18px;
+  }
+  .manage-btn {
+    width: 60px;
+    padding:10px;
+    background-color: black;
+    color: white;
+    border-radius: 20px;
+    border: 0;
+  }
+  .manage-btn:hover {
+    background-color: gray;
+  }
+  
+  .apply-btn {
+    width: 100px;
+    padding:10px;
+    background-color: black;
+    color: white;
+    border-radius: 20px;
+    border: 0;
+  }
+  .apply-btn:hover {
+    background-color: gray;
+  }

@@ -1,5 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
   const registerBtn = document.getElementById('company-registerBtn');
+  const input = document.querySelector('#companyName');
+  // input.addEventListener('blur', function (event) {
+  //   if (this.value.length < 4) {
+  //     alert('최소 4자 이상 입력해주세요.');
+  //     return;
+  //   }
+  // });
   registerBtn.addEventListener('click', () => {
     const company_type = document.getElementById('companyType').value;
     const company_name = document.getElementById('companyName').value;

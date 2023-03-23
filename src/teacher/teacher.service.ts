@@ -271,15 +271,14 @@ export class TeacherService {
   async gerAllCompanies() {
     try {
       const companies = await this.companyRepository.find({
-        where: {company_type: 0}
-      })
-      return companies
+        where: { company_type: 0 },
+      });
+      return companies;
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
-
   // 등록된 업체에 신청하기
   async registerTeacherCompany(userId: number, id: number) {
     try {
@@ -685,6 +684,7 @@ export class TeacherService {
             'workShopInstanceDetail.member_cnt',
             'workShopInstanceDetail.email',
             'workShopInstanceDetail.createdAt',
+            'workShopInstanceDetail.status',
             'GROUP_CONCAT(purposeTag.name) as purposeTag_name', // GROUP_CONCAT을 써서 각 그룹의 purposeTag_name을를 하나의 행에 결합한다.
           ])
           .groupBy('workShopInstanceDetail.id') // groupBy를 써서 각각 id에 해당하는 값을 나타낸다.
@@ -836,7 +836,7 @@ export class TeacherService {
     }
   }
 
-  // 강사 워크샵 신청 취소하기
+  // 강사 워크샵 신청 반려하기
   async cancleWorkshop(userId: number, id: number) {
     try {
       const workshopId = await this.workshopRepository.findOne({
@@ -851,10 +851,16 @@ export class TeacherService {
       }
       const workShopInstance =
         await this.workShopInstanceDetailRepository.findOne({
-          where: { id: id, status: 'request' },
+          where: { id },
         });
-      if (workShopInstance) {
-        this.workShopInstanceDetailRepository.softDelete({ id });
+      if (
+        workShopInstance.status === 'request' ||
+        workShopInstance.status === 'non_payment'
+      ) {
+        await this.workShopInstanceDetailRepository.update(
+          { id },
+          { status: 'rejected' },
+        );
       }
 
       return {

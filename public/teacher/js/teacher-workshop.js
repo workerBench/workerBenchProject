@@ -20,17 +20,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (splitPurposeTag.length > 1) {
           purposeTag2 = '#' + splitPurposeTag[1];
         }
-
         const status = data[i].workshop_status;
         let tempHtml = ``;
         if (status === 'approval' && purposeTag2 !== undefined) {
           tempHtml = `<div class="workshop">
                           <img src=${thumb} alt="">
                           <div class="card-text">
-                            <li class="title">${title}</li>
-                            <li for="tag" class="tag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
-                          </div>
-                      </div>`;
+                          <li class="title">${title}</li>
+                          <li for="tag" class="tag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
+                        </div>
+                    </div>`;
           wokshopApprovalList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'finished') {
           tempHtml = `<div class="workshop">
@@ -43,12 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
           wokshopFinishedList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'request') {
           tempHtml = `<div class="workshop">
-                          <img src=${thumb} alt="">
-                          <div class="card-text">
-                            <li class="title">${title}</li>
-                            <li for="tag" class="tag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
-                          </div>
-                      </div>`;
+                        <img src=${thumb} alt="">
+                        <div class="card-text">
+                        <li class="title">${title}</li>
+                        <li for="tag" class="tag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
+                      </div>
+                  </div>`;
           wokshopRequestList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'rejected') {
           tempHtml = `<div class="workshop">
