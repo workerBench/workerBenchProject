@@ -46,9 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <li class="teacher-workshop-li">업체명</li>
                 </div>
                 <div class="workshop-information-div">
-                    <li class="workshop-information-li">${
-                      company_type === 0 ? '사업자' : '프리랜서'
-                    }</li>
+                    <li class="workshop-information-li">사업자</li>
                     <li class="workshop-information-li">${company_name}</li>
                 </div>
       `;
