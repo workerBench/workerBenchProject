@@ -36,6 +36,15 @@ body {
   height: 200px;
 }
 
+.rank-number {
+  border: 1px solid #9f70fb;
+  border-radius: 5px;
+  padding: 1px 10px;
+  margin-right: 2px;
+  color: white;
+  background-color: #9f70fb;
+}
+
 .workshop-title {
   font-size: 20px;
   font-weight: bold;

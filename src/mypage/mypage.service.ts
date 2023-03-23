@@ -144,14 +144,24 @@ export class MypageService {
         ])
         .getRawMany();
 
-      // request, non_payment, waiting_lecture만 필터링
-      const result = workshops.filter((workshop) => {
-        return (
-          workshop.workshopDetail_status == 'request' ||
-          workshop.workshopDetail_status == 'non_payment' ||
-          workshop.workshopDetail_status == 'waiting_lecture'
-        );
-      });
+      // s3 + cloud front에서 이미지 가져오기
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
+
+      // request, non_payment, waiting_lecture만 필터링 + thumbUrl 가공
+      const result = workshops
+        .filter((workshop) => {
+          return (
+            workshop.workshopDetail_status == 'request' ||
+            workshop.workshopDetail_status == 'non_payment' ||
+            workshop.workshopDetail_status == 'waiting_lecture'
+          );
+        })
+        .map((workshop) => ({
+          ...workshop,
+          thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+        }));
 
       return result;
     } catch (err) {
@@ -181,7 +191,18 @@ export class MypageService {
         ])
         .getRawMany();
 
-      return workshops;
+      // s3 + cloud front에서 이미지 가져오기
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
+
+      // request, non_payment, waiting_lecture만 필터링 + thumbUrl 가공
+      const completeWorkshops = workshops.map((workshop) => ({
+        ...workshop,
+        thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+      }));
+
+      return completeWorkshops;
     } catch (err) {
       throw err;
     }
@@ -232,7 +253,18 @@ export class MypageService {
         ])
         .getRawMany();
 
-      return workshops;
+      // s3 + cloud front에서 이미지 가져오기
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
+
+      // request, non_payment, waiting_lecture만 필터링 + thumbUrl 가공
+      const completeWorkshops = workshops.map((workshop) => ({
+        ...workshop,
+        thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+      }));
+
+      return completeWorkshops;
     } catch (err) {
       throw err;
     }
@@ -470,7 +502,18 @@ export class MypageService {
         ])
         .getRawMany();
 
-      return workshops;
+      // s3 + cloud front에서 이미지 가져오기
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
+
+      // request, non_payment, waiting_lecture만 필터링 + thumbUrl 가공
+      const canceledWorkshops = workshops.map((workshop) => ({
+        ...workshop,
+        thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+      }));
+
+      return canceledWorkshops;
     } catch (err) {
       throw err;
     }
@@ -521,7 +564,18 @@ export class MypageService {
         ])
         .getRawMany();
 
-      return workshops;
+      // s3 + cloud front에서 이미지 가져오기
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
+
+      // request, non_payment, waiting_lecture만 필터링 + thumbUrl 가공
+      const canceledWorkshops = workshops.map((workshop) => ({
+        ...workshop,
+        thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+      }));
+
+      return canceledWorkshops;
     } catch (err) {
       throw err;
     }
@@ -530,45 +584,51 @@ export class MypageService {
   // 찜 목록 불러오기
   async getWishList(userId: number) {
     try {
-      const userWishList = await this.wishListRepository.find({
-        where: { user_id: userId },
-        select: ['workshop_id', 'createdAt'],
-      });
-      if (!userWishList) {
-        throw new NotFoundException('등록하신 찜 목록이 없습니다');
-      }
-
-      const workshopIdArray = userWishList.map((wishList) => {
-        return wishList.workshop_id;
-      });
-
-      const myWishWorkshops = await this.workshopRepository
-        .createQueryBuilder('workshop')
-        .where('workshop.id IN (:...wishWorkshops)', {
-          wishWorkshops: workshopIdArray,
-        })
+      const myWishWorkshops = await this.wishListRepository
+        .createQueryBuilder('wishlist')
+        .where('wishlist.user_id = :userId', { userId })
+        .innerJoinAndSelect('wishlist.Workshop', 'workshop')
         .innerJoinAndSelect('workshop.GenreTag', 'genreTag')
         .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
         .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
-        // .select([
-        //   'workshop.id',
-        //   'workshop.thumb',
-        //   'workshop.title',
-        //   'workshop.createdAt',
-        //   'workshop.status',
-        //   'workshop.price',
-        //   'genreTag.name',
-        //   'purposeTag.name',
-        //   // 'GROUP_CONCAT(purposeTag.name) AS purpose_name',
-        // ])
+        .select([
+          'workshop.id',
+          'workshop.thumb',
+          'workshop.title',
+          'workshop.category',
+          'workshop.min_member',
+          'workshop.max_member',
+          'workshop.total_time',
+          'workshop.createdAt',
+          'workshop.status',
+          'workshop.price',
+          'genreTag.name',
+          'purposeTag.name',
+          // 'GROUP_CONCAT(purposeTag.name) AS purpose_name',
+        ])
+        .orderBy('wishlist.createdAt', 'DESC')
         .andWhere('workshop.status = :status', { status: 'approval' })
         .groupBy('workshop.id')
         .getRawMany();
 
-      return myWishWorkshops;
+      if (myWishWorkshops.length < 1) {
+        throw new NotFoundException('등록하신 찜 목록이 없습니다');
+      }
+
+      const myWishWorkshopsResult = myWishWorkshops.map((wishWorkshop) => {
+        return {
+          ...wishWorkshop,
+          workshop_thumbUrl: `${this.configService.get(
+            'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+          )}images/workshops/${wishWorkshop.workshop_id}/800/${
+            wishWorkshop.workshop_thumb
+          }`,
+        };
+      });
+
+      return myWishWorkshopsResult;
     } catch (error) {
-      console.log(error);
-      throw new BadRequestException('입력된 요청이 잘못되었습니다.');
+      throw error;
     }
   }
 

@@ -32,5 +32,5 @@ export class CreateWorkshopsDto {
   readonly genre_id: number;
 
   @IsArray()
-  readonly purpose_tag_id: number[];
+  readonly purpose_tag_id: Array<number | null>;
 }

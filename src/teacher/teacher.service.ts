@@ -507,18 +507,16 @@ export class TeacherService {
       });
 
       // purpose_tag_id를 배열로 만들어서 넣어준다.
-      const purposeTagIds = purpose_tag_id.map((id) => {
-        if (id !== null || id !== undefined) {
-          return {
+      let purposeTagIds: Array<object> = [];
+      purpose_tag_id.forEach((tagId) => {
+        if (typeof tagId === 'number') {
+          purposeTagIds.push({
             workshop_id: workshop.identifiers[0].id,
-            purpose_tag_id: id,
-          };
+            purpose_tag_id: tagId,
+          });
         }
       });
-      if (
-        purposeTagIds[0].purpose_tag_id !== null ||
-        purposeTagIds[0].purpose_tag_id !== undefined
-      ) {
+      if (purposeTagIds.length > 0) {
         await this.purposeTagIdRepository.insert(purposeTagIds);
       }
 

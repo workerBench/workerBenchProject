@@ -128,7 +128,7 @@ function showIncompleteModal(workshopDetailId) {
               <a href="/workshops/detail?workshopId=${
                 workshop.workshop_id
               }"><img src="${
-        workshop.workshop_thumb
+        workshop.thumbUrl
       }" alt="Image" class="modal-image"></a>
               <div class="info">
                 <div class="info-category">${
@@ -469,13 +469,13 @@ function getCompleteWorkshops() {
       workshops.forEach((element) => {
         let tempHtml = `<div class="col">
           <div class="card h-100">
-            <a href="/workshops/detail?workshopId=${element.workshop_id}"><img src="${element.workshop_thumb}" class="card-img-top" alt="..." /></a>
-              <div class="card-body">mplete
+            <a href="/workshops/detail?workshopId=${element.workshop_id}"><img src="${element.thumbUrl}" class="card-img-top" alt="..." /></a>
+              <div class="card-body">
                 <h5 id="card-workshop-title">${element.workshop_title}</h5>
-                <p class="card-workshop-summary">진행 예정일: ${element.workshopDetail_wish_date}</p>
+                <p class="card-workshop-summary">진행일: ${element.workshopDetail_wish_date}</p>
                 <p class="card-workshop-summary">인원: ${element.workshopDetail_member_cnt}명</p>
-                <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showCompleteModal(${element.workshopDetail_id})">상세 내역 보기</p>
-                <button class="btn btn-primary" onclick="showReviewPost(${element.workshop_id}, ${element.workshopDetail_id})">리뷰작성</button>
+                <p id="show-workshop-detail" data-bs-toggle="modal" onclick="showCompleteModal(${element.workshopDetail_id})">상세 내역 보기 >> </p>
+                <button class="btn btn-primary" onclick="showReviewPost(${element.workshop_id}, ${element.workshopDetail_id})">리뷰 작성하기</button>
               </div>
             </div>
           </div>`;
@@ -506,7 +506,7 @@ function showCompleteModal(workshopDetailId) {
               <a href="/workshops/detail?workshopId=${
                 workshop.workshop_id
               }"><img src="${
-        workshop.workshop_thumb
+        workshop.thumbUrl
       }" alt="Image" class="modal-image"></a>
               <div class="info">
                 <div class="info-category">${
@@ -520,7 +520,7 @@ function showCompleteModal(workshopDetailId) {
                 } (${workshop.workshopDetail_company} /
         ${workshop.workshopDetail_email} /
         ${workshop.workshopDetail_phone_number})</span></div>
-                <div class="info-ul">진행 예정일:
+                <div class="info-ul">진행일:
                   <span class="info-li">${
                     workshop.workshopDetail_wish_date
                   }</span>
@@ -779,7 +779,7 @@ function getRefundWorkshops() {
         <a href="/workshops/detail?workshopId=${
           element.workshop_id
         }"><img src="${
-          element.workshop_thumb
+          element.thumbUrl
         }" class="card-img-top" alt="..." /></a>
           <div class="card-body">
           <button id="show-status"
@@ -833,7 +833,7 @@ function showRefundModal(workshopDetailId) {
               <a href="/workshops/detail?workshopId=${
                 workshop.workshop_id
               }"><img src="${
-        workshop.workshop_thumb
+        workshop.thumbUrl
       }" alt="Image" class="modal-image"></a>
               <div class="info">
                 <div class="info-category">${
