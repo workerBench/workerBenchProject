@@ -823,7 +823,7 @@ export class TeacherService {
     }
   }
 
-  // 강사 워크샵 신청 취소하기
+  // 강사 워크샵 신청 반려하기
   async cancleWorkshop(userId: number, id: number) {
     try {
       const workshopId = await this.workshopRepository.findOne({
@@ -838,10 +838,16 @@ export class TeacherService {
       }
       const workShopInstance =
         await this.workShopInstanceDetailRepository.findOne({
-          where: { id: id, status: 'request' },
+          where: { id },
         });
-      if (workShopInstance) {
-        this.workShopInstanceDetailRepository.softDelete({ id });
+      if (
+        workShopInstance.status === 'request' ||
+        workShopInstance.status === 'non_payment'
+      ) {
+        await this.workShopInstanceDetailRepository.update(
+          { id },
+          { status: 'rejected' },
+        );
       }
 
       return {

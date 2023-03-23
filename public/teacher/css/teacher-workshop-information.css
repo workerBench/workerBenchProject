@@ -194,6 +194,9 @@
   margin-top: 20px;
   margin-left: 50px;
 }
+#acceptListCompanyButton:hover{
+  background-color: #645cbb;
+}
 #apply-company-List{
   width: 800px;
   height: auto;
@@ -260,6 +263,9 @@
   color: white;
   border:none ;
   margin-left: 20px;
+}
+.acceptCompanyButton:hover{
+  background-color: #645cbb;
 }
 .serarchButton{
   height: 35px;

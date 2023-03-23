@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
           case 'request':
             buttonHtml = `
                         <button type="radio" class="Button" onclick="request(${Id})" id="requestButton">수락 하기</button>
-                        <button type="radio" class="Button" onclick="cancleButton(${Id})">취소 하기</button>
+                        <button type="radio" class="Button" onclick="rejectButton(${Id})">취소 하기</button>
                          `;
             break;
           case 'non_payment':
@@ -121,10 +121,10 @@ function waiting_lecture(Id, status) {
       alert(data.error);
     });
 }
-function cancleButton(Id) {
+function rejectButton(Id) {
   axios({
-    method: 'delete',
-    url: `/api/teacher/workshops/manage/delete/${Id}`,
+    method: 'patch',
+    url: `/api/teacher/workshops/manage/reject/${Id}`,
     data: {},
   })
     .then((response) => {
