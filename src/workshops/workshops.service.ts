@@ -186,9 +186,6 @@ export class WorkshopsService {
 
     const workshops = await queryBuilder.getRawMany();
 
-    console.log('검색 결과 어케 나오는지 좀 궁금하네');
-    console.log(workshops);
-
     // purposeTag_name 결과를 콤마(,) 기준으로 쪼개서 배열에 담아줌
     return workshops.map((workshop) => ({
       ...workshop,

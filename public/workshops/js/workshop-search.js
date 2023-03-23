@@ -81,9 +81,6 @@ function searchWorkshops() {
     const category = categorySelect.options[categorySelect.selectedIndex].value;
     params.category = category;
 
-    console.log('선택 유무에 따른 값 변화');
-    console.log(category);
-
     axios
       .get(url, { params })
       .then((res) => {
