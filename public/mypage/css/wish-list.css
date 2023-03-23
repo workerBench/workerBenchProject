@@ -9,16 +9,13 @@ body {
   margin-left: 70px;
 }
 
-.incomplete-list,
-.complete-list {
+.wish-list {
   font-size: 30px;
   margin-left: 70px;
   font-weight: bold;
 }
 
-#incomplete-list,
-#complete-list,
-#refund-list {
+#wish-list {
   margin: 20px 50px;
 }
 
@@ -245,4 +242,37 @@ body {
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+/* 찜 목록 css */
+
+.workshop-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.workshop-category {
+  border-radius: 20px;
+  border: 3px solid #a4a4a4;
+  padding: 3px 10px;
+  color: white;
+  background-color: #a4a4a4;
+}
+
+.workshop-price {
+  margin-top: 20px;
+}
+
+.wish-button {
+  color: #f7819f;
+  border: 1px solid #f7819f;
+  border-radius: 10px;
+  height: 40px;
+  background-color: white;
+  margin: 5px;
+}
+
+.wish-button:hover {
+  background-color: #f5a9bc;
 }

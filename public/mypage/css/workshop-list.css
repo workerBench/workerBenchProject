@@ -156,29 +156,29 @@ body {
 }
 
 /* -----리뷰 작성 모달 내부----- */
-#myform fieldset{
+#myform fieldset {
   display: inline-block;
   direction: rtl;
-  border:0;
+  border: 0;
 }
-#myform fieldset legend{
+#myform fieldset legend {
   text-align: right;
 }
-#myform input[type=radio]{
+#myform input[type='radio'] {
   display: none;
 }
-#myform label{
+#myform label {
   font-size: 3em;
   color: transparent;
   text-shadow: 0 0 0 #f0f0f0;
 }
-#myform label:hover{
+#myform label:hover {
   text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
 }
-#myform label:hover ~ label{
+#myform label:hover ~ label {
   text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
 }
-#myform input[type=radio]:checked ~ label{
+#myform input[type='radio']:checked ~ label {
   text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
 }
 #reviewContents {
@@ -186,7 +186,7 @@ body {
   height: 150px;
   padding: 10px;
   box-sizing: border-box;
-  border: solid 1.5px #D3D3D3;
+  border: solid 1.5px #d3d3d3;
   border-radius: 5px;
   font-size: 16px;
   resize: none;
@@ -194,24 +194,24 @@ body {
 
 /* --------------------------------- 모달창 CSS --------------------------------- */
 .modal-review-image {
-border-radius: 5px;
-background-color: rgb(255, 255, 255);
-box-shadow: rgb(0 0 0 / 30%) 0px 3px 5px;
-width: 320px;
-height: 240px;
-margin-bottom: 20px;
+  border-radius: 5px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgb(0 0 0 / 30%) 0px 3px 5px;
+  width: 320px;
+  height: 240px;
+  margin-bottom: 20px;
 }
 
 .review-modal {
   display: none;
-  position:fixed;
+  position: fixed;
   z-index: 1;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-review-content {

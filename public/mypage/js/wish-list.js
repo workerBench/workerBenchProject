@@ -45,7 +45,9 @@ function getWishList() {
                 element.workshop_total_time
               }분</p>
             </div>
-            <button onclick="cancelWish(${element.workshop_id})">♥</button>
+            <button type="button" class="wish-button" onclick="cancelWish(${
+              element.workshop_id
+            })">♥</button>
           </div>
       </div>`;
         $('#wish-list').append(tempHtml);
@@ -58,6 +60,7 @@ function getWishList() {
 
 // 찜하기 해제
 function cancelWish(workshopId) {
+  confirm('찜 하기를 취소하시겠습니까?');
   axios
     .post(`/api/workshops/${workshopId}/wish`)
     .then((res) => {
