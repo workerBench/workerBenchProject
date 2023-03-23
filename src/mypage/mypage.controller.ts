@@ -204,25 +204,47 @@ export class MypageController {
     );
   }
 
-  // 리뷰 작성 post api
+  // 리뷰 작성 post - 글내용 api
   @ApiResponse({
     status: 201,
     description: '성공',
   })
   @ApiOperation({ summary: '리뷰 작성 페이지 api' })
-  @Post('/:workshop_id/review')
+  @Post('workshops/review')
   @UseGuards(JwtUserAuthGuard)
-  @UseInterceptors(FileInterceptor('image'))
-  review(
-    @Param('workshop_id') workshop_id: number,
-    @Body() reviewData: any,
+  async review(
+    @Body() reviewData: ReviewDto,
     @CurrentUser() user: CurrentUserDto,
-    @UploadedFile() image: Express.Multer.File,
   ) {
-    return this.mypageService.writingReview(
-      workshop_id,
+    const reviewId = await this.mypageService.writingReview(
+      reviewData.content,
+      Number(reviewData.star),
+      Number(reviewData.workshop_id),
+      Number(reviewData.workshop_instance_detail_id),
       user.id,
-      JSON.parse(reviewData.jsonData),
+    );
+    return reviewId;
+  }
+
+  // 리뷰 작성 post - 이미지 api
+  @ApiResponse({
+    status: 201,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '리뷰 작성 페이지 - 이미지 등록 api' })
+  @Post('workshops/review/image')
+  @UseGuards(JwtUserAuthGuard)
+  @UseInterceptors(
+    FileInterceptor('image', { limits: { fileSize: 10 * 1024 * 1024 } }),
+  )
+  async reviewImage(
+    @UploadedFile() image: Express.Multer.File,
+    @Body() data: any,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    return await this.mypageService.reviewImage(
+      Number(data.reviewId),
+      user.id,
       image,
     );
   }
@@ -233,7 +255,7 @@ export class MypageController {
     description: '성공',
   })
   @ApiOperation({ summary: '찜 목록 페이지에 찜한 워크샵 불러오기 api' })
-  @Get('/workshops/wishlist')
+  @Get('workshops/wishlist')
   @UseGuards(JwtUserAuthGuard)
   getWishList(
     @Param('workshop_id') workshop_id: number,
@@ -248,7 +270,7 @@ export class MypageController {
     description: '성공',
   })
   @ApiOperation({ summary: '워크샵 찜하기 취소 api' })
-  @Patch('/workshops/wish-list/:id')
+  @Patch('workshops/wish-list/:id')
   @UseGuards(JwtUserAuthGuard)
   updateWishListCancel(
     @Param('workshop_id') workshop_id: number,

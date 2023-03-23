@@ -341,16 +341,28 @@ export class WorkshopsService {
       const outputDate = `${year}-${month}-${day}`;
 
       // s3 + cloud front에서 이미지 가져오기
-      const reviewImageArr = reviews[0].ReviewImages[0];
+      let thumbUrl: string | null;
+      if (
+        review.ReviewImages.length < 1 ||
+        !review.ReviewImages ||
+        review.ReviewImages[0].img_name === null ||
+        review.ReviewImages[0].img_name === undefined ||
+        review.ReviewImages[0].img_name === ''
+      ) {
+        return { ...review, createdAt: outputDate, reviewImage: null };
+      }
+
+      const reviewImageArr = review.ReviewImages[0];
       const reviewImage = reviewImageArr.img_name;
       const cloundFrontUrl = this.configService.get(
         'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
       );
-      const thumbUrl = `${cloundFrontUrl}/${reviewImage}`;
+      thumbUrl = `${cloundFrontUrl}images/reviews/${review.id}/800/${reviewImage}`;
       // ex) images/reviews/1/eraser-class-thumb.jpg 와 같은 파일명으로 저장되어 있음
 
       return { ...review, createdAt: outputDate, reviewImage: thumbUrl };
     });
+
     return result;
   }
 
