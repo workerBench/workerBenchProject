@@ -80,7 +80,7 @@ export class TeacherController {
     return result;
   }
 
-  // 강사 등록한 전체 워크샵 보기
+  // 강사 등록한 전체 워크샵 목록
   @ApiResponse({
     status: 200,
     description: '성공',
@@ -130,6 +130,7 @@ export class TeacherController {
   })
   @ApiOperation({ summary: '강사 등록된 업체 검색 API' })
   @Get('company/search')
+  @UseGuards(JwtTeacherAuthGuard)
   async searchCompanys(@Query('company_name') company_name: string) {
     return await this.teacherService.searchCompanys(company_name);
   }

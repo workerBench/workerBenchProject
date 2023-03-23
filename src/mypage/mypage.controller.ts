@@ -270,12 +270,12 @@ export class MypageController {
     description: '성공',
   })
   @ApiOperation({ summary: '워크샵 찜하기 취소 api' })
-  @Patch('workshops/wish-list/:id')
+  @Patch('/workshops/wishlist/:workshop_id')
   @UseGuards(JwtUserAuthGuard)
-  updateWishListCancel(
+  cancelWishList(
     @Param('workshop_id') workshop_id: number,
     @CurrentUser() user: CurrentUserDto,
   ) {
-    return this.mypageService.updateWishListCancel(user.id, workshop_id);
+    return this.mypageService.cancelWishList(user.id, workshop_id);
   }
 }
