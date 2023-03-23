@@ -36,6 +36,7 @@
     left: 50%;
     width: 800px;
     height: 600px;
+    overflow: scroll;
     /* padding: 40px; */
     /* text-align: center; */
     background-color: rgb(255, 255, 255);

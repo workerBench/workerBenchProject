@@ -46,82 +46,82 @@ document.addEventListener('DOMContentLoaded', () => {
                     <li class="teacher-workshop-li">업체명</li>
                 </div>
                 <div class="workshop-information-div">
-                <li class="workshop-information-li">${
-                  company_type === 0 ? '사업자' : '프리랜서'
-                }</li>
-                <li class="workshop-information-li">${company_name}</li>
-            </div>
-  `;
+                    <li class="workshop-information-li">${
+                      company_type === 0 ? '사업자' : '프리랜서'
+                    }</li>
+                    <li class="workshop-information-li">${company_name}</li>
+                </div>
+      `;
       } else if (data.MyCompany && company_type === 0) {
         companyHtml += `
-                          <div class="teacher-workshop-li-div">
-                              <li class="teacher-workshop-li">업체종류</li>
-                              <li class="teacher-workshop-li">업체명</li>
-                              <li class="teacher-workshop-li">사업자 번호</li>
-                              <li class="teacher-workshop-li">지정은행</li>
-                              <li class="teacher-workshop-li">계좌 번호</li>
-                              <li class="teacher-workshop-li">예금주명</li>
-                          </div>
-                          <div class="workshop-information-div">
-                          <li class="workshop-information-li">'사업자'</li>
-                          <li class="workshop-information-li">${company_name}</li>
-                          <li class="workshop-information-li">${business_number}</li>
-                          <li class="workshop-information-li">${bank_name}</li>
-                          <li class="workshop-information-li">${account}</li>
-                          <li class="workshop-information-li">${saving_name}</li>
-                          <button type="radio"  id="acceptListCompanyButton" onclick="acceptListCompany()">신청 목록 보기</button>
-                          </div>
-            `;
+                              <div class="teacher-workshop-li-div">
+                                  <li class="teacher-workshop-li">업체종류</li>
+                                  <li class="teacher-workshop-li">업체명</li>
+                                  <li class="teacher-workshop-li">사업자 번호</li>
+                                  <li class="teacher-workshop-li">지정은행</li>
+                                  <li class="teacher-workshop-li">계좌 번호</li>
+                                  <li class="teacher-workshop-li">예금주명</li>
+                              </div>
+                              <div class="workshop-information-div">
+                                  <li class="workshop-information-li">'사업자'</li>
+                                  <li class="workshop-information-li">${company_name}</li>
+                                  <li class="workshop-information-li">${business_number}</li>
+                                  <li class="workshop-information-li">${bank_name}</li>
+                                  <li class="workshop-information-li">${account}</li>
+                                  <li class="workshop-information-li">${saving_name}</li>
+                                  <button type="radio"  id="acceptListCompanyButton" onclick="acceptListCompany()">신청 목록 보기</button>
+                              </div>
+                `;
       } else if (data.MyCompany && company_type === 1) {
         companyHtml += `
-                          <div class="teacher-workshop-li-div">
-                              <li class="teacher-workshop-li">업체종류</li>
-                              <li class="teacher-workshop-li">업체명</li>
-                              <li class="teacher-workshop-li">주빈번호 앞자리</li>
-                              <li class="teacher-workshop-li">지정은행</li>
-                              <li class="teacher-workshop-li">계좌 번호</li>
-                              <li class="teacher-workshop-li">예금주명</li>
-                          </div>
-                          <div class="workshop-information-div">
-                              <li class="workshop-information-li">프리랜서</li>
-                              <li class="workshop-information-li">${company_name}</li>
-                              <li class="workshop-information-li">${rrn_front}</li>
-                              <li class="workshop-information-li">${bank_name}</li>
-                              <li class="workshop-information-li">${account}</li>
-                              <li class="workshop-information-li">${saving_name}</li>
-                          </div>
-            `;
+                              <div class="teacher-workshop-li-div">
+                                  <li class="teacher-workshop-li">업체종류</li>
+                                  <li class="teacher-workshop-li">업체명</li>
+                                  <li class="teacher-workshop-li">주빈번호 앞자리</li>
+                                  <li class="teacher-workshop-li">지정은행</li>
+                                  <li class="teacher-workshop-li">계좌 번호</li>
+                                  <li class="teacher-workshop-li">예금주명</li>
+                              </div>
+                              <div class="workshop-information-div">
+                                  <li class="workshop-information-li">프리랜서</li>
+                                  <li class="workshop-information-li">${company_name}</li>
+                                  <li class="workshop-information-li">${rrn_front}</li>
+                                  <li class="workshop-information-li">${bank_name}</li>
+                                  <li class="workshop-information-li">${account}</li>
+                                  <li class="workshop-information-li">${saving_name}</li>
+                              </div>
+                `;
       }
       let tempHtml = ``;
       tempHtml += `
-                  <div class="workshop-div">
-                      <div class="teacher-li-div">
-                          <li class="teacher-li">강사 정보</li>
+                      <div class="workshop-div">
+                          <div class="teacher-li-div">
+                              <li class="teacher-li">강사 정보</li>
+                          </div>
+                          <div class="teacher-workshop-div">
+                              <div class="teacher-workshop-li-div">
+                                  <li class="teacher-workshop-li">email</li>
+                                  <li class="teacher-workshop-li">이름</li>
+                                  <li class="teacher-workshop-li">주소</li>
+                                  <li class="teacher-workshop-li">전화번호</li>
+                              </div>
+                              <div class="workshop-information-div">
+                                  <li class="workshop-information-li">${email}</li>
+                                  <li class="workshop-information-li">${name}</li>
+                                  <li class="workshop-information-li">${address}</li>
+                                  <li class="workshop-information-li">${phone_number}</li>
+                              </div>
+                          </div>
                       </div>
-                      <div class="teacher-workshop-div">
-                      <div class="teacher-workshop-li-div">
-                          <li class="teacher-workshop-li">email</li>
-                          <li class="teacher-workshop-li">이름</li>
-                          <li class="teacher-workshop-li">주소</li>
-                          <li class="teacher-workshop-li">전화번호</li>
+                      <div class="workshop-div">
+                          <div class="teacher-li-div">
+                              <li class="teacher-li">업체 정보</li>  
+                          </div>
+                          <div class="teacher-workshop-div">
+                              ${companyHtml}
+                          </div>;
                       </div>
-                      <div class="workshop-information-div">
-                          <li class="workshop-information-li">${email}</li>
-                          <li class="workshop-information-li">${name}</li>
-                          <li class="workshop-information-li">${address}</li>
-                          <li class="workshop-information-li">${phone_number}</li>
-                      </div>
-                  </div>
-              </div>
-              <div class="workshop-div">
-                  <div class="teacher-li-div">
-                      <li class="teacher-li">업체 정보</li>  
-                  </div>
-                  <div class="teacher-workshop-div">
-                  ${companyHtml}
-              </div>;
-          </div>
-          `;
+                      `;
       workshopInformationList.insertAdjacentHTML('beforeend', tempHtml);
       // 등록된 업체 검색
       companySearch.addEventListener('click', () => {
@@ -144,18 +144,17 @@ document.addEventListener('DOMContentLoaded', () => {
               const saving_name = data[i].saving_name;
               const id = data[i].user_id;
               const createdAt = data[i].createdAt;
-
               let tempHtml = ``;
               tempHtml += `
-  <tr>
-    <td>${company_name}</td>
-    <td>${saving_name}</td>
-    <td>${createdAt.split('T')[0]}</td>
-    <td>
-      <button class="apply-btn" onclick="applyCompany(${id})">가입 신청</button>
-    </td>
-  </tr>
-  `;
+              <tr>
+                <td>${company_name}</td>
+                <td>${saving_name}</td>
+                <td>${createdAt.split('T')[0]}</td>
+                <td>
+                <button class="apply-btn" onclick="applyCompany(${id})">가입 신청</button>
+                </td>
+              </tr>
+              `;
               applyCompanyTable.insertAdjacentHTML('beforeend', tempHtml);
             }
             // location.reload();
@@ -171,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
       alert(data.message);
     });
 });
-
 // 모든 업체 목록 조회
 axios
   .get('/api/teacher/companies')
@@ -180,24 +178,23 @@ axios
     let html = '';
     for (let company of companies) {
       html += `
-<tr>
-<td>${company.company_name}</td>
-<td>${company.saving_name}</td>
-<td>${company.createdAt.split('T')[0]}</td>
-<td>
-<button class="apply-btn" onclick="applyCompany(${
-        company.id
-      })">가입 신청</button>
-</td>
-</tr>
-`;
+      <tr>
+          <td>${company.company_name}</td>
+          <td>${company.saving_name}</td>
+          <td>${company.createdAt.split('T')[0]}</td>
+          <td>
+            <button class="apply-btn" onclick="applyCompany(${
+              company.id
+            })">가입 신청</button>
+          </td>
+        </tr>
+      `;
     }
     $('#company').append(html);
   })
   .catch(function (error) {
     console.log(error);
   });
-
 // 등록된 업체에 등록 신청
 function applyCompany(id) {
   axios({
@@ -215,7 +212,6 @@ function applyCompany(id) {
       alert(data.error);
     });
 }
-
 // 업체 소속을 신청한 강사 목록 보기
 function acceptListCompany() {
   axios({
@@ -233,7 +229,7 @@ function acceptListCompany() {
         const user_id = data[i].user_id;
         const phone_number = data[i].phone_number;
         html += `
-               
+                
         <tr>
           <td>${name}</td>
           <td>${phone_number}</td>
@@ -246,7 +242,6 @@ function acceptListCompany() {
       }
       document.getElementById('apply-company').innerHTML = html;
     })
-
     .catch((response) => {
       const { data } = response.response;
       alert(data.error);

@@ -31,7 +31,6 @@
       href="/teacher/css/teacher-workshop-information.css"
       rel="stylesheet"
     />
-
     <!----------- Font ----------->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -39,7 +38,6 @@
       href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Ubuntu&display=swap"
       rel="stylesheet"
     />
-
     <script src="/teacher/js/teacher-workshop-information.js"></script>
     <title>강사 및 업체 정보</title>
   </head>
@@ -68,6 +66,7 @@
           <div class="close_btn" id="close_btn">X</div>
         </div>
         <div class="m_body">
+          <div class="modal_label">업체 이름</div>
           <input type="text" class="input_box" id="company-name" />
           <button
             type="button"
@@ -76,25 +75,25 @@
           >
             검색
           </button>
-        </div>
-        <div class="modal-content">
-          <table class="company-List">
-            <thead>
-              <tr>
-                <th>
-                  <img src="/images/office-building.png" width="20" />
-                  업체명
-                </th>
-                <th>
-                  <img src="/images/id-card.png" width="20" />
-                  대표자
-                </th>
-                <th>개설 날짜</th>
-                <th>비고</th>
-              </tr>
-            </thead>
-            <tbody id="company"></tbody>
-          </table>
+          <div class="modal-content">
+            <table class="company-List">
+              <thead>
+                <tr>
+                  <th>
+                    <img src="/images/office-building.png" width="20" />
+                    업체명
+                  </th>
+                  <th>
+                    <img src="/images/id-card.png" width="20" />
+                    대표자
+                  </th>
+                  <th>개설 날짜</th>
+                  <th>비고</th>
+                </tr>
+              </thead>
+              <tbody id="company"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

@@ -135,6 +135,18 @@ export class TeacherController {
     return await this.teacherService.searchCompanys(company_name);
   }
 
+  // 업체 목록 조회
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: 'company_type : 0인 업체 목록 조회 API' })
+  @Get('companies')
+  @UseGuards(JwtTeacherAuthGuard)
+  async gerAllCompanies() {
+    return await this.teacherService.gerAllCompanies();
+  }
+
   // 강사 등록된 업체에 등록 신청
   @ApiResponse({
     status: 200,

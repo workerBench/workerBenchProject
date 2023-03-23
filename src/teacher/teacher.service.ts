@@ -267,6 +267,18 @@ export class TeacherService {
     }
   }
 
+  // 업체 목록 불러오기 API
+  async gerAllCompanies() {
+    try {
+      const companies = await this.companyRepository.find({
+        where: { company_type: 0 },
+      });
+      return companies;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
   // 등록된 업체에 신청하기
   async registerTeacherCompany(userId: number, id: number) {
     try {
