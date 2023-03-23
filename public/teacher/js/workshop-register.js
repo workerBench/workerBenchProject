@@ -166,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // 비디오를 업로드하지 않았을 경우 바로 성공 메세지를 띄워준다.
       alert(messageForSuccess);
       window.location.href = '/teacher/workshop';
+      return;
     }
     // 영상 업로드 과정에서 시간이 소비될 가능성이 있기에, "진행 중" 이라는 알림을 띄운다.
     const loadingBack = document.querySelector('#uploading-video');

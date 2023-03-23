@@ -141,6 +141,7 @@ export class WorkshopsService {
         'workshop.total_time',
         'workshop.updatedAt',
         'genre.name',
+        'purposeTag.id',
         'purposeTag.name',
         'GROUP_CONCAT(purposeTag.name) AS purposeTag_name',
       ])
@@ -156,19 +157,19 @@ export class WorkshopsService {
     }
 
     if (location) {
-      queryBuilder.andWhere('workshop.location = :location', {
-        location: `${location}`,
+      queryBuilder.andWhere('workshop.location LIKE :location', {
+        location: `%${location}%`,
       });
     }
 
     if (genre) {
-      queryBuilder.andWhere('genre.name = :genre', {
+      queryBuilder.andWhere('genre.id = :genre', {
         genre: `${genre}`,
       });
     }
 
     if (purpose) {
-      queryBuilder.andWhere('purposeTag.name = :purpose', {
+      queryBuilder.andWhere('purposeTag.id = :purpose', {
         purpose: `${purpose}`,
       });
     }
@@ -184,6 +185,9 @@ export class WorkshopsService {
     }
 
     const workshops = await queryBuilder.getRawMany();
+
+    console.log('검색 결과 어케 나오는지 좀 궁금하네');
+    console.log(workshops);
 
     // purposeTag_name 결과를 콤마(,) 기준으로 쪼개서 배열에 담아줌
     return workshops.map((workshop) => ({
