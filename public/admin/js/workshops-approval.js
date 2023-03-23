@@ -242,7 +242,7 @@ function updateModal(workshopId) {
 
 function finished(workshopId) {
   axios
-    .delete(`../api/admin/workshop/${workshopId}`)
+    .patch(`../api/admin/workshop/${workshopId}`)
     .then(function (response) {
       alert('워크숍이 삭제되었습니다.');
       location.reload();

@@ -130,8 +130,21 @@ export class TeacherController {
   })
   @ApiOperation({ summary: '강사 등록된 업체 검색 API' })
   @Get('company/search')
+  @UseGuards(JwtTeacherAuthGuard)
   async searchCompanys(@Query('company_name') company_name: string) {
     return await this.teacherService.searchCompanys(company_name);
+  }
+
+  // 업체 목록 조회
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: 'company_type : 0인 업체 목록 조회 API'})
+  @Get('companies')
+  @UseGuards(JwtTeacherAuthGuard)
+  async gerAllCompanies() {
+    return await this.teacherService.gerAllCompanies();
   }
 
   // 강사 등록된 업체에 등록 신청

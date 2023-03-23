@@ -159,7 +159,7 @@ export class AdminController {
     description: 'status:"approval" => "finished", soft delete',
   })
   @ApiOperation({ summary: '워크숍 삭제하기 API' })
-  @Delete('workshop/:id')
+  @Patch('workshop/:id')
   @UseGuards(JwtNormalAdminAuthGuard)
   async removeWorkshop(@Param('id') id: number) {
     await this.adminService.removeWorkshop(id);
