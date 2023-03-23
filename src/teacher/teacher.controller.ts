@@ -249,7 +249,22 @@ export class TeacherController {
       user.id,
     );
   }
-
+  // 강사 워크샵 상세보기
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '강사 워크샵 상세보기 API' })
+  @Get('workshops/detail/:id')
+  @UseGuards(JwtTeacherAuthGuard)
+  async detailWorkshop(
+    @CurrentUser() user: CurrentUserDto,
+    @Param('id') id: number,
+  ) {
+    const data = await this.teacherService.detailWorkshop(user.id, id);
+    const result = { non_complete_instance_list: data };
+    return result;
+  }
   // 강사 미완료 목록 보기
   @ApiResponse({
     status: 200,
