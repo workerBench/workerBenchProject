@@ -346,7 +346,7 @@ export class WorkshopsService {
       const cloundFrontUrl = this.configService.get(
         'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
       );
-      const thumbUrl = `${cloundFrontUrl}/${reviewImage}`;
+      const thumbUrl = `${cloundFrontUrl}images/reviews/${review.id}/800/${reviewImage}`;
       // ex) images/reviews/1/eraser-class-thumb.jpg 와 같은 파일명으로 저장되어 있음
 
       return { ...review, createdAt: outputDate, reviewImage: thumbUrl };
