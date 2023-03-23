@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
+import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AdminUser } from 'src/entities/admin-user';
 import { Company } from 'src/entities/company';
 import { CompanyApplication } from 'src/entities/company-application';
@@ -49,7 +49,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         WorkShopPurpose,
         WorkShop,
       ],
-      synchronize: false,
+      synchronize: true,
       logging: true, // sql 문 띄워줌
       keepConnectionAlive: true, // 이거 안 켜두면 서버 재시작할 때 DB 연결을 끊어버려.
       charset: 'utf8mb4', // 나중에 이모티콘도 추가할려고
