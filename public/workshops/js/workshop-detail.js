@@ -3,7 +3,7 @@ window.addEventListener('DOMContentLoaded', function () {
   getWorkshopReviews();
 });
 
-// 워크샵 상세 조회 API
+// 워크샵 상세 조회
 function getWorkshopDetail() {
   let query = window.location.search;
   let param = new URLSearchParams(query);
@@ -18,7 +18,7 @@ function getWorkshopDetail() {
       let workshopInfo = `<div class="row">
         <div class="col">
           <div class="workshop-thumb">
-            <img id="workshop-thumb" alt="..." src="${
+            <img id="workshop-thumb" alt="워크샵 이미지" src="${
               workshop.workshop_thumb
             }"/>
           </div>...

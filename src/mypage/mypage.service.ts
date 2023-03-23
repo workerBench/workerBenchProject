@@ -144,14 +144,24 @@ export class MypageService {
         ])
         .getRawMany();
 
-      // request, non_payment, waiting_lecture만 필터링
-      const result = workshops.filter((workshop) => {
-        return (
-          workshop.workshopDetail_status == 'request' ||
-          workshop.workshopDetail_status == 'non_payment' ||
-          workshop.workshopDetail_status == 'waiting_lecture'
-        );
-      });
+      // s3 + cloud front에서 이미지 가져오기
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
+
+      // request, non_payment, waiting_lecture만 필터링 + thumbUrl 가공
+      const result = workshops
+        .filter((workshop) => {
+          return (
+            workshop.workshopDetail_status == 'request' ||
+            workshop.workshopDetail_status == 'non_payment' ||
+            workshop.workshopDetail_status == 'waiting_lecture'
+          );
+        })
+        .map((workshop) => ({
+          ...workshop,
+          thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+        }));
 
       return result;
     } catch (err) {
@@ -181,7 +191,18 @@ export class MypageService {
         ])
         .getRawMany();
 
-      return workshops;
+      // s3 + cloud front에서 이미지 가져오기
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
+
+      // request, non_payment, waiting_lecture만 필터링 + thumbUrl 가공
+      const completeWorkshops = workshops.map((workshop) => ({
+        ...workshop,
+        thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+      }));
+
+      return completeWorkshops;
     } catch (err) {
       throw err;
     }
@@ -232,7 +253,18 @@ export class MypageService {
         ])
         .getRawMany();
 
-      return workshops;
+      // s3 + cloud front에서 이미지 가져오기
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
+
+      // request, non_payment, waiting_lecture만 필터링 + thumbUrl 가공
+      const completeWorkshops = workshops.map((workshop) => ({
+        ...workshop,
+        thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+      }));
+
+      return completeWorkshops;
     } catch (err) {
       throw err;
     }
@@ -470,7 +502,18 @@ export class MypageService {
         ])
         .getRawMany();
 
-      return workshops;
+      // s3 + cloud front에서 이미지 가져오기
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
+
+      // request, non_payment, waiting_lecture만 필터링 + thumbUrl 가공
+      const canceledWorkshops = workshops.map((workshop) => ({
+        ...workshop,
+        thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+      }));
+
+      return canceledWorkshops;
     } catch (err) {
       throw err;
     }
@@ -521,7 +564,18 @@ export class MypageService {
         ])
         .getRawMany();
 
-      return workshops;
+      // s3 + cloud front에서 이미지 가져오기
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
+
+      // request, non_payment, waiting_lecture만 필터링 + thumbUrl 가공
+      const canceledWorkshops = workshops.map((workshop) => ({
+        ...workshop,
+        thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+      }));
+
+      return canceledWorkshops;
     } catch (err) {
       throw err;
     }

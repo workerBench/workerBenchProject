@@ -10,7 +10,7 @@ function getBestWorkshops() {
     .then((res) => {
       const workshops = res.data.data;
 
-      workshops.forEach((element) => {
+      workshops.forEach((element, index) => {
         let tempHtml = `<div class="col">
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${element.workshop_id}">
@@ -18,7 +18,9 @@ function getBestWorkshops() {
           element.thumbUrl
         }" /></a>
           <div class="card-body">
-            <p class="workshop-title">${element.workshop_title}</p>
+            <p class="workshop-title"><span class="rank-number">${
+              index + 1
+            }</span> ${element.workshop_title}</p>
             <span class="workshop-category">${
               element.workshop_category === 'online' ? '온라인' : '오프라인'
             }</span>
@@ -56,7 +58,7 @@ function getNewWorkshops() {
               element.thumbUrl
             }"/></a>
           <div class="card-body">
-          <p class="workshop-title">${element.workshop_title}</p>
+          <p class="workshop-title"> ${element.workshop_title}</p>
           <span class="workshop-category">${
             element.workshop_category === 'online' ? '온라인' : '오프라인'
           }</span>
@@ -78,4 +80,3 @@ function getNewWorkshops() {
       console.log(error);
     });
 }
-
