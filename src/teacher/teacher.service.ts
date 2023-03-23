@@ -671,6 +671,7 @@ export class TeacherService {
             'workShopInstanceDetail.member_cnt',
             'workShopInstanceDetail.email',
             'workShopInstanceDetail.createdAt',
+            'workShopInstanceDetail.status',
             'GROUP_CONCAT(purposeTag.name) as purposeTag_name', // GROUP_CONCAT을 써서 각 그룹의 purposeTag_name을를 하나의 행에 결합한다.
           ])
           .groupBy('workShopInstanceDetail.id') // groupBy를 써서 각각 id에 해당하는 값을 나타낸다.

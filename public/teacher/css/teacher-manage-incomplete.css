@@ -84,21 +84,21 @@
     width: 220px;
     height: 370px;
     margin: 0 auto;
-    margin-top: 50px;
 }
 .company-input{
     width:250px;
     height: auto;
     margin: auto;
     margin-bottom: 10px;
-    font-size: 25px;
+    font-size: 22px;
     text-align: center;
     list-style: none;
     border: 2px solid #000000;
 }
 #button-div{
     width: 250px;
-    margin-top: 50px;
+    margin-top: 80px;
+    margin-left: 20px;
 }
 .Button{
     width: 100px;

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
+      console.log(response);
       const data = response.data.non_complete_instance_list;
       for (let i = 0; i < data.length; i++) {
         const workshop_thumb = data[i].workshop_thumb;
@@ -35,24 +36,20 @@ document.addEventListener('DOMContentLoaded', () => {
             buttonHtml = `
                         <button type="radio" class="Button" onclick="request(${Id})" id="requestButton">수락 하기</button>
                         <button type="radio" class="Button" onclick="cancleButton(${Id})">취소 하기</button>
-                        <button type="radio" class="Button" id="editButton">수정 하기</button>
                          `;
             break;
           case 'non_payment':
             buttonHtml = `
                         <button type="radio" class="Button" onclick="non_payment(${Id})" id="non_paymentButton">결제 대기</button>
-                        <button type="radio" class="Button" onclick="cancleButton(${Id})">취소 하기</button>
-                        <button type="radio" class="Button" id="editButton">수정 하기</button>
                         `;
             break;
           case 'waiting_lecture':
             buttonHtml = `
                         <button type="radio" class="Button" onclick="waiting_lecture(${Id})" id="completeButton">결제 완료</button>
-                        <button type="radio" class="Button" onclick="cancleButton(${Id})">취소 하기</button>
-                        <button type="radio" class="Button" id="editButton">수정 하기</button>
                         `;
             break;
         }
+        console.log(buttonHtml);
         let tempHtml = ``;
         tempHtml += `
                     <div class="teacher-manage-div" >
