@@ -140,7 +140,7 @@ export class TeacherController {
     status: 200,
     description: '성공',
   })
-  @ApiOperation({ summary: '모든 업체 목록 조회 API'})
+  @ApiOperation({ summary: 'company_type : 0인 업체 목록 조회 API'})
   @Get('companies')
   @UseGuards(JwtTeacherAuthGuard)
   async gerAllCompanies() {

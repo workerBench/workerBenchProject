@@ -257,7 +257,7 @@ export class TeacherService {
   async searchCompanys(company_name: string) {
     try {
       const companys = await this.companyRepository.find({
-        where: { company_name: Like(`%${company_name}%`) },
+        where: { company_name: Like(`%${company_name}%`), company_type: 0 },
         select: ['company_name', 'saving_name', 'user_id', 'createdAt'],
       });
       return companys;
@@ -270,7 +270,9 @@ export class TeacherService {
   // 업체 목록 불러오기 API
   async gerAllCompanies() {
     try {
-      const companies = await this.companyRepository.find()
+      const companies = await this.companyRepository.find({
+        where: {company_type: 0}
+      })
       return companies
     } catch (error) {
       console.log(error);
