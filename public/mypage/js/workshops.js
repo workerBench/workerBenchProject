@@ -30,9 +30,7 @@ function getSoonWorkshops() {
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${
           element.workshop_id
-        }"><img src="${
-          element.workshop_thumb
-        }" class="card-img-top" alt="..." /></a>
+        }"><img src="${element.thumbUrl}" class="card-img-top" alt="..." /></a>
           <div class="card-body">
             <button id="show-status"
                 type="button"

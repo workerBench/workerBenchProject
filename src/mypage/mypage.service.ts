@@ -75,16 +75,26 @@ export class MypageService {
         ])
         .getRawMany();
 
-      // request, non_payment, waiting_lecture만 필터링
-      const result = workshops.filter((workshop) => {
-        return (
-          workshop.workshopDetail_status == 'request' ||
-          workshop.workshopDetail_status == 'non_payment' ||
-          workshop.workshopDetail_status == 'waiting_lecture'
-        );
-      });
+      // s3 + cloud front에서 이미지 가져오기
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
 
-      return result;
+      // request, non_payment, waiting_lecture만 필터링 + thumbUrl 가공
+      const incompleteWorkshops = workshops
+        .filter((workshop) => {
+          return (
+            workshop.workshopDetail_status == 'request' ||
+            workshop.workshopDetail_status == 'non_payment' ||
+            workshop.workshopDetail_status == 'waiting_lecture'
+          );
+        })
+        .map((workshop) => ({
+          ...workshop,
+          thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+        }));
+
+      return incompleteWorkshops;
     } catch (err) {
       throw err;
     }
@@ -446,8 +456,9 @@ export class MypageService {
         .createQueryBuilder('workshopDetail')
         .innerJoinAndSelect('workshopDetail.Workshop', 'workshop')
         .where('workshopDetail.user_id = :id', { id: user_id })
-        .andWhere('workshopDetail.status = :status', { status: 'refund' })
-        // .orWhere('workshopDetail.status = :status', { status: 'rejected' })
+        .andWhere('workshopDetail.status IN (:...status)', {
+          status: ['refund', 'rejected'],
+        })
         .select([
           'workshop.id',
           'workshop.thumb',
@@ -539,16 +550,19 @@ export class MypageService {
         .innerJoinAndSelect('workshop.GenreTag', 'genreTag')
         .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
         .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
-        .select([
-          'workshop.id',
-          'workshop.thumb',
-          'workshop.title',
-          'workshop.createdAt',
-          'workshop.status',
-          'workshop.price',
-          'genreTag.name',
-          'purposeTag.name',
-        ])
+        // .select([
+        //   'workshop.id',
+        //   'workshop.thumb',
+        //   'workshop.title',
+        //   'workshop.createdAt',
+        //   'workshop.status',
+        //   'workshop.price',
+        //   'genreTag.name',
+        //   'purposeTag.name',
+        //   // 'GROUP_CONCAT(purposeTag.name) AS purpose_name',
+        // ])
+        .andWhere('workshop.status = :status', { status: 'approval' })
+        .groupBy('workshop.id')
         .getRawMany();
 
       return myWishWorkshops;
@@ -558,11 +572,8 @@ export class MypageService {
     }
   }
 
-  // 워크샵 찜 or 취소하기 API
-  /* wishList 엔티티에서 workshop_id와 user_id 찾은 후
-      만약 값이 있으면 찜 해제
-      없으면 user_id와 workshop_id insert */
-  async updateWishListCancel(user_id: number, workshop_id: number) {
+  // 워크샵 찜 취소하기 API
+  async cancelWishList(user_id: number, workshop_id: number) {
     const IsWish = await this.wishListRepository.findOne({
       where: { user_id, workshop_id },
     });
