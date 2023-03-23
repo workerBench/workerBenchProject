@@ -550,11 +550,11 @@ export class MypageService {
     }
   }
 
-  // 워크샵 찜 or 취소하기 API
+  // 워크샵 찜 취소하기 API
   /* wishList 엔티티에서 workshop_id와 user_id 찾은 후
       만약 값이 있으면 찜 해제
       없으면 user_id와 workshop_id insert */
-  async updateWishListCancel(user_id: number, workshop_id: number) {
+  async cancelWishList(user_id: number, workshop_id: number) {
     const IsWish = await this.wishListRepository.findOne({
       where: { user_id, workshop_id },
     });

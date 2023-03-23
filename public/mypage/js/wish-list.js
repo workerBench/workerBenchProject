@@ -25,23 +25,28 @@ function getWishList() {
 
       workshops.forEach((element) => {
         let tempHtml = `<div class="col">
-        <div class="card h-100">
-        <a href="/workshops/detail?workshopId=${element.workshop_id}">
-        <img class="card-img-top" id="best-workshop-thumb alt="..." src="${
-          element.thumbUrl
-        }" /></a>
-          <div class="card-body">
-            <p class="workshop-title">${element.workshop_title}</p>
-            <span class="workshop-category">${
-              element.workshop_category === 'online' ? '온라인' : '오프라인'
-            }</span>
-            <p class="workshop-price">비용 &nbsp;${element.workshop_price}원</p>
-            <p class="card-text">인원 &nbsp;${element.workshop_min_member}~${
+          <div class="card h-100">
+            <a href="/workshops/detail?workshopId=${element.workshop_id}">
+            <img class="card-img-top" id="workshop-thumb alt="..." src="${
+              element.thumbUrl
+            }" /></a>
+            <div class="card-body">
+              <p class="workshop-title">${element.workshop_title}</p>
+              <span class="workshop-category">${
+                element.workshop_category === 'online' ? '온라인' : '오프라인'
+              }</span>
+              <p class="workshop-price">비용 &nbsp;${
+                element.workshop_price
+              }원</p>
+              <p class="card-text">인원 &nbsp;${element.workshop_min_member}~${
           element.workshop_max_member
         }명</p>
-            <p class="card-text">시간 &nbsp;${element.workshop_total_time}분</p>
+              <p class="card-text">시간 &nbsp;${
+                element.workshop_total_time
+              }분</p>
+            </div>
+            <button onclick="cancelWish(${element.workshop_id})">♥</button>
           </div>
-        </div>
       </div>`;
         $('#wish-list').append(tempHtml);
       });
@@ -52,21 +57,13 @@ function getWishList() {
 }
 
 // 찜하기 해제
-function updateWishListCancel() {
-  let query = window.location.search;
-  let param = new URLSearchParams(query);
-  let workshopId = param.get('workshopId');
+function cancelWish(workshopId) {
   axios
-    .post(`/api/workshops/${workshopId}/wish`) // user_id 임시로 하드코딩
+    .post(`/api/workshops/${workshopId}/wish`)
     .then((res) => {
       console.log(res);
       alert(res.data.data.message);
-      if (res.data.data.type === 'add') {
-        document.querySelector('.wish').textContent = '♥';
-      }
-      if (res.data.data.type === 'remove') {
-        document.querySelector('.wish').textContent = '♡';
-      }
+      location.reload();
     })
     .catch((err) => {
       getErrorCode(
@@ -75,11 +72,4 @@ function updateWishListCancel() {
         updateWishListCancel,
       );
     });
-}
-
-// 찜 되어있는 워크샵 하트 칠해져있기
-if (wishCheck) {
-  document.querySelector('.wish').textContent = '♥';
-} else {
-  document.querySelector('.wish').textContent = '♡';
 }
