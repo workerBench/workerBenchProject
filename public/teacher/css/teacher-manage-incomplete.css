@@ -18,6 +18,15 @@
 #button:hover{
     background-color:#a084dc;
 }
+#button-incomplete{
+    width: 200px;
+    margin-right: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #9f70fb;
+}
 #button-manage{
     width: 200px;
     margin-right: 10px;
@@ -37,10 +46,10 @@
 }
 .teacher-manage-div{
     width: 600px;
-    height: 600px;
+    height: auto;
     margin-left: 20px;
     margin-bottom: 20px;
-    border: 2px solid #000000;
+    border: 2px solid rgb(179, 179, 179);
     display: flex;
 }
 .workshop-information-div{
@@ -51,71 +60,93 @@
 .workshop-information-div >img{
     margin-top: 10px;
     margin-left: 10px;
-    width: 250px;
+    width: 260px;
     height: 200px;
 }
 .company-information-div{
-    width: 250px;
-    margin-left: 100px;
+    width: 260px;
+    margin-left: 70px;
     margin-top: 20px;
     justify-content: center;
 }
 .workshop-information-title{
-    width:250px;
-    height: auto;
+    width:260px;
+    height: 80px;
     margin-top: 10px;
     margin-left: 10px;
     font-size: 23px;
     text-align: center;
     list-style: none;
-    border: 2px solid #000000;
+    border-bottom: 2px solid rgb(179, 179, 179);
 }
 .workshop-information{
-    width:250px;
+    width:260px;
     height: auto;
     margin-top: 10px;
     margin-left: 10px;
-    font-size: 25px;
-    text-align: center;
+    font-size: 23px;
     list-style: none;
-    border: 2px solid #000000;
+    border-bottom: 2px solid rgb(179, 179, 179);
+}
+.workshop-information-price{
+    width:260px;
+    height: auto;
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 23px;
+    list-style: none;
 }
 .company-information{
     width: 220px;
     height: 370px;
     margin: 0 auto;
+    margin-top: 100px;
 }
-.company-input{
+.company-input-desc{
     width:250px;
     height: auto;
     margin: auto;
     margin-bottom: 10px;
-    font-size: 22px;
+    font-size: 25px;
     text-align: center;
     list-style: none;
-    border: 2px solid #000000;
+    border-bottom: 2px solid rgb(179, 179, 179);
+}
+.company-input{
+    width:270px;
+    height: auto;
+    margin: auto;
+    margin-bottom: 10px;
+    font-size: 23px;
+    list-style: none;
+    border-bottom: 2px solid rgb(179, 179, 179);
 }
 #button-div{
-    width: 250px;
-    margin-top: 80px;
-    margin-left: 20px;
+    width: 300px;
+    display: flex;
+    flex-direction: row-reverse;
 }
 .Button{
-    width: 100px;
-    height: 40px;
-    margin-left: 15px;
+    width: 150px;
+    height: 50px;
+    margin-right: 20px;
     margin-top: 10px;
     background-color: #9f70fb;
     border-radius: 5px;
     color: white;
     border:none ;
 }
-#button-incomplete{
-    width: 200px;
-    margin-right: 10px;
-    margin-top: 30px;
-    margin-bottom: 30px;
+.non_payment-Button{
+    width: 150px;
     height: 50px;
-    border-radius: 10px;
+    margin-top: 10px;
+    margin-right: 20px;
     background-color: #9f70fb;
+    border-radius: 5px;
+    text-align: center;
+    color: white;
+    padding: 10px;
+}
+.Button:hover{
+    background-color: #645cbb;
 }
