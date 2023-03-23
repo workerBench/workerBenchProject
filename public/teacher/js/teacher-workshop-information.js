@@ -184,7 +184,7 @@ axios
           <td>${company.createdAt.split('T')[0]}</td>
           <td>
             <button class="apply-btn" onclick="applyCompany(${
-              company.id
+              company.user_id
             })">가입 신청</button>
           </td>
         </tr>
