@@ -29,7 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const status = data[i].workShopInstanceDetail_status;
         const Id = data[i].workShopInstanceDetail_id;
         const forFormat = new Date(createdAt);
-        const createdDate = `${forFormat.getFullYear()}-${forFormat.getMonth()}-${forFormat.getDate()} ${forFormat.getHours()}시 ${forFormat.getMinutes()}분`;
+        const createdDate = `${forFormat.getFullYear()}-${
+          forFormat.getMonth() + 1
+        }-${forFormat.getDate()} ${forFormat.getHours()}시 ${forFormat.getMinutes()}분`;
 
         let buttonHtml = '';
         switch (status) {

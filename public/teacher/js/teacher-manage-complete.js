@@ -25,7 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = data[i].workShopInstanceDetail_email;
         const createdAt = data[i].workShopInstanceDetail_createdAt;
         const forFormat = new Date(createdAt);
-        const createdDate = `${forFormat.getFullYear()}-${forFormat.getMonth()}-${forFormat.getDate()} ${forFormat.getHours()}시 ${forFormat.getMinutes()}분`;
+        const createdDate = `${forFormat.getFullYear()}-${
+          forFormat.getMonth() + 1
+        }-${forFormat.getDate()} ${forFormat.getHours()}시 ${forFormat.getMinutes()}분`;
         let tempHtml = ``;
         tempHtml = `
         <div class="teacher-manage-div" >
