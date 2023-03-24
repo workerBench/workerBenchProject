@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
         bank_name,
         account,
         saving_name;
-
       if (data.MyCompany) {
         company_type = data.MyCompany.company_type;
         company_name = data.MyCompany.company_name;
@@ -63,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
       `;
       } else if (data.MyCompany && company_type === 0) {
-        console.log('여기가 걸리긴 해야 함ㅁ!');
         companyHtml += `
                               <div class="teacher-workshop-li-div">
                                   <li class="teacher-workshop-li">업체종류</li>
@@ -74,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                   <li class="teacher-workshop-li">예금주명</li>
                               </div>
                               <div class="workshop-information-div">
-                                  <li class="workshop-information-li">'사업자'</li>
+                                  <li class="workshop-information-li">사업자</li>
                                   <li class="workshop-information-li">${company_name}</li>
                                   <li class="workshop-information-li">${business_number}</li>
                                   <li class="workshop-information-li">${bank_name}</li>
@@ -203,7 +201,8 @@ document.addEventListener('DOMContentLoaded', () => {
       $('#company').append(html);
     })
     .catch(function (error) {
-      console.log(error);
+      const { data } = response.response;
+      alert(data.error);
     });
 });
 

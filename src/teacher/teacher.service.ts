@@ -312,6 +312,7 @@ export class TeacherService {
         where: { user_id: id },
         select: ['id'],
       });
+
       await this.companyApplicationRepository.insert({
         teacher_id: userId,
         company_id: companyId.id,
@@ -365,7 +366,7 @@ export class TeacherService {
     }
   }
 
-  // 업체 소속을 신청한 업체 등록하기
+  // 업체 소속을 신청한 업체 수락하기
   async registerCompany(userId: number, id: number) {
     try {
       const companyId = await this.companyRepository.findOne({
@@ -442,7 +443,7 @@ export class TeacherService {
     }
   }
 
-  // 워크샵 등록
+  // 워크샵 등록 신청 하기
   async createTeacherWorkshops(
     data: CreateWorkshopsDto,
     images: Array<Express.Multer.File>,
@@ -633,26 +634,26 @@ export class TeacherService {
     }
   }
   // 워크샵 상세 보기 api
-  async detailWorkshop(userId: number, id: number) {
+  async workshopDetail(userId: number, id: number) {
     try {
       const userIdInfo = await this.workshopRepository.find({
         where: { user_id: userId },
-        select: ['user_id'],
       });
       if (!userIdInfo) {
         throw new HttpException(
-          '등록되지 않은 유저 입니다.',
+          '등록된 워크샵이 없습니다.',
           HttpStatus.BAD_REQUEST,
         );
       } else {
         let result = await this.workshopRepository
           .createQueryBuilder('workshop')
           .where('workshop.user_id = :user_id', { user_id: userId })
+          .andWhere('workshop.id = :id', { id: id })
           .innerJoinAndSelect('workshop.GenreTag', 'genreTag')
           .innerJoinAndSelect('workshop.PurposeList', 'workshopPurpose')
           .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
+          .leftJoinAndSelect('workshop.Images', 'workshopImage')
           .select([
-            'workshop.id',
             'workshop.title',
             'workshop.category',
             'workshop.desc',
@@ -661,14 +662,13 @@ export class TeacherService {
             'workshop.max_member',
             'workshop.total_time',
             'workshop.price',
-            'workshop.status',
             'workshop.location',
             'workshop.video',
             'workshop.createdAt',
             'genreTag.name',
-            'GROUP_CONCAT(purposeTag.name) as purposeTag_name', // GROUP_CONCAT을 써서 각 그룹의 purposeTag_name을를 하나의 행에 결합한다.
+            'GROUP_CONCAT(DISTINCT workshopImage.img_name) as img_name',
+            'GROUP_CONCAT(DISTINCT purposeTag.name) as purposeTag_name', // GROUP_CONCAT을 써서 각 그룹의 purposeTag_name을를 하나의 행에 결합한다.
           ])
-          .groupBy('workshop.id') // groupBy를 써서 각각 id에 해당하는 값을 나타낸다.
           .getRawMany();
 
         return result.map((workshop) => {
@@ -905,7 +905,7 @@ export class TeacherService {
     }
   }
 
-  // 강사 워크샵 신청 반려하기
+  // 강사 수강 문의 반려하기
   async cancleWorkshop(userId: number, id: number) {
     try {
       const workshopId = await this.workshopRepository.findOne({
@@ -933,7 +933,7 @@ export class TeacherService {
       }
 
       return {
-        message: '해당 워크샵을 취소하였습니다.',
+        message: '해당 워크샵을 반려하였습니다.',
       };
     } catch (error) {
       console.log(error);
