@@ -654,6 +654,7 @@ export class TeacherService {
           .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
           .leftJoinAndSelect('workshop.Images', 'workshopImage')
           .select([
+            'workshop.id',
             'workshop.title',
             'workshop.category',
             'workshop.desc',
@@ -672,6 +673,34 @@ export class TeacherService {
           .getRawMany();
 
         return result.map((workshop) => {
+          // 서브 이미지들 목록을 string[] 으로 만들어주기
+          let subImageUrlArray: string[] = [];
+
+          if (workshop.img_name !== null) {
+            const subImageArray: string[] = workshop.img_name.split(',');
+            subImageArray.forEach((subImageName) => {
+              subImageUrlArray.push(`
+                ${this.configService.get(
+                  'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+                )}images/workshops/${workshop.workshop_id}/800/${subImageName}
+              `);
+            });
+          }
+
+          // 비디오 URL 완성시키기
+          let workshopVedioUrl: string = ``;
+          if (workshop.workshop_video !== null) {
+            const videoNameWithOutType = workshop.workshop_video.substring(
+              0,
+              workshop.workshop_video.lastIndexOf('.'),
+            );
+            workshopVedioUrl = `${this.configService.get(
+              'AWS_CLOUD_FRONT_DOMAIN_VIDEO',
+            )}videos/workshops/${
+              workshop.workshop_id
+            }/hls/${videoNameWithOutType}.m3u8`;
+          }
+
           return {
             ...workshop,
             workshop_thumb: `${this.configService.get(
@@ -679,6 +708,8 @@ export class TeacherService {
             )}images/workshops/${workshop.workshop_id}/800/${
               workshop.workshop_thumb
             }`,
+            workshop_videoUrl: workshopVedioUrl,
+            subImageUrlArray,
           };
         });
       }
