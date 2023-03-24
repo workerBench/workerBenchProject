@@ -310,7 +310,7 @@ border-bottom: 1px solid black;
   .subImage > img{
     width: 300px;
     height: 300px;
-    margin: auto;
+    margin-left: 20px;
   }
   .video-contents-div {
     width: 1000px;

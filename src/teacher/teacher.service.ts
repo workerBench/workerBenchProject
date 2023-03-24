@@ -654,6 +654,7 @@ export class TeacherService {
           .innerJoinAndSelect('workshopPurpose.PurPoseTag', 'purposeTag')
           .leftJoinAndSelect('workshop.Images', 'workshopImage')
           .select([
+            'workshop.id',
             'workshop.title',
             'workshop.category',
             'workshop.desc',

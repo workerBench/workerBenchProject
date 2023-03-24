@@ -109,7 +109,7 @@ function workshopDetail(id) {
         let Minutes = total_time % 60; // 60으로 나눈 나머지를 구합니다
         const workshop_video = data[i].workshop_video;
         const workshop_id = data[i].workshop_id;
-
+        console.log(workshop_thumb);
         if (!subImage1) {
           subImage1 === '';
         }
@@ -137,7 +137,7 @@ function workshopDetail(id) {
                 <li class="workshop-information-li">${workshop_min_member}명</li>
                 <li class="workshop-information-li">${workshop_max_member}명</li>
                 <li class="workshop-information-li">#${genreTag_name} #${purposeTag_name}</li>
-                <li class="workshop-information-li">${hours}시간${Minutes}분</li>
+                <li class="workshop-information-li">${hours}시${Minutes}분</li>
                 <li class="workshop-information-li">${workshop_price}원</li>
                 <li class="workshop-information-li">${workshop_location}</li>
                 <li class="workshop-information-li">${createdDate}</li>
