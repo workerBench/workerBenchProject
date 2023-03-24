@@ -103,7 +103,9 @@ function workshopDetail(id) {
         const purposeTag_name = data[i].purposeTag_name;
         const workshop_createdAt = data[i].workshop_createdAt;
         const forFormat = new Date(workshop_createdAt);
-        const createdDate = `${forFormat.getFullYear()}-${forFormat.getMonth()}-${forFormat.getDate()} ${forFormat.getHours()}시 ${forFormat.getMinutes()}분`;
+        const createdDate = `${forFormat.getFullYear()}-${
+          forFormat.getMonth() + 1
+        }-${forFormat.getDate()} ${forFormat.getHours()}시 ${forFormat.getMinutes()}분`;
         const workshop_desc = data[i].workshop_desc;
         const workshop_location = data[i].workshop_location;
         const workshop_max_member = data[i].workshop_max_member;
