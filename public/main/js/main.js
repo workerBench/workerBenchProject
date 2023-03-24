@@ -14,7 +14,7 @@ function getBestWorkshops() {
         let tempHtml = `<div class="col">
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${element.workshop_id}">
-        <img class="card-img-top" id="best-workshop-thumb alt="..." src="${
+        <img class="card-img-top embed-responsive-item" id="best-workshop-thumb alt="..." src="${
           element.thumbUrl
         }" /></a>
           <div class="card-body">
