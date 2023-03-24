@@ -96,7 +96,7 @@ export class WorkshopsService {
       .andWhere('workshop.status = :status', { status: 'approval' })
       .orderBy('workshop.updatedAt', 'DESC') // 업데이트 최신순으로 정렬
       .groupBy('workshop.id')
-      .limit(4)
+      .limit(8)
       .getRawMany();
 
     // s3 + cloud front에서 이미지 가져오기
