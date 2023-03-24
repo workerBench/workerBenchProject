@@ -47,7 +47,7 @@ const dataSource = new DataSource({
   ],
   migrations: [__dirname + '/src/migrations/*.ts'],
   charset: 'utf8mb4_general_ci',
-  synchronize: false,
+  synchronize: true,
   // logging: true,
 });
 
