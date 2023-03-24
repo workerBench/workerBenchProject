@@ -110,6 +110,10 @@ function workshopDetail(id) {
         const workshop_video = data[i].workshop_video;
         const workshop_id = data[i].workshop_id;
 
+        if (!subImage1) {
+          subImage1 === '';
+        }
+
         let tempHtml = ``;
         tempHtml = `
         <div id="workshopBox">

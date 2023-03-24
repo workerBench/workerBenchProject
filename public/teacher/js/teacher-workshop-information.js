@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
       `;
       } else if (data.MyCompany && company_type === 0) {
-        console.log('여기가 걸리긴 해야 함ㅁ!');
         companyHtml += `
                               <div class="teacher-workshop-li-div">
                                   <li class="teacher-workshop-li">업체종류</li>
