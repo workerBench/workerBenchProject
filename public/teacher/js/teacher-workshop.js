@@ -88,7 +88,11 @@ function workshopDetail(id) {
       for (let i = 0; i < data.length; i++) {
         const workshop_category = data[i].workshop_category;
         const genreTag_name = data[i].genreTag_name;
-        const img_name = data[i].img_name;
+        const subImage = data[i].img_name;
+        const subImageSplit = subImage.split(',');
+        let subImage1 = subImageSplit[0];
+        let subImage2 = subImageSplit[1];
+        let subImage3 = subImageSplit[2];
         const purposeTag_name = data[i].purposeTag_name;
         const workshop_createdAt = data[i].workshop_createdAt;
         const forFormat = new Date(workshop_createdAt);
@@ -105,6 +109,7 @@ function workshopDetail(id) {
         let Minutes = total_time % 60; // 60으로 나눈 나머지를 구합니다
         const workshop_video = data[i].workshop_video;
         const workshop_id = data[i].workshop_id;
+
         let tempHtml = ``;
         tempHtml = `
         <div id="workshopBox">
@@ -138,9 +143,9 @@ function workshopDetail(id) {
                   >서브 이미지</label
                 >
             <div class="subImage">
-                <img src=${workshop_thumb} alt="">
-                <img src=${workshop_thumb} alt="">
-                <img src=${workshop_thumb} alt="">
+                <img src=${subImage1} alt="">
+                <img src=${subImage2} alt="">
+                <img src=${subImage3} alt="">
             </div>
         </div>
         <div class="mb-3 video-contents-div">
@@ -152,7 +157,7 @@ function workshopDetail(id) {
               <div class="video-show-tag-wrap">
                 <video id="video-show-tag" controls></video>
               </div>
-              <video src="workshop_video"></video>
+              <video src="${workshop_video}"></video>
             </div>
           </div>
         </div>
