@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data.complete_instance_list;
       for (let i = 0; i < data.length; i++) {
         const workshop_thumb = data[i].workshopThumbUrl;
@@ -55,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
     .catch((response) => {
-      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });

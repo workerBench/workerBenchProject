@@ -22,6 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
         bank_name,
         account,
         saving_name;
+
+      if (data.MyCompany) {
+        company_type = data.MyCompany.company_type;
+        company_name = data.MyCompany.company_name;
+        business_number = data.MyCompany.business_number;
+        rrn_front = data.MyCompany.rrn_front;
+        bank_name = data.MyCompany.bank_name;
+        account = data.MyCompany.account;
+        saving_name = data.MyCompany.saving_name;
+      }
       if (data.company) {
         company_type = data.company.company_type;
         company_name = data.company.company_name;
@@ -53,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
       `;
       } else if (data.MyCompany && company_type === 0) {
+        console.log('여기가 걸리긴 해야 함ㅁ!');
         companyHtml += `
                               <div class="teacher-workshop-li-div">
                                   <li class="teacher-workshop-li">업체종류</li>
@@ -198,7 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 등록된 업체에 등록 신청
 function applyCompany(id) {
-  console.log(id);
   axios({
     method: 'post',
     url: `/api/teacher/company/apply/${id}`,
@@ -210,7 +220,6 @@ function applyCompany(id) {
       location.reload();
     })
     .catch((response) => {
-      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
@@ -223,9 +232,7 @@ function acceptListCompany() {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data;
-      console.log(data);
       let html = '';
       for (let i = 0; i < data.length; i++) {
         const name = data[i].name;

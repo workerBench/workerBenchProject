@@ -396,6 +396,7 @@ export class WorkshopsService {
       phone_number,
       member_cnt,
       wish_date,
+      status: 'non_payment', // 유저 테스트 종료 시 해당 입력 항목을 삭제. (default = request)
       category,
       purpose,
       wish_location,

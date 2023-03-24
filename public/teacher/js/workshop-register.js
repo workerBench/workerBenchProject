@@ -78,10 +78,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const location = document.getElementById('location').value;
     const purpose_value1 = parseInt(purpose_tag1);
     const purpose_value2 = parseInt(purpose_tag2);
+
     if (!purpose_value1 && !purpose_value2) {
       alert('목적태그 최소 한개는 등록해주세요');
       return;
     }
+
+    if (purpose_value1 === purpose_value2) {
+      alert('중복된 목적을 선택하셨습니다.');
+      return;
+    }
+
     const purposeTagIds = [purpose_value1, purpose_value2];
     if (
       category === '' ||

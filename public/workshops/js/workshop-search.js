@@ -12,9 +12,6 @@ function getAllWorkshops() {
     .get(url)
     .then((res) => {
       const workshops = res.data.data;
-      console.log(res.data.data);
-      console.log(workshops.length);
-      console.log(url, params);
 
       // 검색 결과 건수 표시
       document.querySelector(
@@ -85,9 +82,6 @@ function searchWorkshops() {
       .get(url, { params })
       .then((res) => {
         const workshops = res.data.data;
-        console.log(res.data.data);
-        console.log(workshops.length);
-        console.log(url, params);
 
         // 검색 결과 건수 표시
         document.querySelector(
@@ -138,9 +132,6 @@ function searchWorkshops() {
       .get(url, { params })
       .then((res) => {
         const workshops = res.data.data;
-        console.log(res.data.data);
-        console.log(workshops.length);
-        console.log(url, params);
 
         $('.workshop-result-list').empty();
         if (workshops.length === 0) {
@@ -196,9 +187,6 @@ function searchWorkshops() {
       .get(url, { params })
       .then((res) => {
         const workshops = res.data.data;
-        console.log(res.data.data);
-        console.log(workshops.length);
-        console.log(url, params);
 
         $('.workshop-result-list').empty();
         if (workshops.length === 0) {
@@ -254,9 +242,6 @@ function searchWorkshops() {
       .get(url, { params })
       .then((res) => {
         const workshops = res.data.data;
-        console.log(res.data.data);
-        console.log(workshops.length);
-        console.log(url, params);
 
         $('.workshop-result-list').empty();
         if (workshops.length === 0) {
@@ -311,9 +296,6 @@ function searchWorkshops() {
       .get(url, { params })
       .then((res) => {
         const workshops = res.data.data;
-        console.log(res.data.data);
-        console.log(workshops.length);
-        console.log(url, params);
 
         $('.workshop-result-list').empty();
         if (workshops.length === 0) {
