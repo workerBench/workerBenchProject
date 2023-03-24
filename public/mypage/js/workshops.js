@@ -232,21 +232,19 @@ function putWorkshopOrderInfo(workshopDetailId) {
         workshop.workshop_price * workshop.workshopDetail_member_cnt
       }원</span></p>
       <div class="mb-3">
-        <input type="text" class="form-control" name="name" id="name" placeholder="구매자 이름" required>
+        <input type="text" class="form-control" name="name" id="name" placeholder="이름" required>
       </div>
       <div class="mb-3">
         <input type="email" class="form-control" name="email" id="email" placeholder="이메일" required>
       </div>
       <div class="mb-3">
-        <input type="text" class="form-control" name="phone_number" id="phone_number" placeholder="전화번호" required>
-        <p>* '-' 없이 입력해주세요. (ex. 01012341234)</p>
+        <input type="text" class="form-control" name="phone_number" id="phone_number" placeholder="전화번호 (- 없이 입력해주세요.)" required>
       </div>
-      <div class="mb-3">
-        <input type="text" class="form-control" name="phone_number" id="address" placeholder="주소" required>
-      </div>
-      <div class="mb-3">
-        <input type="text" class="form-control" name="phone_number" id="zip-code" placeholder="우편번호" required>
-      </div>
+      <div class="mb-3" id="address">
+      <input id="zip-code"  class="form-control" type="text" placeholder="우편번호 검색" readonly onclick="findAddr()"> <br>
+      <input id="input-address" class="form-control" type="text" placeholder="주소 (필수) (우편번호를 검색해주세요.)" readonly> <br>
+      <input id="input_addr_detail" class="form-control" type="text" placeholder="상세 주소">
+    </div>
       <button type="button" class="btn btn-primary" onclick="open_iamport()">결제하기</button>
       </div>
     </div>`;
@@ -277,6 +275,26 @@ function putWorkshopOrderInfo(workshopDetailId) {
     });
 }
 
+// 다음 지도 api
+function findAddr() {
+  new daum.Postcode({
+    oncomplete: function (data) {
+      // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+      // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+      // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+      var roadAddr = data.roadAddress; // 도로명 주소 변수
+      var jibunAddr = data.jibunAddress; // 지번 주소 변수
+      // 우편번호와 주소 정보를 해당 필드에 넣는다.
+      document.getElementById('zip-code').value = data.zonecode;
+      if (roadAddr !== '') {
+        document.getElementById('input-address').value = roadAddr;
+      } else if (jibunAddr !== '') {
+        document.getElementById('input_addr_detail').value = jibunAddr;
+      }
+    },
+  }).open();
+}
+
 // 아임포트 결제 창 열기
 function open_iamport() {
   const title = document.querySelector('#order-workshop-title').innerText;
@@ -286,11 +304,33 @@ function open_iamport() {
   const buyer_email = document.querySelector('#email').value; // 구매자 이메일
   const buyer_name = document.querySelector('#name').value; // 구매자 이름
   const buyer_tel = document.querySelector('#phone_number').value; // 구매자 전화번호
-  const buyer_addr = document.querySelector('#address').value; // 구매자 주소
+  const buyer_addr =
+    document.querySelector('#input-address').value +
+    ' ' +
+    document.querySelector('#input_addr_detail').value; // 구매자 주소
   const buyer_postcode = document.querySelector('#zip-code').value; // 주문자 우편번호
   const workshopInstance_id = document.querySelector(
     '#order-workshopDetail-id',
   ).innerText;
+
+  if (!buyer_name || !buyer_addr || !buyer_postcode) {
+    alert('필수 입력 값을 모두 입력해주세요.');
+    return;
+  }
+
+  // 이메일 정규표현식 검사
+  const regEmail = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}');
+  if (buyer_email !== null && regEmail.test(buyer_email) === false) {
+    alert('이메일 형식이 올바르지 않습니다.');
+    return;
+  }
+
+  // 전화번호 정규표현식 검사
+  const regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+  if (buyer_tel !== null && regPhone.test(buyer_tel) === false) {
+    alert('전화번호를 정확하게 입력해주세요.');
+    return;
+  }
 
   // merchant_uid 만들기
   function make_merchant_uid() {

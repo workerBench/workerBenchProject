@@ -9,6 +9,11 @@ body {
   margin-left: 70px;
 }
 
+.card-img-top {
+  height: 15rem;
+  object-fit: cover;
+}
+
 .wish-list {
   font-size: 30px;
   margin-left: 70px;
