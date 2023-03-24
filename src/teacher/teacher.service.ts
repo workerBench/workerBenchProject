@@ -180,9 +180,13 @@ export class TeacherService {
         ]);
       const results = await query.getMany();
       const teacher = results[0]; // results가 배열 형태이므로 배열을 없앤 값을 teacher에 넣어줬다.
-      let company = teacher.MyCompany;
-      if (!company && userIdInfo.affiliation_company_id > 0) {
-        // 만약에 teacher.MyCompany가 없거나 userIdInfo.affiliation_company_id가 0보다 클경우 찾는다.
+      let company = { ...teacher.MyCompany };
+
+      if (
+        Object.keys(company).length === 0 &&
+        userIdInfo.affiliation_company_id > 0
+      ) {
+        // 만약에 teacher.MyCompany가 없거나 userIdInfo.affiliation_company_id가 0보다 클경우 찾는다. 강사가 업체에 소속되어 있는 경우.
         company = await this.companyRepository.findOne({
           where: { id: userIdInfo.affiliation_company_id },
           select: ['company_name', 'saving_name', 'company_type'],
@@ -190,6 +194,7 @@ export class TeacherService {
       } else {
         company = null; // company가 있으면 위에 쿼리빌더로 나온 Mycompany랑 company값이 나와 총 두번 보여지므로 하나는 안보여지게 했다.
       }
+
       return {
         ...teacher,
         company,
@@ -500,7 +505,7 @@ export class TeacherService {
         genre_id,
         total_time,
         price,
-        status: 'request',
+        status: 'approval', // 유저 테스트 종료 시 'request' 로 변환해야 함.
         location,
         desc,
         user_id: userId,

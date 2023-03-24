@@ -67,9 +67,10 @@ function getNewWorkshops() {
           element.workshop_max_member
         }명</p>
           <p class="card-text">시간 &nbsp;${element.workshop_total_time}분</p>
-          <p class="card-text">#${element.genre_tag_name} #${
-          element.purpose_name[0]
-        } #${element.purpose_name[1]}</p>
+          <p class="card-text">#${element.genre_tag_name}
+            #${element.purpose_name[0]}
+            ${element.purpose_name[1] ? `#${element.purpose_name[1]}` : ''}
+          </p>
           </div>
         </div>
       </div>`;

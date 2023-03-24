@@ -344,6 +344,7 @@ export class MypageService {
           imp_uid: paymentData.imp_uid,
           merchant_uid,
           workshop_id,
+          workshop_instance_detail_id: Number(workshopInstance_id),
           amount,
           pay_method,
           status,

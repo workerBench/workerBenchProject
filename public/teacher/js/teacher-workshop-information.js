@@ -22,6 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
         bank_name,
         account,
         saving_name;
+
+      if (data.MyCompany) {
+        company_type = data.MyCompany.company_type;
+        company_name = data.MyCompany.company_name;
+        business_number = data.MyCompany.business_number;
+        rrn_front = data.MyCompany.rrn_front;
+        bank_name = data.MyCompany.bank_name;
+        account = data.MyCompany.account;
+        saving_name = data.MyCompany.saving_name;
+      }
       if (data.company) {
         company_type = data.company.company_type;
         company_name = data.company.company_name;
@@ -53,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
       `;
       } else if (data.MyCompany && company_type === 0) {
+        console.log('여기가 걸리긴 해야 함ㅁ!');
         companyHtml += `
                               <div class="teacher-workshop-li-div">
                                   <li class="teacher-workshop-li">업체종류</li>
