@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>`;
           wokshopApprovalList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'finished') {
-          tempHtml = `<div class="workshop" id="img">
+          tempHtml = `<div class="workshop" id="img" onclick="workshopDetail(${workshop_id})">
                           <img src=${thumb} alt="">
                           <div class="card-text">
                             <li class="title">${title}</li>
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       </div>`;
           wokshopFinishedList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'request') {
-          tempHtml = `<div class="workshop" id="img">
+          tempHtml = `<div class="workshop" id="img" onclick="workshopDetail(${workshop_id})">
                         <img src=${thumb} alt="">
                         <div class="card-text">
                         <li class="title">${title}</li>
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   </div>`;
           wokshopRequestList.insertAdjacentHTML('beforeend', tempHtml);
         } else if (status === 'rejected') {
-          tempHtml = `<div class="workshop" id="img">
+          tempHtml = `<div class="workshop" id="img" onclick="workshopDetail(${workshop_id})">
                           <img src=${thumb} alt="" />
                           <div class="card-text">
                           <li class="title">${title}</li>
@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
     .catch((response) => {
-      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
@@ -85,7 +84,6 @@ function workshopDetail(id) {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data.detailWorkshop;
       for (let i = 0; i < data.length; i++) {
         const workshop_category = data[i].workshop_category;
@@ -102,6 +100,9 @@ function workshopDetail(id) {
         const workshop_thumb = data[i].workshop_thumb;
         const workshop_title = data[i].workshop_title;
         const workshop_total_time = data[i].workshop_total_time;
+        const total_time = data[i].workshop_total_time;
+        let hours = Math.floor(total_time / 60); // 60으로 나눈 몫을 구합니다
+        let Minutes = total_time % 60; // 60으로 나눈 나머지를 구합니다
         const workshop_video = data[i].workshop_video;
         const workshop_id = data[i].workshop_id;
         let tempHtml = ``;
@@ -111,9 +112,8 @@ function workshopDetail(id) {
                 <img src=${workshop_thumb} alt="">
             </div>
             <div class="teacher-workshop-li-div">
-                <li class="teacher-workshop-li">업체종류</li>
                 <li class="teacher-workshop-li">유형</li>
-                <li class="teacher-workshop-li">제목</li>
+                <li class="teacher-workshop-li-title">제목</li>
                 <li class="teacher-workshop-li">최소인원</li>
                 <li class="teacher-workshop-li">최대인원</li>
                 <li class="teacher-workshop-li">태그</li>
@@ -122,14 +122,13 @@ function workshopDetail(id) {
                 <li class="teacher-workshop-li">지역</li>
             </div>
             <div class="workshop-information-div">
-                <li class="workshop-information-li">프리랜서</li>
                 <li class="workshop-information-li">${workshop_category}</li>
-                <li class="workshop-information-li">${workshop_title}</li>
-                <li class="workshop-information-li">${workshop_min_member}</li>
-                <li class="workshop-information-li">${workshop_max_member}</li>
+                <li class="workshop-information-li-title">${workshop_title}</li>
+                <li class="workshop-information-li">${workshop_min_member}명</li>
+                <li class="workshop-information-li">${workshop_max_member}명</li>
                 <li class="workshop-information-li">#${genreTag_name} #${purposeTag_name}</li>
-                <li class="workshop-information-li">${workshop_total_time}</li>
-                <li class="workshop-information-li">${workshop_price}</li>
+                <li class="workshop-information-li">${hours}시간${Minutes}분</li>
+                <li class="workshop-information-li">${workshop_price}원</li>
                 <li class="workshop-information-li">${workshop_location}</li>
             </div>
             <div id="more-img-wrap1">
@@ -168,20 +167,17 @@ function workshopDetail(id) {
       }
     })
     .catch((response) => {
-      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
 }
 // click on 라벨 추가 모달 열기
 $(document).on('click', '#img', function (e) {
-  console.log('click event');
   $('#modal').addClass('show');
 });
 
 // 모달 닫기
 $(document).on('click', '#close_btn', function (e) {
-  console.log('click event');
   $('#modal').removeClass('show');
 });
 function workshop() {

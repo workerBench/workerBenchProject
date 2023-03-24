@@ -244,6 +244,19 @@
   color:#5129a3
   /* border: 2px solid #000000; */
 }
+.teacher-workshop-li-title{
+  font-size: 20px;
+  text-align: center;
+  list-style: none;
+  margin-bottom: 20px;
+  font-weight: bold;
+  box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
+  height: 50px;
+  margin-top: 30px;
+  padding-top: 10px;
+  border-radius: 10px;
+  color:#5129a3
+}
 .workshop-information-div{
   width: 300px;
   height: 300px;
@@ -261,6 +274,15 @@ padding-top: 10px;
 margin-bottom: 20px;
 border-bottom: 1px solid black;
 /* border: 2px solid #000000; */
+}
+.workshop-information-li-title{
+  font-size: 18px;
+text-align: center;
+list-style: none;
+height: 60px;
+padding-top: 10px;
+margin-bottom: 20px;
+border-bottom: 1px solid black;
 }
 #more-img-wrap1 {
   width: 1000px;

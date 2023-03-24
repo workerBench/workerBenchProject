@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data.teacher;
       const email = data.User.email;
       const name = data.name;
@@ -23,14 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
         bank_name,
         account,
         saving_name;
-      if (data.company) {
-        company_type = data.company.company_type;
-        company_name = data.company.company_name;
-        business_number = data.company.business_number;
-        rrn_front = data.company.rrn_front;
-        bank_name = data.company.bank_name;
-        account = data.company.account;
-        saving_name = data.company.saving_name;
+      if (data.MyCompany) {
+        company_type = data.MyCompany.company_type;
+        company_name = data.MyCompany.company_name;
+        business_number = data.MyCompany.business_number;
+        rrn_front = data.MyCompany.rrn_front;
+        bank_name = data.MyCompany.bank_name;
+        account = data.MyCompany.account;
+        saving_name = data.MyCompany.saving_name;
       }
       let companyHtml = ``;
       if (!data.MyCompany && !data.company) {
@@ -38,8 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                               <button type="radio" class="Button" onclick="registerCompany()">업체 등록</button>
                               <button type="radio" class="Button" id="applyCompany">업체 가입 신청</button>
                               `;
-      }
-      if (!data.MyCompany && data.company) {
+      } else if (!data.MyCompany && data.company) {
         company_name = data.company.company_name;
         saving_name = data.company.saving_name;
         companyHtml += `
@@ -128,10 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // 등록된 업체 검색
       companySearch.addEventListener('click', () => {
         const company_name = document.getElementById('company-name').value;
-        if (!company_name) {
-          alert('검색하려는 업체를 입력해 주세요');
-          return;
-        }
+        // if (!company_name) {
+        //   alert('업체를 입력해 주세요');
+        //   return;
+        // }
         axios({
           method: 'get',
           url: `/api/teacher/company/search?company_name=${company_name}`,
@@ -224,9 +222,7 @@ function acceptListCompany() {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data;
-      console.log(data);
       let html = '';
       for (let i = 0; i < data.length; i++) {
         const name = data[i].name;

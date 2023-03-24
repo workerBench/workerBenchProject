@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data.complete_instance_list;
       for (let i = 0; i < data.length; i++) {
         const workshop_thumb = data[i].workshopThumbUrl;
@@ -29,27 +28,45 @@ document.addEventListener('DOMContentLoaded', () => {
         const createdDate = `${forFormat.getFullYear()}-${forFormat.getMonth()}-${forFormat.getDate()} ${forFormat.getHours()}시 ${forFormat.getMinutes()}분`;
         let tempHtml = ``;
         tempHtml = `
-                  <div class="teacher-manage-div" >
-                      <div class="workshop-information-div">
-                          <img src=${workshop_thumb} alt="" />
-                          <li for="purpose-tag" class="workshop-information-title"><img src="/images/title1.png" width="40" />${workshop_title}</li>
-                          <li for="purpose-tag" class="workshop-information">최소 인원 : ${min_member}명</li>
-                          <li for="purpose-tag" class="workshop-information">최대 인원 : ${max_member}명</li>
-                          <li for="purpose-tag" class="workshop-information">분야<img src="/images/tag3.png" width="40" /> ${genreTag_name}<br> 목적<img src="/images/tag4.png" width="40" /> ${purposeTag_name}</li>
-                          <li for="purpose-tag" class="workshop-information"><img src="/images/time.png" width="40" /> ${hours}시간 ${remainingMinutes}분</li>
-                          <li for="purpose-tag" class="workshop-information"><img src="/images/money.png" width="50" /> ${price}원</li>
-                      </div>
-                      <div class="company-information-div">
-                          <div class="company-information">
-                              <li for="purpose-tag" class="company-input-desc"><img src="/images/list.png" width="50" />${etc}</li>
-                              <li for="purpose-tag" class="company-input"><img src="/images/office-building.png" width="50" />${company}</li>
-                              <li for="purpose-tag" class="company-input"><img src="/images/smartphone.png" width="50" /> ${phone_number}</li>
-                              <li for="purpose-tag" class="company-input"><img src="/images/group.png" width="50" /> ${member_cnt}명</li>
-                              <li for="purpose-tag" class="company-input"><img src="/images/email2.png" width="50" /> ${email}</li>
-                              <li for="purpose-tag" class="company-input"><img src="/images/calendar.png" width="50" /> ${createdDate}</li>
-                          </div>
-                      </div>
-                  </div>
+        <div class="teacher-manage-div" >
+        <div class="workshop-information-Div">
+            <div class="teacher-workshop-li-div">
+                <img src="${workshop_thumb}" alt="" />
+                <li class="workshop-information-li-title">제목</li>
+                <li class="workshop-information-li">최소인원</li>
+                <li class="workshop-information-li">최대인원</li>
+                <li class="workshop-information-li-tag">장르태그</li>
+                <li class="workshop-information-li">총시간</li>
+                <li class="workshop-information-li">가격</li>
+            </div>
+            <div class="workshop-information-div">
+                <li class="workshop-information-title-data">${workshop_title}</li>
+                <li class="workshop-information-data">${min_member}</li>
+                <li class="workshop-information-data">${max_member}명</li>
+                <li class="workshop-information-tag-data">${genreTag_name}<br>${purposeTag_name}</li>
+                <li class="workshop-information-data">${hours}시간 ${remainingMinutes}분</li>
+                <li class="workshop-information-data">${price}원</li>
+            </div>
+        </div>
+        <div class="workshop-information-Div2">
+            <div class="teacher-workshop-apply-div">
+                <li class="workshop-information-apply">설명</li>
+                <li class="workshop-information-apply">업체명</li>
+                <li class="workshop-information-apply">휴대폰 번호</li>
+                <li class="workshop-information-apply">인원수</li>
+                <li class="workshop-information-apply">이메일</li>
+                <li class="workshop-information-apply">생성날짜</li>
+            </div>
+            <div class="workshop-information-apply-div">
+                <li class="workshop-information-apply-data">${etc}</li>
+                <li class="workshop-information-apply-data">${company}</li>
+                <li class="workshop-information-apply-data">${phone_number}</li>
+                <li class="workshop-information-apply-data">${member_cnt}명</li>
+                <li class="workshop-information-apply-data">${email}</li>
+                <li class="workshop-information-apply-data">${createdDate}</li>
+            </div>
+        </div
+    </div>
             `;
         workshopcompleteList.insertAdjacentHTML('beforeend', tempHtml);
       }
