@@ -91,15 +91,15 @@ function workshopDetail(id) {
         const img_name = data[i].img_name;
         const purposeTag_name = data[i].purposeTag_name;
         const workshop_createdAt = data[i].workshop_createdAt;
+        const forFormat = new Date(workshop_createdAt);
+        const createdDate = `${forFormat.getFullYear()}-${forFormat.getMonth()}-${forFormat.getDate()} ${forFormat.getHours()}시 ${forFormat.getMinutes()}분`;
         const workshop_desc = data[i].workshop_desc;
         const workshop_location = data[i].workshop_location;
         const workshop_max_member = data[i].workshop_max_member;
         const workshop_min_member = data[i].workshop_min_member;
         const workshop_price = data[i].workshop_price;
-        const workshop_status = data[i].workshop_status;
         const workshop_thumb = data[i].workshop_thumb;
         const workshop_title = data[i].workshop_title;
-        const workshop_total_time = data[i].workshop_total_time;
         const total_time = data[i].workshop_total_time;
         let hours = Math.floor(total_time / 60); // 60으로 나눈 몫을 구합니다
         let Minutes = total_time % 60; // 60으로 나눈 나머지를 구합니다
@@ -114,12 +114,13 @@ function workshopDetail(id) {
             <div class="teacher-workshop-li-div">
                 <li class="teacher-workshop-li">유형</li>
                 <li class="teacher-workshop-li-title">제목</li>
-                <li class="teacher-workshop-li">최소인원</li>
-                <li class="teacher-workshop-li">최대인원</li>
+                <li class="teacher-workshop-li">최소 인원</li>
+                <li class="teacher-workshop-li">최대 인원</li>
                 <li class="teacher-workshop-li">태그</li>
                 <li class="teacher-workshop-li">총 시간</li>
                 <li class="teacher-workshop-li">가격</li>
                 <li class="teacher-workshop-li">지역</li>
+                <li class="teacher-workshop-li">생성 날짜</li>
             </div>
             <div class="workshop-information-div">
                 <li class="workshop-information-li">${workshop_category}</li>
@@ -130,6 +131,7 @@ function workshopDetail(id) {
                 <li class="workshop-information-li">${hours}시간${Minutes}분</li>
                 <li class="workshop-information-li">${workshop_price}원</li>
                 <li class="workshop-information-li">${workshop_location}</li>
+                <li class="workshop-information-li">${createdDate}</li>
             </div>
             <div id="more-img-wrap1">
                 <label for="workshop" class="form-label sub-Img-label"
