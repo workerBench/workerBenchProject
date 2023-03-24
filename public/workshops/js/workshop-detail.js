@@ -345,18 +345,21 @@ function orderWorkshop() {
     !member_cnt
   ) {
     alert('필수 입력 값을 모두 입력해주세요.');
+    return;
   }
 
   // 이메일 정규표현식 검사
   const regEmail = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}');
   if (email !== null && regEmail.test(email) === false) {
     alert('이메일 형식이 올바르지 않습니다.');
+    return;
   }
 
   // 전화번호 정규표현식 검사
   const regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
   if (phone_number !== null && regPhone.test(phone_number) === false) {
     alert('전화번호를 정확하게 입력해주세요.');
+    return;
   }
 
   axios
@@ -379,7 +382,7 @@ function orderWorkshop() {
     .catch((err) => {
       console.log(err);
       if (err.response.data.statusCode === 401) {
-        alert('로그인 후 이용해주세요!');
+        alert('로그인 후 이용 가능합니다.');
       }
     });
 }
