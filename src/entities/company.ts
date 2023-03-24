@@ -51,7 +51,7 @@ export class Company {
     description: '사업자 법인번호. `-` 없이 입력해 주세요',
     required: false,
   })
-  @Column('int', { name: 'business_number', nullable: true })
+  @Column('bigint', { name: 'business_number', nullable: true })
   business_number: number | null;
 
   @IsNumber()
@@ -94,7 +94,7 @@ export class Company {
     description: '계좌 번호. `-` 없이 입력',
     required: true,
   })
-  @Column('int', { name: 'account', nullable: false })
+  @Column('bigint', { name: 'account', nullable: false })
   account: number;
 
   @IsString({ message: '예금주 성함을 정확히 입력해 주세요' })

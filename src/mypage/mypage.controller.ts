@@ -163,7 +163,6 @@ export class MypageController {
     @Body() refundInfo: RefundDto,
     @CurrentUser() user: CurrentUserDto,
   ) {
-    console.log('-----', refundInfo);
     const check_result = await this.mypageService.refundWorkshopPayment(
       user.id,
       refundInfo,

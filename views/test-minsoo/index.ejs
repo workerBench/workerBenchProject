@@ -275,19 +275,15 @@
             },
           })
           .then((response) => {
-            console.log('무사히 통신 완료');
             console.log(response);
           })
           .catch((err) => {
-            console.log('에러 발생. 400 번대 코드가 반환되면 catch로.');
             console.log(err);
           });
       };
 
       const getThumbImg = () => {
         axios.get('/api/auth/img-s3-url').then((res) => {
-          console.log('썸네일 주소 가져오기 api 무사히 작동');
-          console.log(res.data.data);
           document.querySelector('#thumb-show').src = res.data.data;
         });
       };
@@ -311,11 +307,9 @@
             },
           })
           .then((res) => {
-            console.log('정상 작동');
             console.log(res);
           })
           .catch((err) => {
-            console.log('에러 발생');
             console.log(err);
             if (err.status === 404) {
               axios
@@ -333,8 +327,8 @@
 
       const getReviewVideo = () => {
         axios.get('/api/auth/video-s3-url').then((res) => {
-          console.log('무사히 비디오 url 가져옴');
-          console.log(res.data.data);
+          // console.log('무사히 비디오 url 가져옴');
+          // console.log(res.data.data);
           // document.querySelector('#s3-video-show').src = res.data.data;
           // document.querySelector('#video-show-target').src = res.data.data;
         });

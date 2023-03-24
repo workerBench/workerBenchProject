@@ -12,7 +12,6 @@ function getWorkshopDetail() {
   axios
     .get(`/api/workshops/${workshopId}`)
     .then((res) => {
-      console.log(res.data.data);
       const workshop = res.data.data.workshop[0];
       const wishCheck = res.data.data.wish; // false or true
       let workshopInfo = `<div class="row">
@@ -172,7 +171,6 @@ function addToWish() {
   axios
     .post(`/api/workshops/${workshopId}/wish`) // user_id 임시로 하드코딩
     .then((res) => {
-      console.log(res);
       alert(res.data.data.message);
       if (res.data.data.type === 'add') {
         document.querySelector('.wish').textContent = '♥';
@@ -199,7 +197,6 @@ function getWorkshopReviews() {
   axios
     .get(`/api/workshops/${workshopId}/reviews`) // user_id 임시로 하드코딩
     .then((res) => {
-      console.log(res);
       const reviews = res.data.data;
 
       reviews.forEach((element, index) => {
@@ -241,8 +238,6 @@ const form = document.getElementById('form');
 function findAddr() {
   new daum.Postcode({
     oncomplete: function (data) {
-      console.log(data);
-
       // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
       // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
       // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.

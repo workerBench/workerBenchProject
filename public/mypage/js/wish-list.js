@@ -21,7 +21,6 @@ function getWishList() {
     .get('/api/mypage/workshops/wishlist')
     .then((res) => {
       const workshops = res.data.data;
-      console.log('workshops', workshops);
 
       workshops.forEach((element) => {
         let tempHtml = `<div class="col" id="wish-card-${element.workshop_id}">

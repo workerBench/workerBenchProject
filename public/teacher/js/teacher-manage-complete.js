@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
     .catch((response) => {
-      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
