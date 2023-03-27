@@ -31,6 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
         account = data.MyCompany.account;
         saving_name = data.MyCompany.saving_name;
       }
+      if (data.company) {
+        company_type = data.company.company_type;
+        company_name = data.company.company_name;
+        business_number = data.company.business_number;
+        rrn_front = data.company.rrn_front;
+        bank_name = data.company.bank_name;
+        account = data.company.account;
+        saving_name = data.company.saving_name;
+      }
       let companyHtml = ``;
       if (!data.MyCompany && !data.company) {
         companyHtml += `
@@ -61,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                   <li class="teacher-workshop-li">예금주명</li>
                               </div>
                               <div class="workshop-information-div">
-                                  <li class="workshop-information-li">'사업자'</li>
+                                  <li class="workshop-information-li">사업자</li>
                                   <li class="workshop-information-li">${company_name}</li>
                                   <li class="workshop-information-li">${business_number}</li>
                                   <li class="workshop-information-li">${bank_name}</li>
@@ -167,6 +176,32 @@ document.addEventListener('DOMContentLoaded', () => {
       const { data } = response.response;
       alert(data.message);
     });
+  // 모든 업체 목록 조회
+  axios
+    .get('/api/teacher/companies')
+    .then(function (response) {
+      const companies = response.data;
+      let html = '';
+      for (let company of companies) {
+        html += `
+    <tr>
+        <td>${company.company_name}</td>
+        <td>${company.saving_name}</td>
+        <td>${company.createdAt.split('T')[0]}</td>
+        <td>
+          <button class="apply-btn" onclick="applyCompany(${
+            company.user_id
+          })">가입 신청</button>
+        </td>
+      </tr>
+    `;
+      }
+      $('#company').append(html);
+    })
+    .catch(function (error) {
+      const { data } = response.response;
+      alert(data.error);
+    });
 });
 // 모든 업체 목록 조회
 axios
@@ -218,9 +253,7 @@ function acceptListCompany() {
     data: {},
   })
     .then((response) => {
-      console.log(response);
       const data = response.data;
-      console.log(data);
       let html = '';
       for (let i = 0; i < data.length; i++) {
         const name = data[i].name;

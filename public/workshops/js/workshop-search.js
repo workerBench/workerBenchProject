@@ -12,9 +12,6 @@ function getAllWorkshops() {
     .get(url)
     .then((res) => {
       const workshops = res.data.data;
-      console.log(res.data.data);
-      console.log(workshops.length);
-      console.log(url, params);
 
       // 검색 결과 건수 표시
       document.querySelector(
@@ -85,9 +82,6 @@ function searchWorkshops() {
       .get(url, { params })
       .then((res) => {
         const workshops = res.data.data;
-        console.log(res.data.data);
-        console.log(workshops.length);
-        console.log(url, params);
 
         // 검색 결과 건수 표시
         document.querySelector(
@@ -106,13 +100,19 @@ function searchWorkshops() {
         />
         </a>
         <div class="card-body">
-          <h5 class="card-title">${element.workshop_title}</h5>
-          <p class="card-text">${element.workshop_category}</p>
-          <p class="card-text">비용: ${element.workshop_price}원</p>
-          <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
-          <p class="card-text">시간: ${element.workshop_total_time}분</p>
-          <p class="card-text">#${element.genre_name} #${element.purposeTag_name}</p>
-        </div>
+        <p class="workshop-title">${element.workshop_title}</p>
+        <span class="workshop-category">${
+          element.workshop_category === 'online' ? '온라인' : '오프라인'
+        }</span>
+        <p class="workshop-price">비용 &nbsp;${element.workshop_price}원</p>
+        <p class="card-text">인원 &nbsp;${element.workshop_min_member}~${
+            element.workshop_max_member
+          }명</p>
+        <p class="card-text">시간 &nbsp;${element.workshop_total_time}분</p>
+        <p class="card-text">#${element.genre_name} #${
+            element.purposeTag_name
+          }</p>
+      </div>
       </div>
     </div>`;
           $('.workshop-result-list').append(temp);
@@ -132,9 +132,6 @@ function searchWorkshops() {
       .get(url, { params })
       .then((res) => {
         const workshops = res.data.data;
-        console.log(res.data.data);
-        console.log(workshops.length);
-        console.log(url, params);
 
         $('.workshop-result-list').empty();
         if (workshops.length === 0) {
@@ -156,13 +153,20 @@ function searchWorkshops() {
           />
           </a>
           <div class="card-body">
-            <h5 class="card-title">${element.workshop_title}</h5>
-            <p class="card-text">${element.workshop_category}</p>
-            <p class="card-text">비용: ${element.workshop_price}원</p>
-            <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
-            <p class="card-text">시간: ${element.workshop_total_time}분</p>
-            <p class="card-text">#${element.genre_name} #${element.purposeTag_name}</p>
-          </div>
+          <p class="workshop-title">${element.workshop_title}</p>
+          <span class="workshop-category">${
+            element.workshop_category === 'online' ? '온라인' : '오프라인'
+          }</span>
+          <p class="workshop-price">비용 &nbsp;${element.workshop_price}원</p>
+          <p class="card-text">인원 &nbsp;${element.workshop_min_member}~${
+              element.workshop_max_member
+            }명</p>
+          <p class="card-text">시간 &nbsp;${element.workshop_total_time}분</p>
+          <p class="card-text">#${element.genre_name} #${
+              element.purposeTag_name
+            }</p>
+        </div>
+
         </div>
       </div>`;
             $('.workshop-result-list').append(temp);
@@ -183,9 +187,6 @@ function searchWorkshops() {
       .get(url, { params })
       .then((res) => {
         const workshops = res.data.data;
-        console.log(res.data.data);
-        console.log(workshops.length);
-        console.log(url, params);
 
         $('.workshop-result-list').empty();
         if (workshops.length === 0) {
@@ -207,13 +208,20 @@ function searchWorkshops() {
           />
           </a>
           <div class="card-body">
-            <h5 class="card-title">${element.workshop_title}</h5>
-            <p class="card-text">${element.workshop_category}</p>
-            <p class="card-text">비용: ${element.workshop_price}원</p>
-            <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
-            <p class="card-text">시간: ${element.workshop_total_time}분</p>
-            <p class="card-text">#${element.genre_name} #${element.purposeTag_name}</p>
+            <p class="workshop-title">${element.workshop_title}</p>
+            <span class="workshop-category">${
+              element.workshop_category === 'online' ? '온라인' : '오프라인'
+            }</span>
+            <p class="workshop-price">비용 &nbsp;${element.workshop_price}원</p>
+            <p class="card-text">인원 &nbsp;${element.workshop_min_member}~${
+              element.workshop_max_member
+            }명</p>
+            <p class="card-text">시간 &nbsp;${element.workshop_total_time}분</p>
+            <p class="card-text">#${element.genre_name} #${
+              element.purposeTag_name
+            }</p>
           </div>
+
         </div>
       </div>`;
             $('.workshop-result-list').append(temp);
@@ -234,9 +242,6 @@ function searchWorkshops() {
       .get(url, { params })
       .then((res) => {
         const workshops = res.data.data;
-        console.log(res.data.data);
-        console.log(workshops.length);
-        console.log(url, params);
 
         $('.workshop-result-list').empty();
         if (workshops.length === 0) {
@@ -258,12 +263,18 @@ function searchWorkshops() {
           />
           </a>
           <div class="card-body">
-            <h5 class="card-title">${element.workshop_title}</h5>
-            <p class="card-text">${element.workshop_category}</p>
-            <p class="card-text">비용: ${element.workshop_price}원</p>
-            <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
-            <p class="card-text">시간: ${element.workshop_total_time}분</p>
-            <p class="card-text">#${element.genre_name} #${element.purposeTag_name}</p>
+            <p class="workshop-title">${element.workshop_title}</p>
+            <span class="workshop-category">${
+              element.workshop_category === 'online' ? '온라인' : '오프라인'
+            }</span>
+            <p class="workshop-price">비용 &nbsp;${element.workshop_price}원</p>
+            <p class="card-text">인원 &nbsp;${element.workshop_min_member}~${
+              element.workshop_max_member
+            }명</p>
+            <p class="card-text">시간 &nbsp;${element.workshop_total_time}분</p>
+            <p class="card-text">#${element.genre_name} #${
+              element.purposeTag_name
+            }</p>
           </div>
         </div>
       </div>`;
@@ -285,9 +296,6 @@ function searchWorkshops() {
       .get(url, { params })
       .then((res) => {
         const workshops = res.data.data;
-        console.log(res.data.data);
-        console.log(workshops.length);
-        console.log(url, params);
 
         $('.workshop-result-list').empty();
         if (workshops.length === 0) {
@@ -309,12 +317,18 @@ function searchWorkshops() {
           />
           </a>
           <div class="card-body">
-            <h5 class="card-title">${element.workshop_title}</h5>
-            <p class="card-text">${element.workshop_category}</p>
-            <p class="card-text">비용: ${element.workshop_price}원</p>
-            <p class="card-text">인원: ${element.workshop_min_member}~${element.workshop_max_member}명</p>
-            <p class="card-text">시간: ${element.workshop_total_time}분</p>
-            <p class="card-text">#${element.genre_name} #${element.purposeTag_name}</p>
+            <p class="workshop-title">${element.workshop_title}</p>
+            <span class="workshop-category">${
+              element.workshop_category === 'online' ? '온라인' : '오프라인'
+            }</span>
+            <p class="workshop-price">비용 &nbsp;${element.workshop_price}원</p>
+            <p class="card-text">인원 &nbsp;${element.workshop_min_member}~${
+              element.workshop_max_member
+            }명</p>
+            <p class="card-text">시간 &nbsp;${element.workshop_total_time}분</p>
+            <p class="card-text">#${element.genre_name} #${
+              element.purposeTag_name
+            }</p>
           </div>
         </div>
       </div>`;

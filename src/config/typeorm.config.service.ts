@@ -51,6 +51,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       ],
       synchronize: true,
       logging: true, // sql 문 띄워줌
+      // logging: true, // sql 문 띄워줌
       keepConnectionAlive: true, // 이거 안 켜두면 서버 재시작할 때 DB 연결을 끊어버려.
       charset: 'utf8mb4', // 나중에 이모티콘도 추가할려고
     };

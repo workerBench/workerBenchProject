@@ -5,6 +5,11 @@ body {
   font-family: 'Noto Sans KR', sans-serif;
 }
 
+.card-img-top {
+  height: 15rem;
+  object-fit: cover;
+}
+
 .form-select,
 .form-control {
   width: 200px;

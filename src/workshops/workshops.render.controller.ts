@@ -7,6 +7,7 @@ import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { JwtUserPageGuard } from 'src/auth/jwt/refresh-page-check/user/jwt-user-page-guard';
 import { TOKEN_NAME } from 'src/auth/naming/token-name';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
+import axios from 'axios';
 
 @ApiTags('z-page-render')
 @Controller('workshops')
@@ -67,6 +68,7 @@ export class WorkshopsControllerRender {
           clientIp,
           refreshToken,
         );
+
         return res.render('workshops/workshop-detail', { user: user });
       } catch (err) {
         res.clearCookie(TOKEN_NAME.userAccess);

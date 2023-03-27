@@ -123,18 +123,6 @@ export class TeacherController {
     return this.teacherService.createTeacherCompany(data, user.id);
   }
 
-  // 강사 업체 검색
-  @ApiResponse({
-    status: 200,
-    description: '성공',
-  })
-  @ApiOperation({ summary: '강사 등록된 업체 검색 API' })
-  @Get('company/search')
-  @UseGuards(JwtTeacherAuthGuard)
-  async searchCompanys(@Query('company_name') company_name: string) {
-    return await this.teacherService.searchCompanys(company_name);
-  }
-
   // 업체 목록 조회
   @ApiResponse({
     status: 200,
@@ -147,12 +135,24 @@ export class TeacherController {
     return await this.teacherService.gerAllCompanies();
   }
 
+  // 강사 업체 검색
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '강사 등록된 업체 검색 API' })
+  @Get('company/search')
+  @UseGuards(JwtTeacherAuthGuard)
+  async searchCompanys(@Query('company_name') company_name: string) {
+    return await this.teacherService.searchCompanys(company_name);
+  }
+
   // 강사 등록된 업체에 등록 신청
   @ApiResponse({
     status: 200,
     description: '성공',
   })
-  @ApiOperation({ summary: '강사 등록된 업체에 신청 API' })
+  @ApiOperation({ summary: '강사 등록된 업체에 등록 신청 API' })
   @Post('company/apply/:id')
   @UseGuards(JwtTeacherAuthGuard)
   registerTeacherCompany(
@@ -179,7 +179,7 @@ export class TeacherController {
     status: 200,
     description: '성공',
   })
-  @ApiOperation({ summary: '신청한 업체 등록하기 API' })
+  @ApiOperation({ summary: '신청한 업체 수락하기 API' })
   @Patch('company/accept/:id')
   @UseGuards(JwtTeacherAuthGuard)
   registerCompany(
@@ -189,12 +189,12 @@ export class TeacherController {
     return this.teacherService.registerCompany(user.id, id);
   }
 
-  // 업체 소속을 신청한 업체 취소하기
+  // 업체 소속을 신청한 강사 반려하기
   @ApiResponse({
     status: 200,
     description: '성공',
   })
-  @ApiOperation({ summary: '신청한 업체 등록하기 API' })
+  @ApiOperation({ summary: '신청한 업체 반려하기 API' })
   @Delete('company/cancle/:id')
   @UseGuards(JwtTeacherAuthGuard)
   cancleApplyCompany(
@@ -204,12 +204,12 @@ export class TeacherController {
     return this.teacherService.cancleApplyCompany(user.id, id);
   }
 
-  // 강사 워크샵 등록
+  // 강사 워크샵 등록 신청
   @ApiResponse({
     status: 200,
     description: '성공',
   })
-  @ApiOperation({ summary: '강사 워크샵 등록 API' })
+  @ApiOperation({ summary: '강사 워크샵 등록 신청 API' })
   @Post('workshops')
   @UseGuards(JwtTeacherAuthGuard)
   @UseInterceptors(
@@ -249,7 +249,22 @@ export class TeacherController {
       user.id,
     );
   }
-
+  // 강사 워크샵 상세보기
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+  })
+  @ApiOperation({ summary: '강사 워크샵 상세보기 API' })
+  @Get('workshop/detail/:id')
+  @UseGuards(JwtTeacherAuthGuard)
+  async workshopDetail(
+    @CurrentUser() user: CurrentUserDto,
+    @Param('id') id: number,
+  ) {
+    const data = await this.teacherService.workshopDetail(user.id, id);
+    const result = { detailWorkshop: data };
+    return result;
+  }
   // 강사 미완료 목록 보기
   @ApiResponse({
     status: 200,
@@ -310,12 +325,12 @@ export class TeacherController {
     return this.teacherService.updateTeacherComplete(user.id, id);
   }
 
-  // 강사 신청한 워크샵 반려하기
+  // 강사 수강 문의 반려하기
   @ApiResponse({
     status: 200,
-    description: 'status:"waiting_lecture" => "complete"',
+    description: 'status:"request" || "status: => "non_payment" => "rejected"',
   })
-  @ApiOperation({ summary: '강사 수강 문의 종료하기 API' })
+  @ApiOperation({ summary: '강사 신청한 워크샵 반려하기 API' })
   @Patch('workshops/manage/reject/:id')
   @UseGuards(JwtTeacherAuthGuard)
   cancleWorkshop(@CurrentUser() user: CurrentUserDto, @Param('id') id: number) {

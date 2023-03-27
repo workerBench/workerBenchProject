@@ -1,103 +1,378 @@
-.fw-bolderandtopbottom {
-    font-weight: bolder !important;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  .text-center {
-    text-align: center !important;
-  }
-  #button-workshop{
-      width: 200px;
-      margin-right: 10px;
-      margin-top: 30px;
-      margin-bottom: 30px;
-      height: 50px;
-      border-radius: 10px;
-      background-color: #9f70fb;
-  }
-  .button-div{
-      margin: auto;
-      display: flex;
-      justify-content: center;
-      width: 800px;
-      border-bottom: 2px solid rgb(179, 179, 179);
-  }
-  #button{
-      width: 200px;
-      margin-right: 10px;
-      margin-top: 30px;
-      margin-bottom: 30px;
-      height: 50px;
-      border-radius: 10px;
-      background-color: #ffffff;
-  }
-  #button:hover{
-      background-color:#a084dc;
-  }
-  /* teacher-workshop css*/
-  .workshopBox-div{
-      /* width: 2000px; */
-      margin: 100px auto 200px auto;
-      font-family: 'Gowun Dodum', sans-serif;
-  }
-  .workshopBox{
-      margin-left: 80px;
-  }
-  .workshop-div{
-      width: 1200px;
-      margin:auto;
-      display: flex;
-      flex-wrap: wrap;
-      flex-shrink: 0;
-      gap: 20px;
-  }
-  .workshop{
-      margin-top: 20px;
-      box-sizing: border-box;
-      background-color: #ffffff;
-      box-shadow: rgb(0 0 0 / 30%) 0px 2px 8px;
-      width: 280px;
-      height: 350px;
-      font-size: 15px;
-  }
-  .workshop > img{
-      width: 100%;
-      height: 200px;
-  }
-  .reject {
-    padding: 3px 10px 3px 10px;
-    background-color: rgb(79, 79, 79);
-    color: white;
-    border-radius: 5px;
+/* 모달 css */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: none;
+
+  background-color: rgba(0, 0, 0, 0.4);
 }
-  .card-text {
-      padding: 10px;
-      list-style: none;
-  }
-  .title{
-      margin-top: 10px;
-      font-size: 16px;
-      font-weight: bolder;
-  }
-  .tag {
-      margin-top: 70px;
-  }
-  .list-group-item{
-      width:100px
-  }
-  .workshopBox > li {
-      padding-top: 10px;
-      border-radius: 10px;
-      align-items: center;
-      text-align: center;
-      width:250px;
-      height: 50px;
-      margin-top: 50px;
-      margin-left: 15%;
-      font-size: 20px;
-      font-weight: bold;
-      list-style: none;
-      color:#412c6f;
-      background-color: rgb(255, 255, 255);
-      box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
-  }
+
+.modal.show {
+  display: block;
+}
+
+.modal_body {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1100px;
+  height: 900px;
+  overflow: scroll;
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+  transform: translateX(-50%) translateY(-50%);
+}
+.m_head {
+  height: 10%;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #e7e5e5;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.m_body {
+  height: 80%;
+  padding: 20px;
+}
+.m_footer {
+  height: 10%;
+  padding: 15px;
+  background-color: #e7e5e5;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  display: flex;
+  justify-content: end;
+}
+.modal_title {
+  font-size: 18px;
+  color: gray;
+  font-weight: 500;
+}
+.close_btn {
+  font-size: 20px;
+  color: rgb(139, 139, 139);
+  font-weight: 900;
+  cursor: pointer;
+}
+.modal_label {
+  padding-top: 10px;
+}
+.input_box {
+  width: 100%;
+  border: 1px solid rgb(189, 189, 189);
+  height: 30px;
+}
+.modal_btn {
+  width: 80px;
+  height: 30px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bolder;
+  padding-top: 5px;
+  margin-left: 5px;
+  font-family: sans-serif;
+}
+.cancle {
+  background-color: white;
+  color: black;
+}
+.save {
+  background-color: rgb(50, 77, 158);
+  color: white;
+}
+/* 워크샵 css */
+.fw-bolderandtopbottom {
+  font-weight: bolder !important;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.text-center {
+  text-align: center !important;
+}
+#button-workshop {
+  width: 200px;
+  margin-right: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #9f70fb;
+}
+.button-div {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  width: 800px;
+  border-bottom: 2px solid rgb(179, 179, 179);
+}
+#button {
+  width: 200px;
+  margin-right: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+#button:hover {
+  background-color: #a084dc;
+}
+/* teacher-workshop css*/
+.workshopBox-div {
+  /* width: 2000px; */
+  margin: 100px auto 200px auto;
+  font-family: 'Gowun Dodum', sans-serif;
+}
+.workshopBox {
+  margin-left: 80px;
+}
+.workshop-div {
+  width: 1200px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  gap: 20px;
+}
+.workshop {
+  margin-top: 20px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  box-shadow: rgb(0 0 0 / 30%) 0px 2px 8px;
+  width: 280px;
+  height: 350px;
+  font-size: 15px;
+}
+.workshop > img {
+  width: 100%;
+  height: 200px;
+}
+.reject {
+  padding: 3px 10px 3px 10px;
+  background-color: rgb(79, 79, 79);
+  color: white;
+  border-radius: 5px;
+}
+.card-text {
+  padding: 10px;
+  list-style: none;
+}
+.title {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bolder;
+}
+.tag {
+  margin-top: 70px;
+}
+.list-group-item {
+  width: 100px;
+}
+.workshopBox > li {
+  padding-top: 10px;
+  border-radius: 10px;
+  align-items: center;
+  text-align: center;
+  width: 250px;
+  height: 50px;
+  margin-top: 50px;
+  margin-left: 15%;
+  font-size: 20px;
+  font-weight: bold;
+  list-style: none;
+  color: #412c6f;
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
+}
+
+/* 워크샵 css */
+#workshopBox {
+  width: 1000px;
+  height: 1100px;
+  margin: 0 auto;
+  margin-top: 100px;
+  border: 2px solid lavender;
+  border-radius: 20px;
+  box-shadow: 3px 3px 5px lavender;
+  display: flex;
+  flex-wrap: wrap;
+}
+.image {
+  width: 400px;
+  height: 300px;
+  margin-top: 50px;
+  margin-left: 50px;
+}
+.image > img {
+  width: 100%;
+  height: 400px;
+}
+.minMember {
+  width: 50px;
+  border: 1px solid black;
+  list-style: none;
+}
+.maxMember {
+  width: 50px;
+  margin-left: 25px;
+  list-style: none;
+}
+.teacher-workshop-li-div {
+  width: 150px;
+  height: 400px;
+  margin-left: 50px;
+  margin-top: 50px;
+}
+.teacher-workshop-li {
+  font-size: 20px;
+  text-align: center;
+  list-style: none;
+  margin-bottom: 20px;
+  font-weight: bold;
+  box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
+  height: 40px;
+  padding-top: 10px;
+  border-radius: 10px;
+  color: #5129a3;
+  /* border: 2px solid #000000; */
+}
+.teacher-workshop-li-title {
+  font-size: 20px;
+  text-align: center;
+  list-style: none;
+  margin-bottom: 20px;
+  font-weight: bold;
+  box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
+  height: 50px;
+  margin-top: 30px;
+  padding-top: 10px;
+  border-radius: 10px;
+  color: #5129a3;
+}
+.workshop-information-div {
+  width: 300px;
+  height: 300px;
+  margin-top: 50px;
+  margin-left: 20px;
+  font-weight: bold;
+  color: rgb(42, 42, 42);
+}
+.workshop-information-li {
+  font-size: 18px;
+  text-align: center;
+  list-style: none;
+  height: 40px;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid black;
+  /* border: 2px solid #000000; */
+}
+.workshop-information-li-title {
+  font-size: 18px;
+  text-align: center;
+  list-style: none;
+  height: 60px;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid black;
+}
+#more-img-wrap1 {
+  width: 1000px;
+  height: 400px;
+  margin: auto;
+}
+.sub-Img-label {
+  width: 280px;
+  height: 40px;
+  margin-bottom: 10px;
+  font-size: 25px;
+  text-align: center;
+  list-style: none;
+  border: 2px solid #000000;
+  margin-left: 20px;
+  margin-top: 200px;
+  border-radius: 10px;
+  background-color: #a084dc;
+}
+.subImage {
+  width: 1000px;
+  height: 300px;
+  display: flex;
+}
+.subImage > img {
+  width: 300px;
+  height: 300px;
+  margin-left: 20px;
+}
+.video-contents-div {
+  width: 1000px;
+  height: 650px;
+  border: 2px solid lavender;
+  border-radius: 20px;
+  box-shadow: 3px 3px 5px lavender;
+  padding-top: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: auto;
+  margin-top: 300px;
+}
+.workshop-video-li {
+  width: 250px;
+  height: 40px;
+  margin-bottom: 10px;
+  font-size: 25px;
+  text-align: center;
+  list-style: none;
+  border-radius: 10px;
+  border: 2px solid #000000;
+  background-color: #a084dc;
+}
+.workshop-description-li {
+  width: 150px;
+  height: 40px;
+  margin-bottom: 10px;
+  font-size: 25px;
+  text-align: center;
+  list-style: none;
+  border-radius: 10px;
+  border: 2px solid #000000;
+  background-color: #a084dc;
+}
+.desc {
+  width: 1000px;
+  height: 400px;
+  font-size: 30px;
+  list-style: none;
+  border: 2px solid lavender;
+  box-shadow: 3px 3px 5px lavender;
+}
+.video-one-set-wrap {
+  width: 90%;
+  height: 530px;
+  margin: auto;
+  margin-top: 5px;
+}
+.video-show-tag-wrap {
+  width: 600px;
+  height: 460px;
+  margin: auto;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+#video-show-tag {
+  width: 600px;
+  max-height: 450px;
+}
+#fileWidth {
+  width: 280px;
+  margin-right: 10px;
+}

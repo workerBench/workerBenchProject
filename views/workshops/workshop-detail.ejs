@@ -42,59 +42,7 @@
       </div>
 
       <!-- 워크샵 신청하기 Modal -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">워크샵 신청하기</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form id="form">
-                <div class="mb-3">
-                  <input type="text" class="form-control" name="company" id="company" placeholder="회사명" required>
-                </div>
-                <div class="mb-3">
-                  <input type="text" class="form-control" name="name" id="name" placeholder="신청자 성함" required>
-                </div>
-                <div class="mb-3">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="이메일" required>
-                </div>
-                <div class="mb-3">
-                  <input type="text" class="form-control" name="phone_number" id="phone_number" placeholder="전화번호" required>
-                  <p>* '-' 없이 입력해주세요. (ex. 01012341234)</p>
-                </div>
-                <div class="mb-3">
-                  <input type="number" class="form-control" name="member_cnt" id="member_cnt" placeholder="인원" min=1>
-                </div>
-                <div class="mb-3">
-                  <input type="date" class="form-control" name="wish_date" id="wish_date" min="{{strTomorrow}}">
-                  <p>* 희망하는 진행일을 선택해주세요.</p>
-                </div>
-                <div class="on-off-buttons">
-                  <input type="radio" id="hideAddress" name="category" value="online"> 온라인 &nbsp; &nbsp;
-                  <input type="radio" id="showAddress" name="category" value="offline"> 오프라인
-                </div>
-                <div class="mb-3" id="address">
-                  <input id="zip-code"  type="text" placeholder="우편번호 검색" readonly onclick="findAddr()"> <br>
-                  <input id="input-address" type="text" placeholder="주소" value="주소" readonly> <br>
-                  <input id="input_addr_detail" type="text" placeholder="상세 주소">
-                </div>
-                <div class="mb-3">
-                  <input type="text" class="form-control" name="purpose" id="purpose" placeholder="목적">
-                </div>
-                <div class="mb-3">
-                  <textarea class="form-control" name="etc" id="etc" placeholder="기타 문의"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소하기</button>
-              <button type="submit" class="btn btn-primary">제출하기</button>
-            </form>
-            </div>
-          </div>
-        </div>
-      </div>
+      
 
   <div class="container text-center">
    <!-- 하단 탭 (상세정보 / 후기) -->
@@ -169,16 +117,6 @@
     ></script>
 
     <script>
-      // 모달창 온라인 버튼 클릭 시: 주소 창 숨김, 오프라인 버튼 클릭 시: 주소 창 보이기
-      $(function() {
-          $("#showAddress").on("click", function() {
-              $("#address").show();
-          })
-          $("#hideAddress").on("click", function() {
-              $("#address").hide();
-          })
-      })
-
       // 달력에 내일 날짜 가져오기
       let tomorrow = new Date();
       tomorrow.setDate(new Date().getDate() + 1);
@@ -187,15 +125,8 @@
       // 내일 날짜 문자열로 변경
       const strTomorrow = tomorrow.toISOString().split('T')[0];
       
-      // user 로그인 여부 데이터 확인 후 false면 워크샵 문의 신청 막기
+      // user 로그인 여부 데이터 전달
       const user = '<%= user %>'
-      const modal = document.querySelector('#exampleModal')
-      modal.addEventListener('show.bs.modal', (e) => {
-        if(user === 'false') {
-          alert('로그인 이후 이용 가능합니다!')
-          e.preventDefault()
-        }
-      })
 
     </script>
      <script src="/workshops/js/workshop-detail.js"></script>

@@ -96,7 +96,7 @@ export class WorkshopsService {
       .andWhere('workshop.status = :status', { status: 'approval' })
       .orderBy('workshop.updatedAt', 'DESC') // 업데이트 최신순으로 정렬
       .groupBy('workshop.id')
-      .limit(4)
+      .limit(8)
       .getRawMany();
 
     // s3 + cloud front에서 이미지 가져오기
@@ -396,6 +396,7 @@ export class WorkshopsService {
       phone_number,
       member_cnt,
       wish_date,
+      status: 'non_payment', // 유저 테스트 종료 시 해당 입력 항목을 삭제. (default = request)
       category,
       purpose,
       wish_location,
