@@ -28,6 +28,7 @@ import { wrap } from 'module';
 import { QueryResult } from 'typeorm/query-runner/QueryResult';
 import { TransformationType } from 'class-transformer';
 import { CreateWorkshopsVideoDto } from './dto/teacher-workshops-video.dto';
+import { UpdateWorkshopsDto } from './dto/teacher-workshop-update.dto';
 
 @Injectable()
 export class TeacherService {
@@ -1020,4 +1021,69 @@ export class TeacherService {
       throw error;
     }
   }
+
+  // 워크샵 수정
+  async updateWorkshop(data: UpdateWorkshopsDto, userId: number, id: number) {
+    try {
+      const {
+        title,
+        category,
+        desc,
+        min_member,
+        max_member,
+        total_time,
+        price,
+        location,
+        genre_id,
+        purpose_tag_id,
+      } = data;
+      const workshopId = await this.workshopRepository.findOne({
+        where: { user_id: userId },
+      });
+      if (!workshopId) {
+        throw new HttpException(
+          '등록된 워크샵이 없습니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      type WorkshopCategoryType = 'offline' | 'online';
+      const workshopCategory = category as WorkshopCategoryType;
+      const workshop = await this.workshopRepository.update(id, {
+        title,
+        category: workshopCategory,
+        desc,
+        min_member,
+        max_member,
+        total_time,
+        price,
+        location,
+        genre_id,
+      });
+      const updatedWorkshop = await this.workshopRepository.findOne({
+        where: { id },
+      });
+      let purposeTagIds: Array<object> = [];
+      purpose_tag_id.forEach((tagId) => {
+        if (typeof tagId === 'number') {
+          purposeTagIds.push({
+            workshop_id: updatedWorkshop.id,
+            purpose_tag_id: tagId,
+          });
+        }
+      });
+      if (purposeTagIds.length > 0) {
+        await this.purposeTagIdRepository.delete({
+          workshop_id: updatedWorkshop.id,
+        });
+        await this.purposeTagIdRepository.save(purposeTagIds);
+      }
+      return {
+        message: '해당 워크샵을 수정하였습니다.',
+      };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  // 워크샵 삭제
 }

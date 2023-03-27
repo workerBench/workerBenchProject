@@ -72,8 +72,8 @@
         >
         <select name="job" id="category">
           <option value="" disabled selected>유형을 선택해주세요</option>
-          <option value="online">온라인</option>
-          <option value="offline">오프라인</option>
+          <option value="online">online</option>
+          <option value="offline">offlne</option>
         </select>
         <input
           type="text"
@@ -86,8 +86,9 @@
           type="text"
           class="form-control"
           id="minMember"
-          placeholder="최소 인원수"
+          placeholder="최소 인원"
           maxlength="3"
+          onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
         />
         <input
           type="text"
@@ -95,6 +96,7 @@
           id="maxMember"
           placeholder="최대 인원수"
           maxlength="3"
+          onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
         />
         <select name="job" id="genreId">
           <option value="" disabled selected>장르를 선택해주세요</option>
@@ -123,6 +125,7 @@
           id="totalTime"
           placeholder="걸리는시간(분단위)"
           maxlength="3"
+          onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
         />
         <input
           type="text"
@@ -130,6 +133,7 @@
           id="price"
           placeholder="1인당 가격"
           maxlength="7"
+          onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
         />
         <select name="job" id="location">
           <option value="" disabled selected>지역을 선택해주세요</option>
@@ -197,12 +201,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <div class="mb-3 contents-div">
-      <label for="workshop" class="form-label workshop-description-li"></label>
-      <span class="caution-video">* 빈칸 없이 입력해주세요.</span>
-      <input type="text" class="form-control" id="desc" required></input>
-    </div> -->
     <div class="mb-3 contents-div">
       <label
         for="exampleFormControlTextarea1"
