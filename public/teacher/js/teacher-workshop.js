@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           <li class="title">${title}</li>
                           <button type="radio"  id="workshopDetail" onclick="updateWorkshop(${workshop_id})">워크샵 수정 하기</button>
                           <button type="radio"  id="workshopDetail" onclick="workshopDetail(${workshop_id})">워크샵 상세 보기</button>
-                          <li for="tag" class="tag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
+                          <li for="tag" class="approvalTag">#${genreTag} #${purposeTag1} ${purposeTag2}</li>
                         </div>
                     </div>`;
           wokshopApprovalList.insertAdjacentHTML('beforeend', tempHtml);
@@ -241,8 +241,8 @@ function updateWorkshop(id) {
             >
         <select name="job" id="category">
           <option value="${workshop_category}" disabled selected>${workshop_category}</option>
-          <option value="online">온라인</option>
-          <option value="offline">오프라인</option>
+          <option value="online">online</option>
+          <option value="offline">offline</option>
         </select>
         <input
           type="text"
@@ -256,14 +256,14 @@ function updateWorkshop(id) {
           class="form-control"
           id="minMember"
           value="${workshop_min_member}"
-          maxlength="2"
+          maxlength="3"
         />
         <input
           type="text"
           class="form-control"
           id="maxMember"
           value="${workshop_min_member}"
-          maxlength="2"
+          maxlength="3"
         />
         <select name="job" id="genreId">
           <option value="" disabled selected>장르를 선택해주세요</option>

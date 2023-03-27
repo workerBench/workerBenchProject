@@ -13,6 +13,7 @@ import {
   Query,
   Delete,
   UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
@@ -221,6 +222,15 @@ export class TeacherController {
     @Body() data: any, // CreateWorkshopsDto
     @CurrentUser() user: CurrentUserDto,
   ) {
+    // 업로드한 파일이 이미지 타입이 아닌 경우 에러를 반환
+    images.forEach((file) => {
+      if (!file.mimetype.includes('image/')) {
+        throw new BadRequestException(
+          '파일 업로드는 이미지 파일만 가능합니다.',
+        );
+      }
+    });
+
     return await this.teacherService.createTeacherWorkshops(
       JSON.parse(data.jsonData),
       images,
@@ -237,7 +247,7 @@ export class TeacherController {
   @Post('workshops/video')
   @UseGuards(JwtTeacherAuthGuard)
   @UseInterceptors(
-    FileInterceptor('video', { limits: { fileSize: 350 * 1024 * 1024 } }),
+    FileInterceptor('video', { limits: { fileSize: 400 * 1024 * 1024 } }),
   )
   async uploadVideoAfterCreateWorkshop(
     @UploadedFile() video: Express.Multer.File,

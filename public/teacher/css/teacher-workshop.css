@@ -155,6 +155,18 @@
   width: 100%;
   height: 200px;
 }
+#workshopDetail{
+  width: 120px;
+  height: 30px;
+  background-color: #a084dc;
+  border-radius: 5px;
+  color: white;
+  margin-top: 30px;
+  border: none;
+}
+#workshopDetail:hover{
+    background-color: #645cbb;
+}
 .reject {
   padding: 3px 10px 3px 10px;
   background-color: rgb(79, 79, 79);
@@ -169,6 +181,9 @@
   margin-top: 10px;
   font-size: 16px;
   font-weight: bolder;
+}
+.approvalTag{
+  margin-top: 20px;
 }
 .tag {
   margin-top: 70px;
@@ -360,11 +375,10 @@
 }
 .workshop-information1 {
   width: 250px;
-  margin-left: 100px;
+  margin-left: 150px;
   margin-top: 50px;
   display: flex;
   flex-wrap: wrap;
-  border: 2px solid lavender;
 }
 
 #category {

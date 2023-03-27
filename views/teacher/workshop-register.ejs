@@ -51,7 +51,10 @@
             <label for="workshop" class="form-label workshop-description-li"
               >썸네일</label
             >
-            <span class="caution-video">* 썸네일을 등록해주세요!</span>
+            <span class="caution-video"
+              ><br />
+              * 썸네일을 등록해주세요! 이미지 파일만 등록해 주세요.</span
+            >
             <img id="thumb-img-show" />
             <input
               class="form-control"
@@ -69,8 +72,8 @@
         >
         <select name="job" id="category">
           <option value="" disabled selected>유형을 선택해주세요</option>
-          <option value="online">온라인</option>
-          <option value="offline">오프라인</option>
+          <option value="online">online</option>
+          <option value="offline">offline</option>
         </select>
         <input
           type="text"
@@ -80,18 +83,18 @@
           maxlength="22"
         />
         <input
-          type="text"
+          type="number"
           class="form-control"
           id="minMember"
           placeholder="최소 인원수"
-          maxlength="2"
+          max="100"
         />
         <input
-          type="text"
+          type="number"
           class="form-control"
           id="maxMember"
           placeholder="최대 인원수"
-          maxlength="2"
+          oninput="if(parseInt(this.value)>100){this.value='100';}"
         />
         <select name="job" id="genreId">
           <option value="" disabled selected>장르를 선택해주세요</option>
@@ -142,6 +145,7 @@
         <label for="workshop" class="form-label sub-Img-label"
           >서브 이미지 (선택사항)</label
         >
+        <span class="caution-video"> * 이미지 파일만 등록해 주세요.</span>
         <div id="more-img-wrap">
           <div class="sub-imgs-wrap">
             <img class="sub-img-class" id="sub-img-1" />
@@ -179,7 +183,7 @@
         <label for="workshop" class="form-label workshop-video-li"
           >영상 첨부 (선택사항)</label
         >
-        <span class="caution-video">* 최대 350MB 까지 업로드 가능합니다.</span>
+        <span class="caution-video">* 최대 400MB 까지 업로드 가능합니다.</span>
         <div class="video-one-set-wrap">
           <div class="video-show-tag-wrap">
             <video id="video-show-tag" controls></video>

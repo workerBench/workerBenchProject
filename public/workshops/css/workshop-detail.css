@@ -69,13 +69,7 @@ body {
   color: #9f70fb;
 }
 
-.workshop-star #content,
-.workshop-category #content,
-.workshop-member-cnt #content,
-.workshop-total-time #content,
-.workshop-genre #content,
-.workshop-purpose #content,
-.workshop-location #content {
+.content {
   font-weight: bold;
   margin-left: 5px;
 }
