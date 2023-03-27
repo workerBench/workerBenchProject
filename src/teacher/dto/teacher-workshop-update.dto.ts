@@ -1,6 +1,6 @@
 import { IsString, IsNumber, IsOptional, IsArray } from 'class-validator';
 
-export class CreateWorkshopsDto2 {
+export class UpdateWorkshopsDto {
   @IsString()
   readonly title: string;
 
@@ -27,4 +27,7 @@ export class CreateWorkshopsDto2 {
 
   @IsNumber()
   readonly genre_id: number;
+
+  @IsArray()
+  readonly purpose_tag_id: Array<number | null>;
 }

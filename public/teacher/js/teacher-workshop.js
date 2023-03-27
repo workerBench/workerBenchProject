@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
     .catch((response) => {
+      console.log(response);
       const { data } = response.response;
       alert(data.error);
     });
@@ -257,6 +258,7 @@ function updateWorkshop(id) {
           id="minMember"
           value="${workshop_min_member}"
           maxlength="3"
+          onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
         />
         <input
           type="text"
@@ -264,6 +266,7 @@ function updateWorkshop(id) {
           id="maxMember"
           value="${workshop_min_member}"
           maxlength="3"
+          onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
         />
         <select name="job" id="genreId">
           <option value="" disabled selected>장르를 선택해주세요</option>
@@ -292,6 +295,7 @@ function updateWorkshop(id) {
           id="totalTime"
           value="${total_time}"
           maxlength="3"
+          onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
         />
         <input
           type="text"
@@ -299,6 +303,7 @@ function updateWorkshop(id) {
           id="price"
           value="${workshop_price}"
           maxlength="7"
+          onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
         />
         <select name="job" id="location">
           <option value="${workshop_location}" disabled selected>${workshop_location}</option>
@@ -405,6 +410,7 @@ function updateWorkshop2(id) {
       desc,
       location,
       genre_id: parseInt(genre_id),
+      purpose_tag_id: purposeTagIds,
     },
   })
     .then((response) => {

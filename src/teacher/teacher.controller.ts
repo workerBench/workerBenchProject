@@ -31,7 +31,7 @@ import { RealIP } from 'nestjs-real-ip';
 import { Request, Response } from 'express';
 import { TOKEN_NAME } from 'src/auth/naming/token-name';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateWorkshopsDto2 } from './dto/teacher-test.dto';
+import { UpdateWorkshopsDto } from './dto/teacher-workshop-update.dto';
 @ApiTags('teacher')
 @Controller('/api/teacher')
 export class TeacherController {
@@ -357,7 +357,7 @@ export class TeacherController {
   @Patch('workshop/update/:id')
   @UseGuards(JwtTeacherAuthGuard)
   updateWorkshop(
-    @Body() data: CreateWorkshopsDto2,
+    @Body() data: UpdateWorkshopsDto,
     @CurrentUser() user: CurrentUserDto,
     @Param('id') id: number,
   ) {

@@ -27,7 +27,7 @@ import { identity } from 'rxjs';
 import { wrap } from 'module';
 import { QueryResult } from 'typeorm/query-runner/QueryResult';
 import { TransformationType } from 'class-transformer';
-import { CreateWorkshopsDto2 } from './dto/teacher-test.dto';
+import { UpdateWorkshopsDto } from './dto/teacher-workshop-update.dto';
 
 @Injectable()
 export class TeacherService {
@@ -979,7 +979,7 @@ export class TeacherService {
   }
 
   // 워크샵 수정
-  async updateWorkshop(data: CreateWorkshopsDto2, userId: number, id: number) {
+  async updateWorkshop(data: UpdateWorkshopsDto, userId: number, id: number) {
     try {
       const {
         title,
@@ -991,6 +991,7 @@ export class TeacherService {
         price,
         location,
         genre_id,
+        purpose_tag_id,
       } = data;
       const workshopId = await this.workshopRepository.findOne({
         where: { user_id: userId },
@@ -1014,7 +1015,24 @@ export class TeacherService {
         location,
         genre_id,
       });
-
+      const updatedWorkshop = await this.workshopRepository.findOne({
+        where: { id },
+      });
+      let purposeTagIds: Array<object> = [];
+      purpose_tag_id.forEach((tagId) => {
+        if (typeof tagId === 'number') {
+          purposeTagIds.push({
+            workshop_id: updatedWorkshop.id,
+            purpose_tag_id: tagId,
+          });
+        }
+      });
+      if (purposeTagIds.length > 0) {
+        await this.purposeTagIdRepository.delete({
+          workshop_id: updatedWorkshop.id,
+        });
+        await this.purposeTagIdRepository.save(purposeTagIds);
+      }
       return {
         message: '해당 워크샵을 수정하였습니다.',
       };
