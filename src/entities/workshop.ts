@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -66,6 +72,8 @@ export class WorkShop {
   thumb: string;
 
   @IsNumber()
+  @IsInt()
+  @IsPositive()
   @IsNotEmpty({ message: '워크샵 최소 인원을 설정해 주세요' })
   @ApiProperty({
     example: 5,
@@ -76,6 +84,8 @@ export class WorkShop {
   min_member: number;
 
   @IsNumber()
+  @IsInt()
+  @IsPositive()
   @IsNotEmpty({ message: '워크샵 최대 인원을 설정해 주세요' })
   @ApiProperty({
     example: 5,
@@ -86,6 +96,8 @@ export class WorkShop {
   max_member: number;
 
   @IsNumber()
+  @IsInt()
+  @IsPositive()
   @IsNotEmpty({ message: '워크샵 총 일정의 시간을 기입해 주세요' })
   @ApiProperty({
     example: 130,
@@ -96,6 +108,8 @@ export class WorkShop {
   total_time: number;
 
   @IsNumber()
+  @IsInt()
+  @IsPositive()
   @IsNotEmpty({ message: '워크샵 참가 인원 1인당 비용을 설정해 주세요' })
   @ApiProperty({
     example: 45000,

@@ -79,6 +79,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const purpose_value1 = parseInt(purpose_tag1);
     const purpose_value2 = parseInt(purpose_tag2);
 
+    if (!purpose_value1 && !purpose_value2) {
+      alert('목적태그 최소 한개는 등록해주세요');
+      return;
+    }
+
+    if (purpose_value1 === purpose_value2) {
+      alert('중복된 목적을 선택하셨습니다.');
+      return;
+    }
+
     const purposeTagIds = [purpose_value1, purpose_value2];
     if (
       category === '' ||
@@ -99,53 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (!purpose_value1 && !purpose_value2) {
-      alert('목적태그 최소 한개는 등록해주세요');
-      return;
-    }
-
-    if (purpose_value1 === purpose_value2) {
-      alert('중복된 목적을 선택하셨습니다.');
-      return;
-    }
-
-    // 입력받은 숫자값들에 대한 정수 유효성 검사
-    if (
-      Number(min_member) <= 0 ||
-      Number(max_member) <= 0 ||
-      Number.isNaN(Number(min_member)) ||
-      Number.isNaN(Number(max_member))
-    ) {
-      alert('인원수는 최소 1명 이상이어야 합니다.');
-      return;
-    }
-    if (Number(min_member) >= Number(max_member)) {
-      alert('최대 인원수는 최소 인원수보다 많아야 합니다.');
-      return;
-    }
-    if (Number(total_time) <= 0 || Number.isNaN(Number(total_time))) {
-      alert('워크샵 과정 소요 시간은 0분 이상이어야 합니다.');
-      return;
-    }
-    if (Number(price) <= 0 || Number.isNaN(Number(price))) {
-      console.log(Number(price));
-      alert('1인당 가격은 0보다 커야 합니다.');
-      return;
-    }
-    if (
-      !Number.isInteger(Number(min_member)) ||
-      !Number.isInteger(Number(max_member)) ||
-      !Number.isInteger(Number(total_time)) ||
-      !Number.isInteger(Number(price))
-    ) {
-      alert('숫자의 경우 정수만 입력 가능합니다.');
-      return;
-    }
-
     // 동영상을 첨부하였을 경우, 영상의 용량을 검사
     const isVideo = document.querySelector('#video-file').files;
     if (isVideo.length >= 1) {
-      if (isVideo[0].size > 400000000) {
+      if (isVideo[0].size > 350000000) {
         alert('동영상의 용량이 제한을 초과합니다.');
         return;
       }
@@ -194,8 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch((response) => {
         const { data } = response.response;
-        console.log(data);
-        alert(data.message);
+        alert(data.error);
       });
   });
 

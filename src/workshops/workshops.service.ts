@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from 'src/entities/order';
@@ -218,7 +218,6 @@ export class WorkshopsService {
       .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
       .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
       .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
-
       .select([
         'workshop.id',
         'workshop.title',
@@ -239,7 +238,6 @@ export class WorkshopsService {
         'workshop.updatedAt',
         'workshop.deletedAt',
       ])
-
       .where('workshop.id = :id', { id: workshop_id })
       .groupBy('workshop.id')
       .getRawMany();
@@ -367,6 +365,53 @@ export class WorkshopsService {
     });
 
     return result;
+  }
+
+  // 워크샵 신청하기 API 요청 시 우선 유효성 검사
+  async checkOrderWorkshopValidation(
+    orderWorkshopData: OrderWorkshopDto,
+    workshopId: number,
+    userId: number,
+  ) {
+    const workshop = await this.workshopRepository.findOne({
+      where: { id: workshopId },
+      select: ['min_member', 'max_member', 'status'],
+    });
+
+    if (!workshop || workshop.status !== 'approval') {
+      throw new BadRequestException(
+        '존재하지 않는 워크샵, 혹은 현재 운영중이지 않은 워크샵에 대한 수강 신청입니다.',
+      );
+    }
+
+    // 유저가 입력한 참가 희망인원이 실제 워크샵의 최소인원 ~ 최대인원 사이인지 검사
+    if (
+      orderWorkshopData.member_cnt < workshop.min_member ||
+      orderWorkshopData.member_cnt > workshop.max_member
+    ) {
+      throw new BadRequestException(
+        '수강 희망인원이 워크샵의 제한 인원에 포함되지 않습니다.',
+      );
+    }
+
+    // 해당 워크샵에 대해 수강 문의를 과거에 한 번 이상 했었다면, 현재 그 수강 문의가 진행중인지 확인
+    const workShopInstanceDetailResult =
+      await this.workshopDetailRepository.find({
+        where: { user_id: userId, workshop_id: workshopId },
+        select: ['status'],
+      });
+    const isStatusRequest = workShopInstanceDetailResult.filter((detail) => {
+      return (
+        detail.status === 'request' ||
+        detail.status === 'non_payment' ||
+        detail.status === 'waiting_lecture'
+      );
+    });
+    if (isStatusRequest.length > 0) {
+      throw new BadRequestException(
+        '이미 수강 과정을 진행중이신 워크샵 입니다.',
+      );
+    }
   }
 
   // 워크샵 신청하기 API

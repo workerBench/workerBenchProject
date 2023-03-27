@@ -547,6 +547,41 @@ export class AuthService {
     return user;
   }
 
+  // 강사가 워크샵 등록 페이지 접속 시, 강사의 id 로 해당 강사가 소속된 업체는 있는지, 가지고 있는 업체는 있는지 확인.
+  async checkTeacherCompany(userId: number) {
+    try {
+      // 먼저 업체의 오너인지 확인
+      const ownCompany = await this.companyRepository.findOne({
+        where: { user_id: userId },
+        select: ['id'],
+      });
+
+      // 업체 소유주라면 워크샵 등록 페이지에 접속 가능.
+      if (ownCompany) {
+        return true;
+      }
+
+      // 업체 소유주가 아니라면, 소속된 업체가 있는지 확인.
+      const teacherInfo = await this.teacherRepository.findOne({
+        where: { user_id: userId },
+        select: ['user_id', 'affiliation_company_id'],
+      });
+
+      // 소속된 업체가 없다면, 우선 업체 등록을 해야 워크샵 등록 페이지에 접속할 수 있기 때문에 접근을 불허가.
+      if (
+        teacherInfo.affiliation_company_id === null ||
+        teacherInfo.affiliation_company_id < 1
+      ) {
+        return false;
+      }
+
+      // 소속된 업체가 있다면 워크샵 등록 페이지에 접근 가능.
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
   /* -------------------------------- 테스트용 API -------------------------------- */
 
   // 유저가 업로드한 사진을 S3 에 저장

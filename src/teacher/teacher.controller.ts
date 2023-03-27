@@ -14,6 +14,8 @@ import {
   Delete,
   UploadedFile,
   BadRequestException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { CurrentUserDto } from 'src/auth/dtos/current-user.dto';
 import { JwtUserAuthGuard } from 'src/auth/jwt/access/user/jwt-user-guard';
@@ -221,14 +223,24 @@ export class TeacherController {
     @Body() data: any, // CreateWorkshopsDto
     @CurrentUser() user: CurrentUserDto,
   ) {
-    // 업로드한 파일이 이미지 타입이 아닌 경우 에러를 반환
-    images.forEach((file) => {
-      if (!file.mimetype.includes('image/')) {
-        throw new BadRequestException(
-          '파일 업로드는 이미지 파일만 가능합니다.',
-        );
-      }
-    });
+    try {
+      // 업로드한 파일이 이미지 타입이 아닌 경우 에러를 반환
+      images.forEach((file) => {
+        if (!file.mimetype.includes('image/')) {
+          throw new HttpException(
+            '썸네일이 포함되지 않았거나, 이미지 종류가 아닌 파일을 업로드 하셨습니다.',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      });
+
+      // 입력값 유효성 검사
+      await this.teacherService.checkWorkShopInFoValidation(
+        JSON.parse(data.jsonData),
+      );
+    } catch (err) {
+      throw err;
+    }
 
     return await this.teacherService.createTeacherWorkshops(
       JSON.parse(data.jsonData),
