@@ -213,7 +213,6 @@ export class WorkshopsService {
   async getWorkshopDetail(workshop_id: number) {
     const queryBuilder = await this.workshopRepository
       .createQueryBuilder('workshop')
-      .leftJoinAndSelect('workshop.WishList', 'wish')
       .leftJoinAndSelect('workshop.Reviews', 'review') // workshop - GenreTag 테이블 조인
       .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
       .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
@@ -229,9 +228,7 @@ export class WorkshopsService {
         'workshop.price',
         'workshop.location',
         'workshop.video',
-        'wish.workshop_id',
         'workshop.thumb',
-        'GROUP_CONCAT(wish.user_id) as wish_user_id',
         'GROUP_CONCAT(review.star) as star',
         'GROUP_CONCAT(purposeTag.name) as purpose',
         'GROUP_CONCAT(genre_tag.name) as genre',
@@ -252,12 +249,12 @@ export class WorkshopsService {
         halfStars.reduce((acc, cur) => acc + parseFloat(cur), 0) /
           halfStars.length || 0; // 평균 계산하기
 
-      // wish_user_id == null 일 때 예외 처리가 필요함
-      const wishArray = workshop.wish_user_id
-        ? workshop.wish_user_id.split(',')
-        : []; // star가 null일 경우 빈 배열로 초기화
-      const wishHalfIndex = Math.floor(wishArray.length / 2);
-      const halfWish = wishArray.slice(0, wishHalfIndex); // 중복 값이 나오므로 배열 길이의 반만큼 잘라줘야 함
+      // // wish_user_id == null 일 때 예외 처리가 필요함
+      // const wishArray = workshop.wish_user_id
+      //   ? workshop.wish_user_id.split(',')
+      //   : []; // star가 null일 경우 빈 배열로 초기화
+      // const wishHalfIndex = Math.floor(wishArray.length / 2);
+      // const halfWish = wishArray.slice(0, wishHalfIndex); // 중복 값이 나오므로 배열 길이의 반만큼 잘라줘야 함
 
       // s3 + cloud front에서 이미지 가져오기
       const thumbName = workshop.workshop_thumb;
@@ -283,7 +280,7 @@ export class WorkshopsService {
 
       return {
         ...workshop,
-        wish_user_id: Array.from(new Set(halfWish)).map((el) => Number(el)),
+        // wish_user_id: Array.from(new Set(halfWish)).map((el) => Number(el)),
         star: starArray.length ? starArray : ['0.0'], // star가 빈 문자열인 경우 '0.0'으로 초기화
         purpose: Array.from(new Set(workshop.purpose.split(','))),
         genre: Array.from(new Set(workshop.genre.split(','))),
