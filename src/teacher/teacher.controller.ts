@@ -31,6 +31,7 @@ import { RealIP } from 'nestjs-real-ip';
 import { Request, Response } from 'express';
 import { TOKEN_NAME } from 'src/auth/naming/token-name';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UpdateWorkshopsDto } from './dto/teacher-workshop-update.dto';
 @ApiTags('teacher')
 @Controller('/api/teacher')
 export class TeacherController {
@@ -345,5 +346,21 @@ export class TeacherController {
   @UseGuards(JwtTeacherAuthGuard)
   cancleWorkshop(@CurrentUser() user: CurrentUserDto, @Param('id') id: number) {
     return this.teacherService.cancleWorkshop(user.id, id);
+  }
+
+  // 강사 워크샵 수정하기
+  @ApiResponse({
+    status: 200,
+    description: 'status:"request" || "status: => "non_payment" => "rejected"',
+  })
+  @ApiOperation({ summary: '강사 워크샵 수정하기 API' })
+  @Patch('workshop/update/:id')
+  @UseGuards(JwtTeacherAuthGuard)
+  updateWorkshop(
+    @Body() data: UpdateWorkshopsDto,
+    @CurrentUser() user: CurrentUserDto,
+    @Param('id') id: number,
+  ) {
+    return this.teacherService.updateWorkshop(data, user.id, id);
   }
 }
