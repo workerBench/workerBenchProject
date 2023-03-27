@@ -72,7 +72,9 @@ export class MypageService {
           'workshopDetail.wish_date',
           'workshopDetail.member_cnt',
           'workshopDetail.id',
+          'workshopDetail.updatedAt',
         ])
+        .orderBy('workshopDetail.updatedAt', 'DESC')
         .getRawMany();
 
       // s3 + cloud front에서 이미지 가져오기
@@ -188,7 +190,9 @@ export class MypageService {
           'workshopDetail.wish_date',
           'workshopDetail.member_cnt',
           'workshopDetail.id',
+          'workshopDetail.updatedAt',
         ])
+        .orderBy('workshopDetail.updatedAt', 'DESC')
         .getRawMany();
 
       // s3 + cloud front에서 이미지 가져오기
@@ -487,7 +491,9 @@ export class MypageService {
           'workshopDetail.wish_date',
           'workshopDetail.member_cnt',
           'workshopDetail.id',
+          'workshopDetail.updatedAt',
         ])
+        .orderBy('workshopDetail.updatedAt', 'DESC')
         .getRawMany();
 
       // s3 + cloud front에서 이미지 가져오기

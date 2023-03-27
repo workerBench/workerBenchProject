@@ -14,7 +14,7 @@ function getBestWorkshops() {
         let tempHtml = `<div class="col">
         <div class="card h-100">
         <a href="/workshops/detail?workshopId=${element.workshop_id}">
-        <img class="card-img-top" id="best-workshop-thumb alt="..." src="${
+        <img class="card-img-top embed-responsive-item" id="best-workshop-thumb alt="..." src="${
           element.thumbUrl
         }" /></a>
           <div class="card-body">
@@ -29,10 +29,10 @@ function getBestWorkshops() {
           element.workshop_max_member
         }명</p>
             <p class="card-text">시간 &nbsp;${element.workshop_total_time}분</p>
-            <p class="card-text">#${element.genre_tag_name} #${
-          element.purpose_name[0]
-        } #${element.purpose_name[1]}</p>
-          </div>
+            <p class="card-text">#${element.genre_tag_name}
+            #${element.purpose_name[0]}
+            ${element.purpose_name[1] ? `#${element.purpose_name[1]}` : ''}
+          </p>
         </div>
       </div>`;
         $('#best-workshop-list').append(tempHtml);

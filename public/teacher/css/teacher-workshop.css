@@ -312,29 +312,7 @@
   height: 300px;
   margin-left: 20px;
 }
-.video-contents-div {
-  width: 1000px;
-  height: 650px;
-  border: 2px solid lavender;
-  border-radius: 20px;
-  box-shadow: 3px 3px 5px lavender;
-  padding-top: 40px;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin: auto;
-  margin-top: 300px;
-}
-.workshop-video-li {
-  width: 250px;
-  height: 40px;
-  margin-bottom: 10px;
-  font-size: 25px;
-  text-align: center;
-  list-style: none;
-  border-radius: 10px;
-  border: 2px solid #000000;
-  background-color: #a084dc;
-}
+
 .workshop-description-li {
   width: 150px;
   height: 40px;
@@ -354,25 +332,143 @@
   border: 2px solid lavender;
   box-shadow: 3px 3px 5px lavender;
 }
-.video-one-set-wrap {
-  width: 90%;
-  height: 530px;
-  margin: auto;
-  margin-top: 5px;
-}
-.video-show-tag-wrap {
-  width: 600px;
-  height: 460px;
-  margin: auto;
-  margin-bottom: 20px;
+
+
+/* 워크샵 수정 css */
+#workshop-registerBox {
+  width: 1000px;
+  height: 1100px;
+  margin: 0 auto;
+  margin-top: 100px;
+  border: 2px solid lavender;
+  border-radius: 20px;
+  box-shadow: 3px 3px 5px lavender;
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
 }
-#video-show-tag {
-  width: 600px;
-  max-height: 450px;
+#workshop-registerBox > img{
+  width: 400px;
+  height: 400px;
 }
-#fileWidth {
+#thumb-img-show {
+  width: 400px;
+  height: 400px;
+  margin: auto;
+  margin-bottom: 5px;
+  border: none;
+  border: 2px solid lavender;
+}
+.workshop-information1 {
+  width: 250px;
+  margin-left: 100px;
+  margin-top: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  border: 2px solid lavender;
+}
+
+#category {
+  width: 300px;
+  height: 40px;
+}
+#title {
+  width: 245px;
+  font-size: 15px;
+}
+#minMember {
+  width: 110px;
+}
+#maxMember {
+  width: 110px;
+  margin-left: 25px;
+}
+
+#genreId {
+  width: 300px;
+  height: 40px;
+  margin-top: 10px;
+}
+#purposeTagId1 {
+  width: 110px;
+  height: 40px;
+  margin-top: 10px;
+}
+#purposeTagId2 {
+  width: 110px;
+  height: 40px;
+  margin-left: 25px;
+  margin-top: 10px;
+}
+#totalTime {
+  width: 245px;
+}
+#price {
+  width: 245px;
+}
+#location {
+  width: 300px;
+  height: 40px;
+}
+.contents-div {
+  width: 1000px;
+  height: 400px;
+  margin: auto;
+  margin-top: 50px;
+}
+.workshop-description-li {
+  width: 150px;
+  height: 40px;
+  margin-bottom: 10px;
+  font-size: 25px;
+  text-align: center;
+  list-style: none;
+  border-radius: 10px;
+  border: 2px solid #000000;
+  background-color: #a084dc;
+}
+#desc {
+  width: 1000px;
+  height: 300px;
+  font-size: 30px;
+}
+.regiseterBtn-div {
+  width: 1000px;
+  height: 50px;
+  margin: auto;
+  margin-bottom: 150px;
+  margin-top: 20px;
+}
+#updateWorkshop {
+  width: 200px;
+  height: 50px;
+  background-color: #a084dc;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  float: right;
+}
+.sub-imgs-wrap > img{
+  width: 300px;
+  height: 300px;
+}
+#more-img-wrap {
+  width: 1000px;
+  height: 400px;
+  margin: auto;
+  display: flex;
+}
+.sub-imgs-wrap {
+  margin: auto;
+}
+.sub-Img-label1 {
   width: 280px;
-  margin-right: 10px;
+  height: 40px;
+  margin-bottom: 10px;
+  font-size: 25px;
+  text-align: center;
+  list-style: none;
+  border: 2px solid #000000;
+  margin-left: 20px;
+  border-radius: 10px;
+  background-color: #a084dc;
 }

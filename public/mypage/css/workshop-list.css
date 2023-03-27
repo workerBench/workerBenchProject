@@ -9,6 +9,11 @@ body {
   margin-left: 70px;
 }
 
+.card-img-top {
+  height: 15rem;
+  object-fit: cover;
+}
+
 .incomplete-list,
 .complete-list {
   font-size: 30px;
