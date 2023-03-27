@@ -27,6 +27,7 @@ import { identity } from 'rxjs';
 import { wrap } from 'module';
 import { QueryResult } from 'typeorm/query-runner/QueryResult';
 import { TransformationType } from 'class-transformer';
+import { CreateWorkshopsDto2 } from './dto/teacher-test.dto';
 
 @Injectable()
 export class TeacherService {
@@ -971,4 +972,48 @@ export class TeacherService {
       throw error;
     }
   }
+
+  // 워크샵 수정
+  async updateWorkshop(data: CreateWorkshopsDto2, userId: number, id: number) {
+    try {
+      const {
+        title,
+        desc,
+        min_member,
+        max_member,
+        total_time,
+        price,
+        location,
+        genre_id,
+      } = data;
+      const workshopId = await this.workshopRepository.findOne({
+        where: { user_id: userId },
+      });
+      if (!workshopId) {
+        throw new HttpException(
+          '등록된 워크샵이 없습니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const workshop = await this.workshopRepository.update(id, {
+        title,
+        category: 'offline' || 'online',
+        desc,
+        min_member,
+        max_member,
+        total_time,
+        price,
+        location,
+        genre_id,
+      });
+
+      return {
+        message: '해당 워크샵을 수정하였습니다.',
+      };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  // 워크샵 삭제
 }

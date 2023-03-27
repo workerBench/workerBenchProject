@@ -164,9 +164,8 @@
     flex-wrap: wrap;
 }
 .teacher-workshop-apply-div{
-    width: 110px;
+    width: 100px;
     height: 300px;
-    margin-left: 10px;
     margin-top: 100px;
     margin-right: 10px;
 }
@@ -182,7 +181,7 @@
     color:#5129a3
 }
 .workshop-information-apply-div{
-    width: 160px;
+    width: 180px;
     height: 300px;
     margin-top: 100px;
     font-weight: bold;
