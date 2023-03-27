@@ -30,30 +30,30 @@ function getWorkshopDetail() {
         <div class="col">
           <div class="workshop-summary">
             <div class="workshop-title">${workshop.workshop_title}</div>
-            <div class="workshop-star">평가 <span id="content">${
+            <div class="workshop-star">평가 <span class="content">${
               workshop.averageStar
-            }점<span id="content"></div>
+            }점</span></div>
             <span class="workshop-category">${
               workshop.workshop_category === 'online' ? '온라인' : '오프라인'
             }</span>
             <div class="workshop-location">
-            활동 가능 지역 <span id="content">${
+            활동 가능 지역 <span class="content">${
               workshop.workshop_location === null
                 ? '(온라인만 가능)'
                 : workshop.workshop_location
             }</span></div>
-            <div class="workshop-member-cnt">인원 <span id="content">${
+            <div class="workshop-member-cnt">인원 <span id="member-limit" class="content">${
               workshop.workshop_min_member
-            }~${workshop.workshop_max_member}명<span id="content"></div>
-            <div class="workshop-total-time">총 시간 <span id="content">${
+            }~${workshop.workshop_max_member}명</span></div>
+            <div class="workshop-total-time">총 시간 <span class="content">${
               workshop.workshop_total_time
-            }분<span id="content"></div>
-            <div class="workshop-genre">분야 <span id="content">${
+            }분</span></div>
+            <div class="workshop-genre">분야 <span class="content">${
               workshop.genre
-            }<span id="content"></div>
-            <div class="workshop-purpose">목적 <span id="content">${
+            }</span ></div>
+            <div class="workshop-purpose">목적 <span class="content">${
               workshop.purpose
-            }<span id="content"></div>
+            }</span></div>
             <div class="workshop-price">${workshop.workshop_price}원</div>
             <div>*1인 기준</div>
             <div class="order-wish-buttons">
@@ -113,6 +113,14 @@ function getWorkshopDetail() {
         </div>
       </div>`;
       $('#workshop-image-info').append(workshopInfo);
+
+      // 달력에 내일 날짜 가져오기
+      let tomorrow = new Date();
+      tomorrow.setDate(new Date().getDate() + 1);
+      document.getElementById('wish_date').valueAsDate = tomorrow;
+
+      // 내일 날짜 문자열로 변경
+      const strTomorrow = tomorrow.toISOString().split('T')[0];
 
       // 워크샵 카테고리가 온라인일 때는 주소 입력창 숨기기
       if (workshop.workshop_category === 'online') {
@@ -359,6 +367,22 @@ function orderWorkshop() {
   const regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
   if (phone_number !== null && regPhone.test(phone_number) === false) {
     alert('전화번호를 정확하게 입력해주세요.');
+    return;
+  }
+
+  // 참가 희망인원이 제한 인원을 어기지 않는지 검사
+  const member_limit = document.querySelector('#member-limit').innerHTML;
+  const minAndMaxMember = member_limit
+    .substring(0, member_limit.length - 1)
+    .split('~');
+
+  if (
+    member_cnt < Number(minAndMaxMember[0]) ||
+    member_cnt > Number(minAndMaxMember[1])
+  ) {
+    alert(
+      `참가 희망인원은 ${minAndMaxMember[0]} ~ ${minAndMaxMember[1]}명 사이여야 합니다.`,
+    );
     return;
   }
 
