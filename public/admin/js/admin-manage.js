@@ -1,10 +1,41 @@
-axios
-  .get('../api/admin/admin/list')
-  .then(function (response) {
-    let adminUsers = response.data;
-    let html = '';
-    for (let adminUser of adminUsers) {
-      html += `
+// access 토큰이 만료되었을 시 refresh 토큰으로 access 토큰 재발급을 요청
+const requestAccessToken = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: '/api/auth/refreshtoken/admin',
+    });
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+// 에러 발생 시 상태 코드에 따른 로직 실행
+const getErrorCode = async (statusCode, errorMessage) => {
+  if (statusCode === 400) {
+    alert(`에러 코드: ${statusCode} / message: ${errorMessage}`);
+    return false;
+  }
+  if (statusCode === 401) {
+    const refreshRes = await requestAccessToken();
+    if (!refreshRes) {
+      alert('현재 로그인이 되어있지 않습니다. 로그인 후 이용 가능합니다.');
+      location.href = '/admin/login';
+      return;
+    }
+    return true;
+  }
+};
+
+async function getAdminList() {
+  axios
+    .get('../api/admin/admin/list')
+    .then(function (response) {
+      let adminUsers = response.data;
+      let html = '';
+      for (let adminUser of adminUsers) {
+        html += `
         <tr>
           <td>${adminUser.name}</td>
           <td id="admin-email-${adminUser.id}">${adminUser.email}</td>
@@ -17,17 +48,26 @@ axios
           </td>
         </tr>
       `;
-    }
-    $('#admin-user-list').append(html);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+      }
+      $('#admin-user-list').append(html);
+    })
+    .catch(async function (error) {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        getAdminList();
+      }
+    });
+}
+
+getAdminList();
 
 // ------------------------ 계정 생성 버튼 (+모달) ------------------------ //
 
 // 관리자 계정 삭제
-const deleteAdmin = (id) => {
+const deleteAdmin = async (id) => {
   const email = document.querySelector(`#admin-email-${id}`).innerHTML;
   const check = confirm(`${email} 관리자 계정을 삭제하시겠습니까?`);
   if (check === false) {
@@ -42,10 +82,14 @@ const deleteAdmin = (id) => {
     });
     alert(`${email} 관리자 계정이 삭제되었습니다.`);
     location.reload();
-  } catch (err) {
-    alert(
-      `에러 코드: ${err.response.data.statusCode} / message: ${err.response.data.message}`,
+  } catch (error) {
+    const result = await getErrorCode(
+      error.response.data.statusCode,
+      error.response.data.message,
     );
+    if (result) {
+      deleteAdmin(id);
+    }
   }
 };
 
