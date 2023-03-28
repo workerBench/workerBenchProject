@@ -71,3 +71,96 @@
 | 이동호                                            | 팀원                                            | - 깃허브 주소 -               | `BackEnd` : 강사 페이지 전체 API <br/> `FrontEnd` : 강사등록하기,워크샵등록,워크샵목록,강사 업체 등록,강사 업체정보,강사 수강 관리(미완료),강사 수강 관리 (완료)                                                        |
 | 한동주                                            | 부리더                                          | https://github.com/handongjoo | `BackEnd` : 관리자 페이지 전체 API <br/> `FrontEnd` : 관리자 페이지 전체 , 마이 페이지 (나의 워크샵 목록 / 강사 및 업체 정보 / 리뷰 작성)                                                                               |
 | 황민주 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | 팀원 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | https://github.com/minzunim   | `BackEnd` : 인기/신규 워크샵 조회, 검색, 수강 신청, 결제/환불, 찜 API <br/> `FrontEnd` : 메인, 검색, 워크샵 상세, 수강 신청, 마이 페이지 내 워크샵 목록                                                                 |
+
+<br/>
+<br/>
+
+## 프로젝트 일정
+
+<br/>
+<br/>
+
+## 프로젝트 폴더 구조
+
+```
+📦WORKERBENCHPROJECT
+ ┣ 📂public
+ ┣ 📂src
+ ┃ ┣ 📂admin
+ ┃ ┣ 📂auth
+ ┃ ┣ 📂common
+ ┃ ┣ 📂config
+ ┃ ┣ 📂database
+ ┃ ┣ 📂entities
+ ┃ ┣ 📂mypage
+ ┃ ┣ 📂teacher
+ ┃ ┣ 📂workshops
+ ┃ ┣ 📜app.controller.spec.ts
+ ┃ ┣ 📜app.controller.ts
+ ┃ ┣ 📜app.module.ts
+ ┃ ┣ 📜app.render.controller.ts
+ ┃ ┣ 📜app.service.ts
+ ┃ ┣ 📜main.ts
+ ┣ 📂test
+ ┣ 📂views
+ ┣ 📜.env(서버 한정)
+ ┣ 📜.eslintrc.js
+ ┣ 📜.prettierrc
+ ┣ 📜dataSource.ts
+ ┣ 📜nest-cli.json
+ ┣ 📜package-lock.json
+ ┣ 📜package.json
+ ┣ 📜README.md
+ ┣ 📜tsconfig.build.json
+ ┗ 📜tsconfig.json
+```
+
+- `public` : css, js 파일 등 정적 파일
+- `src` : nestJs 프로젝트를 구성하는 모듈들의 집합. 추후 build 되어 root 폴더에 'dist' 폴더로 트랜스파일 됨.
+- `test` : e2e 테스트 파일
+- `view` : 서버 사이드 랜더링용 ejs 파일
+
+<br/>
+<br/>
+
+## 모듈별 주요 기능
+
+### - auth 모듈
+
+- 로그인, 회원가입, 그 밖에 JWT 등 인증/검증 관련 기능을 수행합니다.
+
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-1.png" alt="auth" width="100%"
+
+<br/>
+
+### - workshop 모듈
+
+- 가장 인기 있는 워크샵, 신규 워크샵, 워크샵 검색 기능 등을 제공합니다.
+
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-2.png" alt="workshop" width="100%"
+
+<br/>
+
+### - mypage 모듈
+
+- 계정을 소유한 유저의 워크샵 수강 이력, 찜 목록 등을 보여줍니다.
+
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-3.png" alt="mypage" width="100%"
+
+<br/>
+
+### - teacher 모듈
+
+- 강사로 등록된 유저가 나의 워크샵을 관리, 등록 신청 할 수 있으며 유저의 수강 신청 이력도 조회 가능합니다.
+
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-4.png" alt="teacher" width="100%"
+
+<br/>
+
+### - admin 모듈
+
+- 강사가 등록 신청한 워크샵을 승인/반려 하거나 블랙 리스트를 추가하는 등의 권한을 가집니다.
+
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-5.png" alt="admin" width="100%"
+
+<br/>

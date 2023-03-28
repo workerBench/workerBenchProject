@@ -15,11 +15,11 @@ services:
       DB_HOST: 'host.docker.internal' # If you're using Docker Desktop on Windows or macOS
       # DATABASE_HOST: '<your_local_machine_IP>' # If you're using Docker on Linux
       DB_PORT: 3306
-      DB_USERNAME: root
-      DB_PASSWORD: lololo46
-      DB_NAME: workerbench
-      DB_LOGGING: 'false'
-      DB_SYNCHRONAIZE: 'false'
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_LOGGING: ${DB_LOGGING}
+      DB_SYNCHRONAIZE: ${DB_SYNCHRONAIZE}
       TEST_DB_NAME: ${TEST_DB_NAME}
       GOOGLE_MAIL: ${GOOGLE_MAIL}
       GOOGLE_PASSWORD: ${GOOGLE_PASSWORD}
