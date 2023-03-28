@@ -30,11 +30,29 @@
 
 <div align="center"><img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme_logo.png" alt="로고" width="700px"></div>
 
-## Installation
+<br/>
 
-```bash
-$ npm install
-```
+**프로젝트 기간** : 2023-02-27(월) ~ 2023-03-31(금)
+
+📖 [Workerbecn 홈페이지](http://msdou46-94.shop/) (데스크탑 환경에서 이용해 주세요)
+📖 [Workerbecn 홈페이지 - 관리자 페이지 ](http://msdou46-94.shop/admin/login) (데스크탑 환경에서 이용해 주세요)
+📖 [Workerbecn Notion 읽어보기](http://msdou46-94.shop/) (데스크탑 환경에서 이용해 주세요)
+
+<br/>
+<br/>
+
+## 프로젝트 개요 소개
+
+<div align="center"><img src="https://d2y5u1z6769wng.cloudfront.net/base_images/introduce_project.png" alt="로고" width="700px"></div>
+
+### 동료와 나를 나란히 이어주는 벤치, 워크숍 중개 플랫폼 ‘워커 벤치(Work-Bench)’입니다.
+
+- 코로나19로 인해 재택근무가 활성화된 요즘, 워크숍 트렌드도 변화하고 있습니다.
+- 술자리와 회식이 전부인 워크샵은 옛말, 비대면 워크숍부터 취미 활동을 함께 하는 등 워크숍의 의미가 달라지고 있습니다.
+- 워커 벤치는 건강한 워크숍 문화를 만들고 싶은 기업과 직장인, 그리고 워크숍 콘텐츠 제공자를 이어주는 플랫폼입니다.
+
+<br/>
+<br/>
 
 ## Running the app
 
@@ -48,30 +66,3 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
