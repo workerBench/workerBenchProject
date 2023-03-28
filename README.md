@@ -79,8 +79,19 @@
 
 <img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-6.png" alt="stack" width="90%">
 
-자세한 사항은 [기술 멘토링 노트 2주차](https://www.notion.so/752577fa2ec444939940621dc8f7999f) 와
+&nbsp;&nbsp; 🔍자세한 사항은 [기술 멘토링 노트 2주차](https://www.notion.so/752577fa2ec444939940621dc8f7999f) 와
 [브로셔](https://www.notion.so/c53f5fb8b7a44bb799cdfa2407178996) 에 기록되어 있습니다.
+
+| 사용 기술                                                   | 용도                                                       |
+| ----------------------------------------------------------- | ---------------------------------------------------------- |
+| Node.js(v18.12.0)                                           | JavaScript 런타임 환경                                     |
+| NestJs(^9.0.0)                                              | 확장 가능한 애플리케이션 구축을 위한 Node.js 웹 프레임워크 |
+| Typescript(^4.7.4)                                          | JavaScript의 슈퍼셋                                        |
+| TypeORM(^0.3.12)                                            | TypeScript로 작성된 Object Relational Mapper 라이브러리    |
+| MySQL(^8.0.31)                                              | SQL을 기반으로 한 관계형 데이터베이스 관리 시스템(RDBMS)   |
+| Ejs(^3.1.8)                                                 | JavaScript로 HTML 마크업을 생성할 수 있는 템플릿 언어      |
+| redis(^3.0.504)                                             | Key, Value 구조의 비정형 데이터를 저장하고 관리하기 위한   |
+| in-memory 기반 비관계형 데이터 베이스 관리 시스템(DBMS)위한 |
 
 <br/>
 <br/>
