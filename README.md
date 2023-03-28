@@ -129,7 +129,7 @@
 
 - 로그인, 회원가입, 그 밖에 JWT 등 인증/검증 관련 기능을 수행합니다.
 
-<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-1.png" alt="auth" width="100%"
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-1.png" alt="auth" width="100%">
 
 <br/>
 
@@ -137,7 +137,7 @@
 
 - 가장 인기 있는 워크샵, 신규 워크샵, 워크샵 검색 기능 등을 제공합니다.
 
-<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-2.png" alt="workshop" width="100%"
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-2.png" alt="workshop" width="100%">
 
 <br/>
 
@@ -145,7 +145,7 @@
 
 - 계정을 소유한 유저의 워크샵 수강 이력, 찜 목록 등을 보여줍니다.
 
-<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-3.png" alt="mypage" width="100%"
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-3.png" alt="mypage" width="100%">
 
 <br/>
 
@@ -153,7 +153,7 @@
 
 - 강사로 등록된 유저가 나의 워크샵을 관리, 등록 신청 할 수 있으며 유저의 수강 신청 이력도 조회 가능합니다.
 
-<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-4.png" alt="teacher" width="100%"
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-4.png" alt="teacher" width="100%">
 
 <br/>
 
@@ -161,6 +161,6 @@
 
 - 강사가 등록 신청한 워크샵을 승인/반려 하거나 블랙 리스트를 추가하는 등의 권한을 가집니다.
 
-<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-5.png" alt="admin" width="100%"
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-5.png" alt="admin" width="100%">
 
 <br/>
