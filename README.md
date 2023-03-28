@@ -56,8 +56,8 @@
 
 ## 프로젝트 문서 열람
 
-| 📚 [Workerbench 노션](https://www.notion.so/7-ebc4b4e491d44187bbb3ba1ba01e31ce) | 🧩 [프로젝트 S.A](https://www.notion.so/Worker-Bench-S-A-933d80bfe63342db887234344eae6b4b) | 📝 [멘토링 노트](https://www.notion.so/752577fa2ec444939940621dc8f7999f) | 💾 [프로젝트 ERD](https://www.erdcloud.com/d/yHqRArd86ZtT2rgRh) | 💬 [브로셔](https://www.notion.so/c53f5fb8b7a44bb799cdfa2407178996) |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------- |
+| 📚 [Workerbench 노션](https://www.notion.so/7-ebc4b4e491d44187bbb3ba1ba01e31ce) | 🧩 [프로젝트 S.A](https://www.notion.so/Worker-Bench-S-A-933d80bfe63342db887234344eae6b4b) | 📝 [멘토링 노트](https://www.notion.so/752577fa2ec444939940621dc8f7999f) | 💾 [프로젝트 ERD](https://www.erdcloud.com/d/yHqRArd86ZtT2rgRh) | 💬 [브로셔](https://www.notion.so/c53f5fb8b7a44bb799cdfa2407178996) | 🖍️ [베타 테스트 결과](https://www.notion.so/Workerbench-f21f182cbce7406fb7f3c0eaff839235) |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 
 <br/>
 <br/>
@@ -71,6 +71,13 @@
 | 이동호                                            | 팀원                                            | - 깃허브 주소 -               | `BackEnd` : 강사 페이지 전체 API <br/> `FrontEnd` : 강사등록하기,워크샵등록,워크샵목록,강사 업체 등록,강사 업체정보,강사 수강 관리(미완료),강사 수강 관리 (완료)                                                        |
 | 한동주                                            | 부리더                                          | https://github.com/handongjoo | `BackEnd` : 관리자 페이지 전체 API <br/> `FrontEnd` : 관리자 페이지 전체 , 마이 페이지 (나의 워크샵 목록 / 강사 및 업체 정보 / 리뷰 작성)                                                                               |
 | 황민주 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | 팀원 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | https://github.com/minzunim   | `BackEnd` : 인기/신규 워크샵 조회, 검색, 수강 신청, 결제/환불, 찜 API <br/> `FrontEnd` : 메인, 검색, 워크샵 상세, 수강 신청, 마이 페이지 내 워크샵 목록                                                                 |
+
+<br/>
+<br/>
+
+## 사용한 기술 스택
+
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-6.png" alt="stack" width="90%">
 
 <br/>
 <br/>
@@ -129,7 +136,7 @@
 
 - 로그인, 회원가입, 그 밖에 JWT 등 인증/검증 관련 기능을 수행합니다.
 
-<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-1.png" alt="auth" width="100%">
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-1.png" alt="auth" width="90%">
 
 <br/>
 
@@ -137,7 +144,7 @@
 
 - 가장 인기 있는 워크샵, 신규 워크샵, 워크샵 검색 기능 등을 제공합니다.
 
-<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-2.png" alt="workshop" width="100%">
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-2.png" alt="workshop" width="90%">
 
 <br/>
 
@@ -145,7 +152,7 @@
 
 - 계정을 소유한 유저의 워크샵 수강 이력, 찜 목록 등을 보여줍니다.
 
-<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-3.png" alt="mypage" width="100%">
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-3.png" alt="mypage" width="90%">
 
 <br/>
 
@@ -153,7 +160,7 @@
 
 - 강사로 등록된 유저가 나의 워크샵을 관리, 등록 신청 할 수 있으며 유저의 수강 신청 이력도 조회 가능합니다.
 
-<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-4.png" alt="teacher" width="100%">
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-4.png" alt="teacher" width="90%">
 
 <br/>
 
@@ -161,6 +168,6 @@
 
 - 강사가 등록 신청한 워크샵을 승인/반려 하거나 블랙 리스트를 추가하는 등의 권한을 가집니다.
 
-<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-5.png" alt="admin" width="100%">
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-5.png" alt="admin" width="90%">
 
 <br/>
