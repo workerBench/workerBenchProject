@@ -404,10 +404,10 @@ function orderWorkshop() {
       location.href = '/mypage/workshops';
     })
     .catch((err) => {
-      console.log(err);
-      if (err.response.data.statusCode === 401) {
-        alert('로그인 후 이용 가능합니다.');
-      }
+      alert(err.response.data.message);
+      // if (err.response.data.statusCode === 401) {
+      //   alert('로그인 후 이용 가능합니다.');
+      // }
     });
 }
 

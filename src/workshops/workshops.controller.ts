@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -159,11 +160,22 @@ export class WorkshopsController {
   @ApiOperation({ summary: '워크샵 신청 문의하기 api' })
   @Post(':workshop_id/order')
   @UseGuards(JwtUserAuthGuard)
-  orderWorkshop(
+  async orderWorkshop(
     @Param('workshop_id') workshop_id: number,
     @Body() orderWorkshopData: OrderWorkshopDto,
     @CurrentUser() user: CurrentUserDto,
   ) {
+    // 워크샵 수강 신청서 작성 시 입력한 값에 대한 유효성 검사
+    try {
+      await this.workshopsService.checkOrderWorkshopValidation(
+        orderWorkshopData,
+        workshop_id,
+        user.id,
+      );
+    } catch (err) {
+      throw err;
+    }
+
     const user_id = user.id;
     return this.workshopsService.orderWorkshop(
       workshop_id,

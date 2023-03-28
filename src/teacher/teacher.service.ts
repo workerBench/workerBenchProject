@@ -27,6 +27,7 @@ import { identity } from 'rxjs';
 import { wrap } from 'module';
 import { QueryResult } from 'typeorm/query-runner/QueryResult';
 import { TransformationType } from 'class-transformer';
+import { CreateWorkshopsVideoDto } from './dto/teacher-workshops-video.dto';
 import { UpdateWorkshopsDto } from './dto/teacher-workshop-update.dto';
 
 @Injectable()
@@ -444,6 +445,50 @@ export class TeacherService {
     }
   }
 
+  // 워크샵 등록 신청 시 유효성 검사 우선시. 기본적인 타입 검사는 class-validator 가 수행.
+  async checkWorkShopInFoValidation(workshopInputData: CreateWorkshopsDto) {
+    const {
+      title,
+      category,
+      min_member,
+      max_member,
+      genre_id,
+      total_time,
+      desc,
+      price,
+      location,
+      purpose_tag_id,
+    } = workshopInputData;
+
+    if (purpose_tag_id.length < 1) {
+      throw new HttpException(
+        '워크샵의 목적 태그를 최소 한 개는 선택해야 합니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    // 둘 다 null 이다 = 목적 태그가 1개도 입력되지 않았다.
+    if (purpose_tag_id[0] === null && purpose_tag_id[1] === null) {
+      throw new HttpException(
+        '워크샵의 목적 태그를 최소 한 개는 선택해야 합니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (purpose_tag_id[0] === purpose_tag_id[1]) {
+      throw new HttpException(
+        '동일한 목적을 선택하셨습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (min_member > max_member) {
+      throw new HttpException(
+        '최소 인원이 최대 인원을 초과하였습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
   // 워크샵 등록 신청 하기
   async createTeacherWorkshops(
     data: CreateWorkshopsDto,
@@ -573,14 +618,13 @@ export class TeacherService {
         title,
       };
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
 
   // 워크샵 등록 후 영상 등록
   async uploadVideo(
-    workshopData: any,
+    workshopData: CreateWorkshopsVideoDto,
     video: Express.Multer.File,
     userId: number,
   ) {

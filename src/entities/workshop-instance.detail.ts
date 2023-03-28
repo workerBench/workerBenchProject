@@ -2,8 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsEmail,
+  IsInt,
   IsNotEmpty,
   IsNumber,
+  IsPositive,
   IsString,
   Matches,
 } from 'class-validator';
@@ -119,6 +121,8 @@ export class WorkShopInstanceDetail {
 
   @Type(() => Number) // 숫자 타입으로 변환
   @IsNumber()
+  @IsInt()
+  @IsPositive()
   @IsNotEmpty({ message: '희망하시는 인원을 적어 주세요' })
   @ApiProperty({
     example: 20,
