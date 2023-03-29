@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
       reader.readAsDataURL(files[0]);
     }
     if (!files.length) {
+      console.log('여기여기~');
       const imgShow = document.querySelector(`#thumb-img-show`);
       imgShow.removeAttribute('src');
     }

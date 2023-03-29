@@ -26,6 +26,8 @@ const getErrorCode = async (statusCode, errorMessage) => {
     }
     return true;
   }
+  alert(`에러 코드: ${statusCode} / message: ${errorMessage}`);
+  return false;
 };
 
 // 블랙리스트 목록 불러오기
