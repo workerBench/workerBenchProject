@@ -30,7 +30,7 @@ const getErrorCode = async (statusCode, errorMessage) => {
   return false;
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+const getTeacherWorkshops = () => {
   const wokshopApprovalList = document.getElementById('wokshop-approvalList');
   const wokshopFinishedList = document.getElementById('wokshop-finishedList');
   const wokshopRequestList = document.getElementById('wokshop-requestList');
@@ -105,11 +105,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     })
-    .catch((response) => {
-      console.log(response);
-      const { data } = response.response;
-      alert(data.error);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        getTeacherWorkshops();
+      }
     });
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  getTeacherWorkshops();
 });
 
 // 강사 - 나의 워크샵 목록에서 워크샵 카드 클릭 시 모달창으로 상세 페이지 업.
@@ -205,11 +213,14 @@ function workshopDetail(id) {
         document.getElementById('detailWorkshopList').innerHTML = tempHtml;
       }
     })
-    .catch((response) => {
-      console.log('~~~~');
-      console.log(response);
-      // const { data } = response.response;
-      // alert(data.error);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        workshopDetail(id);
+      }
     });
 }
 
@@ -384,9 +395,14 @@ function updateWorkshop(id) {
         document.getElementById('detailWorkshopList').innerHTML = tempHtml;
       }
     })
-    .catch((response) => {
-      const { data } = response.response;
-      alert(data.error);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        updateWorkshop(id);
+      }
     });
 }
 function updateWorkshop2(id) {
@@ -449,13 +465,17 @@ function updateWorkshop2(id) {
       const data = response.data;
       alert(data.message);
     })
-    .catch((response) => {
-      console.log('~~~~');
-      console.log(response);
-      const { data } = response.response;
-      alert(data.message);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        updateWorkshop2(id);
+      }
     });
 }
+
 // click on 라벨 추가 모달 열기
 $(document).on('click', '#workshopDetail', function (e) {
   $('#modal').addClass('show');

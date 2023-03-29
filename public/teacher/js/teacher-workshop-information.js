@@ -30,7 +30,7 @@ const getErrorCode = async (statusCode, errorMessage) => {
   return false;
 };
 
-const getTacherMypage = () => {
+const getTeacherMypage = () => {
   const workshopInformationList = document.getElementById(
     'workshop-informationList',
   );
@@ -171,7 +171,7 @@ const getTacherMypage = () => {
         error.response.data.message,
       );
       if (result) {
-        getTacherMypage();
+        getTeacherMypage();
       }
     });
 };
@@ -261,7 +261,7 @@ const getEveryCompany = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  getTacherMypage();
+  getTeacherMypage();
   searchingCompany();
   getEveryCompany();
 });
