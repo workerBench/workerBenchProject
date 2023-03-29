@@ -34,9 +34,9 @@
 
 **프로젝트 기간** : 2023-02-27(월) ~ 2023-03-31(금)
 
-📖 [Workerbecn 홈페이지](http://msdou46-94.shop/) (데스크탑 환경에서 이용해 주세요) \* 위 경로로 접속이 불가능 할 시 [Workerbecn 홈페이지 (www)](http://www.msdou46-94.shop/)
+📖 [Workerbecn 홈페이지](http://msdou46-94.shop/) (데스크탑 환경에서 이용해 주세요) <br/> \* 위 경로로 접속이 불가능 할 시 [Workerbecn 홈페이지 (www)](http://www.msdou46-94.shop/)
 
-📖 [Workerbecn 홈페이지 - 관리자 페이지 ](http://msdou46-94.shop/admin/login) (데스크탑 환경에서 이용해 주세요) \* 위 경로로 접속이 불가능 할 시 [Workerbecn 홈페이지 (www)](http://www.msdou46-94.shop/admin/login)
+📖 [Workerbecn 홈페이지 - 관리자 페이지 ](http://msdou46-94.shop/admin/login) (데스크탑 환경에서 이용해 주세요) <br/> \* 위 경로로 접속이 불가능 할 시 [Workerbecn 홈페이지 - 관리자 페이지(www)](http://www.msdou46-94.shop/admin/login)
 
 <br/>
 <br/>
