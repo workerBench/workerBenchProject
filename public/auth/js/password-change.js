@@ -24,10 +24,6 @@ const submitPassword = async () => {
     );
     location.href = '/auth/login';
   } catch (err) {
-    getErrorCode(
-      err.response.data.statusCode,
-      err.response.data.message,
-      submitPassword,
-    );
+    alert(`${err.response.data.message}`);
   }
 };

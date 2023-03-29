@@ -166,7 +166,7 @@ function showModal(workshopId) {
         error.response.data.message,
       );
       if (result) {
-        showModal();
+        showModal(workshopId);
       }
     });
 }

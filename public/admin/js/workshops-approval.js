@@ -176,7 +176,7 @@ function showModal(workshopId) {
         error.response.data.message,
       );
       if (result) {
-        showModal();
+        showModal(workshopId);
       }
     });
 }
@@ -288,7 +288,7 @@ function updateModal(workshopId) {
         error.response.data.message,
       );
       if (result) {
-        updateModal();
+        updateModal(workshopId);
       }
     });
 }
@@ -308,7 +308,7 @@ function finished(workshopId) {
         error.response.data.message,
       );
       if (result) {
-        finished();
+        finished(workshopId);
       }
     });
 }
@@ -363,7 +363,7 @@ function update(workshopId) {
         error.response.data.message,
       );
       if (result) {
-        update();
+        update(workshopId);
       }
     });
 }

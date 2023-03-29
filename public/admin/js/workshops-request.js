@@ -171,7 +171,7 @@ function showModal(workshopId) {
         error.response.data.message,
       );
       if (result) {
-        showModal();
+        showModal(workshopId);
       }
     });
 }
@@ -191,7 +191,7 @@ function approval(workshopId) {
         error.response.data.message,
       );
       if (result) {
-        approval();
+        approval(workshopId);
       }
     });
 }
@@ -209,7 +209,7 @@ function rejection(workshopId) {
         error.response.data.message,
       );
       if (result) {
-        rejection();
+        rejection(workshopId);
       }
     });
 }

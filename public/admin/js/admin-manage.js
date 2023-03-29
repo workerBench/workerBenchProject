@@ -66,8 +66,6 @@ async function getAdminList() {
 
 getAdminList();
 
-// ------------------------ 계정 생성 버튼 (+모달) ------------------------ //
-
 // 관리자 계정 삭제
 const deleteAdmin = async (id) => {
   const email = document.querySelector(`#admin-email-${id}`).innerHTML;
@@ -146,9 +144,14 @@ $(document).ready(function () {
         alert('관리자 계정이 생성되었습니다.');
         location.reload(); // 페이지 새로고침
       })
-      .catch((error) => {
-        alert(error.response.data.message);
-        // getErrorCode(err.response.data.statusCode, err.response.data.message);
+      .catch(async (error) => {
+        const result = await getErrorCode(
+          error.response.data.statusCode,
+          error.response.data.message,
+        );
+        if (result) {
+          document.querySelector('#create').click();
+        }
       });
   });
 });
