@@ -452,6 +452,7 @@ export class TeacherService {
     try {
       const {
         title,
+        category,
         min_member,
         max_member,
         genre_id,
@@ -497,9 +498,13 @@ export class TeacherService {
       );
       const thumbImgName = uuid() + thumbImgType;
 
+      // 온라인 / 오프라인 카테고리 유형 정하기
+      type WorkshopCategoryType = 'offline' | 'online';
+      const workshopCategory = category as WorkshopCategoryType;
+
       const workshop = await this.workshopRepository.insert({
         thumb: thumbImgName,
-        category: 'offline' || 'online',
+        category: workshopCategory,
         title,
         min_member,
         max_member,
