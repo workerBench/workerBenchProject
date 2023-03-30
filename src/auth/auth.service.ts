@@ -5,6 +5,7 @@ import {
   ConflictException,
   HttpException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -189,7 +190,7 @@ export class AuthService {
       { id, email, userType },
       {
         secret: this.configService.get('JWT_SECRET_KEY'),
-        expiresIn: '6000s',
+        expiresIn: '600s',
         algorithm: 'HS256',
       },
     );
@@ -202,7 +203,7 @@ export class AuthService {
       { id, email, adminType },
       {
         secret: this.configService.get('JWT_SECRET_KEY_ADMIN'),
-        expiresIn: '6000s',
+        expiresIn: '600s',
         algorithm: 'HS256',
       },
     );
@@ -228,13 +229,13 @@ export class AuthService {
       { id, email, userType },
       {
         secret: this.configService.get('JWT_SECRET_KEY'),
-        expiresIn: '7000s',
+        expiresIn: '86400s',
         algorithm: 'HS256',
       },
     );
     await this.redisClient.setex(
       refreshTokenRedisKey(userTypeString, id),
-      7000,
+      86400,
       `${clientIp}_#_${refreshToekn}`,
     );
     return refreshToekn;
@@ -259,14 +260,14 @@ export class AuthService {
       { id, email, adminType },
       {
         secret: this.configService.get('JWT_SECRET_KEY_ADMIN'),
-        expiresIn: '7000s',
+        expiresIn: '86400s',
         algorithm: 'HS256',
       },
     );
 
     await this.redisClient.setex(
       refreshTokenRedisKey(adminTypeString, id),
-      7000,
+      86400,
       `${clientIp}_#_${refreshToekn}`,
     );
     return refreshToekn;
@@ -300,19 +301,13 @@ export class AuthService {
       select: ['id', 'email', 'password', 'admin_type', 'deletedAt'],
     });
     if (!adminInfo) {
-      const err = new Error('이메일 또는 비밀번호가 일치하지 않습니다');
-      err.name = 'DoesntExistEmailOrPasswordError';
-      throw err;
+      throw new BadRequestException('이메일 또는 비밀번호가 일치하지 않습니다');
     }
     if (!(await bcrypt.compare(password, adminInfo.password))) {
-      const err = new Error('이메일 또는 비밀번호가 일치하지 않습니다');
-      err.name = 'DoesntExistEmailOrPasswordError';
-      throw err;
+      throw new BadRequestException('이메일 또는 비밀번호가 일치하지 않습니다');
     }
     if (adminInfo.deletedAt !== null) {
-      const err = new Error('현재 권한이 박탈된 관리자 계정입니다');
-      err.name = 'ThisAdminUserIsUnBlock';
-      throw err;
+      throw new BadRequestException('현재 권한이 박탈된 관리자 계정입니다');
     }
 
     return adminInfo;
@@ -366,15 +361,11 @@ export class AuthService {
     ).split('_#_');
 
     if (clientInfoFromRedis[0] !== ip) {
-      const err = new Error('사용자의 ip 정보가 정확하지 않습니다');
-      err.name = 'IpDoesntSame';
-      throw err;
+      throw new BadRequestException('사용자의 ip 정보가 정확하지 않습니다');
     }
 
     if (clientInfoFromRedis[1] !== refreshToken) {
-      const err = new Error('사용자의 토큰 정보가 정확하지 않습니다');
-      err.name = 'IpDoesntSame';
-      throw err;
+      throw new BadRequestException('사용자의 토큰 정보가 정확하지 않습니다');
     }
 
     return;
@@ -400,15 +391,11 @@ export class AuthService {
     ).split('_#_');
 
     if (clientInfoFromRedis[0] !== ip) {
-      const err = new Error('사용자의 ip 정보가 정확하지 않습니다');
-      err.name = 'IpDoesntSame';
-      throw err;
+      throw new BadRequestException('사용자의 ip 정보가 정확하지 않습니다');
     }
 
     if (clientInfoFromRedis[1] !== refreshToken) {
-      const err = new Error('사용자의 토큰 정보가 정확하지 않습니다');
-      err.name = 'IpDoesntSame';
-      throw err;
+      throw new BadRequestException('사용자의 토큰 정보가 정확하지 않습니다');
     }
 
     return;
@@ -422,9 +409,7 @@ export class AuthService {
     });
 
     if (!adminInfo) {
-      const err = new Error('존재하지 않는 부관리자 계정입니다.');
-      err.name = 'DoesntExistAdminAccount';
-      throw err;
+      throw new NotFoundException('존재하지 않는 부관리자 계정입니다.');
     }
     // soft delete
     await this.adminUserRepository.softDelete({ email });
@@ -436,7 +421,7 @@ export class AuthService {
     // 이메일로 계정 찾기
     const user = await this.userRepository.findOne({ where: { email } });
     if (!user) {
-      throw new BadRequestException('존재하지 않는 계정입니다.');
+      throw new NotFoundException('존재하지 않는 계정입니다.');
     }
   }
 
@@ -584,106 +569,106 @@ export class AuthService {
 
   /* -------------------------------- 테스트용 API -------------------------------- */
 
-  // 유저가 업로드한 사진을 S3 에 저장
-  async uploadFileToS3(images: Array<Express.Multer.File>, workshopInfo: any) {
-    // 썸네일 이미지 이름 만들기. 프론트에서는 썸네일을 가장 먼저 formData 에 저장하기에 무조건 배열의 첫 번째 사진이 썸네일.
-    const thumbImgType = images[0].originalname.substring(
-      images[0].originalname.lastIndexOf('.'),
-      images[0].originalname.length,
-    );
-    const thumbImgName = uuid() + thumbImgType;
-    /*
-    여기서 워크샵을 insert 해야 함. 할 때 썸네일 경로, 이름과 같이 insert. insert 결과를 insertResult 변수에 저장.
-    insert 한 후 insertResult.identifiers[0].id 로 id 를 가져와.
-    가져와서 아래의 else 문 안에서 미리 바깥에서 만들어 둔 배열에 [img_name: "ddd", workshop_id: insertResult.identifiers[0].id]
-    이런 식으로 push. 
-    이렇게 만들어 진 배열을 workshop_image 에 insert 한다.
-    */
+  // // 유저가 업로드한 사진을 S3 에 저장
+  // async uploadFileToS3(images: Array<Express.Multer.File>, workshopInfo: any) {
+  //   // 썸네일 이미지 이름 만들기. 프론트에서는 썸네일을 가장 먼저 formData 에 저장하기에 무조건 배열의 첫 번째 사진이 썸네일.
+  //   const thumbImgType = images[0].originalname.substring(
+  //     images[0].originalname.lastIndexOf('.'),
+  //     images[0].originalname.length,
+  //   );
+  //   const thumbImgName = uuid() + thumbImgType;
+  //   /*
+  //   여기서 워크샵을 insert 해야 함. 할 때 썸네일 경로, 이름과 같이 insert. insert 결과를 insertResult 변수에 저장.
+  //   insert 한 후 insertResult.identifiers[0].id 로 id 를 가져와.
+  //   가져와서 아래의 else 문 안에서 미리 바깥에서 만들어 둔 배열에 [img_name: "ddd", workshop_id: insertResult.identifiers[0].id]
+  //   이런 식으로 push.
+  //   이렇게 만들어 진 배열을 workshop_image 에 insert 한다.
+  //   */
 
-    // 이제 썸네일 이미지와 서브 이미지들을 S3 에 저장해야 해.
-    try {
-      images.forEach(async (image, index) => {
-        // 첫 번째 image 일 경우 해당 이미지는 썸네일 이미지로 간주한다.
-        if (index === 0) {
-          const s3OptionForThumbImg = {
-            Bucket: this.configService.get('AWS_S3_BUCKET_NAME_IMAGE_INPUT'), // S3의 버킷 이름.
-            Key: `images/workshops/10/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
-            Body: image.buffer, // 업로드 하고자 하는 파일.
-          };
-          await this.s3Client.send(new PutObjectCommand(s3OptionForThumbImg)); // 실제로 S3 클라우드로 파일을 전송 및 업로드 하는 코드.
-        } else {
-          const subImgType = image.originalname.substring(
-            image.originalname.lastIndexOf('.'),
-            image.originalname.length,
-          );
-          const subImgName = uuid() + subImgType;
+  //   // 이제 썸네일 이미지와 서브 이미지들을 S3 에 저장해야 해.
+  //   try {
+  //     images.forEach(async (image, index) => {
+  //       // 첫 번째 image 일 경우 해당 이미지는 썸네일 이미지로 간주한다.
+  //       if (index === 0) {
+  //         const s3OptionForThumbImg = {
+  //           Bucket: this.configService.get('AWS_S3_BUCKET_NAME_IMAGE_INPUT'), // S3의 버킷 이름.
+  //           Key: `images/workshops/10/original/${thumbImgName}`, // 폴더 구조와 파일 이름 (실제로는 폴더 구조는 아님. 그냥 사용자가 인지하기 쉽게 폴더 혹은 주소마냥 나타내는 논리적 구조.)
+  //           Body: image.buffer, // 업로드 하고자 하는 파일.
+  //         };
+  //         await this.s3Client.send(new PutObjectCommand(s3OptionForThumbImg)); // 실제로 S3 클라우드로 파일을 전송 및 업로드 하는 코드.
+  //       } else {
+  //         const subImgType = image.originalname.substring(
+  //           image.originalname.lastIndexOf('.'),
+  //           image.originalname.length,
+  //         );
+  //         const subImgName = uuid() + subImgType;
 
-          const s3OptionForSubImg = {
-            Bucket: this.configService.get('AWS_S3_BUCKET_NAME_IMAGE_INPUT'),
-            Key: `images/workshops/10/original/${subImgName}`,
-            Body: image.buffer,
-          };
-          await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
-        }
-      });
-    } catch (err) {
-      throw new HttpException('s3 이미지 업로드 도중 오류 발생', 400);
-    }
-  }
+  //         const s3OptionForSubImg = {
+  //           Bucket: this.configService.get('AWS_S3_BUCKET_NAME_IMAGE_INPUT'),
+  //           Key: `images/workshops/10/original/${subImgName}`,
+  //           Body: image.buffer,
+  //         };
+  //         await this.s3Client.send(new PutObjectCommand(s3OptionForSubImg));
+  //       }
+  //     });
+  //   } catch (err) {
+  //     throw new HttpException('s3 이미지 업로드 도중 오류 발생', 400);
+  //   }
+  // }
 
-  // 워크샵 썸네일 가져오기. 이건... S3 버킷에 가서 파일 이름을 직접 복사해 와서 thumbName 변수에 넣어주셔야 합니다.
-  async workshopThumbImg() {
-    const workshop_id = 1;
-    const region = this.configService.get('AWS_S3_REGION');
-    const cloundFrontUrl = this.configService.get(
-      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
-    );
-    const thumbName =
-      'images/workshops/3/800/46c6217a-cb8e-4795-b185-8dcc5e2e61cb.jpeg';
+  // // 워크샵 썸네일 가져오기. 이건... S3 버킷에 가서 파일 이름을 직접 복사해 와서 thumbName 변수에 넣어주셔야 합니다.
+  // async workshopThumbImg() {
+  //   const workshop_id = 1;
+  //   const region = this.configService.get('AWS_S3_REGION');
+  //   const cloundFrontUrl = this.configService.get(
+  //     'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+  //   );
+  //   const thumbName =
+  //     'images/workshops/3/800/46c6217a-cb8e-4795-b185-8dcc5e2e61cb.jpeg';
 
-    // const thumbUrl = `https://workerbench.s3.${region}.amazonaws.com/${thumbName}`;
-    const thumbUrl = `${cloundFrontUrl}${thumbName}`;
+  //   // const thumbUrl = `https://workerbench.s3.${region}.amazonaws.com/${thumbName}`;
+  //   const thumbUrl = `${cloundFrontUrl}${thumbName}`;
 
-    return thumbUrl;
-  }
+  //   return thumbUrl;
+  // }
 
-  // 동영상 저장
-  async uploadVideoToS3(video: Express.Multer.File) {
-    const review_id = 1; // 리뷰의 id 가 1 이라고 가정.
+  // // 동영상 저장
+  // async uploadVideoToS3(video: Express.Multer.File) {
+  //   const review_id = 1; // 리뷰의 id 가 1 이라고 가정.
 
-    // 랜덤한 이름 생성
-    const videoTypeName = video.originalname.substring(
-      video.originalname.lastIndexOf('.'),
-      video.originalname.length,
-    );
-    const videoName = uuid() + videoTypeName;
+  //   // 랜덤한 이름 생성
+  //   const videoTypeName = video.originalname.substring(
+  //     video.originalname.lastIndexOf('.'),
+  //     video.originalname.length,
+  //   );
+  //   const videoName = uuid() + videoTypeName;
 
-    // s3 에 입력할 옵션
-    const s3OptionForReviewVideo = {
-      Bucket: this.configService.get('AWS_S3_BUCKET_NAME_VIDEO_INPUT'),
-      Key: `videos/workshops/10/original/${videoName}`,
-      Body: video.buffer,
-    };
+  //   // s3 에 입력할 옵션
+  //   const s3OptionForReviewVideo = {
+  //     Bucket: this.configService.get('AWS_S3_BUCKET_NAME_VIDEO_INPUT'),
+  //     Key: `videos/workshops/10/original/${videoName}`,
+  //     Body: video.buffer,
+  //   };
 
-    // 실제로 s3 버킷에 업로드
-    await this.s3Client.send(new PutObjectCommand(s3OptionForReviewVideo));
+  //   // 실제로 s3 버킷에 업로드
+  //   await this.s3Client.send(new PutObjectCommand(s3OptionForReviewVideo));
 
-    return;
-  }
+  //   return;
+  // }
 
-  // S3 에서 비디오 url 가져오기. 버킷에서 비디오의 제목을 가져와서 여기에 직접 입력해야 함.
-  async getVideoUrl() {
-    const review_id = 1;
-    const region = this.configService.get('AWS_S3_REGION');
-    const cloundFrontUrl = this.configService.get(
-      'AWS_CLOUD_FRONT_DOMAIN_VIDEO',
-    );
-    const videoName =
-      'videos/review/1/original/38d56d07-2326-4806-8ac6-289a2054f7b2.mov';
-    // https://d3uycps0xwbcx9.cloudfront.net/videos/review/1/original/38d56d07-2326-4806-8ac6-289a2054f7b2.mov
-    const videoUrl = `${cloundFrontUrl}${videoName}`;
-    return videoUrl;
-  }
+  // // S3 에서 비디오 url 가져오기. 버킷에서 비디오의 제목을 가져와서 여기에 직접 입력해야 함.
+  // async getVideoUrl() {
+  //   const review_id = 1;
+  //   const region = this.configService.get('AWS_S3_REGION');
+  //   const cloundFrontUrl = this.configService.get(
+  //     'AWS_CLOUD_FRONT_DOMAIN_VIDEO',
+  //   );
+  //   const videoName =
+  //     'videos/review/1/original/38d56d07-2326-4806-8ac6-289a2054f7b2.mov';
+  //   // https://d3uycps0xwbcx9.cloudfront.net/videos/review/1/original/38d56d07-2326-4806-8ac6-289a2054f7b2.mov
+  //   const videoUrl = `${cloundFrontUrl}${videoName}`;
+  //   return videoUrl;
+  // }
 
   // // 배열로 여러 개의 데이터를 한 번에 insert 가능한가 실험. 결과는 성공.
   // async userUptest() {

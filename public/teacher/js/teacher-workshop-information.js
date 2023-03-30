@@ -1,4 +1,36 @@
-document.addEventListener('DOMContentLoaded', () => {
+// access 토큰이 만료되었을 시 refresh 토큰으로 access 토큰 재발급을 요청
+const requestAccessToken = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: '/api/auth/refreshtoken/user',
+    });
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+// 에러 발생 시 상태 코드에 따른 로직 실행
+const getErrorCode = async (statusCode, errorMessage) => {
+  if (statusCode === 400) {
+    alert(`에러 코드: ${statusCode} / message: ${errorMessage}`);
+    return false;
+  }
+  if (statusCode === 401) {
+    const refreshRes = await requestAccessToken();
+    if (!refreshRes) {
+      alert('현재 로그인이 되어있지 않습니다. 로그인 후 이용 가능합니다.');
+      location.href = '/auth/login';
+      return;
+    }
+    return true;
+  }
+  alert(`에러 코드: ${statusCode} / message: ${errorMessage}`);
+  return false;
+};
+
+const getTeacherMypage = () => {
   const workshopInformationList = document.getElementById(
     'workshop-informationList',
   );
@@ -132,52 +164,69 @@ document.addEventListener('DOMContentLoaded', () => {
                       </div>
                       `;
       workshopInformationList.insertAdjacentHTML('beforeend', tempHtml);
-      // 등록된 업체 검색
-      companySearch.addEventListener('click', () => {
-        const company_name = document.getElementById('company-name').value;
-        // if (!company_name) {
-        //   alert('업체를 입력해 주세요');
-        //   return;
-        // }
-        axios({
-          method: 'get',
-          url: `/api/teacher/company/search?company_name=${company_name}`,
-          data: {},
-        })
-          .then((response) => {
-            const data = response.data;
-            const applyCompanyTable = document.getElementById('company');
-            applyCompanyTable.innerHTML = '';
-            for (let i = 0; i < data.length; i++) {
-              const company_name = data[i].company_name;
-              const saving_name = data[i].saving_name;
-              const id = data[i].user_id;
-              const createdAt = data[i].createdAt;
-              let tempHtml = ``;
-              tempHtml += `
-              <tr>
-                <td>${company_name}</td>
-                <td>${saving_name}</td>
-                <td>${createdAt.split('T')[0]}</td>
-                <td>
-                <button class="apply-btn" onclick="applyCompany(${id})">가입 신청</button>
-                </td>
-              </tr>
-              `;
-              applyCompanyTable.insertAdjacentHTML('beforeend', tempHtml);
-            }
-            // location.reload();
-          })
-          .catch((response) => {
-            const { data } = response.response;
-            alert(data.error);
-          });
-      });
     })
-    .catch((response) => {
-      const { data } = response.response;
-      alert(data.message);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        getTeacherMypage();
+      }
     });
+};
+
+const searchingCompany = () => {
+  // 등록된 업체 검색
+  const companySearch = document.getElementById('search');
+  companySearch.addEventListener('click', () => {
+    const company_name = document.getElementById('company-name').value;
+    // if (!company_name) {
+    //   alert('업체를 입력해 주세요');
+    //   return;
+    // }
+    axios({
+      method: 'get',
+      url: `/api/teacher/company/search?company_name=${company_name}`,
+      data: {},
+    })
+      .then((response) => {
+        const data = response.data;
+        const applyCompanyTable = document.getElementById('company');
+        applyCompanyTable.innerHTML = '';
+        for (let i = 0; i < data.length; i++) {
+          const company_name = data[i].company_name;
+          const saving_name = data[i].saving_name;
+          const id = data[i].user_id;
+          const createdAt = data[i].createdAt;
+          let tempHtml = ``;
+          tempHtml += `
+          <tr>
+            <td>${company_name}</td>
+            <td>${saving_name}</td>
+            <td>${createdAt.split('T')[0]}</td>
+            <td>
+            <button class="apply-btn" onclick="applyCompany(${id})">가입 신청</button>
+            </td>
+          </tr>
+          `;
+          applyCompanyTable.insertAdjacentHTML('beforeend', tempHtml);
+        }
+        // location.reload();
+      })
+      .catch(async (error) => {
+        const result = await getErrorCode(
+          error.response.data.statusCode,
+          error.response.data.message,
+        );
+        if (result) {
+          document.getElementById('search').click();
+        }
+      });
+  });
+};
+
+const getEveryCompany = () => {
   // 모든 업체 목록 조회
   axios
     .get('/api/teacher/companies')
@@ -186,24 +235,35 @@ document.addEventListener('DOMContentLoaded', () => {
       let html = '';
       for (let company of companies) {
         html += `
-    <tr>
-        <td>${company.company_name}</td>
-        <td>${company.saving_name}</td>
-        <td>${company.createdAt.split('T')[0]}</td>
-        <td>
-          <button class="apply-btn" onclick="applyCompany(${
-            company.user_id
-          })">가입 신청</button>
-        </td>
-      </tr>
-    `;
+        <tr>
+            <td>${company.company_name}</td>
+            <td>${company.saving_name}</td>
+            <td>${company.createdAt.split('T')[0]}</td>
+            <td>
+              <button class="apply-btn" onclick="applyCompany(${
+                company.user_id
+              })">가입 신청</button>
+            </td>
+          </tr>
+        `;
       }
       $('#company').append(html);
     })
-    .catch(function (error) {
-      const { data } = response.response;
-      alert(data.error);
+    .catch(async function (error) {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        getEveryCompany();
+      }
     });
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  getTeacherMypage();
+  searchingCompany();
+  getEveryCompany();
 });
 
 // 등록된 업체에 등록 신청
@@ -218,9 +278,14 @@ function applyCompany(id) {
       alert(data.message);
       location.reload();
     })
-    .catch((response) => {
-      const { data } = response.response;
-      alert(data.error);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        applyCompany(id);
+      }
     });
 }
 // 업체 소속을 신청한 강사 목록 보기
@@ -251,11 +316,17 @@ function acceptListCompany() {
       }
       document.getElementById('apply-company').innerHTML = html;
     })
-    .catch((response) => {
-      const { data } = response.response;
-      alert(data.error);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        acceptListCompany();
+      }
     });
 }
+
 // 업체 소속을 신청한 업체 수락하기
 function acceptCompany(user_id) {
   axios({
@@ -268,11 +339,17 @@ function acceptCompany(user_id) {
       alert(data.message);
       location.reload();
     })
-    .catch((response) => {
-      const { data } = response.response;
-      alert(data.error);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        acceptCompany(user_id);
+      }
     });
 }
+
 // 업체 소속을 신청한 업체 반려하기
 function cancleCompany(user_id) {
   axios({
@@ -285,11 +362,17 @@ function cancleCompany(user_id) {
       alert(data.message);
       location.reload();
     })
-    .catch((response) => {
-      const { data } = response.response;
-      alert(data.error);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        cancleCompany(user_id);
+      }
     });
 }
+
 // 등록된 업체에 등록신청 모달 열기
 $(document).on('click', '#applyCompany', function (e) {
   $('#modal').addClass('show');

@@ -272,6 +272,7 @@ export class TeacherController {
       user.id,
     );
   }
+
   // 강사 워크샵 상세보기
   @ApiResponse({
     status: 200,

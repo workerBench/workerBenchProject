@@ -1,12 +1,47 @@
-axios
-  .get('../api/admin/workshops/approval')
-  .then(function (response) {
-    const workshops = response.data;
-    let html = '';
-    for (let workshop of workshops) {
-      html += `
+// access 토큰이 만료되었을 시 refresh 토큰으로 access 토큰 재발급을 요청
+const requestAccessToken = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: '/api/auth/refreshtoken/admin',
+    });
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+// 에러 발생 시 상태 코드에 따른 로직 실행
+const getErrorCode = async (statusCode, errorMessage) => {
+  if (statusCode === 400) {
+    alert(`에러 코드: ${statusCode} / message: ${errorMessage}`);
+    return false;
+  }
+  if (statusCode === 401) {
+    const refreshRes = await requestAccessToken();
+    if (!refreshRes) {
+      alert('현재 로그인이 되어있지 않습니다. 로그인 후 이용 가능합니다.');
+      location.href = '/admin/login';
+      return;
+    }
+    return true;
+  }
+  alert(`에러 코드: ${statusCode} / message: ${errorMessage}`);
+  return false;
+};
+
+async function approvalAfterOnLoad() {
+  axios
+    .get('../api/admin/workshops/approval')
+    .then(function (response) {
+      const workshops = response.data;
+      let html = '';
+      for (let workshop of workshops) {
+        html += `
                 <div class="card">
-                  <img src="${workshop.ThumbUrl}" alt="Image" onclick="showModal('${workshop.id}')">
+                  <img src="${
+                    workshop.ThumbUrl
+                  }" alt="Image" onclick="showModal('${workshop.id}')">
                   <div class="card-text" onclick="showModal('${workshop.id}')">
                     <div class="category">
                         ${
@@ -35,18 +70,29 @@ axios
                     </div>
                     
                   </div>
-                  <button id="update-btn" onclick="updateModal('${workshop.id}')">수정하기</button>
+                  <button id="update-btn" onclick="updateModal('${
+                    workshop.id
+                  }')">수정하기</button>
                 </div>
                 `;
-    }
+      }
 
-    $('#workshop-list').append(html);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+      $('#workshop-list').append(html);
+    })
+    .catch(async function (error) {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        approvalAfterOnLoad();
+      }
+    });
+}
 
-  // 상세 정보 모달창
+approvalAfterOnLoad();
+
+// 상세 정보 모달창
 function showModal(workshopId) {
   axios
     .get(`../api/admin/workshops/${workshopId}`)
@@ -124,8 +170,14 @@ function showModal(workshopId) {
         }
       });
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch(async function (error) {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        showModal(workshopId);
+      }
     });
 }
 
@@ -205,9 +257,7 @@ function updateModal(workshopId) {
               </div>
             </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" id="update" onclick="update(${
-            workshop.workshop_id
-          })">수정하기</button>
+          <button type="button" class="btn btn-primary" id="update" onclick="update(${workshop.workshop_id})">수정하기</button>
         </div>
       </div>
     
@@ -232,11 +282,16 @@ function updateModal(workshopId) {
         }
       });
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch(async function (error) {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        updateModal(workshopId);
+      }
     });
 }
-
 
 // ---------------- 워크숍 삭제하기 버튼 ---------------- //
 
@@ -247,8 +302,14 @@ function finished(workshopId) {
       alert('워크숍이 삭제되었습니다.');
       location.reload();
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch(async function (error) {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        finished(workshopId);
+      }
     });
 }
 
@@ -265,9 +326,17 @@ function update(workshopId) {
   const price = parseInt($('#price').val());
   const purpose_1 = parseInt($('#purpose-1').val());
   const purpose_2 = parseInt($('#purpose-2').val()) || null;
-  const purpose_tag_id = [purpose_1, purpose_2]
+  const purpose_tag_id = [purpose_1, purpose_2];
 
-  if (!title || !desc || !min_member || !max_member || !total_time || !price || !purpose_1) {
+  if (
+    !title ||
+    !desc ||
+    !min_member ||
+    !max_member ||
+    !total_time ||
+    !price ||
+    !purpose_1
+  ) {
     alert('모든 항목을 입력해주세요.');
     return;
   }
@@ -282,14 +351,20 @@ function update(workshopId) {
       total_time,
       genre_id,
       price,
-      purpose_tag_id
+      purpose_tag_id,
     })
     .then(function (response) {
       alert('워크숍이 수정되었습니다.');
       location.reload();
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch(async function (error) {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        update(workshopId);
+      }
     });
 }
 
@@ -310,7 +385,9 @@ $(document).ready(() => {
       data.forEach((workshop) => {
         const cardHtml = `
               <div class="card">
-              <img src="${workshop.ThumbUrl}" alt="Image" onclick="showModal('${workshop.id}')">
+              <img src="${workshop.ThumbUrl}" alt="Image" onclick="showModal('${
+          workshop.id
+        }')">
               <div class="card-text" onclick="showModal('${workshop.id}')">
                 <div class="category">
                     ${
@@ -336,14 +413,21 @@ $(document).ready(() => {
                     <span class="tag">${workshop.GenreTag.name}</span>
                 </div>
               </div>
-              <button id="update-btn" onclick="updateModal('${workshop.id}')">수정하기</button>
+              <button id="update-btn" onclick="updateModal('${
+                workshop.id
+              }')">수정하기</button>
             </div>
           `;
         workshopList.append(cardHtml);
       });
     } catch (error) {
-      console.error(error);
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        document.querySelector('.search-button').click();
+      }
     }
   });
 });
-

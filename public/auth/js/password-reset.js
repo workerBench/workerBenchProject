@@ -22,11 +22,7 @@ const sendingEmail = async () => {
     const modal = document.querySelector('#modal');
     modal.classList.add('show');
   } catch (err) {
-    getErrorCode(
-      err.response.data.statusCode,
-      err.response.data.message,
-      sendingEmail,
-    );
+    alert(`${err.response.data.message}`);
   }
 };
 
@@ -52,10 +48,6 @@ const checkEmailAuthCode = async () => {
     alert('이메일 인증에 성공하였습니다.');
     location.href = `/auth/password/change`;
   } catch (err) {
-    getErrorCode(
-      err.response.data.statusCode,
-      err.response.data.message,
-      checkEmailAuthCode,
-    );
+    alert(`${err.response.data.message}`);
   }
 };

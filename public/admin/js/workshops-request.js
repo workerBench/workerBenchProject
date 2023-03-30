@@ -1,10 +1,43 @@
-axios
-  .get('../api/admin/workshops/request')
-  .then(function (response) {
-    const workshops = response.data;
-    let html = '';
-    for (let workshop of workshops) {
-      html += `
+// access 토큰이 만료되었을 시 refresh 토큰으로 access 토큰 재발급을 요청
+const requestAccessToken = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: '/api/auth/refreshtoken/admin',
+    });
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+// 에러 발생 시 상태 코드에 따른 로직 실행
+const getErrorCode = async (statusCode, errorMessage) => {
+  if (statusCode === 400) {
+    alert(`에러 코드: ${statusCode} / message: ${errorMessage}`);
+    return false;
+  }
+  if (statusCode === 401) {
+    const refreshRes = await requestAccessToken();
+    if (!refreshRes) {
+      alert('현재 로그인이 되어있지 않습니다. 로그인 후 이용 가능합니다.');
+      location.href = '/admin/login';
+      return;
+    }
+    return true;
+  }
+  alert(`에러 코드: ${statusCode} / message: ${errorMessage}`);
+  return false;
+};
+
+async function afterOnLoad() {
+  await axios
+    .get('../api/admin/workshops/request')
+    .then(function (response) {
+      const workshops = response.data;
+      let html = '';
+      for (let workshop of workshops) {
+        html += `
         <div class="card" onclick="showModal('${workshop.id}')">
           <img src="${workshop.ThumbUrl}" alt="Image">
           <div class="card-text">
@@ -24,8 +57,8 @@ axios
             <div class="workshop-price">${workshop.price}원~</div>
             <div class="personnel-and-time">
                 <div class="workshop-personnel">${workshop.min_member}명~${
-        workshop.max_member
-      }명</div>
+          workshop.max_member
+        }명</div>
                 <div class="workshop-time">${workshop.total_time}분</div>
             </div>
             <div class="workshop-tag">
@@ -34,12 +67,21 @@ axios
           </div>
         </div>
       `;
-    }
-    $('#workshop-list').append(html);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+      }
+      $('#workshop-list').append(html);
+    })
+    .catch(async function (error) {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        afterOnLoad();
+      }
+    });
+}
+
+afterOnLoad();
 
 function showModal(workshopId) {
   axios
@@ -123,8 +165,14 @@ function showModal(workshopId) {
         }
       });
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch(async function (error) {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        showModal(workshopId);
+      }
     });
 }
 
@@ -137,8 +185,14 @@ function approval(workshopId) {
       alert('워크숍이 승인되었습니다.');
       location.reload();
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch(async function (error) {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        approval(workshopId);
+      }
     });
 }
 
@@ -149,8 +203,14 @@ function rejection(workshopId) {
       alert('워크숍이 반려되었습니다.');
       location.reload();
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch(async function (error) {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        rejection(workshopId);
+      }
     });
 }
 
@@ -202,7 +262,13 @@ $(document).ready(() => {
         workshopList.append(cardHtml);
       });
     } catch (error) {
-      console.error(error);
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        document.querySelector('.search-button').click();
+      }
     }
   });
 });

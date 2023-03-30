@@ -209,7 +209,7 @@ export class AuthController {
     } catch (err) {
       response.clearCookie(TOKEN_NAME.userAccess);
       response.clearCookie(TOKEN_NAME.userRefresh);
-      throw new HttpException(`${err.message}`, 400);
+      throw err;
     }
   }
 
@@ -236,7 +236,7 @@ export class AuthController {
       return true;
     } catch (err) {
       // 에러가 string. 지역 에러
-      throw new HttpException(`${err.message}`, 401);
+      throw err;
     }
   }
 
@@ -264,7 +264,7 @@ export class AuthController {
       // 유저 찾기
       adminInfo = await this.authService.checkLoginAdminUser(email, password);
     } catch (err) {
-      throw new BadRequestException(`${err.message}`);
+      throw err;
     }
 
     // 검증 후 토큰 발행
@@ -328,7 +328,7 @@ export class AuthController {
     } catch (err) {
       response.clearCookie(TOKEN_NAME.adminAccess);
       response.clearCookie(TOKEN_NAME.adminRefresh);
-      throw new HttpException(`${err.message}`, 400);
+      throw err;
     }
   }
 
