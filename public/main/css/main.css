@@ -1,0 +1,69 @@
+/* 웹 폰트 임포트 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.card-img-top {
+  height: 15rem;
+  object-fit: cover;
+}
+
+.main-title {
+  background-size: cover;
+  width: 100%;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('../../images/drawing-class-thumb.jpg') no-repeat;
+  background-size: auto, cover;
+  color: rgb(255, 255, 247);
+  font-size: 40px;
+}
+
+.best-workshop-title,
+.new-workshop-title {
+  margin: 50px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.best-workshop-list,
+.new-workshop-list {
+  margin: 0 50px 0 50px;
+}
+
+#bottom-margin-div {
+  width: 100%;
+  height: 200px;
+}
+
+.rank-number {
+  border: 1px solid #9f70fb;
+  border-radius: 5px;
+  padding: 1px 10px;
+  margin-right: 2px;
+  color: white;
+  background-color: #9f70fb;
+}
+
+.workshop-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.workshop-category {
+  border-radius: 20px;
+  border: 3px solid #a4a4a4;
+  padding: 3px 10px;
+  color: white;
+  background-color: #a4a4a4;
+}
+
+.workshop-price {
+  margin-top: 20px;
+}

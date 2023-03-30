@@ -1,0 +1,35 @@
+/* teacher-register css*/
+#teacherBox > h1 {
+  margin: 0 auto;
+  margin-bottom: 25px;
+}
+
+#teacherBox {
+  width: 400px;
+  margin: 0 auto;
+  margin-top: 100px;
+  padding: 20px;
+
+  border: 2px solid lavender;
+  border-radius: 20px;
+
+  box-shadow: 3px 3px 5px lavender;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#registerBtn {
+  width: 200px;
+  height: 40px;
+  margin: 0 auto;
+  margin-top: 10px;
+  background-color: #a084dc;
+  border-radius: 10px;
+  color: white;
+  border: none;
+}
+#registerBtn:hover {
+  background-color: #645cbb;
+}

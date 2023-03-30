@@ -1,0 +1,253 @@
+/* 웹 폰트 임포트 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+#pills-tab {
+  margin-left: 70px;
+}
+
+.card-img-top {
+  height: 15rem;
+  object-fit: cover;
+}
+
+.incomplete-list,
+.complete-list {
+  font-size: 30px;
+  margin-left: 70px;
+  font-weight: bold;
+}
+
+#incomplete-list,
+#complete-list,
+#refund-list {
+  margin: 20px 50px;
+}
+
+#card-workshop-title {
+  margin: 20px 0 20px 0;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+#show-workshop-detail {
+  cursor: pointer;
+}
+
+.card-workshop-summary,
+#show-workshop-detail {
+  font-size: 18px;
+}
+
+#show-workshop-detail:hover {
+  color: #0d6efd;
+}
+
+.open-order-input {
+  background-color: #9f70fb;
+  border: 10px;
+}
+
+.open-order-input:hover {
+  background-color: #a084dc;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 50px auto 50px auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 70%;
+  /* height: 100%; */
+}
+
+.modal-body {
+  display: flex;
+  /* flex-wrap: wrap; */
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+.modal-image {
+  width: 100%;
+  border-radius: 10px;
+  height: 400px;
+}
+.modal-image img {
+  max-width: 100%;
+}
+.info {
+  border-radius: 10px;
+  box-shadow: rgb(0 0 0 / 30%) 1px 4px 7px;
+  width: 40%;
+  height: 100%;
+  padding: 30px;
+}
+
+.info-category {
+  width: 70px;
+  text-align: center;
+  background-color: #c9ddff;
+  box-shadow: 0 0 3px 0 #c9ddff;
+  color: blue;
+  padding: 3px 5px 3px 5px;
+  border-radius: 5px;
+}
+.info-title {
+  font-weight: bold;
+  font-size: 22px;
+  margin: 20px 0 2px 0;
+}
+.info-desc {
+  font-size: 14px;
+  color: gray;
+  margin-bottom: 20px;
+}
+.info-ul {
+  font-weight: bold;
+  margin-top: 15px;
+  font-size: 17px;
+  color: rgb(100, 97, 97);
+}
+.info-li {
+  font-weight: lighter;
+  font-size: 15px;
+  color: black;
+}
+.info-price {
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.info-price > span {
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: lighter;
+  border-radius: 30px;
+  background-color: rgb(84, 84, 236);
+  color: white;
+  padding: 0 8px 0 8px;
+}
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* -----리뷰 작성 모달 내부----- */
+#myform fieldset {
+  display: inline-block;
+  direction: rtl;
+  border: 0;
+}
+#myform fieldset legend {
+  text-align: right;
+}
+#myform input[type='radio'] {
+  display: none;
+}
+#myform label {
+  font-size: 3em;
+  color: transparent;
+  text-shadow: 0 0 0 #f0f0f0;
+}
+#myform label:hover {
+  text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#myform label:hover ~ label {
+  text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#myform input[type='radio']:checked ~ label {
+  text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#reviewContents {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  box-sizing: border-box;
+  border: solid 1.5px #d3d3d3;
+  border-radius: 5px;
+  font-size: 16px;
+  resize: none;
+}
+
+/* --------------------------------- 모달창 CSS --------------------------------- */
+.modal-review-image {
+  border-radius: 5px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgb(0 0 0 / 30%) 0px 3px 5px;
+  width: 320px;
+  height: 240px;
+  margin-bottom: 20px;
+}
+
+.review-modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-review-content {
+  background-color: white;
+  margin: 50px auto 50px auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  height: 100%;
+  border-radius: 10px;
+}
+.modal-review-body {
+  height: 80%;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 50px;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.btn-close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.btn-close:hover,
+.btn-close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}

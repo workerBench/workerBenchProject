@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link href="/teacher/css/header.css" rel="stylesheet" />
+    <title>Document</title>
+  </head>
+  <style></style>
+
+  <body>
+    <div class="nav-wrap">
+      <nav class="nav-bar">
+        <div class="logo-img-wrap" onclick="location.href='/'">
+          <img src="/images/logo.png" />
+        </div>
+        <div
+          class="menu-workshop-search"
+          onclick="location.href='/workshops/search'"
+        >
+          워크샵 검색하기
+        </div>
+        <% if (user === false) { %>
+        <div class="login-or-mypage-div" onclick="login()">로그인</div>
+        <div class="register-or-logout-div" onclick="register()">회원가입</div>
+        <% } else { %>
+        <div class="login-or-mypage-div" onclick="goMypage()">마이페이지</div>
+        <div class="register-or-logout-div" onclick="logout()">로그아웃</div>
+        <% } %>
+      </nav>
+    </div>
+
+    <script src="/teacher/js/header.js"></script>
+  </body>
+</html>

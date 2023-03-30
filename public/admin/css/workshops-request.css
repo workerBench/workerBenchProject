@@ -1,0 +1,294 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Gowun Dodum', sans-serif;
+}
+
+/*sidebar css 구간입니다.*/
+
+.wrapper {
+  display: flex;
+  min-height: 1280px;
+  height: 100%;
+}
+
+.sidebar {
+  min-width: 170px;
+  max-width: 220px;
+  width: 16%;
+  height: 100%;
+  min-height: 1280px;
+  background: #9f70fb;
+  color: white;
+  padding-top: 30px;
+  flex-shrink: 0;
+}
+.ul-title {
+  padding-top: 10px;
+  padding-left: 15px;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 30px;
+}
+.ul-category {
+  display: block;
+  margin-top: 5px;
+  padding: 0;
+}
+
+.target-li {
+  display: block;
+  padding-left: 20px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 14px;
+}
+
+.link-li:hover {
+  background-color: white;
+  color: black;
+  cursor: pointer;
+}
+.active-li {
+  background-color: white;
+  color: black;
+}
+
+/*main-content 구간입니다.*/
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px auto auto auto;
+}
+
+.workshop-search {
+  font-weight: bold;
+  width: 700px;
+  padding: 30px 45px 40px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.search-wrap {
+  height: 40px;
+  width: 600px;
+  background-color: #ffffff;
+  display: flex;
+  margin-top: 20px;
+}
+.search-wrap > .form-select {
+  width: 135px;
+  font-size: 13px;
+}
+
+.search-box {
+  border: 1px solid #9f70fb;
+  font-size: 16px;
+  width: 400px;
+  padding: 10px;
+  outline: none;
+  float: left;
+}
+.search-button {
+  width: 50px;
+  height: 100%;
+  border: 0px;
+  background: #9f70fb;
+  outline: none;
+  float: right;
+  color: white;
+  cursor: pointer;
+}
+
+/*워크숍 목록 구간입니다.*/
+.card-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1200px;
+}
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 90%;
+  flex-shrink: 0;
+}
+
+.card {
+  min-width: 250px;
+  width: calc(25% - 20px);
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.card:hover {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+.card:hover img {
+  transform: scale(1.03);
+}
+
+.card img {
+  display: block;
+  width: 100%;
+  transition: transform 0.2s ease-out;
+  max-height: 210px;
+  min-height: 200px;
+}
+
+.card-text {
+  padding: 10px;
+}
+
+.card-text > div {
+  margin: auto auto 10px auto;
+}
+.card-text > div > div {
+  margin-right: 30px;
+}
+.category {
+  display: flex;
+  font-size: 14px;
+}
+.category > .online {
+  box-shadow: 0 0 3px 0 gray;
+  padding: 3px 8px 3px 8px;
+  border-radius: 15px;
+}
+.category > .offline {
+  box-shadow: 0 0 3px 0 gray;
+  padding: 3px 8px 3px 8px;
+  border-radius: 15px;
+}
+.workshop-price {
+  font-size: 15px;
+  font-weight: bold;
+}
+.personnel-and-time {
+  display: flex;
+}
+.workshop-tag > .tag {
+  box-shadow: 0 0 3px 0 gray;
+  padding: 3px 8px 3px 8px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+/* 모달창 부분 */
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 50px auto 50px auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 70%;
+  /* height: 100%; */
+}
+
+.modal-body {
+  display: flex;
+  /* flex-wrap: wrap; */
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+.modal-image {
+  width: 60%;
+  border-radius: 10px;
+  height: 400px;
+}
+.modal-image img {
+  max-width: 100%;
+}
+.info {
+  border-radius: 10px;
+  box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
+  width: 40%;
+  height: 100%;
+  padding: 30px;
+}
+
+.info-category {
+  width: 70px;
+  text-align: center;
+  background-color: #c9ddff;
+  box-shadow: 0 0 3px 0 #c9ddff;
+  color: blue;
+  padding: 3px 5px 3px 5px;
+  border-radius: 5px;
+}
+.info-title {
+  font-size: 22px;
+  margin: 20px 0 2px 0;
+}
+.info-desc {
+  font-size: 14px;
+  color: gray;
+  margin-bottom: 20px;
+}
+.info-ul {
+  font-weight: bold;
+  margin-top: 15px;
+  font-size: 17px;
+  color: rgb(100, 97, 97);
+}
+.info-li {
+  font-weight: lighter;
+  font-size: 15px;
+  color: black;
+}
+.info-price {
+  margin-top: 20px;
+  font-size: 22px;
+  font-weight: bold;
+}
+.info-price > span {
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: lighter;
+  border-radius: 30px;
+  background-color: rgb(84, 84, 236);
+  color: white;
+  padding: 0 8px 0 8px;
+}
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}

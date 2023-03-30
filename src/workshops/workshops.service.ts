@@ -1,0 +1,449 @@
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Order } from 'src/entities/order';
+import { Review } from 'src/entities/review';
+import { WishList } from 'src/entities/wish-list';
+import { WorkShop } from 'src/entities/workshop';
+import { WorkShopInstanceDetail } from 'src/entities/workshop-instance.detail';
+import { OrderWorkshopDto } from 'src/workshops/dtos/order-workshop.dto';
+import { Repository } from 'typeorm';
+
+@Injectable()
+export class WorkshopsService {
+  constructor(
+    @InjectRepository(WorkShop)
+    private readonly workshopRepository: Repository<WorkShop>,
+    @InjectRepository(WishList)
+    private readonly wishRepository: Repository<WishList>,
+    @InjectRepository(WorkShopInstanceDetail)
+    private readonly workshopDetailRepository: Repository<WorkShopInstanceDetail>,
+    @InjectRepository(Review)
+    private readonly reviewRepository: Repository<Review>,
+    private readonly configService: ConfigService,
+  ) {}
+
+  // 인기 워크샵 조회 API
+  // 가장 결제 횟수가 많은 순으로 워크샵을 8개까지 가져온다.
+  async getBestWorkshops() {
+    const workshops = await this.workshopRepository
+      .createQueryBuilder('workshop')
+      .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
+      .select([
+        'COUNT(o.workshop_id) as orderCount', // order id 개수를 세서 카운트
+        'workshop.id',
+        'workshop.title',
+        'workshop.category',
+        'workshop.desc',
+        'workshop.thumb',
+        'workshop.min_member',
+        'workshop.max_member',
+        'workshop.total_time',
+        'workshop.price',
+        'genre_tag.name',
+        'GROUP_CONCAT(purposeTag.name) AS purpose_name',
+        'workshop.deletedAt',
+      ])
+      .innerJoin(Order, 'o', 'workshop.id = o.workshop_id') // order 테이블과 join
+      .where('workshop.deletedAt IS NULL')
+      .andWhere('workshop.status = :status', { status: 'approval' })
+      .groupBy('workshop.id') // workshop id로 결제 내역을 그룹핑
+      .orderBy('orderCount', 'DESC') // 결제 횟수로 내림차순
+      .limit(8)
+      .getRawMany();
+
+    // s3 + cloud front에서 이미지 가져오기
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
+
+    // , 기준으로 나누고 purpose_name 값 중복 제거
+    const result = workshops.map((workshop) => ({
+      ...workshop,
+      purpose_name: Array.from(new Set(workshop.purpose_name.split(','))),
+      thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+    }));
+
+    return result;
+  }
+
+  // 신규 워크샵 조회 API
+  // 전체 워크샵 중에서 updatedAt이 가장 최근인 순(=내림차순)으로 정렬한 후 최대 8개를 가져온다.
+  async getNewWorkshops() {
+    const queryBuilder = await this.workshopRepository
+      .createQueryBuilder('workshop')
+      .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
+      .select([
+        'workshop.id',
+        'workshop.title',
+        'workshop.category',
+        'workshop.desc',
+        'workshop.thumb',
+        'workshop.min_member',
+        'workshop.max_member',
+        'workshop.total_time',
+        'workshop.price',
+        'genre_tag.name',
+        'GROUP_CONCAT(purposeTag.name) AS purpose_name',
+        'workshop.updatedAt',
+        'workshop.deletedAt',
+      ])
+      .where('workshop.deletedAt IS NULL')
+      .andWhere('workshop.status = :status', { status: 'approval' })
+      .orderBy('workshop.updatedAt', 'DESC') // 업데이트 최신순으로 정렬
+      .groupBy('workshop.id')
+      .limit(8)
+      .getRawMany();
+
+    // s3 + cloud front에서 이미지 가져오기
+    const cloundFrontUrl = this.configService.get(
+      'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+    );
+
+    // , 기준으로 나누고 purpose_name 값 중복 제거
+    const result = queryBuilder.map((workshop) => ({
+      ...workshop,
+      purpose_name: Array.from(new Set(workshop.purpose_name.split(','))),
+      thumbUrl: `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${workshop.workshop_thumb}`,
+    }));
+
+    return result;
+  }
+
+  // 워크샵 검색 API (옵션을 선택할 때마다 검색 결과가 조회되어야 함)
+  /* workshop - GenreTag - Workshop_purpose - PurposeTag 테이블을 조인한 후
+  결과를 purposeTag로 그룹핑하고 workshop.id로 묶어줌*/
+  async searchWorkshops(
+    category: string,
+    memberCnt: number,
+    location: string,
+    purpose: string,
+    genre: string,
+  ) {
+    const queryBuilder = this.workshopRepository
+      .createQueryBuilder('workshop')
+      .innerJoinAndSelect('workshop.GenreTag', 'genre') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
+      .select([
+        'workshop.id',
+        'workshop.title',
+        'workshop.category',
+        'workshop.thumb',
+        'workshop.location',
+        'workshop.price',
+        'workshop.min_member',
+        'workshop.max_member',
+        'workshop.total_time',
+        'workshop.updatedAt',
+        'genre.name',
+        'purposeTag.id',
+        'purposeTag.name',
+        'GROUP_CONCAT(purposeTag.name) AS purposeTag_name',
+      ])
+      .where('workshop.status = :status', { status: 'approval' })
+      .groupBy('workshop.id')
+      .orderBy('workshop.updatedAt', 'DESC');
+
+    // 각 태그(ex. category)가 query parameter로 들어온다면 andWhere로 찾기
+    if (category) {
+      queryBuilder.andWhere('workshop.category = :category', {
+        category: `${category}`,
+      });
+    }
+
+    if (location) {
+      queryBuilder.andWhere('workshop.location LIKE :location', {
+        location: `%${location}%`,
+      });
+    }
+
+    if (genre) {
+      queryBuilder.andWhere('genre.id = :genre', {
+        genre: `${genre}`,
+      });
+    }
+
+    if (purpose) {
+      queryBuilder.andWhere('purposeTag.id = :purpose', {
+        purpose: `${purpose}`,
+      });
+    }
+
+    if (memberCnt) {
+      queryBuilder
+        .andWhere('workshop.min_member <= :memberCnt', {
+          memberCnt: `${memberCnt}`,
+        })
+        .andWhere('workshop.max_member >= :memberCnt', {
+          memberCnt: `${memberCnt}`,
+        });
+    }
+
+    const workshops = await queryBuilder.getRawMany();
+
+    // purposeTag_name 결과를 콤마(,) 기준으로 쪼개서 배열에 담아줌
+    return workshops.map((workshop) => ({
+      ...workshop,
+      purposeTag_name: workshop.purposeTag_name.split(','),
+      thumb: `${this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      )}images/workshops/${workshop.workshop_id}/800/${
+        workshop.workshop_thumb
+      }`,
+    }));
+  }
+
+  // 승인된 전체 워크샵 조회 API
+  // status가 approval인 워크샵을 updatedAt이 최신 순으로 불러온다.
+  // *페이지네이션 추가 필요*
+  async getApprovedWorkshops() {
+    return await this.workshopRepository.find({
+      where: { status: 'approval' },
+      order: { updatedAt: 'DESC' },
+    });
+  }
+
+  // 워크샵 상세 조회 API
+  // id에 해당하는 워크샵 정보만 가져온다.
+  async getWorkshopDetail(workshop_id: number) {
+    const queryBuilder = await this.workshopRepository
+      .createQueryBuilder('workshop')
+      .leftJoinAndSelect('workshop.Reviews', 'review') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
+      .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
+      .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
+      .select([
+        'workshop.id',
+        'workshop.title',
+        'workshop.category',
+        'workshop.desc',
+        'workshop.min_member',
+        'workshop.max_member',
+        'workshop.total_time',
+        'workshop.price',
+        'workshop.location',
+        'workshop.video',
+        'workshop.thumb',
+        'GROUP_CONCAT(review.star) as star',
+        'GROUP_CONCAT(purposeTag.name) as purpose',
+        'GROUP_CONCAT(genre_tag.name) as genre',
+        'workshop.updatedAt',
+        'workshop.deletedAt',
+      ])
+      .where('workshop.id = :id', { id: workshop_id })
+      .groupBy('workshop.id')
+      .getRawMany();
+
+    // , 기준으로 나누고 purpose_name 값 중복 제거
+    // star == null 일 때 예외 처리가 필요함
+    const result = queryBuilder.map((workshop) => {
+      const starArray = workshop.star ? workshop.star.split(',') : []; // star가 null일 경우 빈 배열로 초기화
+      const starHalfIndex = Math.floor(starArray.length / 2);
+      const halfStars = starArray.slice(0, starHalfIndex); // 중복 값이 나오므로 배열 길이의 반만큼 잘라줘야 함
+      const averageStar =
+        halfStars.reduce((acc, cur) => acc + parseFloat(cur), 0) /
+          halfStars.length || 0; // 평균 계산하기
+
+      // // wish_user_id == null 일 때 예외 처리가 필요함
+      // const wishArray = workshop.wish_user_id
+      //   ? workshop.wish_user_id.split(',')
+      //   : []; // star가 null일 경우 빈 배열로 초기화
+      // const wishHalfIndex = Math.floor(wishArray.length / 2);
+      // const halfWish = wishArray.slice(0, wishHalfIndex); // 중복 값이 나오므로 배열 길이의 반만큼 잘라줘야 함
+
+      // s3 + cloud front에서 이미지 가져오기
+      const thumbName = workshop.workshop_thumb;
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
+      const thumbUrl = `${cloundFrontUrl}images/workshops/${workshop.workshop_id}/800/${thumbName}`;
+      // ex) images/workshop/1/eraser-class-thumb.jpg 와 같은 파일명으로 저장되어 있음
+
+      // 영상이 첨부되어 있을 경우 cloud front 를 경유하는 영상 url 가져오기
+      let videoUrl: string = '';
+      const videoName = workshop.workshop_video;
+      if (videoName !== null && videoName !== undefined && videoName !== '') {
+        const videoNameWithOutType = videoName.substring(
+          0,
+          videoName.lastIndexOf('.'),
+        );
+        const cloundFrontUrlForVideo = this.configService.get(
+          'AWS_CLOUD_FRONT_DOMAIN_VIDEO',
+        );
+        videoUrl = `${cloundFrontUrlForVideo}videos/workshops/${workshop.workshop_id}/hls/${videoNameWithOutType}.m3u8`;
+      }
+
+      return {
+        ...workshop,
+        // wish_user_id: Array.from(new Set(halfWish)).map((el) => Number(el)),
+        star: starArray.length ? starArray : ['0.0'], // star가 빈 문자열인 경우 '0.0'으로 초기화
+        purpose: Array.from(new Set(workshop.purpose.split(','))),
+        genre: Array.from(new Set(workshop.genre.split(','))),
+        averageStar: averageStar.toFixed(1), // 소수점 첫째자리에서 반올림
+        workshop_thumb: thumbUrl,
+        workshop_video: videoUrl,
+      };
+    });
+
+    return result;
+  }
+
+  // 워크샵 찜 or 취소하기 API
+  /* wishList 엔티티에서 workshop_id와 user_id 찾은 후
+  만약 값이 있으면 찜 해제
+  없으면 user_id와 workshop_id insert */
+  async addToWish(user_id: number, workshop_id: number) {
+    const IsWish = await this.wishRepository.findOne({
+      where: { user_id, workshop_id },
+    });
+    if (IsWish === null) {
+      await this.wishRepository.insert({ user_id, workshop_id });
+      return { message: '찜하기 성공!', type: 'add' };
+    } else {
+      await this.wishRepository.delete({ user_id, workshop_id }); // 찜 해제
+      return { message: '찜하기 취소!', type: 'remove' };
+    }
+  }
+
+  // 워크샵 상세 정보를 가져올 때 로그인 한 유저가 있다면, 해당 유저가 워크샵을 찜 했는지 안했는지 여부를 확인
+  async checkingWish(user_id: number, workshop_id: number) {
+    const wishCheck = await this.wishRepository.findOne({
+      where: { user_id, workshop_id },
+    });
+    if (!wishCheck) {
+      return false;
+    }
+    return true;
+  }
+
+  // 특정 워크샵 후기 불러오기 API
+  async getWorkshopReviews(workshop_id: number) {
+    const reviews = await this.reviewRepository.find({
+      relations: ['ReviewImages'],
+      where: { workshop_id, deletedAt: null },
+    });
+
+    const result = reviews.map((review) => {
+      // 입력받은 날짜 문자열을 Date 객체로 파싱
+      const inputDate = new Date(review.createdAt);
+
+      // (yyyy-mm-dd) 날짜 형식으로 변환
+      const year = inputDate.getFullYear();
+      const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+      const day = String(inputDate.getDate()).padStart(2, '0');
+      const outputDate = `${year}-${month}-${day}`;
+
+      // s3 + cloud front에서 이미지 가져오기
+      let thumbUrl: string | null;
+      if (
+        review.ReviewImages.length < 1 ||
+        !review.ReviewImages ||
+        review.ReviewImages[0].img_name === null ||
+        review.ReviewImages[0].img_name === undefined ||
+        review.ReviewImages[0].img_name === ''
+      ) {
+        return { ...review, createdAt: outputDate, reviewImage: null };
+      }
+
+      const reviewImageArr = review.ReviewImages[0];
+      const reviewImage = reviewImageArr.img_name;
+      const cloundFrontUrl = this.configService.get(
+        'AWS_CLOUD_FRONT_DOMAIN_IMAGE',
+      );
+      thumbUrl = `${cloundFrontUrl}images/reviews/${review.id}/800/${reviewImage}`;
+      // ex) images/reviews/1/eraser-class-thumb.jpg 와 같은 파일명으로 저장되어 있음
+
+      return { ...review, createdAt: outputDate, reviewImage: thumbUrl };
+    });
+
+    return result;
+  }
+
+  // 워크샵 신청하기 API 요청 시 우선 유효성 검사
+  async checkOrderWorkshopValidation(
+    orderWorkshopData: OrderWorkshopDto,
+    workshopId: number,
+    userId: number,
+  ) {
+    const workshop = await this.workshopRepository.findOne({
+      where: { id: workshopId },
+      select: ['min_member', 'max_member', 'status'],
+    });
+
+    if (!workshop || workshop.status !== 'approval') {
+      throw new BadRequestException(
+        '존재하지 않는 워크샵, 혹은 현재 운영중이지 않은 워크샵에 대한 수강 신청입니다.',
+      );
+    }
+
+    // 유저가 입력한 참가 희망인원이 실제 워크샵의 최소인원 ~ 최대인원 사이인지 검사
+    if (
+      orderWorkshopData.member_cnt < workshop.min_member ||
+      orderWorkshopData.member_cnt > workshop.max_member
+    ) {
+      throw new BadRequestException(
+        '수강 희망인원이 워크샵의 제한 인원에 포함되지 않습니다.',
+      );
+    }
+
+    // 해당 워크샵에 대해 수강 문의를 과거에 한 번 이상 했었다면, 현재 그 수강 문의가 진행중인지 확인
+    const workShopInstanceDetailResult =
+      await this.workshopDetailRepository.find({
+        where: { user_id: userId, workshop_id: workshopId },
+        select: ['status'],
+      });
+    const isStatusRequest = workShopInstanceDetailResult.filter((detail) => {
+      return (
+        detail.status === 'request' ||
+        detail.status === 'non_payment' ||
+        detail.status === 'waiting_lecture'
+      );
+    });
+    if (isStatusRequest.length > 0) {
+      throw new BadRequestException(
+        '이미 수강 과정을 진행중이신 워크샵 입니다.',
+      );
+    }
+  }
+
+  // 워크샵 신청하기 API
+  async orderWorkshop(
+    workshop_id: number,
+    user_id: number,
+    orderWorkshopDto: OrderWorkshopDto,
+  ) {
+    const {
+      company,
+      name,
+      email,
+      phone_number,
+      member_cnt,
+      wish_date,
+      category,
+      purpose,
+      wish_location,
+      etc,
+    } = orderWorkshopDto;
+    await this.workshopDetailRepository.insert({
+      user_id,
+      workshop_id,
+      company,
+      name,
+      email,
+      phone_number,
+      member_cnt,
+      wish_date,
+      // status: 'non_payment', // 유저 테스트 종료 시 해당 입력 항목을 삭제. (default = request)
+      category,
+      purpose,
+      wish_location,
+      etc,
+    });
+    return { message: '워크샵 문의 신청이 완료되었습니다.' };
+  }
+}

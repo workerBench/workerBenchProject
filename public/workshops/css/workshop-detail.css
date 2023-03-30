@@ -1,0 +1,124 @@
+/* 웹 폰트 임포트 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+#workshop-image-info img {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+}
+
+.row {
+  display: flex;
+  align-items: center; /* 세로 중앙 정렬 */
+  justify-content: center; /* 가로 중앙 정렬 */
+}
+
+.col {
+  flex: 1; /* 컬럼 너비 자동 조절 */
+}
+
+.workshop-thumb {
+  margin-top: 20px;
+  margin-left: 200px;
+}
+
+.workshop-summary {
+  height: 600px;
+  width: 600px;
+  margin-top: 20px;
+  border: 1px solid rgb(158, 158, 158);
+  border-radius: 20px;
+  text-align: left;
+  padding: 30px;
+  box-shadow: 10px 10px rgb(158, 158, 158);
+}
+
+.workshop-title {
+  font-size: 30px;
+  font-weight: bold;
+  color: #9f70fb;
+  margin-bottom: 20px;
+}
+
+.workshop-star,
+.workshop-member-cnt,
+.workshop-total-time,
+.workshop-genre,
+.workshop-purpose,
+.workshop-location {
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.workshop-category {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.workshop-location {
+  margin-top: 20px;
+}
+
+.workshop-price {
+  font-size: 30px;
+  font-weight: bold;
+  color: #9f70fb;
+}
+
+.content {
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.order-wish-buttons {
+  margin-top: 20px;
+}
+
+.order {
+  width: 300px;
+}
+
+.wish {
+  width: 200px;
+}
+
+.modal {
+  pointer-events: none;
+  /* background clickable */
+}
+
+.modal-dialog {
+  text-align: left;
+}
+
+.on-off-buttons {
+  margin-bottom: 20px;
+}
+
+.nav-tabs {
+  margin-top: 50px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.workshop-category {
+  border-radius: 20px;
+  border: 3px solid #a4a4a4;
+  padding: 3px 10px;
+  color: white;
+  background-color: #a4a4a4;
+}
+
+.workshop-price {
+  margin-top: 20px;
+}
+
+.video-set-wrap {
+  margin-bottom: 200px;
+  margin-top: 100px;
+  width: 800px;
+}
