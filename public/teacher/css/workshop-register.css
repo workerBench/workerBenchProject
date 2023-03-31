@@ -63,7 +63,7 @@
   border: 2px solid lavender;
 }
 .workshop-information {
-  width: 245px;
+  width: 280px;
   margin-left: 100px;
   margin-top: 50px;
   display: flex;
@@ -108,7 +108,7 @@
   margin-right: 10px;
 }
 #category {
-  width: 300px;
+  width: 245px;
   height: 40px;
 }
 #title {
@@ -124,7 +124,7 @@
 }
 
 #genreId {
-  width: 300px;
+  width: 245px;
   height: 40px;
   margin-top: 10px;
 }
@@ -146,7 +146,7 @@
   width: 245px;
 }
 #location {
-  width: 300px;
+  width: 245px;
   height: 40px;
 }
 .contents-div {
@@ -260,4 +260,12 @@
   font-size: 28px;
   color: rgb(255, 255, 255);
   display: none;
+}
+
+.deco-number-input {
+  width: 20px;
+  height: 20px;
+  display: block;
+  padding-top: 10px;
+  margin-left: 7px;
 }

@@ -44,7 +44,7 @@ const submitWorkshop = () => {
     const purpose_tag1 = document.getElementById('purposeTagId1').value;
     const purpose_tag2 = document.getElementById('purposeTagId2').value;
     const total_time = document.getElementById('totalTime').value;
-    const price = document.getElementById('price').value;
+    const price = document.getElementById('price').value.replace(',', '');
     const desc = document.getElementById('desc').value;
     const location = document.getElementById('location').value;
     const purpose_value1 = parseInt(purpose_tag1);
@@ -82,10 +82,10 @@ const submitWorkshop = () => {
 
     // 입력받은 숫자값들에 대한 정수 유효성 검사
     if (
-      Number(min_member) <= 0 ||
-      Number(max_member) <= 0 ||
       Number.isNaN(Number(min_member)) ||
-      Number.isNaN(Number(max_member))
+      Number.isNaN(Number(max_member)) ||
+      Number(min_member) <= 0 ||
+      Number(max_member) <= 0
     ) {
       alert('인원수는 최소 1명 이상이어야 합니다.');
       return;
@@ -98,8 +98,7 @@ const submitWorkshop = () => {
       alert('워크샵 과정 소요 시간은 0분 이상이어야 합니다.');
       return;
     }
-    if (Number(price) <= 0 || Number.isNaN(Number(price))) {
-      console.log(Number(price));
+    if (Number.isNaN(Number(price)) || Number(price) <= 0) {
       alert('1인당 가격은 0보다 커야 합니다.');
       return;
     }
@@ -313,3 +312,24 @@ function register() {
 function manage() {
   window.location.href = '/teacher/manage/complete';
 }
+
+const calPrice = () => {
+  const price = document.querySelector('#price').value.replace(',', '');
+  const resultPrice = price.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+  document.querySelector('#price').value = resultPrice;
+};
+
+const checkMaxNum = () => {
+  const minMember = document.querySelector('#minMember').value;
+  const maxMember = document.querySelector('#maxMember').value;
+
+  if (minMember === '') {
+    return;
+  }
+
+  if (
+    (Number(minMember) >= 0 && maxMember === '') ||
+    (Number(minMember) >= 0 && Number(maxMember) < Number(minMember))
+  ) {
+  }
+};

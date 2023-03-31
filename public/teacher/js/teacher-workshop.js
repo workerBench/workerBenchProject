@@ -279,9 +279,9 @@ function updateWorkshop(id) {
             <img src=${workshop_thumb} alt="">
         </div>
         <div class="workshop-information1">
-            <span class="caution-video">* 빈칸없이 입력해주세요</span>
-            <span class="caution-video"
-              >* 목적태그는 최소 한개이상 <br />선택해주세요</span
+            <span class="caution-video" style="color: red">* 빈칸없이 입력해주세요</span>
+            <span class="caution-video" style="color: red"
+              >* 목적태그는 최소 한개이상 <br /> &nbsp; &nbsp;선택해주세요</span
             >
         <select name="job" id="category">
           <option value="${workshop_category}" disabled selected>${workshop_category}</option>

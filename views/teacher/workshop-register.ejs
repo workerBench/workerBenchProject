@@ -68,7 +68,7 @@
       <div class="workshop-information">
         <span class="caution-video">* 빈칸없이 입력해주세요</span>
         <span class="caution-video"
-          >* 목적태그는 최소 한개이상 <br />선택해주세요</span
+          >* 목적태그는 최소 한개이상 <br />&nbsp;&nbsp;&nbsp;선택해주세요</span
         >
         <select name="job" id="category">
           <option value="" disabled selected>유형을 선택해주세요</option>
@@ -97,7 +97,9 @@
           placeholder="최대 인원수"
           maxlength="3"
           onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
+          onfocusout="checkMaxNum()"
         />
+        <span class="deco-number-input">명</span>
         <select name="job" id="genreId">
           <option value="" disabled selected>장르를 선택해주세요</option>
           <option value="1">문화예술</option>
@@ -127,14 +129,16 @@
           maxlength="3"
           onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
         />
+        <span class="deco-number-input">분</span>
         <input
           type="text"
           class="form-control"
           id="price"
           placeholder="1인당 가격"
           maxlength="7"
-          onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
+          onKeyup="calPrice()"
         />
+        <span class="deco-number-input">원</span>
         <select name="job" id="location">
           <option value="" disabled selected>지역을 선택해주세요</option>
           <option value="서울">서울</option>

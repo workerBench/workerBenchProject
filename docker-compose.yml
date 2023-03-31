@@ -12,9 +12,8 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       JWT_SECRET_KEY_ADMIN: ${JWT_SECRET_KEY_ADMIN}
-      DB_HOST: 'host.docker.internal' # If you're using Docker Desktop on Windows or macOS
-      # DATABASE_HOST: '<your_local_machine_IP>' # If you're using Docker on Linux
-      DB_PORT: 3306
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
@@ -35,12 +34,13 @@ services:
       PORTONE_API_KEY: ${PORTONE_API_KEY}
       PORTONE_API_SECRET_KEY: ${PORTONE_API_SECRET_KEY}
       REDIS_HOSTNAME: 'redis'
-      REDIS_PORT: 6379
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     depends_on: # app service 가 redis 실행 후에 실행됨.
-      - redi
+      - redis
 
   redis:
     image: 'redis:latest' # 최신 버전 사용
-    command: redis-server --bind '0.0.0.0
+    command: redis-server --bind '0.0.0.0'
     ports:
       - '6379:6379'
