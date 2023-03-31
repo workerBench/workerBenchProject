@@ -67,7 +67,7 @@ jobs:
           docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
           docker network create app-network || true
           docker run -d --name redis --network app-network --restart always redis:latest
-          docker run -d --name go_cicd --network app-network --restart always \
+          docker run -d -p 5000:5000 --name go_cicd --network app-network --restart always \
             -e NODE_ENV=${{ secrets.NODE_ENV }} \
             -e PORT=${{ secrets.PORT }} \
             -e ADMIN_USER=${{ secrets.ADMIN_USER }} \
