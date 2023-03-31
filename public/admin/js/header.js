@@ -5,7 +5,7 @@ const adminLogout = async () => {
       method: 'GET',
       url: '/api/auth/logout/admin',
     });
-    location.href = '/';
+    location.href = '/admin/login';
     //location.reload();
   } catch (err) {}
 };
