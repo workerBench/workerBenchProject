@@ -14,7 +14,7 @@ const requestAccessToken = async () => {
 // 에러 발생 시 상태 코드에 따른 로직 실행
 const getErrorCode = async (statusCode, errorMessage) => {
   if (statusCode === 400) {
-    alert(`${errorMessage}`);
+    alert(`message: ${errorMessage}`);
     return false;
   }
   if (statusCode === 401) {
@@ -26,7 +26,7 @@ const getErrorCode = async (statusCode, errorMessage) => {
     }
     return true;
   }
-  alert(`${errorMessage}`);
+  alert(`message: ${errorMessage}`);
   return false;
 };
 
