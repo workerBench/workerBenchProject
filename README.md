@@ -77,7 +77,7 @@
 
 ## 사용한 기술 스택
 
-<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/readme-6.png" alt="stack" width="90%">
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/workerbench_service_architecture.png" alt="stack" width="90%">
 
 &nbsp;&nbsp; 🔍자세한 사항은 [기술 멘토링 노트 2주차](https://www.notion.so/752577fa2ec444939940621dc8f7999f) 와
 [브로셔](https://www.notion.so/c53f5fb8b7a44bb799cdfa2407178996) 에 기록되어 있습니다.
