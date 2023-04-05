@@ -56,7 +56,7 @@
 
 ## 프로젝트 문서 열람
 
-| 📚 [팀 노션](https://www.notion.so/7-ebc4b4e491d44187bbb3ba1ba01e31ce) | 🧩 [프로젝트 S.A](https://www.notion.so/Worker-Bench-S-A-933d80bfe63342db887234344eae6b4b) | 📝 [멘토링 노트](https://www.notion.so/752577fa2ec444939940621dc8f7999f) | 💾 [프로젝트 ERD](https://www.erdcloud.com/d/yHqRArd86ZtT2rgRh) | 💬 [브로셔](https://www.notion.so/c53f5fb8b7a44bb799cdfa2407178996) | 🖍️ [베타 테스트 결과](https://www.notion.so/Workerbench-f21f182cbce7406fb7f3c0eaff839235) |
+| 📚 [팀 노션](https://www.notion.so/7-ebc4b4e491d44187bbb3ba1ba01e31ce) | 🧩 [프로젝트 S.A](https://www.notion.so/Worker-Bench-S-A-933d80bfe63342db887234344eae6b4b) | 📝 [주차별 노트](https://www.notion.so/752577fa2ec444939940621dc8f7999f) | 💾 [프로젝트 ERD](https://www.erdcloud.com/d/yHqRArd86ZtT2rgRh) | 💬 [브로셔](https://www.notion.so/c53f5fb8b7a44bb799cdfa2407178996) | 🖍️ [베타 테스트 결과](https://www.notion.so/Workerbench-f21f182cbce7406fb7f3c0eaff839235) |
 | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 
 <br/>
@@ -97,6 +97,10 @@
 
 ## 프로젝트 일정
 
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/time_line_1.png" alt="stack" width="90%">
+<br/>
+<img src="https://d2y5u1z6769wng.cloudfront.net/base_images/time_line_2.png" alt="stack" width="90%">
+
 <br/>
 <br/>
 
@@ -123,6 +127,8 @@
  ┃ ┣ 📜main.ts
  ┣ 📂test
  ┣ 📂views
+ ┣ 📂lambda_image_resize
+ ┣ 📂lambda_video_hls
  ┣ 📜.env(서버 한정)
  ┣ 📜.eslintrc.js
  ┣ 📜.prettierrc
@@ -139,6 +145,8 @@
 - `src` : nestJs 프로젝트를 구성하는 모듈들의 집합. 추후 build 되어 root 폴더에 'dist' 폴더로 트랜스파일 됨.
 - `test` : e2e 테스트 파일
 - `view` : 서버 사이드 랜더링용 ejs 파일
+- `lambda_image_resize` : AWS Lambda 함수에서 사용된 이미지 리사이징 코드. 프로젝트 내부에서는 사용되지 않음
+- `lambda_video_hls` : AWS Lambda 함수에서 사용된 영상 컨버팅 코드. 프로젝트 내부에서는 사용되지 않음
 
 <br/>
 <br/>
