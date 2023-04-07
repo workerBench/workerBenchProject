@@ -30,7 +30,7 @@ export default class MinzuSeeder implements Seeder {
     // 2. dummy data를 하드코딩할 경우
     // 랜덤 날짜 구하는 함수
 
-    const userPs1 = await bcrypt.hash('12345', 12);
+    // const userPs1 = await bcrypt.hash('12345', 12);
     const userPs2 = await bcrypt.hash('12345', 12);
     const userPs3 = await bcrypt.hash('12345', 12);
     const userPs4 = await bcrypt.hash('12345', 12);
