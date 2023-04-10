@@ -25,7 +25,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     return {
       type: 'mysql',
       host: this.configService.get('DB_HOST'),
-      port: this.configService.get('DB_PORT'),
+      port: parseInt(this.configService.get('DB_PORT'), 10),
       username: this.configService.get('DB_USERNAME'),
       password: this.configService.get('DB_PASSWORD'),
       database:
@@ -49,9 +49,8 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         WorkShopPurpose,
         WorkShop,
       ],
-      synchronize: true,
-      logging: true, // sql 문 띄워줌
-      // logging: true, // sql 문 띄워줌
+      synchronize: this.configService.get('DB_SYNCHRONAIZE') === 'true',
+      logging: this.configService.get('DB_LOGGING') === 'true', // sql 문 띄워줌
       keepConnectionAlive: true, // 이거 안 켜두면 서버 재시작할 때 DB 연결을 끊어버려.
       charset: 'utf8mb4', // 나중에 이모티콘도 추가할려고
     };

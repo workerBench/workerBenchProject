@@ -172,6 +172,14 @@ export class TeacherControllerRender {
           clientIp,
           refreshToken,
         );
+        // 해당 강사가 업체를 가지고 있는지, 혹은 소속되어 있는지 체크.
+        const companyResut = await this.authService.checkTeacherCompany(
+          user.id,
+        );
+        if (companyResut === false) {
+          return res.render('auth/go-to-register-company', { user: user });
+        }
+
         return res.render('teacher/workshop-register', { user: user });
       } catch (err) {
         res.clearCookie(TOKEN_NAME.userAccess);

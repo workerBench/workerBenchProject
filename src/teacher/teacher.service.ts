@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  HttpException,
   HttpStatus,
   Injectable,
   NotFoundException,
@@ -27,6 +26,8 @@ import { identity } from 'rxjs';
 import { wrap } from 'module';
 import { QueryResult } from 'typeorm/query-runner/QueryResult';
 import { TransformationType } from 'class-transformer';
+import { CreateWorkshopsVideoDto } from './dto/teacher-workshops-video.dto';
+import { UpdateWorkshopsDto } from './dto/teacher-workshop-update.dto';
 
 @Injectable()
 export class TeacherService {
@@ -70,20 +71,14 @@ export class TeacherService {
         select: ['id'],
       });
       if (!userIdInfo) {
-        throw new HttpException(
-          '등록되지 않은 유저 입니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('등록되지 않은 유저 입니다.');
       }
       const teacherid = await this.teacherRepository.findOne({
         where: { user_id: userId },
         select: ['user_id'],
       });
       if (teacherid) {
-        throw new HttpException(
-          '이미 등록된 강사입니다',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('이미 등록된 강사입니다.');
       } else {
         await this.teacherRepository.insert({
           user_id: userId,
@@ -108,10 +103,7 @@ export class TeacherService {
         select: ['user_id'],
       });
       if (!userIdInfo) {
-        throw new HttpException(
-          '등록되지 않은 유저 입니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('등록되지 않은 유저입니다.');
       } else {
         let result = await this.workshopRepository
           .createQueryBuilder('workshop')
@@ -154,10 +146,7 @@ export class TeacherService {
       select: ['user_id', 'affiliation_company_id'],
     });
     if (!userIdInfo) {
-      throw new HttpException(
-        '등록되지 않은 유저 입니다.',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException('등록되지 않은 유저 입니다.');
     } else {
       let query = this.teacherRepository
         .createQueryBuilder('teacher')
@@ -220,10 +209,7 @@ export class TeacherService {
         where: { user_id: userId },
       });
       if (!userIdInfo) {
-        throw new HttpException(
-          '등록되지 않은 강사입니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('등록되지 않은 강사 입니다.');
       }
 
       const companyId = await this.companyRepository.findOne({
@@ -232,10 +218,7 @@ export class TeacherService {
       });
 
       if (companyId) {
-        throw new HttpException(
-          '이미 등록된 업체입니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('이미 등록된 업체입니다.');
       } else {
         const company = await this.companyRepository.create({
           company_type,
@@ -292,20 +275,14 @@ export class TeacherService {
         select: ['user_id', 'affiliation_company_id'],
       });
       if (!userIdInfo) {
-        throw new HttpException(
-          '등록되지 않은 강사입니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('등록되지 않은 강사입니다.');
       }
 
       const companyApplyId = await this.companyApplicationRepository.findOne({
         where: { teacher_id: userId },
       });
       if (companyApplyId) {
-        throw new HttpException(
-          '이미 업체에 신청을 보냈습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('이미 업체에 신청을 보냈습니다.');
       }
 
       const companyId = await this.companyRepository.findOne({
@@ -333,20 +310,14 @@ export class TeacherService {
         select: ['id'],
       });
       if (!companyId) {
-        throw new HttpException(
-          '등록된 업체가 없습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('등록된 업체가 없습니다.');
       }
       const Applycompanys = await this.companyApplicationRepository.find({
         where: { company_id: companyId.id },
         select: ['teacher_id'],
       });
       if (!Applycompanys) {
-        throw new HttpException(
-          '신청한 강사가 없습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('신청한 강사가 없습니다.');
       }
       // Promise.all()은 병렬로 여러 개의 비동기 작업을 수행하고 모든 작업이 완료될 때까지 기다린 다음 결과를 반환하는 데 사용된다.
       // find로 찾은 값이 배열이기 떄문에 각 배열요소에 병렬도 비동기 작업을 실행하고, 모든작업이 완료 될때까지 기다려야 하기 때문에 사용한다.
@@ -374,28 +345,19 @@ export class TeacherService {
         select: ['id'],
       });
       if (!companyId) {
-        throw new HttpException(
-          '해당하는 업체가 없습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('해당하는 업체가 없습니다.');
       }
       const applycompanyId = await this.companyApplicationRepository.findOne({
         where: { teacher_id: id, company_id: companyId.id },
       });
       if (!applycompanyId) {
-        throw new HttpException(
-          '해당하는 강사가 없습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('해당하는 강사가 없습니다.');
       }
       const teahcerInfo = await this.teacherRepository.findOne({
         where: { user_id: id, affiliation_company_id: userId },
       });
       if (teahcerInfo) {
-        throw new HttpException(
-          '이미 해당하는 강사를 등록하였습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('이미 해당하는 강사를 등록하였습니다.');
       } else {
         await this.teacherRepository.update(id, {
           affiliation_company_id: companyId.id,
@@ -419,19 +381,13 @@ export class TeacherService {
         select: ['id'],
       });
       if (!companyId) {
-        throw new HttpException(
-          '해당하는 업체가 없습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('해당하는 업체가 없습니다.');
       }
       const applycompanyId = await this.companyApplicationRepository.findOne({
         where: { teacher_id: id, company_id: companyId.id },
       });
       if (!applycompanyId) {
-        throw new HttpException(
-          '해당하는 강사가 없습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('해당하는 강사가 없습니다.');
       } else {
         await this.companyApplicationRepository.delete(applycompanyId.id);
       }
@@ -440,6 +396,42 @@ export class TeacherService {
     } catch (error) {
       console.log(error);
       throw error;
+    }
+  }
+
+  // 워크샵 등록 신청 시 유효성 검사 우선시. 기본적인 타입 검사는 class-validator 가 수행.
+  async checkWorkShopInFoValidation(workshopInputData: CreateWorkshopsDto) {
+    const {
+      title,
+      category,
+      min_member,
+      max_member,
+      genre_id,
+      total_time,
+      desc,
+      price,
+      location,
+      purpose_tag_id,
+    } = workshopInputData;
+
+    if (purpose_tag_id.length < 1) {
+      throw new BadRequestException(
+        '워크샵의 목적 태그를 최소 한 개는 선택해야 합니다.',
+      );
+    }
+    // 둘 다 null 이다 = 목적 태그가 1개도 입력되지 않았다.
+    if (purpose_tag_id[0] === null && purpose_tag_id[1] === null) {
+      throw new BadRequestException(
+        '워크샵의 목적 태그를 최소 한 개는 선택해야 합니다.',
+      );
+    }
+
+    if (purpose_tag_id[0] === purpose_tag_id[1]) {
+      throw new BadRequestException('동일한 목적을 선택하셨습니다.');
+    }
+
+    if (min_member > max_member) {
+      throw new BadRequestException('최소 인원이 최대 인원을 초과하였습니다.');
     }
   }
 
@@ -467,28 +459,21 @@ export class TeacherService {
         select: ['user_id', 'affiliation_company_id'],
       });
       if (!teacherInfo.user_id) {
-        throw new HttpException(
-          '등록된 강사가 아닙니다',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('등록된 강사가 아닙니다');
       }
       const companyInfo = await this.companyRepository.findOne({
         where: { user_id: userId },
       });
       if (teacherInfo.affiliation_company_id === 0 && !companyInfo) {
-        throw new HttpException(
+        throw new BadRequestException(
           '업체를 등록하셔야 워크샵을 등록 할 수 있습니다.',
-          HttpStatus.BAD_REQUEST,
         );
       }
       const workshopsInfo = await this.workshopRepository.findOne({
         where: { user_id: userId, title },
       });
       if (workshopsInfo) {
-        throw new HttpException(
-          '이미 등록된 제목 입니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('이미 등록된 제목 입니다.');
       }
 
       // 썸네일 이미지 이름 만들기. 프론트에서는 썸네일을 가장 먼저 formData 에 저장하기에 무조건 배열의 첫 번째 사진이 썸네일.
@@ -511,7 +496,7 @@ export class TeacherService {
         genre_id,
         total_time,
         price,
-        status: 'approval', // 유저 테스트 종료 시 'request' 로 변환해야 함.
+        // status: 'approval', // 유저 테스트 종료 시 삭제. 기본값이 'request'
         location,
         desc,
         user_id: userId,
@@ -572,14 +557,13 @@ export class TeacherService {
         title,
       };
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
 
   // 워크샵 등록 후 영상 등록
   async uploadVideo(
-    workshopData: any,
+    workshopData: CreateWorkshopsVideoDto,
     video: Express.Multer.File,
     userId: number,
   ) {
@@ -645,10 +629,7 @@ export class TeacherService {
         where: { user_id: userId },
       });
       if (!userIdInfo) {
-        throw new HttpException(
-          '등록된 워크샵이 없습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('등록된 워크샵이 없습니다.');
       } else {
         let result = await this.workshopRepository
           .createQueryBuilder('workshop')
@@ -734,10 +715,7 @@ export class TeacherService {
       // id만 map으로 새로운 배열형태를 만든다. [31,32]
       const userIds = userIdInfo.map((info) => info.id);
       if (userIdInfo.length === 0) {
-        throw new HttpException(
-          '등록된 워크샵이 없습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('등록된 워크샵이 없습니다.');
       } else {
         let result = await this.workshopRepository
           .createQueryBuilder('workshop')
@@ -807,10 +785,7 @@ export class TeacherService {
         select: ['user_id', 'id'],
       });
       if (userIdInfo.length === 0) {
-        throw new HttpException(
-          '등록된 워크샵이 없습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('등록된 워크샵이 없습니다.');
       } else {
         const workshopId = userIdInfo.map((info) => info.id); // id 값을 배열로 변환한다.
         let result = await this.workshopRepository
@@ -881,10 +856,7 @@ export class TeacherService {
         where: { user_id: userId },
       });
       if (!userIdInfo) {
-        throw new HttpException(
-          '등록된 워크샵이 없습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('등록된 워크샵이 없습니다.');
       }
       const instanceStatus =
         await this.workShopInstanceDetailRepository.findOne({
@@ -897,10 +869,7 @@ export class TeacherService {
         });
         return { message: '워크샵이 수락 되었습니다.' };
       } else {
-        throw new HttpException(
-          '이미 수락된 워크샵 입니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('이미 수락된 워크샵 입니다.');
       }
     } catch (error) {
       console.log(error);
@@ -914,10 +883,7 @@ export class TeacherService {
         where: { user_id: userId },
       });
       if (!userIdInfo) {
-        throw new HttpException(
-          '등록된 워크샵이 없습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('등록된 워크샵이 없습니다.');
       }
       const instanceStatus =
         await this.workShopInstanceDetailRepository.findOne({
@@ -930,10 +896,7 @@ export class TeacherService {
         });
         return { message: '워크샵이 종료 되었습니다.' };
       } else {
-        throw new HttpException(
-          '이미 종료된 워크샵 입니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('이미 종료된 워크샵 입니다.');
       }
     } catch (error) {
       console.log(error);
@@ -949,10 +912,7 @@ export class TeacherService {
       });
 
       if (!workshopId) {
-        throw new HttpException(
-          '등록된 워크샵이 없습니다.',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('등록된 워크샵이 없습니다.');
       }
       const workShopInstance =
         await this.workShopInstanceDetailRepository.findOne({
@@ -976,4 +936,66 @@ export class TeacherService {
       throw error;
     }
   }
+
+  // 워크샵 수정
+  async updateWorkshop(data: UpdateWorkshopsDto, userId: number, id: number) {
+    try {
+      const {
+        title,
+        category,
+        desc,
+        min_member,
+        max_member,
+        total_time,
+        price,
+        location,
+        genre_id,
+        purpose_tag_id,
+      } = data;
+      const workshopId = await this.workshopRepository.findOne({
+        where: { user_id: userId },
+      });
+      if (!workshopId) {
+        throw new BadRequestException('등록된 워크샵이 없습니다.');
+      }
+      type WorkshopCategoryType = 'offline' | 'online';
+      const workshopCategory = category as WorkshopCategoryType;
+      const workshop = await this.workshopRepository.update(id, {
+        title,
+        category: workshopCategory,
+        desc,
+        min_member,
+        max_member,
+        total_time,
+        price,
+        location,
+        genre_id,
+      });
+      const updatedWorkshop = await this.workshopRepository.findOne({
+        where: { id },
+      });
+      let purposeTagIds: Array<object> = [];
+      purpose_tag_id.forEach((tagId) => {
+        if (typeof tagId === 'number') {
+          purposeTagIds.push({
+            workshop_id: updatedWorkshop.id,
+            purpose_tag_id: tagId,
+          });
+        }
+      });
+      if (purposeTagIds.length > 0) {
+        await this.purposeTagIdRepository.delete({
+          workshop_id: updatedWorkshop.id,
+        });
+        await this.purposeTagIdRepository.save(purposeTagIds);
+      }
+      return {
+        message: '해당 워크샵을 수정하였습니다.',
+      };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  // 워크샵 삭제
 }

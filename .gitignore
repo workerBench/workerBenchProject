@@ -41,3 +41,5 @@ lerna-debug.log*
 .env
 .env.test
 
+# readme for reference
+README_2.md

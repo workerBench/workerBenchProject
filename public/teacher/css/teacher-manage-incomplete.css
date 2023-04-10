@@ -1,137 +1,138 @@
 .fw-bolderandtopbottom {
-    font-weight: bolder !important;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .text-center {
-    text-align: center !important;
-  }
+  font-weight: bolder !important;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.text-center {
+  text-align: center !important;
+}
 
 /* workshop-register css */
-.button-div{
-   margin: auto;
-   display: flex;
-   justify-content: center;
-   width: 800px;
-   border-bottom: 2px solid rgb(179, 179, 179);
+.button-div {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  width: 800px;
+  border-bottom: 2px solid rgb(179, 179, 179);
 }
-#button{
-   width: 200px;
-   margin-right: 10px;
-   margin-top: 30px;
-   margin-bottom: 30px;
-   height: 50px;
-   border-radius: 10px;
-   background-color: #ffffff;
+#button {
+  width: 200px;
+  margin-right: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #ffffff;
 }
-#button:hover{
-    background-color:#a084dc;
+#button:hover {
+  background-color: #a084dc;
 }
-#button-incomplete{
-    width: 200px;
-    margin-right: 10px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    height: 50px;
-    border-radius: 10px;
-    background-color: #9f70fb;
+#button-incomplete {
+  width: 200px;
+  margin-right: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #9f70fb;
 }
-#button-manage{
-    width: 200px;
-    margin-right: 10px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    height: 50px;
-    border-radius: 10px;
-    background-color: #9f70fb;
+#button-manage {
+  width: 200px;
+  margin-right: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #9f70fb;
 }
 #teacher-incompleteBox {
-    width: 1250px;
-    margin: auto;
-    margin-top: 100px;
-    border-radius: 20px;
-    display: flex;
-    flex-wrap: wrap;
+  width: 1250px;
+  margin: auto;
+  margin-top: 100px;
+  border-radius: 20px;
+  display: flex;
+  flex-wrap: wrap;
 }
-#button-div{
-    width: 300px;
-    display: flex;
-    flex-direction: row-reverse;
+#button-div {
+  width: 300px;
+  display: flex;
+  flex-direction: row-reverse;
 }
-.Button{
-    width: 150px;
-    height: 50px;
-    margin-right: 20px;
-    margin-top: 10px;
-    background-color: #9f70fb;
-    border-radius: 5px;
-    color: white;
-    border:none ;
+.Button {
+  width: 150px;
+  height: 50px;
+  margin-right: 20px;
+  margin-top: 10px;
+  background-color: #9f70fb;
+  border-radius: 5px;
+  color: white;
+  border: none;
 }
-.incomplete-Button{
-    width: 150px;
-    height: 50px;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
-    background-color: #9f70fb;
-    border-radius: 5px;
-    color: white;
-    border:none ;
+.incomplete-Button {
+  width: 150px;
+  height: 50px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  background-color: #9f70fb;
+  border-radius: 5px;
+  color: white;
+  border: none;
 }
-.incomplete-Button:hover{
-    background-color: #645cbb;
+.incomplete-Button:hover {
+  background-color: #645cbb;
 }
-.non_payment-Button{
-    width: 150px;
-    height: 50px;
-    margin-top: 10px;
-    margin-right: 20px;
-    background-color: #9f70fb;
-    border-radius: 5px;
-    text-align: center;
-    color: white;
-    padding: 10px;
+.non_payment-Button {
+  width: 150px;
+  height: 50px;
+  margin-top: 10px;
+  margin-right: 20px;
+  background-color: #9f70fb;
+  border-radius: 5px;
+  text-align: center;
+  color: white;
+  padding: 10px;
 }
-.Button:hover{
-    background-color: #645cbb;
+.Button:hover {
+  background-color: #645cbb;
 }
-.teacher-manage-div{
-    width: 600px;
-    height: 600px;
-    margin-bottom: 20px;
-    margin-left: 10px;
-    border: 2px solid rgb(179, 179, 179);
-    display: flex;
+.teacher-manage-div {
+  width: 600px;
+  height: 600px;
+  margin-bottom: 20px;
+  margin-left: 10px;
+  border: 2px solid rgb(179, 179, 179);
+  display: flex;
+  overflow: hidden;
 }
-.workshop-information-Div{
-    width: 300px;
-    height: 600px;
+.workshop-information-Div {
+  width: 300px;
+  height: 600px;
 }
-.teacher-workshop-li-div{
-    width: 100px;
-    height: 200px;
-    margin-left: 10px;
+.teacher-workshop-li-div {
+  width: 100px;
+  height: 200px;
+  margin-left: 10px;
 }
-.teacher-workshop-li-div >img{
-    margin-top: 10px;
-    width: 280px;
-    height: 200px;
+.teacher-workshop-li-div > img {
+  margin-top: 10px;
+  width: 280px;
+  height: 200px;
 }
-.workshop-information-li-title{
-    font-size: 20px;
-    text-align: center;
-    list-style: none;
-    margin-bottom: 20px;
-    margin-top: 20px;
-    font-weight: bold;
-    box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
-    height: 40px;
-    border-radius: 10px;
-    color:#5129a3
+.workshop-information-li-title {
+  font-size: 20px;
+  text-align: center;
+  list-style: none;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  font-weight: bold;
+  box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
+  height: 40px;
+  border-radius: 10px;
+  color: #5129a3;
 }
-.workshop-information-li{
+.workshop-information-li {
   font-size: 20px;
   text-align: center;
   list-style: none;
@@ -141,92 +142,92 @@
   box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
   height: 35px;
   border-radius: 10px;
-  color:#5129a3
+  color: #5129a3;
 }
-.workshop-information-li-tag{
-    font-size: 20px;
-    text-align: center;
-    list-style: none;
-    margin-bottom: 20px;
-    margin-top: 30px;
-    font-weight: bold;
-    box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
-    height: 50px;
-    border-radius: 10px;
-    color:#5129a3
+.workshop-information-li-tag {
+  font-size: 20px;
+  text-align: center;
+  list-style: none;
+  margin-bottom: 20px;
+  margin-top: 30px;
+  font-weight: bold;
+  box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
+  height: 50px;
+  border-radius: 10px;
+  color: #5129a3;
 }
-.workshop-information-div{
-    width: 170px;
-    height: 300px;
-    margin-left: 120px;
-    font-weight: bold;
-    color: rgb(42, 42, 42);
+.workshop-information-div {
+  width: 170px;
+  height: 300px;
+  margin-left: 120px;
+  font-weight: bold;
+  color: rgb(42, 42, 42);
 }
-.workshop-information-title-data{
-    font-size: 18px;
-    text-align: center;
-    list-style: none;
-    height: 60px;
-    padding-top: 10px;
-    margin-bottom: 20px;
-    margin-top: 10px;
-    border-bottom: 1px solid black;
+.workshop-information-title-data {
+  font-size: 18px;
+  text-align: center;
+  list-style: none;
+  height: 60px;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  border-bottom: 1px solid black;
 }
-.workshop-information-data{
-    font-size: 18px;
-    text-align: center;
-    list-style: none;
-    height: 35px;
-    padding-top: 10px;
-    margin-bottom: 20px;
-    margin-top: 10px;
-    border-bottom: 1px solid black;
+.workshop-information-data {
+  font-size: 18px;
+  text-align: center;
+  list-style: none;
+  height: 35px;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  border-bottom: 1px solid black;
 }
-.workshop-information-tag-data{
-    font-size: 18px;
-    text-align: center;
-    list-style: none;
-    height: 60px;
-    padding-top: 10px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid black;
+.workshop-information-tag-data {
+  font-size: 18px;
+  text-align: center;
+  list-style: none;
+  height: 60px;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid black;
 }
-.workshop-information-Div2{
-    width: 300px;
-    height: 600px;
-    display: flex;
-    flex-wrap: wrap;
+.workshop-information-Div2 {
+  width: 300px;
+  height: 600px;
+  display: flex;
+  flex-wrap: wrap;
 }
-.teacher-workshop-apply-div{
-    width: 110px;
-    height: 300px;
-    margin-top: 100px;
-    margin-right: 10px;
+.teacher-workshop-apply-div {
+  width: 110px;
+  height: 300px;
+  margin-top: 100px;
+  margin-right: 10px;
 }
-.workshop-information-apply{
-    font-size: 20px;
-    text-align: center;
-    list-style: none;
-    margin-bottom: 20px;
-    font-weight: bold;
-    box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
-    height: 35px;
-    border-radius: 10px;
-    color:#5129a3
+.workshop-information-apply {
+  font-size: 20px;
+  text-align: center;
+  list-style: none;
+  margin-bottom: 20px;
+  font-weight: bold;
+  box-shadow: rgb(0 0 0 / 30%) 0px 4px 15px;
+  height: 35px;
+  border-radius: 10px;
+  color: #5129a3;
 }
-.workshop-information-apply-div{
-    width: 180px;
-    height: 300px;
-    margin-top: 100px;
-    font-weight: bold;
-    color: rgb(42, 42, 42);
+.workshop-information-apply-div {
+  width: 180px;
+  height: 300px;
+  margin-top: 100px;
+  font-weight: bold;
+  color: rgb(42, 42, 42);
 }
-.workshop-information-apply-data{
-    font-size: 18px;
-    text-align: center;
-    list-style: none;
-    height: 35px;
-    padding-top: 10px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid black;
+.workshop-information-apply-data {
+  font-size: 18px;
+  text-align: center;
+  list-style: none;
+  height: 35px;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid black;
 }

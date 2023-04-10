@@ -1,3 +1,35 @@
+// access 토큰이 만료되었을 시 refresh 토큰으로 access 토큰 재발급을 요청
+const requestAccessToken = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: '/api/auth/refreshtoken/user',
+    });
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+// 에러 발생 시 상태 코드에 따른 로직 실행
+const getErrorCode = async (statusCode, errorMessage) => {
+  if (statusCode === 400) {
+    alert(`에러 코드: ${statusCode} / message: ${errorMessage}`);
+    return false;
+  }
+  if (statusCode === 401) {
+    const refreshRes = await requestAccessToken();
+    if (!refreshRes) {
+      alert('현재 로그인이 되어있지 않습니다. 로그인 후 이용 가능합니다.');
+      location.href = '/auth/login';
+      return;
+    }
+    return true;
+  }
+  alert(`에러 코드: ${statusCode} / message: ${errorMessage}`);
+  return false;
+};
+
 window.addEventListener('DOMContentLoaded', function () {
   getSoonWorkshops();
   getCompleteWorkshops();
@@ -81,8 +113,14 @@ function getSoonWorkshops() {
       hideButtonIfNotPayable();
       hideButtonIfNotRefundable();
     })
-    .catch((error) => {
-      console.log(error);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        getSoonWorkshops();
+      }
     });
 }
 
@@ -199,8 +237,14 @@ function showIncompleteModal(workshopDetailId) {
         }
       });
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        showIncompleteModal(workshopDetailId);
+      }
     });
 }
 
@@ -268,10 +312,14 @@ function putWorkshopOrderInfo(workshopDetailId) {
         }
       });
     })
-    .catch((err) => {
-      console.log(err);
-      alert(err.response.data.message);
-      location.reload();
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        putWorkshopOrderInfo(workshopDetailId);
+      }
     });
 }
 
@@ -365,26 +413,36 @@ function open_iamport() {
     },
     function (rsp) {
       if (rsp.success) {
-        axios
-          .patch('/api/mypage/workshops/order', {
-            workshopInstance_id,
-            workshop_id,
-            imp_uid: rsp.imp_uid,
-            merchant_uid: rsp.merchant_uid,
-          })
-          .then((response) => {
-            alert('결제가 완료되었습니다.');
-            location.href = '/mypage/workshops';
-          })
-          .catch((error) => {
-            console.log(error);
-            alert(error.message / error.response.data.message);
-          });
+        recordOrder(workshopInstance_id, workshop_id, rsp);
       } else {
         alert('결제가 실패했습니다.');
       }
     },
   );
+}
+
+// 결제 성공 시 실행할 함수
+function recordOrder(workshopInstance_id, workshop_id, rsp) {
+  axios
+    .patch('/api/mypage/workshops/order', {
+      workshopInstance_id,
+      workshop_id,
+      imp_uid: rsp.imp_uid,
+      merchant_uid: rsp.merchant_uid,
+    })
+    .then((response) => {
+      alert('결제가 완료되었습니다.');
+      location.href = '/mypage/workshops';
+    })
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        recordOrder(workshopInstance_id, workshop_id, rsp);
+      }
+    });
 }
 
 // 환불하기 버튼 클릭 시 모달 창 불러오기
@@ -443,15 +501,19 @@ function putWorkshopRefundInfo(workshopDetailId) {
         }
       });
     })
-    .catch((err) => {
-      console.log(err);
-      alert(err.response.data.message);
-      location.reload();
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        putWorkshopRefundInfo(workshopDetailId);
+      }
     });
 }
 
 // 아임포트 환불 요청하기
-function cancel_pay() {
+function cancel_pay(retry = false) {
   const merchant_uid = document.getElementById('order-merchant-id').innerText;
   const amount = document.getElementById('refund-workshop-price').innerText;
   const reason = document.getElementById('reason').value;
@@ -461,9 +523,16 @@ function cancel_pay() {
   ).innerText;
 
   if (!reason) {
-    return alert('환불 사유를 입력해주세요.');
+    alert('환불 사유를 입력해주세요.');
+    return;
   }
-  confirm('결제를 취소하시겠습니까?');
+
+  if (retry === false) {
+    const result = confirm('결제를 취소하시겠습니까?');
+    if (result === false) {
+      return;
+    }
+  }
 
   $.ajax({
     type: 'POST',
@@ -480,8 +549,14 @@ function cancel_pay() {
       alert('결제 취소가 완료되었습니다.');
       location.reload();
     },
-    error: function (error) {
-      console.log(error);
+    error: async function (error) {
+      const result = await getErrorCode(
+        error.responseJSON.statusCode,
+        error.responseJSON.message,
+      );
+      if (result) {
+        cancel_pay(true);
+      }
     },
   });
 }
@@ -509,8 +584,14 @@ function getCompleteWorkshops() {
         $('#complete-list').append(tempHtml);
       });
     })
-    .catch((error) => {
-      console.log(error);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        getCompleteWorkshops();
+      }
     });
 }
 
@@ -606,8 +687,14 @@ function showCompleteModal(workshopDetailId) {
         }
       });
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        showCompleteModal(workshopDetailId);
+      }
     });
 }
 
@@ -748,9 +835,17 @@ const submitReview = async (workshop_id, workshopInstanceDetail_id) => {
       },
     });
     checkAndSendingImage(res.data.data);
-  } catch (err) {
-    alert(err.response.data.message);
-    location.reload();
+  } catch (error) {
+    const result = await getErrorCode(
+      error.response.data.statusCode,
+      error.response.data.message,
+    );
+    if (result) {
+      submitReview(workshop_id, workshopInstanceDetail_id);
+    }
+    if (!result) {
+      location.reload();
+    }
   }
 };
 
@@ -787,9 +882,17 @@ const checkAndSendingImage = (reviewId) => {
       alert('리뷰 작성이 완료되었습니다.');
       location.reload();
     })
-    .catch((err) => {
-      alert(err.response.data.message);
-      location.reload();
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        checkAndSendingImage(reviewId);
+      }
+      if (!result) {
+        location.reload();
+      }
     });
 };
 
@@ -834,8 +937,14 @@ function getRefundWorkshops() {
         $('#refund-list').append(tempHtml);
       });
     })
-    .catch((error) => {
-      console.log(error);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        getRefundWorkshops();
+      }
     });
 }
 
@@ -931,7 +1040,13 @@ function showRefundModal(workshopDetailId) {
         }
       });
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        showRefundModal(workshopDetailId);
+      }
     });
 }

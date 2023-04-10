@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from 'src/entities/order';
@@ -213,12 +213,10 @@ export class WorkshopsService {
   async getWorkshopDetail(workshop_id: number) {
     const queryBuilder = await this.workshopRepository
       .createQueryBuilder('workshop')
-      .leftJoinAndSelect('workshop.WishList', 'wish')
       .leftJoinAndSelect('workshop.Reviews', 'review') // workshop - GenreTag 테이블 조인
       .innerJoinAndSelect('workshop.GenreTag', 'genre_tag') // workshop - GenreTag 테이블 조인
       .innerJoinAndSelect('workshop.PurposeList', 'purpose') // 조인한 결과에 PuposeList 테이블 조인
       .innerJoinAndSelect('purpose.PurPoseTag', 'purposeTag') // 조인한 결과에 PurPoseTag 테이블 조인
-
       .select([
         'workshop.id',
         'workshop.title',
@@ -230,16 +228,13 @@ export class WorkshopsService {
         'workshop.price',
         'workshop.location',
         'workshop.video',
-        'wish.workshop_id',
         'workshop.thumb',
-        'GROUP_CONCAT(wish.user_id) as wish_user_id',
         'GROUP_CONCAT(review.star) as star',
         'GROUP_CONCAT(purposeTag.name) as purpose',
         'GROUP_CONCAT(genre_tag.name) as genre',
         'workshop.updatedAt',
         'workshop.deletedAt',
       ])
-
       .where('workshop.id = :id', { id: workshop_id })
       .groupBy('workshop.id')
       .getRawMany();
@@ -254,12 +249,12 @@ export class WorkshopsService {
         halfStars.reduce((acc, cur) => acc + parseFloat(cur), 0) /
           halfStars.length || 0; // 평균 계산하기
 
-      // wish_user_id == null 일 때 예외 처리가 필요함
-      const wishArray = workshop.wish_user_id
-        ? workshop.wish_user_id.split(',')
-        : []; // star가 null일 경우 빈 배열로 초기화
-      const wishHalfIndex = Math.floor(wishArray.length / 2);
-      const halfWish = wishArray.slice(0, wishHalfIndex); // 중복 값이 나오므로 배열 길이의 반만큼 잘라줘야 함
+      // // wish_user_id == null 일 때 예외 처리가 필요함
+      // const wishArray = workshop.wish_user_id
+      //   ? workshop.wish_user_id.split(',')
+      //   : []; // star가 null일 경우 빈 배열로 초기화
+      // const wishHalfIndex = Math.floor(wishArray.length / 2);
+      // const halfWish = wishArray.slice(0, wishHalfIndex); // 중복 값이 나오므로 배열 길이의 반만큼 잘라줘야 함
 
       // s3 + cloud front에서 이미지 가져오기
       const thumbName = workshop.workshop_thumb;
@@ -285,7 +280,7 @@ export class WorkshopsService {
 
       return {
         ...workshop,
-        wish_user_id: Array.from(new Set(halfWish)).map((el) => Number(el)),
+        // wish_user_id: Array.from(new Set(halfWish)).map((el) => Number(el)),
         star: starArray.length ? starArray : ['0.0'], // star가 빈 문자열인 경우 '0.0'으로 초기화
         purpose: Array.from(new Set(workshop.purpose.split(','))),
         genre: Array.from(new Set(workshop.genre.split(','))),
@@ -369,6 +364,53 @@ export class WorkshopsService {
     return result;
   }
 
+  // 워크샵 신청하기 API 요청 시 우선 유효성 검사
+  async checkOrderWorkshopValidation(
+    orderWorkshopData: OrderWorkshopDto,
+    workshopId: number,
+    userId: number,
+  ) {
+    const workshop = await this.workshopRepository.findOne({
+      where: { id: workshopId },
+      select: ['min_member', 'max_member', 'status'],
+    });
+
+    if (!workshop || workshop.status !== 'approval') {
+      throw new BadRequestException(
+        '존재하지 않는 워크샵, 혹은 현재 운영중이지 않은 워크샵에 대한 수강 신청입니다.',
+      );
+    }
+
+    // 유저가 입력한 참가 희망인원이 실제 워크샵의 최소인원 ~ 최대인원 사이인지 검사
+    if (
+      orderWorkshopData.member_cnt < workshop.min_member ||
+      orderWorkshopData.member_cnt > workshop.max_member
+    ) {
+      throw new BadRequestException(
+        '수강 희망인원이 워크샵의 제한 인원에 포함되지 않습니다.',
+      );
+    }
+
+    // 해당 워크샵에 대해 수강 문의를 과거에 한 번 이상 했었다면, 현재 그 수강 문의가 진행중인지 확인
+    const workShopInstanceDetailResult =
+      await this.workshopDetailRepository.find({
+        where: { user_id: userId, workshop_id: workshopId },
+        select: ['status'],
+      });
+    const isStatusRequest = workShopInstanceDetailResult.filter((detail) => {
+      return (
+        detail.status === 'request' ||
+        detail.status === 'non_payment' ||
+        detail.status === 'waiting_lecture'
+      );
+    });
+    if (isStatusRequest.length > 0) {
+      throw new BadRequestException(
+        '이미 수강 과정을 진행중이신 워크샵 입니다.',
+      );
+    }
+  }
+
   // 워크샵 신청하기 API
   async orderWorkshop(
     workshop_id: number,
@@ -396,7 +438,7 @@ export class WorkshopsService {
       phone_number,
       member_cnt,
       wish_date,
-      status: 'non_payment', // 유저 테스트 종료 시 해당 입력 항목을 삭제. (default = request)
+      // status: 'non_payment', // 유저 테스트 종료 시 해당 입력 항목을 삭제. (default = request)
       category,
       purpose,
       wish_location,

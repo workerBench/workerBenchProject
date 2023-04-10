@@ -1,4 +1,36 @@
-document.addEventListener('DOMContentLoaded', () => {
+// access 토큰이 만료되었을 시 refresh 토큰으로 access 토큰 재발급을 요청
+const requestAccessToken = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: '/api/auth/refreshtoken/user',
+    });
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+// 에러 발생 시 상태 코드에 따른 로직 실행
+const getErrorCode = async (statusCode, errorMessage) => {
+  if (statusCode === 400) {
+    alert(`에러 코드: ${statusCode} / message: ${errorMessage}`);
+    return false;
+  }
+  if (statusCode === 401) {
+    const refreshRes = await requestAccessToken();
+    if (!refreshRes) {
+      alert('현재 로그인이 되어있지 않습니다. 로그인 후 이용 가능합니다.');
+      location.href = '/auth/login';
+      return;
+    }
+    return true;
+  }
+  alert(`에러 코드: ${statusCode} / message: ${errorMessage}`);
+  return false;
+};
+
+const getTeacherManageComplete = () => {
   const workshopcompleteList = document.getElementById('teacher-completeBox');
   axios({
     method: 'get',
@@ -73,11 +105,20 @@ document.addEventListener('DOMContentLoaded', () => {
         workshopcompleteList.insertAdjacentHTML('beforeend', tempHtml);
       }
     })
-    .catch((response) => {
-      const { data } = response.response;
-      alert(data.error);
+    .catch(async (error) => {
+      const result = await getErrorCode(
+        error.response.data.statusCode,
+        error.response.data.message,
+      );
+      if (result) {
+        getTeacherManageComplete();
+      }
     });
+};
+document.addEventListener('DOMContentLoaded', () => {
+  getTeacherManageComplete();
 });
+
 function workshop() {
   window.location.href = '/teacher/workshop';
 }

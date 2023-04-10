@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UseGuards,
   UploadedFile,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';

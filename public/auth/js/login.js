@@ -26,8 +26,6 @@ const login = async () => {
       location.href = beforeUrl;
     }
   } catch (err) {
-    alert(
-      `에러 코드: ${err.response.data.statusCode} / message: ${err.response.data.message}`,
-    );
+    alert(`${err.response.data.message}`);
   }
 };
