@@ -36,7 +36,7 @@
 
 📖 [Workerbecn 홈페이지](http://msdou46-94.shop/) (데스크탑 환경에서 이용해 주세요) <br/> &nbsp;&nbsp;&nbsp; \* 위 경로로 접속이 불가능 할 시 [Workerbecn 홈페이지 (www)](http://www.msdou46-94.shop/)
 
-📖 [Workerbecn 홈페이지 - 관리자 페이지 ](http://msdou46-94.shop/admin/login) (데스크탑 환경에서 이용해 주세요) <br/>&nbsp;&nbsp;&nbsp;\* 위 경로로 접속이 불가능 할 시 [Workerbecn 홈페이지 - 관리자 페이지(www)](http://www.msdou46-94.shop/admin/login)
+📖 [Workerbecn 홈페이지 - 관리자 페이지 ](http://msdou46-94.shop/admin/login) (데스크탑 환경에서 이용해 주세요) <br/>&nbsp;&nbsp;&nbsp;\* 위 경로로 접속이 불가능 할 시 [Workerbecn 홈페이지 - 관리자 페이지(www)](http://www.msdou46-94.shop/admin/login) <br/>&nbsp;&nbsp;&nbsp;\* 관리자 페이지 접속 시에는 아래의 '브로셔' 를 참조해주세요.
 
 <br/>
 <br/>
